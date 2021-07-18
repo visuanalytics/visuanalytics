@@ -639,7 +639,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             //only called when the component is still mounted
             if (isMounted.current) handleExportSceneError(err)
         }).finally(() => clearTimeout(timer));
-    }, [editId, createJSONExport, handleExportSceneSuccess, handleExportSceneError])
+    }, [propsSceneFromBackend, editId, createJSONExport, handleExportSceneSuccess, handleExportSceneError])
 
     /**
      * Method to handle the results of posting the preview image of a scene.
@@ -2651,7 +2651,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                         {props.diagramList.length > 0 &&
                         <DiagramList
                             diagramList={props.diagramList}
-                            handleDiagramClick={() => {return;}}
+                            handleDiagramClick={handleImageClick}
+                            infoProviderName={props.infoProvider.infoproviderName}
                         />
                         }
                     </Grid>
