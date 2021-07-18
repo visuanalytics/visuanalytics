@@ -1038,6 +1038,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                     ...selectedObject,
                     textContent: textEditContent,
                     currentlyRendered: true,
+                    x: textEditX,
+                    y: textEditY,
                 };
                 localItems[index] = objectCopy;
                 setSelectedObject(objectCopy);
@@ -2342,7 +2344,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                       display: textEditVisibility ? "block" : "none",
                                       top: textEditY + "px",
                                       left: textEditX + "px",
-                                      marginTop: "20%",
+                                      marginTop: "17%",
                                       marginLeft: "6%",
                                       width: textEditWidth + "px",
                                       fontSize: textEditFontSize + "px",
