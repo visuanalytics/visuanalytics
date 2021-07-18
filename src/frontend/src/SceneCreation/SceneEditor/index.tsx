@@ -1334,6 +1334,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             ...selectedObject,
             currentlyRendered: false,
             textContent: "",
+            x: -10000,
+            y: -10000
         } as CustomText;
         localItems[index] = objectCopy;
         // set the states to place the edit field and make the text invisible
@@ -1342,8 +1344,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         setItems(localItems);
         setTextEditContent(backup.textContent);
         setTextEditVisibility(true);
-        setTextEditX(objectCopy.x);
-        setTextEditY(objectCopy.y);
+        setTextEditX(selectedObject.x);
+        setTextEditY(selectedObject.y);
         setTextEditWidth(objectCopy.width);
         setTextEditFontSize(objectCopy.fontSize);
         setTextEditFontFamily(objectCopy.fontFamily);
@@ -1362,6 +1364,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 ...selectedObject,
                 textContent: textEditContent,
                 currentlyRendered: true,
+                x: textEditX,
+                y: textEditY,
             };
             localItems[index] = objectCopy;
             setSelectedObject(objectCopy);
