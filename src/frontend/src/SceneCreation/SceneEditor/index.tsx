@@ -541,7 +541,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                         color: element.color, //item.color
                         font_size: element.fontSize, //item.fontSize
                         font: "fonts/" + element.fontFamily + ".ttf", // "fonts/{item.font}.ttf"
-                        pattern: "_req|" + element.textContent // "Datum: {_req|api_key}"
+                        pattern: element.textContent // "Datum: {_req|api_key}"
                     }
                     dataTextAndImages.push(itemToPush);
                 }
@@ -1854,10 +1854,10 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * Method that renders the list items to be displayed in the list of all available data.
      * @param item The item to be displayed
      */
-    const renderListItem = (item: string) => {
+    const renderListItem = (item: string, selectedData: boolean) => {
         return (
             <ListItem key={item}>
-                <Button onClick={() => handleItemSelect(item, false)} >
+                <Button onClick={() => handleItemSelect((selectedData ? "_req|" : "" ) + item, false)} >
                     <span className={classes.overflowButtonText}>{item}</span>
                 </Button>
             </ListItem>
@@ -2561,7 +2561,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                             <Box borderColor="primary.main" border={4} borderRadius={5}
                                  className={classes.choiceListFrame}>
                                 <List disablePadding={true}>
-                                    {props.selectedDataList.map((item) => renderListItem(item))}
+                                    {props.selectedDataList.map((item) => renderListItem(item, true))}
                                 </List>
                             </Box>
                         </Grid>
@@ -2577,7 +2577,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                     <Box borderColor="primary.main" border={4} borderRadius={5}
                                          className={classes.choiceListFrame}>
                                         <List disablePadding={true}>
-                                            {props.arrayProcessingList.map((item: string) => renderListItem(item))}
+                                            {props.arrayProcessingList.map((item: string) => renderListItem(item, false))}
                                         </List>
                                     </Box>
                                 </Grid>
@@ -2595,7 +2595,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                 <Box borderColor="primary.main" border={4} borderRadius={5}
                                      className={classes.choiceListFrame}>
                                     <List disablePadding={true}>
-                                        {props.customDataList.map((item: string) => renderListItem(item))}
+                                        {props.customDataList.map((item: string) => renderListItem(item.substring(item.indexOf("|") + 1), false))}
                                     </List>
                                 </Box>
                             </Grid>
@@ -2613,7 +2613,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                     <Box borderColor="primary.main" border={4} borderRadius={5}
                                          className={classes.choiceListFrame}>
                                         <List disablePadding={true}>
-                                            {props.stringReplacementList.map((item: string) => renderListItem(item))}
+                                            {props.stringReplacementList.map((item: string) => renderListItem(item, false))}
                                         </List>
                                     </Box>
                                 </Grid>
