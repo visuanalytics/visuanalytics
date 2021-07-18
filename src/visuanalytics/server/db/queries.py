@@ -994,6 +994,11 @@ def update_scene(scene_id, updated_data):
     scene_json.update({"used_images": used_images})
     scene_json.update({"used_infoproviders": used_infoproviders})
     scene_json.update({"images": images})
+    scene_json.update({"backgroundImage": updated_data["backgroundImage"]})
+    scene_json.update({"backgroundType": updated_data["backgroundType"]})
+    scene_json.update({"backgroundColor": updated_data["backgroundColor"]})
+    scene_json.update({"backgroundColorEnabled": updated_data["backgroundColorEnabled"]})
+    scene_json.update({"itemCounter": updated_data["itemCounter"]})
     scene_json.update({"scene_items": scene_items})
 
     # Alte Einträge aus scene_uses_image entfernen
