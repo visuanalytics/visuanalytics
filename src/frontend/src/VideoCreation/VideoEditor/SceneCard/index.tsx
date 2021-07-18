@@ -109,7 +109,7 @@ export const SceneCard: React.FC<SceneCardProps> = (props) => {
                         <Grid item container xs={12} className={classes.elementLargeMargin}>
                             <Grid item xs={3}>
                                 <Typography variant="body1" id={props.sceneName + "-durationExceed-input"}>
-                                    Dauer:
+                                    Dauer nach TTS-Abschluss:
                                 </Typography>
                             </Grid>
                             <Grid item xs={9}>
