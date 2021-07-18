@@ -87,9 +87,9 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
      * The item is always inserted to the textfield, which was clicked last by the mouse.
      * @param item The item name that should be added to the textfield. This should be the full path, beginning with the infoprovider name
      */
-    const insertSelectedOrCustomData = (item: string) => {
+    const insertSelectedOrCustomData = (item: string, customData: boolean) => {
         const arrCopy = audioElements.slice();
-        arrCopy[lastEditedTTSTextIndex].text = arrCopy[lastEditedTTSTextIndex].text + "{" + item + "} ";
+        arrCopy[lastEditedTTSTextIndex].text = arrCopy[lastEditedTTSTextIndex].text + (!customData ? "{_req|" : "{") + item + "} ";
         setAudioElements(arrCopy);
     }
 
@@ -259,7 +259,7 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
     const renderData = (item: string, infoProvName: string, customData: boolean, withoutDataSourceName?: string) => {
         return (
             <ListItem key={item}>
-                <Button variant="contained" size="large" onClick={() => insertSelectedOrCustomData((!customData ? "_req|" : "") + (withoutDataSourceName !== undefined ? withoutDataSourceName : item))}>
+                <Button variant="contained" size="large" onClick={() => insertSelectedOrCustomData(withoutDataSourceName !== undefined ? withoutDataSourceName : item, customData)}>
                     <span className={classes.overflowButtonText}>{infoProvName + "|" + item}</span>
                 </Button>
             </ListItem>
