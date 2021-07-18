@@ -47,6 +47,8 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
     // The state, which holds the value for a pause that should be added. Please note that this state is not used for modifying existing pauses
     const [newPause, setNewPause] = React.useState<number | undefined>(0);
 
+    //TODO: document new formats
+
     // This state holds all information for the audio of the scene. Audio can be text or pause at the moment. If non spoken text is provided, an audio element with no text is generated for the state
     const [audioElements, setAudioElements] = React.useState<Array<AudioElement>>(props.spokenText.length === 0 ? [{
         type: "text",
@@ -87,7 +89,7 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
      */
     const insertSelectedOrCustomData = (item: string) => {
         const arrCopy = audioElements.slice();
-        arrCopy[lastEditedTTSTextIndex].text = arrCopy[lastEditedTTSTextIndex].text + "{:" + item + ":} ";
+        arrCopy[lastEditedTTSTextIndex].text = arrCopy[lastEditedTTSTextIndex].text + "{" + item + "} ";
         setAudioElements(arrCopy);
     }
 
@@ -98,7 +100,7 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
     const insertHistorizedData = () => {
         if(selectedInterval !== undefined) {
             const arrCopy = audioElements.slice();
-            arrCopy[lastEditedTTSTextIndex].text = arrCopy[lastEditedTTSTextIndex].text + "{:" + selectedHistorizedElement + "{" + selectedInterval.toString() + "}:} ";
+            arrCopy[lastEditedTTSTextIndex].text = arrCopy[lastEditedTTSTextIndex].text + "{_req|" + selectedHistorizedElement + "{" + selectedInterval.toString() + "}} ";
             setAudioElements(arrCopy);
             setSelectedInterval(0);
             setShowHistorizedDialog(false);
@@ -239,11 +241,11 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
      * @param item The item name
      * @param schedule The corresponding schedule for the rendered element, this is needed for passing to the next dialog if clicked
      */
-    const renderHistorizedData = (item: string, schedule: Schedule) => {
+    const renderHistorizedData = (item: string, infoProvName: string, schedule: Schedule) => {
         return (
             <ListItem key={item}>
                 <Button variant="contained" size="large" onClick={() => handleClickOnHistorizedData(item, schedule)}>
-                    <span className={classes.overflowButtonText}>{item}</span>
+                    <span className={classes.overflowButtonText}>{infoProvName + "|" + item}</span>
                 </Button>
             </ListItem>
         );
@@ -254,10 +256,10 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
      * This method renders clickable buttons for inserting selected and custom data from an infoprovider into a textfield.
      * @param item The name of the item that should be rendered
      */
-    const renderData = (item: string) => {
+    const renderData = (item: string, customData: boolean) => {
         return (
             <ListItem key={item}>
-                <Button variant="contained" size="large" onClick={() => insertSelectedOrCustomData(item)}>
+                <Button variant="contained" size="large" onClick={() => insertSelectedOrCustomData((!customData ? "_req|" : "") + item)}>
                     <span className={classes.overflowButtonText}>{item}</span>
                 </Button>
             </ListItem>
@@ -279,7 +281,7 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
                 </Grid>
                 <Grid item xs={12}>
                     <List key={dataSource.apiName + "-SelectedData"} disablePadding={true}>
-                        {extractKeysFromSelection(dataSource.selectedData).map((item: string) => renderData(infoProviderName + "|" + dataSource.apiName + "|" + item))}
+                        {extractKeysFromSelection(dataSource.selectedData).map((item: string) => renderData(infoProviderName + "|" + dataSource.apiName + "|" + item, false))}
                     </List>
                 </Grid>
                 <Grid item xs={12}>
@@ -289,7 +291,7 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
                 </Grid>
                 <Grid item xs={12}>
                     <List key={dataSource.apiName + "-SelectedData"} disablePadding={true}>
-                        {dataSource.arrayProcessingList.map((item: ArrayProcessingData) => renderData(infoProviderName + "|" + dataSource.apiName + "|" + item.name))}
+                        {dataSource.arrayProcessingList.map((item: ArrayProcessingData) => renderData(infoProviderName + "|" + dataSource.apiName + "|" + item.name, false))}
                     </List>
                 </Grid>
                 <Grid item xs={12}>
@@ -299,7 +301,7 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
                 </Grid>
                 <Grid item xs={12}>
                     <List key={dataSource.apiName + "-SelectedData"} disablePadding={true}>
-                        {dataSource.stringReplacementList.map((item: StringReplacementData) => renderData(infoProviderName + "|" + dataSource.apiName + "|" + item.name))}
+                        {dataSource.stringReplacementList.map((item: StringReplacementData) => renderData(infoProviderName + "|" + dataSource.apiName + "|" + item.name, false))}
                     </List>
                 </Grid>
                 <Grid item xs={12} className={classes.elementLargeMargin}>
@@ -309,7 +311,7 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
                 </Grid>
                 <Grid item xs={12} className={classes.elementLargeMargin}>
                     <List key={dataSource.apiName + "-CustomData"} disablePadding={true}>
-                        {dataSource.customData.map((item: FormelObj) => renderData(infoProviderName + "|" + dataSource.apiName + "|" + item.formelName))}
+                        {dataSource.customData.map((item: FormelObj) => renderData(infoProviderName + "|" + dataSource.apiName + "|" + item.formelName, true))}
                     </List>
                 </Grid>
                 <Grid item xs={12}>
@@ -319,7 +321,7 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
                 </Grid>
                 <Grid item xs={12}>
                     <List key={dataSource.apiName + "-HistorizedData"} disablePadding={true}>
-                        {dataSource.historizedData.map((item: string) => renderHistorizedData(infoProviderName + "|" + dataSource.apiName + "|" + item, dataSource.schedule))}
+                        {dataSource.historizedData.map((item: string) => renderHistorizedData(dataSource.apiName + "|" + item, infoProviderName, dataSource.schedule))}
                     </List>
                 </Grid>
             </Grid>

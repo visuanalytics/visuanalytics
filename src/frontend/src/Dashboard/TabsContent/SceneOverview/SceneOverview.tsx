@@ -66,12 +66,13 @@ export const SceneOverview: React.FC<SceneOverviewProps> = (props) => {
      * this method is used to set currentScene and currentImg. These are used to display right information
      * in the detailDialog
      * @param data the jsonRefScene-Object that should be set to current.
+     * @param index Index of the entry in the list
      */
-    const setCurrent = (data: BackendScene) => {
+    const setCurrent = (data: BackendScene, index: number) => {
         //TODO: implement method to find the right preview-image for the given SceneId
         //console.log(data.scene_id)
         setCurrentScene(data);
-        setCurrentImg(props.previewImgList[data.scene_id - 1].URL);
+        setCurrentImg(props.previewImgList[index].URL);
     }
 
     return (
@@ -100,7 +101,7 @@ export const SceneOverview: React.FC<SceneOverviewProps> = (props) => {
                         scenes={props.scenes}
                         previewImgList={props.previewImgList}
                         setDetailDialogOpen={(flag: boolean) => setDetailDialogOpen(flag)}
-                        setCurrent={(data: BackendScene) => setCurrent(data)}
+                        setCurrent={(data: BackendScene, index: number) => setCurrent(data, index)}
                     />
                 </Grid>
             </Grid>

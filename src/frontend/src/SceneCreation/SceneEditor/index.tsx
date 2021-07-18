@@ -176,10 +176,12 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             setStage(new Konva.Stage({container: "main", width: 960, height: 540}));
         }
         window.addEventListener("load", setStageAfterLoad);
+        //setStage(new Konva.Stage({container: "main", width: 960, height: 540}));
         return () => {
             window.removeEventListener("load", setStageAfterLoad);
         }
     }, [])
+
 
     //extract imageList, backgroundImageList and diagramList from props to use in dependencies
     const imageList = props.imageList;
@@ -475,6 +477,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     //variables used for storing values while preparing and doing the posting of a finished scene
     //stores the id the background was stored with by the backend
     const backgroundID = React.useRef(-1);
+    //store the path of the background image
+    const backgroundPath = React.useRef("");
     //stores the id the preview was stored with by the backend
     const scenePreviewID = React.useRef(-1);
 
@@ -530,7 +534,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         }
         const base: BaseImg = {
             type: "pillow",
-            path: sceneName + "_background.png",
+            path: backgroundPath.current,
             overlay: dataTextAndImages
         }
         const returnValue: JsonExport = {
@@ -559,7 +563,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                         color: element.color, //item.color
                         font_size: element.fontSize, //item.fontSize
                         font: "fonts/" + element.fontFamily + ".ttf", // "fonts/{item.font}.ttf"
-                        pattern: element.textContent // "Datum: {_req|api_key}"
+                        pattern: "_req|" + element.textContent // "Datum: {_req|api_key}"
                     }
                     dataTextAndImages.push(itemToPush);
                 }
@@ -571,8 +575,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                         type: "image",
                         pos_x: element.x, //X-Coordinate
                         pos_y: element.y, //Y-Coordinate
-                        size_x: element.width * element.scaleX, //Breite optional
-                        size_y: element.height * element.scaleY, //Höhe optional
+                        //TODO: document this - rounding because backend doesnt allow floats
+                        size_x: Math.round(element.width * element.scaleX), //Breite optional
+                        size_y: Math.round(element.height * element.scaleY), //Höhe optional
                         color: "RGBA",
                         path: element.imagePath //Diagrammname "image_name" : "" eventuell
                     }
@@ -736,6 +741,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         console.log(jsonData);
         const data = jsonData as ResponseData;
         backgroundID.current = data.image_id;
+        backgroundPath.current = data.path;
         console.log("successful background post: " + backgroundID.current);
         createPreviewImage();
     }, [createPreviewImage]);

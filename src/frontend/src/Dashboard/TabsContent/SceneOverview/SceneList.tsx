@@ -8,7 +8,7 @@ interface SceneListProps {
     scenes: Array<BackendScene>;
     previewImgList: Array<PreviewImage>;
     setDetailDialogOpen: (flag: boolean) => void;
-    setCurrent: (data: BackendScene) => void;
+    setCurrent: (data: BackendScene, index: number) => void;
 }
 
 export const SceneList: React.FC<SceneListProps> = (props) => {
@@ -21,7 +21,7 @@ export const SceneList: React.FC<SceneListProps> = (props) => {
         imgId.current = -1
     }
 
-    const renderSceneCard = (data: BackendScene) => {
+    const renderSceneCard = (data: BackendScene, index: number) => {
 
         imgId.current = imgId.current + 1;
 
@@ -38,7 +38,7 @@ export const SceneList: React.FC<SceneListProps> = (props) => {
                     variant={"outlined"}
                 >
                     <CardActionArea onClick={() => {
-                        props.setCurrent(data);
+                        props.setCurrent(data, index);
                         props.setDetailDialogOpen(true);
                     }}>
                         <img width="240" height="135" alt="Vorschaubild Diagramm" src={props.previewImgList[imgId.current].URL}/>
@@ -62,7 +62,7 @@ export const SceneList: React.FC<SceneListProps> = (props) => {
         >
             <Grid item container xs={12}>
                 {resetImgId()}
-                {props.scenes.map((scene) => renderSceneCard(scene))}
+                {props.scenes.map((scene, index) => renderSceneCard(scene, index))}
             </Grid>
         </Box>
     );
