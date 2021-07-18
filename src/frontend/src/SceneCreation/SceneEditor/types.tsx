@@ -87,6 +87,7 @@ export type CustomImage = {
     image: HTMLImageElement;
     imageId: number;
     imagePath: string;
+    diagram: boolean;
     index: number;
     width: number;
     height: number;

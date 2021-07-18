@@ -181,9 +181,10 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         }
     }, [])
 
-    //extract imageList and backgroundImageList from props to use in dependencies
+    //extract imageList, backgroundImageList and diagramList from props to use in dependencies
     const imageList = props.imageList;
     const backgroundImageList = props.backgroundImageList;
+    const diagramList = props.diagramList;
 
     //extract items from props to use in dependencies.
     const propsSceneFromBackend = props.sceneFromBackend;
@@ -244,7 +245,12 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 if(restoredItems[index].hasOwnProperty("image")) {
                     let castedItem = restoredItems[index] as CustomImage;
                     castedItem.image = new window.Image();
-                    castedItem.image.src = imageList[castedItem.index].image_blob_url;
+                    //if it is a diagram, we need to find it in the diagramList instead of the imageList
+                    if(castedItem.diagram) {
+                        castedItem.image.src = diagramList[castedItem.index].url;
+                    } else {
+                        castedItem.image.src = imageList[castedItem.index].image_blob_url;
+                    }
                     restoredItems[index] = castedItem;
                 }
             }
@@ -267,7 +273,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         //console.log(sessionStorage.getItem("items-" + uniqueId) === null ? new Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>() : JSON.parse(sessionStorage.getItem("items-" + uniqueId)!));
         //recentlyRemovedItems
         setRecentlyRemovedItems(sessionStorage.getItem("recentlyRemovedItems-" + uniqueId) === null ? new Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>() : JSON.parse(sessionStorage.getItem("recentlyRemovedItems-" + uniqueId)!))
-    }, [imageList, backgroundImageList])
+    }, [imageList, diagramList, backgroundImageList])
 
     //store backgroundImageIndex in sessionStorage
     React.useEffect(() => {
