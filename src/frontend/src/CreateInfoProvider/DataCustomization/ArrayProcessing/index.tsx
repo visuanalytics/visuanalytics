@@ -12,7 +12,14 @@ import {
 import Radio from "@material-ui/core/Radio";
 import DeleteIcon from "@material-ui/icons/Delete";
 import {getListItemsNames} from "../../helpermethods";
-import {ArrayProcessingData, Diagram, ListItemRepresentation, Operation, StringReplacementData} from "../../types";
+import {
+    ArrayProcessingData,
+    Diagram,
+    ListItemRepresentation,
+    Operation,
+    ProcessableArray,
+    StringReplacementData
+} from "../../types";
 import {FormelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 
 
@@ -62,7 +69,7 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
     //index of the operation currently selected by the user
     const [selectedOperationIndex, setSelectedOperationIndex] = React.useState(-1);
     //list of all arrays available
-    const [availableArrays, setAvailableArrays] = React.useState<Array<string>>(["array1", "array2", "array3"]);
+    const [availableArrays, setAvailableArrays] = React.useState<Array<ProcessableArray>>([]);
     //index of the item currently to be removed
     const [currentRemoveIndex, setCurrentRemoveIndex] = React.useState(-1);
     //true when the dialog for confirming removal of processings is open
@@ -87,18 +94,25 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
      * arrays with objects that contain a numeric attribute (each one will be shown on its own
      * @param listItems The listItems to be searched through. Necessary for recursive calls.
      * @param noArray True when the search is for an object inside an array and arrays should be ignored
+     * @param keyPath Path of the array when recursively searching through objects inside an array
+     * @param innerKeyPath Inner object path so far when recursively searching through objects inside an array
      */
-    const getProcessableArrays = React.useCallback((listItems: Array<ListItemRepresentation>, noArray: boolean) => {
-        let compatibleArraysList: Array<string> = [];
+    const getProcessableArrays = React.useCallback((listItems: Array<ListItemRepresentation>, noArray: boolean, keyPath: string = "", innerKeyPath: string = "") => {
+        let compatibleArraysList: Array<ProcessableArray> = [];
         listItems.forEach((listItem) => {
             //check if the search is for arrays or only primitive values because its a recursive search inside an object in array
             if(noArray) {
                 //only search for primitive numeric values and objects
                 if(!listItem.arrayRep && !Array.isArray(listItem.value) && (listItem.value === "Zahl" || listItem.value === "Gleitkommazahl"))
-                    compatibleArraysList.push((listItem.parentKeyName === "" ? listItem.keyName : listItem.parentKeyName + "|" + listItem.keyName).replace("|0", ""));
+                    compatibleArraysList.push({
+                        valueInObject: true,
+                        key: keyPath,
+                        innerKey: innerKeyPath === "" ? listItem.keyName : innerKeyPath + "|" + listItem.keyName //this check should normally not be necessary since call with noArray === true will only be with a innerKeyPath
+                    });
                 else if(!listItem.arrayRep && Array.isArray(listItem.value)) {
                     //the element is an object, its children need to be searched through - dont check arrays in this search
-                    compatibleArraysList = compatibleArraysList.concat(getProcessableArrays(listItem.value, true));
+                    //since this is only called when recursively searching through objects inside an array, update the innerKeyPath by appending the element itself
+                    compatibleArraysList = compatibleArraysList.concat(getProcessableArrays(listItem.value, true, keyPath, innerKeyPath + "|" + listItem.keyName));
                 }
             } else {
                 //check if it is a primitive array containing
@@ -106,15 +120,27 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
                     //check for primitive arrays
                     if(!Array.isArray(listItem.value)) {
                         if(listItem.value === "Zahl" || listItem.value === "Gleitkommazahl")
-                            compatibleArraysList.push((listItem.parentKeyName === "" ? listItem.keyName : listItem.parentKeyName + "|" + listItem.keyName).replace("|0", ""));
+                            compatibleArraysList.push({
+                                valueInObject: false,
+                                key: (listItem.parentKeyName === "" ? listItem.keyName : listItem.parentKeyName + "|" + listItem.keyName).replace("|0", ""),
+                                innerKey: ""
+                            });
                     } else {
                         //the array contains an object - search for all primitive numeric values in it  (subobjects are also supported)
+                        //store the path of the array itself to use it as key
+                        const keyPath = (listItem.parentKeyName === "" ? listItem.keyName : listItem.parentKeyName + "|" + listItem.keyName).replace("|0", "")
                         listItem.value.forEach((value: ListItemRepresentation) => {
                             if(value.value === "Zahl" || value.value === "Gleitkommazahl")
-                                compatibleArraysList.push((value.parentKeyName === "" ? value.keyName : value.parentKeyName + "|" + value.keyName).replace("|0", ""));
+                                //since this is a primitive contained in an object, we need to split the path in key and innerKey
+                                compatibleArraysList.push({
+                                    valueInObject: true,
+                                    key: keyPath,
+                                    innerKey: value.keyName //this value will always be stored directly within an object inside an array and not nested so we can use the keyName alone
+                                });
                             else if((!value.arrayRep) && Array.isArray(value.value)) {
+                                //the object contains another object - recursive search happens here - pass the keyName as innerKeyPath since the inner search starts at this level
                                 //search through variables but only care about primitives and subobjects, not arrays
-                                compatibleArraysList = compatibleArraysList.concat(getProcessableArrays(value.value, true));
+                                compatibleArraysList = compatibleArraysList.concat(getProcessableArrays(value.value, true, keyPath, value.keyName));
                             }
                         })
                     }
@@ -276,20 +302,22 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
      * @param array The name of the array to be rendered.
      * @param index The index of the array in the list of all arrays.
      */
-    const renderArrayListItem = (array: string, index: number) => {
+    const renderArrayListItem = (array: ProcessableArray, index: number) => {
+        //construct the key by checking which type of processing this is (primitive array or complex array)
+        const displayKey = array.valueInObject ? array.key + "|" + array.innerKey : array.key;
         return (
-            <Grid item container xs={12} key={array}>
+            <Grid item container xs={12} key={displayKey}>
                 <Grid item xs={2}>
                     <Radio
                         checked={selectedArrayIndex === index}
                         onChange={() => setSelectedArrayIndex(index)}
                         value={index}
-                        inputProps={{ 'aria-label': array }}
+                        inputProps={{ 'aria-label': displayKey }}
                     />
                 </Grid>
                 <Grid item xs={10}>
                     <Typography variant="body1" className={classes.radioButtonListWrapText}>
-                        {array}
+                        {displayKey}
                     </Typography>
                 </Grid>
             </Grid>
