@@ -10,8 +10,6 @@ export type CustomCircle = {
     rotation: number;
     width: number;
     height: number;
-    baseWidth: number;
-    baseHeight: number;
     scaleX: number;
     scaleY: number;
 };
@@ -24,8 +22,6 @@ export type CustomRectangle = {
     id: string;
     color: string;
     rotation: number;
-    baseWidth: number;
-    baseHeight: number;
     scaleX: number;
     scaleY: number;
 };
@@ -35,12 +31,9 @@ export type CustomLine = {
     y: number;
     id: string;
     color: string;
-    strokeWidth: number;
     rotation: number;
     width: number;
     height: number;
-    baseWidth: number;
-    baseHeight: number;
     scaleX: number;
     scaleY: number;
 };
@@ -48,14 +41,11 @@ export type CustomLine = {
 export type CustomStar = {
     x: number;
     y: number;
-    numPoints: number;
     id: string;
     color: string;
     rotation: number;
     width: number;
     height: number;
-    baseWidth: number;
-    baseHeight: number;
     scaleX: number;
     scaleY: number;
 };
@@ -66,15 +56,11 @@ export type CustomText = {
     id: string;
     textContent: string;
     width: number;
+    height: number;
     rotation: number;
     fontFamily: string;
     fontSize: number;
     color: string;
-    height: number;
-    padding: number;
-    currentlyRendered: boolean;
-    baseWidth: number;
-    baseHeight: number;
     scaleX: number;
     scaleY: number;
 };
@@ -92,8 +78,6 @@ export type CustomImage = {
     width: number;
     height: number;
     color: string;
-    baseWidth: number;
-    baseHeight: number;
     scaleX: number;
     scaleY: number;
 };

@@ -440,11 +440,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * postings to the backend.
      */
     const saveButtonHandler = () => {
-        // throws an error when the amount of items on the stage is 0, and empty stage can not be exported
-        if (itemCounter === 0 && backGroundType === "COLOR" ) {
-            dispatchMessage({type: "reportError", message: "Die Szene ist leer!"});
-            return;
-        }
         setSelectedItemName("");
         //start the chain of fetching to communicate with the backend
         createBackgroundImage();
@@ -1036,7 +1031,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 const objectCopy = {
                     ...selectedObject,
                     textContent: textEditContent,
-                    currentlyRendered: true,
                     x: textEditX,
                     y: textEditY,
                 };
@@ -1134,8 +1128,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                     width: 100,
                     height: 100,
                     rotation: 0,
-                    baseWidth: 100,
-                    baseHeight: 100,
                     scaleX: 1,
                     scaleY: 1,
 
@@ -1157,8 +1149,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                     id: 'rect-' + itemCounter.toString(),
                     color: nextColor,
                     rotation: 0,
-                    baseWidth: 100,
-                    baseHeight: 100,
                     scaleX: 1,
                     scaleY: 1,
 
@@ -1176,12 +1166,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                     y: parseInt(localY.toFixed(0)),
                     id: 'line-' + itemCounter.toString(),
                     color: "#000000",
-                    strokeWidth: 10,
                     rotation: 0,
                     width: 100,
                     height: 100,
-                    baseWidth: 100,
-                    baseHeight: 100,
                     scaleX: 1,
                     scaleY: 1,
 
@@ -1197,14 +1184,11 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 arCopy.push({
                     x: parseInt(localX.toFixed(0)),
                     y: parseInt(localY.toFixed(0)),
-                    numPoints: 5,
                     id: 'star-' + itemCounter.toString(),
                     color: nextColor,
                     rotation: 0,
                     width: 200,
                     height: 100,
-                    baseWidth: 200,
-                    baseHeight: 100,
                     scaleX: 1,
                     scaleY: 1,
 
@@ -1216,28 +1200,30 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             }
             case "Text": {
                 const arCopy = items.slice();
-                arCopy.push({
-                    x: parseInt(localX.toFixed(0)),
-                    y: parseInt(localY.toFixed(0)),
-                    id: 'text-' + itemCounter.toString(),
-                    textContent: currentTextContent,
-                    width: currentTextWidth,
-                    rotation: 0,
-                    fontFamily: currentFontFamily,
-                    fontSize: currentFontSize,
-                    color: currentFontColor,
-                    height: 20,
-                    padding: 2,
-                    currentlyRendered: true,
-                    baseWidth: 100,
-                    baseHeight: 100,
-                    scaleX: 1,
-                    scaleY: 1,
-                } as CustomText);
-                setItems(arCopy);
-                setCurrentTextWidth(200);
-                incrementCounterResetType();
-                return;
+                if (currentTextContent !== ""){
+                    arCopy.push({
+                        x: parseInt(localX.toFixed(0)),
+                        y: parseInt(localY.toFixed(0)),
+                        id: 'text-' + itemCounter.toString(),
+                        textContent: currentTextContent,
+                        width: currentTextWidth,
+                        rotation: 0,
+                        fontFamily: currentFontFamily,
+                        fontSize: currentFontSize,
+                        color: currentFontColor,
+                        height: 20,
+                        scaleX: 1,
+                        scaleY: 1,
+                    } as CustomText);
+                    setItems(arCopy);
+                    setCurrentTextWidth(200);
+                    incrementCounterResetType();
+                    return;
+                } else {
+                    reportError("Fehler beim Hinzufügen des Texts: Der Textinhalt darf nicht leer sein!");
+                    setSelectedType("");
+                    return;
+                }
             }
         }
     }
@@ -1264,8 +1250,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             index: index,
             width: image.width,
             height: image.height,
-            baseWidth: image.width,
-            baseHeight: image.height,
             scaleX: 1,
             scaleY: 1,
             color: "#000000"
@@ -1336,7 +1320,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         let backup: any = items[index];
         const objectCopy = {
             ...selectedObject,
-            currentlyRendered: false,
             textContent: "",
             x: -10000,
             y: -10000
@@ -1367,7 +1350,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             const objectCopy = {
                 ...selectedObject,
                 textContent: textEditContent,
-                currentlyRendered: true,
                 x: textEditX,
                 y: textEditY,
             };
@@ -1557,13 +1539,14 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             const localItems = items.slice();
             localItems.push({
                 ...selectedObject,
-                id: parts[0] + '-' + Math.random() * Math.random(),
+                id: parts[0] + '-' + itemCounter.toString(),
                 rotation: currentItemRotation.current,
                 scaleX: currentItemScaleX.current,
                 scaleY: currentItemScaleY.current,
                 x: currentItemX.current,
                 y: currentItemY.current,
             });
+            setItemCounter(itemCounter+1);
             setItems(localItems);
         }
     }
@@ -1820,10 +1803,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 fontSize: currentFontSize,
                 color: currentFontColor,
                 height: 20,
-                padding: 2,
-                currentlyRendered: true,
-                baseWidth: 200,
-                baseHeight: 20,
             } as CustomText);
             setItems(arCopy);
             setCurrentTextWidth(200);
@@ -1853,6 +1832,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     /**
      * Method that renders the list items to be displayed in the list of all available data.
      * @param item The item to be displayed
+     * @param selectedData
      */
     const renderListItem = (item: string, selectedData: boolean) => {
         return (
@@ -2268,12 +2248,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                                     fill={item.color}
                                                     onMouseOver={mouseOver}
                                                     onMouseLeave={mouseLeave}
-                                                    padding={item.padding}
-                                                    style={item.currentlyRendered ? {
-                                                        display: "block",
-                                                    } : {
-                                                        display: "none",
-                                                    }}
+                                                    padding={2}
                                                     dragBoundFunc={function (pos: Konva.Vector2d) {
                                                         if (pos.x > 960 - item.width) {
                                                             pos.x = 960 - item.width
