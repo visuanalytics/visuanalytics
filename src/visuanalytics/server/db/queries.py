@@ -293,7 +293,8 @@ def insert_video_job(video, update=False, job_id=None):
         #video["images"].update(infoprovider["images"])
         diagram_config = video.get("diagrams", None)
         if diagram_config:
-            video["diagrams"] += infoprovider["images"]
+            # video["diagrams"] += infoprovider["images"]
+            video["diagrams"].update(infoprovider["images"])
         else:
             video.update({
                 "diagrams": infoprovider["images"]

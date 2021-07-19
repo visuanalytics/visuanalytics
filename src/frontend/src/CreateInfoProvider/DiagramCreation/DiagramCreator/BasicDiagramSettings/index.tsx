@@ -5,11 +5,11 @@ import FormControl from "@material-ui/core/FormControl";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import Typography from "@material-ui/core/Typography";
-import {InsertEmoticon, BugReport, Face, LinkedCamera, MailOutline} from "@material-ui/icons";
 import TextField from "@material-ui/core/TextField";
 import {Alert} from "@material-ui/lab";
 import {ArrayDiagramProperties, diagramType} from "../../../types";
 import {FormControlLabel} from "@material-ui/core";
+import {getUrl} from "../../../../util/fetchUtils";
 
 interface BasicDiagramSettingsProps {
     arrayObjects?: Array<ArrayDiagramProperties>;
@@ -47,19 +47,39 @@ export const BasicDiagramSettings: React.FC<BasicDiagramSettingsProps> = (props)
     const diagramIconSelector = () => {
         switch (props.diagramType) {
             case "verticalBarChart": {
-                return (<InsertEmoticon style={{fontSize: 60}}/>)
+                return (<img
+                    style={{ maxWidth: "100%", maxHeight: "100%" }}
+                    src={getUrl("/images/DiagramIcons/Bar.png")}
+                    alt="Icon Säulendiagramm"
+                />)
             }
             case "horizontalBarChart": {
-                return (<BugReport style={{fontSize: 60}}/>)
+                return (<img
+                    style={{ maxWidth: "100%", maxHeight: "100%" }}
+                    src={getUrl("/images/DiagramIcons/BarH.png")}
+                    alt="Icon Säulendiagramm"
+                />)
             }
             case "pieChart": {
-                return (<Face style={{fontSize: 60}}/>)
+                return (<img
+                    style={{ maxWidth: "100%", maxHeight: "100%" }}
+                    src={getUrl("/images/DiagramIcons/Pie.png")}
+                    alt="Icon Säulendiagramm"
+                />)
             }
             case "dotDiagram": {
-                return (<LinkedCamera style={{fontSize: 60}}/>)
+                return (<img
+                    style={{ maxWidth: "100%", maxHeight: "100%" }}
+                    src={getUrl("/images/DiagramIcons/Scatter.png")}
+                    alt="Icon Säulendiagramm"
+                />)
             }
             case "lineChart": {
-                return (<MailOutline style={{fontSize: 60}}/>)
+                return (<img
+                    style={{ maxWidth: "100%", maxHeight: "100%" }}
+                    src={getUrl("/images/DiagramIcons/Line.png")}
+                    alt="Icon Säulendiagramm"
+                />)
             }
         }
     }
@@ -89,8 +109,8 @@ export const BasicDiagramSettings: React.FC<BasicDiagramSettingsProps> = (props)
                     Bitte wählen sie aus den zu erstellenden Diagrammtyp:
                 </Typography>
             </Grid>
-            <Grid item container xs={12} justify="space-between" className={classes.elementLargeMargin}>
-                <Grid item xs={7}>
+            <Grid item xs={7} justify="space-between" className={classes.elementLargeMargin}>
+                <Grid item xs={12}>
                     <FormControl fullWidth variant="outlined">
                         <Select
                             value={props.diagramType}
@@ -104,12 +124,7 @@ export const BasicDiagramSettings: React.FC<BasicDiagramSettingsProps> = (props)
                         </Select>
                     </FormControl>
                 </Grid>
-                <Grid item xs={4}>
-                    {diagramIconSelector()}
-                </Grid>
-            </Grid>
-            <Grid item container xs={12} justify={props.arrayObjects !== undefined ? "flex-start" : "flex-start"}>
-                <Grid item xs={4} className={classes.amountChoiceContainer}>
+                <Grid item xs={12} className={classes.amountChoiceContainer}>
                     <FormControlLabel
                         className={classes.creatorFormControlLabel}
                         control={
@@ -122,7 +137,11 @@ export const BasicDiagramSettings: React.FC<BasicDiagramSettingsProps> = (props)
                         labelPlacement="start"
                     />
                 </Grid>
-
+            </Grid>
+            <Grid item xs={4}>
+                {diagramIconSelector()}
+            </Grid>
+            <Grid item container xs={12} justify={props.arrayObjects !== undefined ? "flex-start" : "flex-start"}>
                 {props.arrayObjects !== undefined &&
                 <Grid item xs={7} className={classes.amountWarningContainer}>
                     {evaluateAmount() &&
