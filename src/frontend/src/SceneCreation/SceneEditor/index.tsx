@@ -536,7 +536,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                         color: element.color, //item.color
                         font_size: element.fontSize, //item.fontSize
                         font: "fonts/" + element.fontFamily + ".ttf", // "fonts/{item.font}.ttf"
-                        pattern: element.textContent // "Datum: {_req|api_key}"
+                        pattern: element.textContent, // "Datum: {_req|api_key}"
+                        width: element.width,
                     }
                     dataTextAndImages.push(itemToPush);
                 }
@@ -2491,7 +2492,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                         type="number"
                                         InputProps={{
                                             inputProps: {
-                                                min: 200, max: 540, step: 1,
+                                                min: 200, max: 940, step: 1,
                                             }
                                         }}
                                         onChange={(e) => changeTextWidth(e)}

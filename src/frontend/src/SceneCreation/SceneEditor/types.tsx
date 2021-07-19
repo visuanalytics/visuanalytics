@@ -124,6 +124,7 @@ export type DataText = {
     font_size: number, //item.fontSize
     font: string // "fonts/{item.font}.ttf"
     pattern: string // "Datum: {_req|api_key}"
+    width: number
 }
 
 /**

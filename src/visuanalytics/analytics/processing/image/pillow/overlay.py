@@ -46,7 +46,8 @@ def text(overlay: dict, step_data: StepData, source_img, prev_paths, draw):
               content,
               step_data.get_data(overlay["font_size"], None, numbers.Number),
               step_data.format(overlay["color"]),
-              step_data.format(overlay["font"]))
+              step_data.format(overlay["font"]),
+              overlay.get("width", None))
 
 
 @register_overlay
