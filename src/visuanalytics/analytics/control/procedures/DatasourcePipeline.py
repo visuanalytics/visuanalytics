@@ -117,7 +117,7 @@ class DatasourcePipeline(Pipeline):
 
         self.__start_time = time.time()
 
-        # Insert job into Table
+        # Insert Datasource into Table
         log_id = self.__update_db(insert_log, self.__job_id, self.__log_states["running"], round(self.__start_time), 'DATASOURCE')
         self.__log_id = log_id
 

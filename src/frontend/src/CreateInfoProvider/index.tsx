@@ -524,13 +524,13 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
             if (diagram.historizedObjects !== undefined) {
                 diagram.historizedObjects.forEach((item) => {
                     const plots = {
-                        dateLabels: item.dateLabels,
+                        //dateLabels: item.dateLabels, //deactivated since there is currently no support for date labels by the backend
                         plot: {
                             type: type,
                             x: item.intervalSizes,
                             y: "{_req|" + item.name + "}",
                             color: item.color,
-                            dateFormat: item.dateFormat,
+                            //dateFormat: item.dateFormat,
                             x_ticks: {
                                 ticks: item.labelArray
                             }

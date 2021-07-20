@@ -23,11 +23,17 @@ export const SceneOverview: React.FC<SceneOverviewProps> = (props) => {
 
     //TODO: add sessionStorage support
 
+    const [scenes, setScenes] = React.useState<Array<BackendScene>>(props.scenes);
+
+    const [previewImgList, setPreviewImgList] = React.useState<Array<PreviewImage>>(props.previewImgList);
+
     const [detailDialogOpen, setDetailDialogOpen] = React.useState(false);
+
+    const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
 
     const [currentImg, setCurrentImg] = React.useState("");
 
-    const [currentScene, setCurrentScene] = React.useState<BackendScene>({scene_id: -1, scene_name: ""})
+    const [currentScene, setCurrentScene] = React.useState<BackendScene>({} as BackendScene)
 
     /**
      * setup for error notification
@@ -72,8 +78,36 @@ export const SceneOverview: React.FC<SceneOverviewProps> = (props) => {
         //TODO: implement method to find the right preview-image for the given SceneId
         //console.log(data.scene_id)
         setCurrentScene(data);
-        setCurrentImg(props.previewImgList[index].URL);
+        setCurrentImg(previewImgList[index].URL);
     }
+
+    const handleSuccessDelete = () => {
+
+        setScenes(
+            scenes.filter((data) => {
+                return data.scene_id !== currentScene.scene_id
+            })
+        );
+
+        //-1 because scene_id starts with 1.
+        setPreviewImgList(previewImgList.splice((currentScene.scene_id - 1), 1));
+
+        setDeleteDialogOpen(false);
+        setDetailDialogOpen(false);
+    }
+
+    const handleErrorDelete = (err: Error) => {
+        reportError("Ein Fehler ist aufgetreten!: " + err);
+    }
+
+
+    const deleteSceneInBackend = useCallFetch("visuanalytics/scene/" + currentScene.scene_id, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json\n"
+            }
+        }, handleSuccessDelete, handleErrorDelete
+    );
 
     return (
         <StepFrame
@@ -98,8 +132,8 @@ export const SceneOverview: React.FC<SceneOverviewProps> = (props) => {
                 </Grid>
                 <Grid item container xs={12} justify={"center"}>
                     <SceneList
-                        scenes={props.scenes}
-                        previewImgList={props.previewImgList}
+                        scenes={scenes}
+                        previewImgList={previewImgList}
                         setDetailDialogOpen={(flag: boolean) => setDetailDialogOpen(flag)}
                         setCurrent={(data: BackendScene, index: number) => setCurrent(data, index)}
                     />
@@ -145,7 +179,42 @@ export const SceneOverview: React.FC<SceneOverviewProps> = (props) => {
                         <Grid item>
                             <Button variant="contained"
                                     className={classes.redDeleteButton}
-                                    onClick={() => dispatchMessage({type: "reportError", message: 'Delete not implemented'})}
+                                    onClick={() => setDeleteDialogOpen(true)}
+                            >
+                                Löschen
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </DialogActions>
+            </Dialog>
+            <Dialog
+                onClose={() => {
+                    setDeleteDialogOpen(false);
+                    window.setTimeout(() => {}, 200);}
+                }
+                aria-labelledby="deleteDialog-title"
+                open={deleteDialogOpen}
+            >
+                <DialogTitle id="deleteDialog-title">
+                    {currentScene.scene_name}
+                </DialogTitle>
+                <DialogContent dividers>
+                    Wollen sie "{currentScene.scene_name}" wirklich löschen?
+                </DialogContent>
+                <DialogActions>
+                    <Grid container justify="space-between">
+                        <Grid item>
+                            <Button variant="contained"
+                                    color={"secondary"}
+                                    onClick={() => setDeleteDialogOpen(false)}
+                            >
+                                Zurück
+                            </Button>
+                        </Grid>
+                        <Grid item>
+                            <Button variant="contained"
+                                    className={classes.redDeleteButton}
+                                    onClick={() => deleteSceneInBackend()}
                             >
                                 Löschen
                             </Button>

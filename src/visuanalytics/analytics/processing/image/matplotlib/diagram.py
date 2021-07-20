@@ -391,8 +391,6 @@ def get_x_y(values, step_data, array_source, custom_labels=False, primitive=True
                 values.update({"x_ticks": x_ticks})
     else:
         y_vals = step_data.format(values["y"])
-        # print("y_vals", y_vals)
-        # step_data.print_data()
         y_vals = list(map(float, y_vals[1: -1].split(", ")))
         y_vals = list(map(y_vals.__getitem__, [i - 1 for i in values.get("x", np.arange(len(y_vals)))]))
 
