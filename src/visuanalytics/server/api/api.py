@@ -750,7 +750,7 @@ def delete_scene(id):
     """
     try:
         success = queries.delete_scene(id)
-        return "", 200 if success else flask.jsonify({"err_msg": f"Could not remove scene with ID {id}"})
+        return flask.jsonify({"status": "successful"}) if success else flask.jsonify({"err_msg": f"Could not remove scene with ID {id}"})
     except Exception:
         logger.exception("An error occurred: ")
         err = flask.jsonify({"err_msg": f"An error occurred while deleting the scene with the ID {id}"})
