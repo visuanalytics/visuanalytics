@@ -6,6 +6,9 @@ import {
     DataImage,
     DataText
 } from "../SceneCreation/SceneEditor/types";
+import {SceneCardData} from "../VideoCreation/types";
+import {Schedule} from "../CreateInfoProvider/types";
+import {InfoProviderData} from "../SceneCreation/types";
 
 export type jsonRef = {
     infoprovider_id: number;
@@ -83,4 +86,19 @@ export type ImagesBackend = {
     type: string;
     path: string;
     overlay: Array<DataImage | DataText>
+}
+
+/**
+ * Represents all information of one single video fetched from the backend.
+ */
+export type FullVideo = {
+    audio: any;
+    images: any;
+    name: string;
+    sceneList: Array<SceneCardData>;
+    schedule: Schedule;
+    selectedInfoprovider: Array<InfoProviderData>;
+    sequence: any;
+    tts_ids: Array<number>;
+    video_name: string;
 }

@@ -24,6 +24,7 @@ interface InfoProviderSelectionProps {
     fetchAllScenes: () => void;
     infoproviderIDs: Array<number>;
     setInfoproviderIDs: (infoproviderIDs: Array<number>) => void;
+    isEditMode?: boolean;
 }
 
 /**
@@ -224,6 +225,7 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
                     <Checkbox
                         checked={checkIdIncluded(infoProvider.infoprovider_id)}
                         onChange={() => checkBoxHandler(infoProvider)}
+                        disabled={props.isEditMode}
                     />
                 </ListItemIcon>
                 <ListItemText className={classes.wrappedText}>

@@ -112,10 +112,6 @@ export const DashboardTabs = () =>  {
 
     const handleErrorFetchAllVideos = (err: Error) => {
         reportError("Fehler: " + err);
-
-        //-----------------------------------------------------TEST-----------------------------------------------------
-        allVideos.current = [{videojob_name: "Video1", videojob_id: 0}, {videojob_name: "Video2", videojob_id: 1}, {videojob_name: "Video3", videojob_id: 2}];
-        setValue(2);
     }
 
     const handleSuccessFetchAllVideos = (jsonData: any) => {
