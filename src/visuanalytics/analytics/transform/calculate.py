@@ -35,7 +35,7 @@ def calculate_mean(values: dict, data: StepData):
     """
     for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(key, values)
-        inner_key = values.get("inner_key", None)
+        inner_key = values.get("innerKey", None)
         if inner_key:
             value = [x[inner_key] for x in value]
         new_key = get_new_keys(values, idx)
@@ -56,7 +56,7 @@ def calculate_max(values: dict, data: StepData):
     """
     for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(key, values)
-        inner_key = values.get("inner_key", None)
+        inner_key = values.get("innerKey", None)
         if inner_key:
             value = [x[inner_key] for x in value]
         new_key = get_new_keys(values, idx)
@@ -76,7 +76,7 @@ def calculate_sum(values: dict, data: StepData):
     """
     for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(key, values)
-        inner_key = values.get("inner_key", None)
+        inner_key = values.get("innerKey", None)
         if inner_key:
             value = [x[inner_key] for x in value]
         new_key = get_new_keys(values, idx)
@@ -96,7 +96,7 @@ def calculate_min(values: dict, data: StepData):
     """
     for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(key, values)
-        inner_key = values.get("inner_key", None)
+        inner_key = values.get("innerKey", None)
         if inner_key:
             value = [x[inner_key] for x in value]
         new_key = get_new_keys(values, idx)
