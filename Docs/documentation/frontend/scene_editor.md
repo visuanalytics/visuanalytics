@@ -120,11 +120,151 @@ case "Star": {
 }
 ```
 
-Zunächst wird eine Kopie des Arrays mit allen Elementen erstellt. Hierbei geht es darum, Updateprobleme auf dem Canvas zu vermeiden.
+Zunächst wird eine Kopie des Arrays mit allen Elementen erstellt. 
+Hierbei geht es darum, Updateprobleme auf dem Canvas zu vermeiden.
+Anschließend wird in dieser Kopie ein neues Element hinzugefügt, welches die Koordinaten vom Klick auf den Canvas enthält.
+Die ID wird dabei eindeutig auf "star-" und der aktuellen Menge an Elementen gesetzt.
+Als Standardfarbe haben wir uns für Schwarz entschieden.
+Höhe und Breite werden dabei passend zur Form gesetzt.
 
 #### Backend-Typen
+```
+export type DataText = {
+    description: string,
+    type: string,
+    anchor_point: string,
+    pos_x: number,
+    pos_y: number,
+    color: string,
+    font_size: number,
+    font: string,
+    pattern: string,
+    width: number
+}
+
+export type DataImage = {
+    description: string,
+    type: string,
+    pos_x: number,
+    pos_y: number,
+    size_x: number,
+    size_y: number,
+    color: string,
+    path: string
+}
+```
+DataText und DataImage enthalten das Datenformat, mit welchem das Backend später Texte oder Bild auf der fertigen Szene hinzufügt.
+Die benötigten Typen wurden vom Backend vorgegeben.
+
+**description** ist ein optionaler Parameter. Er beschreibt den Text.
+**type** beschreibt die Art des Elementes. **type** ist entweder "text" oder "image".
+**anchor_point** gibt an, an welcher Stelle der Text verankert wird. Dies kann man mit dem klassischen linksbündig, rechtsbündig oder zentriert setzen.
+**pos_x** gibt die Position des Elements in Pixel auf der X-Achse an.
+**pos_y** gibt dementsprechend die Position des Elements auf der Y-Achse an.
+**color** gibt die Schriftfarbe an.
+**font_size** gibt die Schriftgröße des Textes an.
+**font** gibt die Schriftart an.
+**pattern** enthält den eigentlichen Text.
+**width** enthält die Breite des Textes.
+
+Bei den Bildern gibt es noch folgende Parameter:
+
+**size_x** gibt dabei die Breite des Bildes und **size_y** die Höhe des Bildes an.
+Die beiden Variablen werden dabei gerundet, da das Backend keine Floats unterstützt. Sie werden durch die Variablen **width** und **scaleX** bzw. **height** und **scaleY** des Elementes errechnet.
+**color** gibt die Farbart des Bildes an. Dies kann "RGBA" oder "L" sein.
+**path** gibt den Dateipfad zu dem Element auf dem Laufwerk an.
+
+```
+export type BaseImg = {
+    type: string;
+    path: string;
+    overlay: Array<DataImage | DataText>;
+}
+```
+
+Das BaseImg stellt die Basis für die fertige Szene dar. Die Variable **type** muss dabei immer "pillow" sein. **path** enthält den Pfad zum aktuellen Hintergrundbild.
+**overlay** enthält ein Array aus den vorher beschriebenen DataText und DataImages.
+
+```
+export type JsonExport = {
+    scene_name: string;
+    used_images: number[];
+    used_infoproviders: number[];
+    images: BaseImg;
+    backgroundImage: number; //ID of the background image
+    backgroundType: string;
+    backgroundColor: string;
+    backgroundColorEnabled: boolean;
+    itemCounter: number;
+    scene_items: Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>;
+}
+```
+
+Der Typ **JsonExport** enthält die finalen Werte, welche das Backend direkt verarbeiten kann. 
+Die Variablen kann man dabei grob in Backenddaten und Frontenddaten unterscheiden.
+Backenddaten:
+
+**scene_name** ist ein String und beschreibt den Szenennamen.
+**used_images** ist ein Array aus ID's der im Backend verwendeten Bilder.
+**used_infoproviders** ist ein Array aus Zahlen, welches die benutzten Infoprovider enthält. Allerdings wird im Frontend nur ein Infoprovider pro Szene unterstützt.
+**images** enthält das BaseImg, welches vorher beschrieben wurde.
+
+Frontenddaten:
+
+**backgroundImage** enthält die ID des verwendeten Hintergrundbildes.
+**backgroundType** enthält entweder "IMAGE" oder "COLOR".
+**backgroundColor** enthält die verwendete Farbe, falls eine Farbe gewählt ist. Die Farbe ist bei keiner Veränderung weiß ("FFFFFF").
+**backgroundColorEnabled** ist *true*, wenn eine Hintergrundfarbe verwendet wird, ansonsten *false*.
+**itemCounter** enthält die Menge an Elementen, welche im *items*-Array vorhanden sind.
+**scene_items** enthält das *items*-Array.
 
 #### Items Array
+
+Das *items*-Array enthält alle Elemente, welche auf dem Canvas hinzugefügt werden, mit Ausnahme von Hintergrundfarbe und Hintergrundbild.
+Das Array wird mit Hilfe der folgenden Funktion im Hauptarray dargestellt:
+```
+{items.map((item: any) => (
+    (item.id.startsWith('circle') &&
+        <Circle
+            key={item.id}
+            name={item.id}
+            draggable
+            x={item.x}
+            y={item.y}
+            scaleX={item.scaleX}
+            scaleY={item.scaleY}
+            fill={item.color}
+            radius={item.radius}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+            onTransformStart={handleTransformStart}
+            onTransformEnd={handleTransformEnd}
+            rotation={item.rotation}
+            onMouseOver={mouseOver}
+            onMouseLeave={mouseLeave}
+            dragBoundFunc={function (pos: Konva.Vector2d) {
+                if (pos.x > 960 - item.radius) {
+                    pos.x = 960 - item.radius
+                }
+                if (pos.x < 0 + item.radius) {
+                    pos.x = 0 + item.radius
+                }
+                if (pos.y > 540 - item.radius) {
+                    pos.y = 540 - item.radius
+                }
+                if (pos.y < item.radius) {
+                    pos.y = item.radius
+                }
+                return pos;
+            }}
+        />)
+```
+Im obigen Beispiel sieht man die generelle Darstellung eines Kreises auf dem Canvas. Es werden die Elemente mit Hilfe der *map*-Methode des Arrays auf dem Canvas hinzugefügt.
+Je nachdem, mit welchem Wort die ID des Elements beginnt, wird ein neues Konva-Element des zugehörigen Typs erstellt. Diesem Element werden bestimmte Eigenschaften zugewiesen, welche das Verhalten auf dem Canvas bestimmen.
+Jedes Element benötigt eine *key*-Eigenschaft und einen Namen, worüber es eindeutig identifiziert werden kann. Dies liegt an der internen Struktur von Konva.
+Wichtige Eigenschaften sind außerdem **draggable** und **fill**. Wenn **draggable** definiert ist, so wird das native Drag & Drop von KonvaJS aktiviert.
+**fill** entspricht der *color*-Variable der Elemente, hier wird die Farbe festgelegt. Des Weiteren werden einige Methoden übergeben. Hierbei ist die dragBoundFunc interessant.
+Darin wird definiert, was passieren soll, wenn der Benutzer das Element über eine bestimmte Koordinate zieht.
 
 #### Hintergrund
 

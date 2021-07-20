@@ -490,7 +490,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     /**
      * Method that takes all necessary data of the scene creation and
      * forms a JSON object as specified by the backend to post the scene to the backend.
-     * @returns a JsonExport element
+     * @returns returnValue a JsonExport element
      */
     const createJSONExport = React.useCallback(() => {
         //empty array for all text and image elements (except background)
