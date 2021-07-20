@@ -67,8 +67,9 @@ def insert_infoprovider(infoprovider):
     """
     Methode für das einfügen eines neuen Infoproviders.
 
-    :param infoprovider: Ein Dictionary welches den Namen des Infoproviders, den Schedule sowie die Steps 'api', 'transform' und 'storing' enthält.
-    :type infoprovider: Json-Objekt.
+    :param infoprovider: Ein Dictionary welches den Namen des Infoproviders, den Schedule sowie die Steps 'diagrams',
+        'diagrams_original' sowie einen Key 'datasources', welcher alle Datenquellen beinhaltet, enthält.
+    :type infoprovider: dict
 
     :return: Gibt an, ob das Hinzufügen erfolgreich war.
     """
@@ -116,9 +117,8 @@ def insert_infoprovider(infoprovider):
         transform_step += datasource["transform"]
         transform_step += datasource["calculates"]
         formulas = copy.deepcopy(datasource["formulas"])
-        custom_keys = extract_custom_keys(datasource["calculates"], datasource["formulas"], datasource["replacements"])
+        custom_keys = _extract_custom_keys(datasource["calculates"], datasource["formulas"], datasource["replacements"])
         transform_step = _generate_transform(_extend_formula_keys(formulas, datasource["datasource_name"], custom_keys), remove_toplevel_key(transform_step))
-        print("transform", transform_step)
         transform_step += remove_toplevel_key(datasource["replacements"])
 
     datasources_copy = deepcopy(infoprovider["datasources"])
@@ -179,7 +179,7 @@ def insert_infoprovider(infoprovider):
         transform_step = datasource["transform"]
         transform_step += datasource["calculates"]
         formulas = copy.deepcopy(datasource["formulas"])
-        custom_keys = extract_custom_keys(datasource["calculates"], datasource["formulas"], datasource["replacements"])
+        custom_keys = _extract_custom_keys(datasource["calculates"], datasource["formulas"], datasource["replacements"])
         transform_step = _generate_transform(_extend_formula_keys(formulas, datasource_name, custom_keys), remove_toplevel_key(transform_step))
         transform_step += remove_toplevel_key(datasource["replacements"])
         datasource_json = {
@@ -251,6 +251,7 @@ def insert_video_job(video, update=False, job_id=None):
     tts_infoprovider_ids = video["tts_ids"]
     tts_names = []
     infoprovider_names = [infoprovider["infoprovider_name"] for infoprovider in video["selectedInfoprovider"]]
+
     # Namen aller Infoprovider die in TTS genutzt werden laden
     for tts_id in tts_infoprovider_ids:
         tts_name = con.execute("SELECT infoprovider_name FROM infoprovider WHERE infoprovider_id=?",
@@ -267,7 +268,6 @@ def insert_video_job(video, update=False, job_id=None):
     for infoprovider_name in infoprovider_names:
         with open_resource(_get_infoprovider_path(infoprovider_name.replace(" ", "-")), "r") as f:
             infoprovider = json.load(f)
-        # print("loaded infoprovider:", infoprovider)
 
         datasource_files = [x for x in os.listdir(get_datasource_path("")) if x.startswith(infoprovider_name + "_")]
         for file in datasource_files:
@@ -288,9 +288,7 @@ def insert_video_job(video, update=False, job_id=None):
                 video.update({
                     "transform": datasource_config["transform"]
                 })
-        #print("video with transform:", video)
 
-        #video["images"].update(infoprovider["images"])
         diagram_config = video.get("diagrams", None)
         if diagram_config:
             # video["diagrams"] += infoprovider["images"]
@@ -299,21 +297,16 @@ def insert_video_job(video, update=False, job_id=None):
             video.update({
                 "diagrams": infoprovider["images"]
             })
-        # print("video with diagrams:", video)
 
     # Restliche Daten sammeln und kombinieren
     images = video.get("images", None)
     scene_names = list(map(lambda x: images[x]["key"], list(images.keys())))
     scenes = get_scene_list()
     scenes = list(filter(lambda x: x["scene_name"] in scene_names, scenes))
-    # print("scenes", scenes)
-    # print("scene_names", scene_names)
     scene_ids = list(map(lambda x: x["scene_id"], scenes))
     scenes = list(map(lambda x: get_scene(x["scene_id"]), scenes))
-    # print("scenes", scenes)
     for k, v in images.items():
         images[k] = list(filter(lambda x: x["name"] == v["key"], scenes))[0]["images"]
-    # print("images", json.dumps(images, indent=4))
 
     video["images"] = images
     video["storing"] = []
@@ -328,7 +321,6 @@ def insert_video_job(video, update=False, job_id=None):
     })
     if not schedule:
         return False if not update else {"err_msg": "could not read schedule from JSON"}
-    # print("complete video configuration:", video)
 
     # Neue Json-Datei speichern
     with open_resource(_get_videojob_path(video_name.replace(" ", "-")), "wt") as f:
@@ -382,9 +374,7 @@ def get_videojob(job_id):
     :return: JSON für das Frontend.
     """
     job_list = get_job_list()
-    #print("job_list", job_list)
     videojob = list(filter(lambda x: x["jobId"] == job_id, job_list))[0]
-    #print("videojob", videojob)
 
     with open(_get_videojob_path(videojob["jobName"].replace(" ", "-")), "r") as f:
         video_json = json.load(f)
@@ -395,12 +385,6 @@ def get_videojob(job_id):
     video_json.pop("run_config", None)
     video_json.pop("presets", None)
     video_json.pop("info", None)
-    #for infoprovider_name in video_json["infoprovider_names"]:
-    #    with open_resource(_get_infoprovider_path(infoprovider_name.replace(" ", "-")), "r") as f:
-    #        infoprovider = json.load(f)
-    #
-    #    for img in list(infoprovider["images"].keys()):
-    #        video_json["images"].pop(img, None)
     video_json.pop("diagrams", None)
 
     return video_json
@@ -408,7 +392,7 @@ def get_videojob(job_id):
 
 def show_schedule():
     """
-    For Testing purposes only
+    Läd alle Einträge in der Tabelle 'schedule_historisation'.
     """
     con = db.open_con_f()
     res = con.execute("SELECT schedule_historisation_id, type FROM schedule_historisation")
@@ -417,7 +401,7 @@ def show_schedule():
 
 def show_weekly():
     """
-    For testing purposes only
+    Läd alle Einträge in der Tabelle 'schedule_historisation_weekday'.
     """
     con = db.open_con_f()
     res = con.execute("SELECT * FROM schedule_historisation_weekday")
@@ -429,9 +413,9 @@ def get_infoprovider_file(infoprovider_id):
     Generiert den Pfad zu der Datei eines gegebenen Infoproviders anhand seiner ID.
 
     :param infoprovider_id: ID des Infoproviders.
-    :type infoprovider_id: Integer.
+    :type infoprovider_id: int
 
-    :return: Pfad zur Json Datei des Infoproviders.
+    :return: Pfad zu der JSON-Datei des Infoproviders.
     """
     con = db.open_con_f()
     # Namen des gegebenen Infoproviders laden
@@ -443,12 +427,12 @@ def get_infoprovider_file(infoprovider_id):
 
 def get_datasource_file(datasource_id):
     """
-    Läd den Pfad zu der Json-Date einger gegebenen Datenquelle
+    Läd den Pfad zu der JSON-Datei einer gegebenen Datenquelle.
 
-    :param datasource_id: ID der Datenquelle
-    :type datasource_id: Integer.
+    :param datasource_id: ID der Datenquelle.
+    :type datasource_id: int
 
-    :return: Pfad zu Json-Datei der Datenquelle
+    :return: Pfad zu JSON-Datei der Datenquelle.
     """
     con = db.open_con_f()
     # Namen der gegebenen Datenquelle laden
@@ -461,6 +445,12 @@ def get_datasource_file(datasource_id):
 
 
 def get_infoprovider_name(infoprovider_id):
+    """
+    Läd den Namen eines Infoproviders aus der Datenbank.
+
+    :param infoprovider_id: ID des Infoproviders.
+    :type infoprovider_id: int
+    """
     con = db.open_con_f()
     # Namen des gegebenen Infoproviders laden
     res = con.execute("SELECT infoprovider_name FROM infoprovider WHERE infoprovider_id = ?",
@@ -474,9 +464,9 @@ def get_infoprovider(infoprovider_id):
     Methode für das Laden eines Infoproviders anhand seiner ID.
 
     :param infoprovider_id: ID des Infoproviders.
-    :type infoprovider_id: Integer.
+    :type infoprovider_id: int
 
-    :return: Dictionary welches den Namen, den Ihnalt der Json-Datei sowie den Schedule des Infoproivders enthält.
+    :return: Die JSON-Datei des Infoproviders.
     """
     # Laden der Json-Datei des Infoproviders
     with open_resource(get_infoprovider_file(infoprovider_id), "r") as f:
@@ -502,9 +492,9 @@ def update_infoprovider(infoprovider_id, updated_data):
     Methode mit der die Daten eines Infoproviders verändert werden können.
 
     :param infoprovider_id: ID des Infoproviders.
-    :type infoprovider_id: Integer.
-    :param updated_data: Dictionary welches die Keys 'infoprovider_name', 'api', 'transform', 'storing' oder 'schedule' enthalten kann. Ist ein Key nicht vorhanden so werden die entprechenden Daten auch nicht verändert.
-    :type updated_data: Json-Objekt.
+    :type infoprovider_id: int
+    :param updated_data: Die neuen Daten mit denen der Infoprovider überschrieben werden soll.
+    :type updated_data: dict
 
     :return: Enthält im Fehlerfall Informationen über den aufgetretenen Fehler.
     """
@@ -572,7 +562,7 @@ def update_infoprovider(infoprovider_id, updated_data):
     new_transform = []
     for datasource in datasources:
         new_transform += datasource["calculates"]
-        custom_keys = extract_custom_keys(datasource["calculates"], datasource["formulas"], datasource["replacements"])
+        custom_keys = _extract_custom_keys(datasource["calculates"], datasource["formulas"], datasource["replacements"])
         new_transform = _generate_transform(_extend_formula_keys(datasource["formulas"], datasource["datasource_name"], custom_keys), remove_toplevel_key(new_transform))
         new_transform += datasource["replacements"]
 
@@ -630,7 +620,7 @@ def update_infoprovider(infoprovider_id, updated_data):
         transform_step = datasource['transform']
         transform_step += datasource["calculates"]
         formulas = copy.deepcopy(datasource["formulas"])
-        custom_keys = extract_custom_keys(datasource["calculates"], datasource["formulas"], datasource["replacements"])
+        custom_keys = _extract_custom_keys(datasource["calculates"], datasource["formulas"], datasource["replacements"])
         transform_step += _generate_transform(_extend_formula_keys(formulas, datasource_name, custom_keys),
                                               remove_toplevel_key(transform_step))
         transform_step += remove_toplevel_key(datasource["replacements"])
@@ -688,7 +678,7 @@ def get_max_use_last(diagrams=None):
     Dabei werden alle potentiellen Konfigurationen durchsucht, die auf historisierte Daten zugreifen.
 
     :param diagrams: Liste von Diagrammen.
-    :type diagrams: list.
+    :type diagrams: list
 
     :return: Index, des am weitesten zurückliegenden historisierten Wertes.
     """
@@ -712,7 +702,7 @@ def delete_infoprovider(infoprovider_id):
     Entfernt den Infoprovider mit der gegebenen ID.
 
     :param infoprovider_id: ID des Infoproviders.
-    :type infoprovider_id: Integer.
+    :type infoprovider_id: int
 
     :return: Boolschen Wert welcher angibt, ob das Löschen erfolgreich war.
     """
@@ -748,6 +738,8 @@ def get_infoprovider_logs(infoprovider_id):
     Läd die Logs aller Datenquellen die einem bestimmten Infoprovider angehören.
 
     :param infoprovider_id: ID eines Infoproviders.
+    :type infoprovider_id: int
+
     :return: Liste aller gefundenen Logs.
     """
     con = db.open_con_f()
@@ -775,6 +767,8 @@ def get_videojob_logs(videojob_id):
     Läd die Logs aller Datenquellen die einem bestimmten Infoprovider angehören.
 
     :param videojob_id: ID eines Infoproviders.
+    :type videojob_id: int
+
     :return: Liste aller gefundenen Logs.
     """
     con = db.open_con_f()
@@ -795,10 +789,9 @@ def get_videojob_logs(videojob_id):
 
 def get_all_videojobs():
     """
-    Läd die Logs aller Datenquellen die einem bestimmten Infoprovider angehören.
+    Läd Informationen zu allen Video-Jobs.
 
-    :param videojob_id: ID eines Infoproviders.
-    :return: Liste aller gefundenen Logs.
+    :return: Enthält die Keys 'job_id' und 'job_name' zu allen in der Datenbank vorhandenen Video-Jobs.
     """
     con = db.open_con_f()
     jobs = con.execute("SELECT job_id, job_name FROM job").fetchall()
@@ -813,6 +806,8 @@ def delete_videojob(videojob_id):
     Entfernt den Videojob mit der gegebenen ID.
 
     :param videojob_id: ID des Videojobs.
+    :type videojob_id: int
+
     :return: Boolschen Wert welcher angibt ob das Löschen erfolgreich war.
     """
     con = db.open_con_f()
@@ -831,6 +826,8 @@ def get_videojob_preview(videojob_id):
     Generiert den Pfad zu dem Preview-Bild eines Videojobs.
 
     :param videojob_id: ID des Videojobs.
+    :type videojob_id: int
+
     :return: Dateipfad zu dem Preview-Bild.
     """
     con = db.open_con_f()
@@ -845,10 +842,10 @@ def insert_scene(scene):
     """
     Fügt eine Szene zu der Datenbank hinzu und legt eine entsprechende Json-Datei an.
 
-    :param scene: Objekt welches die Szene beschreibt.
-    :type scene: Json-Objekt mit den Keys 'scene_name', 'used_images', 'used_infoproviders' und 'images'.
-                    'used_images' und 'used_infoproviders enthalten eine Liste von ID's der Bilder und Infoprovider.
-                    'images' ist die Konfiguration des image-step's.
+    :param scene: JSON-Objekt welches die Szene beschreibt. Enthält die Keys 'scene_name', 'used_images',
+        'used_infoproviders', 'images', 'backgroundImage', 'backgroundType', 'backgroundColor',
+        'backgroundColorEnabled', 'itemCounter' und 'scene_items'.
+    :type scene: dict
 
     :return: Enthält bei einem Fehler Informationen über diesen.
     """
@@ -871,7 +868,6 @@ def insert_scene(scene):
         "backgroundColor": scene["backgroundColor"],
         "backgroundColorEnabled": scene["backgroundColorEnabled"],
         "itemCounter": scene["itemCounter"],
-        # "diagrams_original": diagrams_original,
         "scene_items": scene_items
     }
 
@@ -916,7 +912,7 @@ def get_scene_file(scene_id):
     Erzeugt den Pfad zu der Json-Datei einer Szene anhand ihrer ID.
 
     :param scene_id: ID der Szene.
-    :type scene_id: Integer.
+    :type scene_id: int
 
     :return: Pfad zu der Json-Datei.
     """
@@ -928,10 +924,10 @@ def get_scene_file(scene_id):
 
 def get_scene(scene_id):
     """
-    Läd die Json-Datei der Szene deren ID gegeben wird.
+    Läd die JSON-Datei der Szene, deren ID gegeben wird.
 
     :param scene_id: ID der Szene.
-    :type scene_id: Integer.
+    :type scene_id: int
 
     :return: Json-Objekt der Szenen Datei.
     """
@@ -947,7 +943,7 @@ def get_scene_list():
     """
     Läd Informationen über alle vorhandenen Szenen.
 
-    :return: Ein Json-Objekt mit den Keys 'scene_id' und 'scene_name' zu jeder Szene.
+    :return: Ein JSON-Objekt mit den Keys 'scene_id' und 'scene_name' zu jeder Szene.
     """
     con = db.open_con_f()
     res = con.execute("SELECT * FROM scene")
@@ -957,12 +953,12 @@ def get_scene_list():
 
 def update_scene(scene_id, updated_data):
     """
-    Updated die Json-Datei und die Tabelleneinträge zu einer Szene.
+    Updated die JSON-Datei und die Tabelleneinträge zu einer Szene.
 
     :param scene_id: ID der Szene.
-    :type scene_id: Integer.
+    :type scene_id: int
     :param updated_data: Neue Daten der Szene.
-    :type updated_data: Json-Objekt.
+    :type updated_data: dict
 
     :return: Enthölt bei einem Fehler Informationen über diesen.
     """
@@ -1045,7 +1041,7 @@ def delete_scene(scene_id):
     Entfernt eine Szene aus der Datenbank und löscht die zugehörige Json-Datei.
 
     :param scene_id: ID der Szene.
-    :type scene_id: Integer.
+    :type scene_id: int
 
     :return: Zeigt an ob das Löschen erfolgreich war.
     """
@@ -1082,6 +1078,7 @@ def get_scene_preview(scene_id):
     Läd das Preview-Bild einer Szene
 
     :param scene_id: ID der Szene.
+    :type scene_id: int
     """
     con = db.open_con_f()
 
@@ -1108,7 +1105,9 @@ def insert_image(image_name, folder):
     Fügt ein Bild zu der Datenbank hinzu.
 
     :param image_name: Name des Bildes.
+    :type image_name: str
     :param folder: Ordner unter dem das Bild gespeichert werden soll.
+    :type folder: str
     """
     con = db.open_con_f()
 
@@ -1122,6 +1121,7 @@ def get_scene_image_file(image_id):
     Generiert den Dateipfad zu einem Bild anhand seiner ID.
 
     :param image_id: ID des Bildes.
+    :type image_id: int
     """
     con = db.open_con_f()
     res = con.execute("SELECT * FROM image WHERE image_id=?", [image_id]).fetchone()
@@ -1148,6 +1148,7 @@ def delete_scene_image(image_id):
     Entfernt ein Bild aus der Datenbank.
 
     :param image_id: ID des Bildes.
+    :type image_id: int
     """
     con = db.open_con_f()
 
@@ -1169,11 +1170,13 @@ def delete_scene_image(image_id):
 
 def set_videojob_preview(videojob_id, scene_id):
     """
-    Setzt eine gegebene Szene als das Previewbild eines Videos.
+    Setzt eine gegebene Szene als das Preview-Bild eines Videos.
 
-    :param videojob_id: ID eines Videojobs.
+    :param videojob_id: ID eines Video-Jobs.
+    :type videojob_id: int
     :param scene_id: ID einer Szene.
-    :return: Eine Fehlermeldung im Json-Format falls vorhanden.
+    :type scene_id: int
+    :return: Eine Fehlermeldung im JSON-Format falls vorhanden.
     """
     con = db.open_con_f()
 
@@ -1360,6 +1363,7 @@ def generate_request_dicts(api_info, method, api_key_name=None):
     :type method: str
     :param api_key_name: Name des Keys, falls er in der privaten Konfig-Datei abgespeichert werden soll
     :type api_key_name: str
+
     :return: Aufbereitete Header- und Parameter-Dictionaries
     """
     header = {}
@@ -1390,7 +1394,7 @@ def generate_request_dicts(api_info, method, api_key_name=None):
     return header, parameter
 
 
-def extract_custom_keys(calculates, formulas, replacements):
+def _extract_custom_keys(calculates, formulas, replacements):
     keys = []
     keys += _extract_transform_keys(calculates, keys)
     keys += [formula["formelName"] for formula in formulas]
@@ -1462,12 +1466,10 @@ def _extend_formula_keys(obj, datasource_name, formula_keys):
                     transformed_keys.append(part)
                     part_temp = remove_toplevel_key(part)
                     obj = obj.replace(part, "_req|" + datasource_name + "|" + part_temp)
-    #print("obj", obj)
     return obj
 
 
 def _insert_param_values(con, job_id, topic_values, config=True):
-    #print("topic_value in _insert_param_values:", topic_values)
     for pos, t in enumerate(topic_values):
         position_id = con.execute("INSERT INTO job_topic_position(job_id, steps_id, position) VALUES (?, ?, ?)",
                                   [job_id, t["topicId"], pos]).lastrowid
@@ -1508,16 +1510,11 @@ def _generate_storing(historized_data, datasource_name, formula_keys, old_storin
 
 
 def _remove_unused_memory(datasource_names, infoprovider_name):
-    # print("datasource_names:", datasource_names)
     pre = infoprovider_name + "_"
     dirs = [f.path for f in os.scandir(MEMORY_LOCATION) if f.is_dir()]
-    # print("dirs:", dirs)
     dirs = list(filter(lambda x: re.search(pre + ".*", x), dirs))
-    # print("dirs:", dirs)
     datasource_memory_dirs = list(map(lambda x: x.split("\\")[-1].replace(pre, ""), dirs))
-    # print("datasource_memory_dirs:", datasource_memory_dirs)
     for index, dir in enumerate(dirs):
-        # print(dir, datasource_memory_dirs[index] in datasource_names)
         if not datasource_memory_dirs[index] in datasource_names:
             shutil.rmtree(dir, ignore_errors=True)
 
@@ -1541,10 +1538,11 @@ def _remove_datasources(con, infoprovider_id, remove_historised=False, datasourc
 
 def _insert_historisation_schedule(con, schedule):
     """
-    Trägt gegebenen Schedule in die Tabellen schedule_historisation und schedule_historisation_weekday ein.
+    Trägt den gegebenen Schedule in die Tabellen schedule_historisation und schedule_historisation_weekday ein.
 
     :param con: Variable welche auf die Datenbank verweist.
     :param schedule: Schedule als Dictionary.
+    :type schedule: dict
     """
     type, time, date, weekdays, time_interval = _unpack_schedule(schedule)
     schedule_id = con.execute("INSERT INTO schedule_historisation(type, time, date, time_interval) VALUES (?, ?, ?, ?)",
@@ -1561,7 +1559,8 @@ def _remove_historisation_schedule(con, datasource_id):
     Entfernt den Schedule eines Infoproviders.
 
     :param con: Variable welche auf die Datenbank verweist.
-    :param infoprovider_id: ID des Infoproviders.
+    :param datasource_id: ID des Infoproviders.
+    :type datasource_id: int
     """
     res = con.execute("SELECT schedule_historisation_id, type FROM schedule_historisation INNER JOIN datasource USING "
                       "(schedule_historisation_id) WHERE datasource_id=?", [datasource_id]).fetchone()

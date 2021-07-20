@@ -91,13 +91,14 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
     const checkProceed = () => {
         for (let i = 0; i < props.historizedObjects.length; i++) {
             const item = props.historizedObjects[i];
-            if (item.dateLabels) {
+            //currently deactivated because there is no support for date labels
+            /*if (item.dateLabels) {
                 if (item.dateFormat === "") return false;
-            } else {
+            } else {*/
                 for (let j = 0; j < item.labelArray.length; j++) {
                     if (item.labelArray[j] === "") return false;
                 }
-            }
+            //}
         }
         return true;
     }
@@ -177,24 +178,24 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
         props.changeObjectInHistorizedObjects(objCopy, selectedHistorizedOrdinal);
     }
 
-
+    //both functions are not used right now since there is no support for date labels from the backend
     /**
      * Toggles the dateLabel property for the current historized data.
      */
-    const toggleDateLabels = () => {
+    /*const toggleDateLabels = () => {
         let objCopy = {
             ...props.historizedObjects[selectedHistorizedOrdinal],
             dateLabels: !(props.historizedObjects[selectedHistorizedOrdinal].dateLabels)
         }
         //console.log(event.target.value);
         props.changeObjectInHistorizedObjects(objCopy, selectedHistorizedOrdinal);
-    }
+    }*/
 
     /**
      * Handler for changing the date format used for displaying date labels.
      * @param event The change event holding the new format
      */
-    const dateFormatChangeHandler = (event: React.ChangeEvent<{ value: unknown }>) => {
+    /*const dateFormatChangeHandler = (event: React.ChangeEvent<{ value: unknown }>) => {
         if (event.target.value !== undefined) {
             let objCopy = {
                 ...props.historizedObjects[selectedHistorizedOrdinal],
@@ -203,8 +204,7 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
             //console.log(event.target.value);
             props.changeObjectInHistorizedObjects(objCopy, selectedHistorizedOrdinal);
         }
-
-    }
+    }*/
 
 
 
@@ -332,7 +332,8 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
                     </Box>
                 </Grid>
                 <Grid item container xs={6}>
-                    {props.historizedObjects[selectedHistorizedOrdinal].dateLabels ?
+                    {//the possibility of using dates as labeling is not supported in the backend so far
+                        /*props.historizedObjects[selectedHistorizedOrdinal].dateLabels ?
                         (<Box borderColor="primary.main" border={4} borderRadius={5}
                               className={classes.choiceListFrame}>
                             <Grid item xs={12} className={classes.elementLargeMargin}>
@@ -355,7 +356,7 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
                                     </Select>
                                 </FormControl>
                             </Grid>
-                        </Box>) :
+                        </Box>) :*/
                         (<CustomLabels
                             amount={props.amount}
                             historizedObjects={props.historizedObjects}
@@ -416,11 +417,13 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
                         Vorschau generieren
                     </Button>
                 </Grid>
-                <Grid item>
+                { //this possibility of using dates as labels is not supported in the backend so far
+                    /*<Grid item>
                     <Button variant="contained" size="large" color="primary" onClick={() => toggleDateLabels()}>
                         {props.historizedObjects[selectedHistorizedOrdinal].dateLabels ? "eigene Beschriftungen" : "Datum-Beschriftungen"}
                     </Button>
                 </Grid>
+                */}
             </Grid>
             <Grid item container xs={12} justify="space-between" className={classes.elementLargeMargin}>
                 <Grid item>

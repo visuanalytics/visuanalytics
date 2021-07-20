@@ -529,6 +529,11 @@ Das Rendering der Komponente generiert dann anhand des Arrays, welches durch `ge
 ## DiagramCreation
 Die Komponente **DiagramCreation** stellt die umschließende Wrapper-Komponente für die Diagrammerstellung dar, welche der letzte Schritt in der Erstellung eines Infoprovider ist.
 
+### Disclaimer
+Ursprünglich war vorgesehen, dass als Labels für historisierte Daten in Diagrammen das Datum der Historisierung des jeweils angezeigten Wertes genutzt werden könnte und im Frontend auch ein entsprechender Support dafür realisiert. Im Verlauf des Projekts konnte jedoch aus zeitlichen Gründen die Umsetzung dieses Features im Backend nicht mehr realisiert werden, da die Implementierung weniger simpel als ursprünglich vorgesehen war. Aus diesem Grund besteht kein Backend-Support für das Feature, sodass im Frontend-Code alle relevanten Zeilen auskommentiert und dieses Variante der Label-Generierung somit deaktiviert wurde.
+Diese Dokumentation beschreibt den Frontend-Zustand mit Unterstützung dieses Features - wir haben uns dafür entschieden, die Beschreibungen dazu beizubehalten, da so der Code bei einer möglichen zukünftigen Realisierung des Features wieder einkommentiert werden könnte.
+
+
 ### State-Inhalte
 Als Wrapper-Komponente werden im State der Komponente alle Informationen gehalten, die für das Ergebnis der Diagrammerstellung relevant sind:
 * **diagramStep** gibt den Schritt an, in dem sich der Nutzer gerade befindet.
@@ -773,6 +778,7 @@ Bei der Auswahl der Beschriftungen wird standardmäßig in der Methode **renderS
 * Es gibt jedoch auch einen Button, über den man zur Beschriftung mit einem Datum wechseln kann. Dieser Button wechselt den Wert von **dateLabels** beim Objekt des aktuellen historisierten Datums.
     * Im Falle der Beschriftung mit einem Datum wird hier der in der Datenbank hinterlegte Zeitpunkt der Historisierung als formatiertes Datum geschrieben. Per **Select**-Komponente kann der Nutzer hier zwischen verschiedenen Anzeigeformaten wechseln. Gespeichert wird die Auswahl in **dateFormat**.
 * Da **dateLabels** für jedes Objekt in **historizedObjects** individuell gespeichert wird lässt sich für jedes historisierte Datum im Diagramm einzeln zwischen eigener Beschriftung und einem Datum wählen.
+ * Anmerkung: Wie im Disclaimer am Anfang dieses Abschnitts erwähnt konnte der Backend-Support für dieses Feature nicht mehr realisiert werden, sodass der Code **auskommentiert** wurde.
 
 <div style="page-break-after: always;"></div>
 

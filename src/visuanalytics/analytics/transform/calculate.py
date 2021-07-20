@@ -70,7 +70,7 @@ def calculate_max(values: dict, data: StepData):
 
 @register_calculate
 def calculate_sum(values: dict, data: StepData):
-    """Findet den Maximalwert von Werten, die in einem Array stehen.
+    """Findet die Summe von Werten, die in einem Array stehen.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API

@@ -197,8 +197,8 @@ export type HistorizedDiagramProperties = {
     labelArray: Array<string>;
     color: string;
     intervalSizes: Array<number>;
-    dateLabels: boolean;
-    dateFormat: string;
+    //dateLabels: boolean; //both are deactivated since there is no support for date labels by the backend
+    //dateFormat: string;
 }
 
 /**
@@ -207,7 +207,7 @@ export type HistorizedDiagramProperties = {
 export type Plots = {
     customLabels?: boolean;
     primitive?: boolean;
-    dateLabels?: boolean;
+    //dateLabels?: boolean; //deactived since the backend does not support date labels so far
     plot: {
         type: string;
         x: Array<number>;
@@ -215,7 +215,7 @@ export type Plots = {
         color: string;
         numericAttribute?: string;
         stringAttribute?: string;
-        dateFormat?: string;
+        //dateFormat?: string;
         x_ticks: {
             ticks: Array<string>;
         };

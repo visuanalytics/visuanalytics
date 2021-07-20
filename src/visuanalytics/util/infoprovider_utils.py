@@ -14,8 +14,9 @@ def get_transformations(tree, k, key_name, counter):
     :type k: str
     :param key_name: falls es sich nicht um ein Ziwschenergebnis handelt, wird das Ergebnis unter diesem Namen abgespeichert, damit es später wiederverwendet werden kann
     :type key_name: str
-    :param counter: zählt hoch und ist Teil der Namen aller Zwischenvariablen
-    :type counter: number
+    :param counter: Zählervariable für die Keys der Zwischenergebnisse
+    :type counter: int
+
     :return: Liste der Transformtypen
     """
     operations = {
@@ -38,7 +39,7 @@ def get_transformations(tree, k, key_name, counter):
 
     def build_calc_list(tree, k, counter, key_name=None):
         """
-        Erstellt rekursiv eine Rechnung für den Transform-Schritt, mit der die Formeln
+        Erstellt rekursiv eine Liste von primitiven Rechenoperationen für den Transform-Schritt, mit der die Formeln
         eines Infoproviders umgesetzt werden können.
 
         :param tree: Dictionary mit der Formel repräsentiert als ein abstrakter Syntaxbaum
@@ -49,7 +50,8 @@ def get_transformations(tree, k, key_name, counter):
         :type counter: int
         :param key_name: falls es sich nicht um ein Ziwschenergebnis handelt, wird das Ergebnis unter diesem Namen abgespeichert, damit es später wiederverwendet werden kann
         :type key_name: str
-        :return: Key, an dem das Zwischenergebnis von einem Operanden zu finden ist
+
+        :return: Key, an dem das Zwischenergebnis einer Operation zu finden ist
         """
         current_calc = tree[k]
         contains_calc = False
@@ -96,6 +98,7 @@ def parse_to_own_format(rep, decimal, loop_var=None):
     :type decimal: int
     :param loop_var: Name der Loop-Variable
     :type loop_var: str
+
     :return: je nach '_type' wird ein Variablenname, eine Zahl oder ein Dictionary in verständlichem Format zurückgegeben
     """
     if rep["_type"].lower() == "binop":
@@ -118,6 +121,7 @@ def parse_string(calculation_string):
 
     :param calculation_string: Stringrepräsentation einer Formel
     :type calculation_string: str
+
     :return: Formel als abstrakter Syntaxbaum (Dictionary) repräsentiert
     """
     try:
@@ -143,6 +147,7 @@ def generate_step_transform(formula, key_name, counter, copy=None, array_key=Non
     :type loop_key: str
     :param decimal: Anzahl der Nachkommastellen für das Ergebnis und die Zwischenergebnisse
     :type decimal: int
+
     :return: Liste der Transformtypen
     """
     if copy and not array_key:

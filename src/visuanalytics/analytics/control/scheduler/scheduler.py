@@ -1,5 +1,6 @@
 """
-Scheduler Oberklasse welche sich darum kümmert das ein Video zur richtigen zeit gerendert wird.
+Scheduler Oberklasse welche sich darum kümmert das ein Video zur richtigen Zeit gerendert und
+die Historisierung einer Datenquelle zur richtigen Zeit ausgeführt wird.
 """
 
 import functools
@@ -32,12 +33,13 @@ def ignore_errors(func):
 
 
 class Scheduler(object):
-    """Klasse zum Ausführen der Jobs an vorgegebenen Zeitpunkten.
+    """Klasse zum Ausführen der Jobs und Datenquellen an vorgegebenen Zeitpunkten.
 
-    Wenn :func:`start` aufgerufen wird, testet die Funktion jede Minute, ob ein Job ausgeführt werden muss.
+    Wenn :func:`start` aufgerufen wird, testet die Funktion jede Minute, ob ein Job oder eine Datenquelle ausgeführt werden muss.
      Ist dies der Fall, wird die dazugehörige Konfigurationsdatei aus der Datenbank geladen und
-     der Job wird in einem anderen Thread ausgeführt. Um zu bestimmen, ob ein Job ausgeführt werden muss,
-     werden die Daten aus der Datenbank mithilfe der Funktion :func:job.get_all_schedules` aus der Datenbak geholt
+     der Job bzw. die Datenquelle wird in einem anderen Thread ausgeführt. Um zu bestimmen, ob ein Job
+     oder eine Datenquelle ausgeführt werden muss, werden die Daten aus der Datenbank mithilfe der Funktionen
+     :func:`job.get_job_schedules` und :func:`job.get_datasource_schedules` aus der Datenbak geholt
      und getestet, ob diese jetzt ausgeführt werden müssen.
 
     :param steps: Dictionary zum Übersetzen der Step-ID zu einer Step-Klasse.
@@ -132,7 +134,7 @@ class Scheduler(object):
     def start(self):
         """Startet den Scheduler (Blocking).
 
-        Testet jede Minute, ob Jobs ausgeführt werden müssen. Ist dies der Fall, werden diese in
+        Testet jede Minute, ob Jobs oder Datenquellen ausgeführt werden müssen. Ist dies der Fall, werden diese in
         einem anderen Thread ausgeführt.
         """
         logger.info("Scheduler started")
@@ -148,7 +150,7 @@ class Scheduler(object):
     def start_unblocking(self):
         """Startet den Scheduler in einem neuen Thread.
 
-        Testet jede Minute, ob Jobs ausgeführt werden müssen. Ist dies der Fall, werden diese in
+        Testet jede Minute, ob Jobs oder Datenquellen ausgeführt werden müssen. Ist dies der Fall, werden diese in
         einem anderen Thread ausgeführt.
         """
         threading.Thread(target=self.start, daemon=True).start()
