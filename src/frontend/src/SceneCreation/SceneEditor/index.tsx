@@ -1972,7 +1972,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * @param event ChangeEvent of the HTMLInputElement
      */
     const handleFileUploadChange = (event : React.ChangeEvent<HTMLInputElement>) => {
-        if (event.target.files !== null){
+        if (event.target.files !== null && event.target.files !== undefined){
             let formData = new FormData();
             let name = event.target.files[0].name.split('.');
             formData.append('image', event.target.files[0]);
