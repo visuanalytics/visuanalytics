@@ -4,7 +4,7 @@ Modul für Berechnungen für den `transform`-Typ `calculate`.
 import collections
 import numbers
 import operator
-
+from functools import reduce
 import numpy as np
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
@@ -38,7 +38,7 @@ def calculate_mean(values: dict, data: StepData):
         value = data.get_data(key, values)
         inner_key = values.get("innerKey", None)[0]
         if inner_key:
-            value = [x[inner_key] for x in value]
+            value = [reduce(operator.getitem, inner_key.split('|'), x) for x in value]
         new_key = get_new_keys(values, idx)
         mean_value = float(np.mean(value))
         if values.get("decimal", None):
@@ -59,7 +59,7 @@ def calculate_max(values: dict, data: StepData):
         value = data.get_data(key, values)
         inner_key = values.get("innerKey", None)[0]
         if inner_key:
-            value = [x[inner_key] for x in value]
+            value = [reduce(operator.getitem, inner_key.split('|'), x) for x in value]
         new_key = get_new_keys(values, idx)
         new_value = max(value)
         data.insert_data(new_key, new_value, values)
@@ -79,7 +79,7 @@ def calculate_sum(values: dict, data: StepData):
         value = data.get_data(key, values)
         inner_key = values.get("innerKey", None)[0]
         if inner_key:
-            value = [x[inner_key] for x in value]
+            value = [reduce(operator.getitem, inner_key.split('|'), x) for x in value]
         new_key = get_new_keys(values, idx)
         new_value = sum(value)
         data.insert_data(new_key, new_value, values)
@@ -99,7 +99,7 @@ def calculate_min(values: dict, data: StepData):
         value = data.get_data(key, values)
         inner_key = values.get("innerKey", None)[0]
         if inner_key:
-            value = [x[inner_key] for x in value]
+            value = [reduce(operator.getitem, inner_key.split('|'), x) for x in value]
         new_key = get_new_keys(values, idx)
         new_value = min(value)
         data.insert_data(new_key, new_value, values)
