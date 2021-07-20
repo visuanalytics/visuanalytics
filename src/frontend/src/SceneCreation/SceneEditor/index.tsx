@@ -1118,14 +1118,13 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             case "":
                 return;
             case "Circle": {
-                let nextColor = Konva.Util.getRandomColor();
                 const arCopy = items.slice();
                 const item: CustomCircle = {
                     x: parseInt(localX.toFixed(0)),
                     y: parseInt(localY.toFixed(0)),
                     radius: 50,
                     id: 'circle-' + itemCounter.toString(),
-                    color: nextColor,
+                    color: "#000000",
                     width: 100,
                     height: 100,
                     rotation: 0,
@@ -1135,12 +1134,11 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 }
                 arCopy.push(item);
                 setItems(arCopy);
-                setCurrentItemColor(nextColor);
+                setCurrentItemColor("#000000");
                 incrementCounterResetType();
                 return;
             }
             case "Rectangle": {
-                let nextColor = Konva.Util.getRandomColor();
                 const arCopy = items.slice();
                 arCopy.push({
                     x: parseInt(localX.toFixed(0)),
@@ -1148,14 +1146,14 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                     width: 100,
                     height: 100,
                     id: 'rect-' + itemCounter.toString(),
-                    color: nextColor,
+                    color: "#000000",
                     rotation: 0,
                     scaleX: 1,
                     scaleY: 1,
 
                 } as CustomRectangle);
                 setItems(arCopy);
-                setCurrentItemColor(nextColor);
+                setCurrentItemColor("#000000");
                 incrementCounterResetType();
                 return;
             }
@@ -1175,18 +1173,18 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
 
                 } as CustomLine);
                 setItems(arCopy);
+                setCurrentItemColor("#000000")
                 incrementCounterResetType();
                 return;
             }
 
             case "Star": {
-                let nextColor = Konva.Util.getRandomColor();
                 const arCopy = items.slice();
                 arCopy.push({
                     x: parseInt(localX.toFixed(0)),
                     y: parseInt(localY.toFixed(0)),
                     id: 'star-' + itemCounter.toString(),
-                    color: nextColor,
+                    color: "#000000",
                     rotation: 0,
                     width: 200,
                     height: 100,
@@ -1195,7 +1193,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
 
                 } as CustomStar);
                 setItems(arCopy);
-                setCurrentItemColor(nextColor);
+                setCurrentItemColor("#000000");
                 incrementCounterResetType();
                 return;
             }
@@ -1211,7 +1209,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                         rotation: 0,
                         fontFamily: currentFontFamily,
                         fontSize: currentFontSize,
-                        color: currentFontColor,
+                        color: "#000000",
                         height: 20,
                         scaleX: 1,
                         scaleY: 1,

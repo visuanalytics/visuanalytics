@@ -38,38 +38,89 @@ Sie werden über ein Array aus eigenen Datentypen über die forEach-Methode hinz
 * Framework
 * Funktionsweise
 ### Datentypen
+Alle Datentypen für Elemente enthalten die folgenden Eigenschaften:
+```
+x: number;
+y: number;
+id: string;
+width: number;
+height: number;
+rotation: number;
+color: string;
+scaleX: number;
+scaleY: number;
+```
+Über die Variablen **x** und **y** werden die Koordinaten des Elements gespeichert.
+Die **id** enthält immer die eindeutige ID des Elements.
+**width** gibt die Breite des Elements an.
+**height** gibt die Höhe des Elements an.
+**rotation** gibt an, um wieviel Grad ein Element gedreht ist.
+**color** wird für die Schriftfarbe verwendet.
+**scaleX** und **scaleY** werden für die Transformation verwendet. 
+Der Wert ist standardmäßig als eins festgelegt.
+Wenn das Element verkleinert wird, so wird der Wert kleiner als eins, ansonsten größer als eins.
+
 #### Texte
 ```
-export type CustomText = {
-    x: number;
-    y: number;
-    id: string;
-    textContent: string;
-    width: number;
-    height: number;
-    rotation: number;
-    fontFamily: string;
-    fontSize: number;
-    color: string;
-    scaleX: number;
-    scaleY: number;
-};
+textContent: string;
+fontFamily: string;
+fontSize: number;
 ```
 
 Für alle Elemente, welche man auf dem Layer hinzufügen kann, haben wir einen eigenen Datentyp hinzugefügt. 
 Hier oben sieht man den Datentyp für Texte jeglicher Art (API-Texte und eigene Texte).
-Über die Variablen "x" und "y" werden die Koordinaten von Elementen gespeichert. 
-Die "id" enthält immer die eindeutige ID eines Elements. In "textContent" wird der tatsächliche Text gespeichert.
-Dieser wird beim Bearbeiten des Textes überschrieben.
-"width" gibt die Breite des Textelementes an.
-Darüber lassen sich Linebreaks steuern.
-"height" gibt die Höhe des Textfeldes an. Diese wird allerdings nicht verändert
-"rotation" gibt an, um wieviel Grad ein Text gedreht ist. 
-"fontFamily" und "fontSize" geben jeweils die Schriftart und Schriftgröße des Elements an.
-"color" wird für die Schriftfarbe verwendet.
-"scaleX" und "scaleY" sind für die Transformation da.
+In **textContent** wird der eigentliche Text gespeichert, welcher auf dem Canvas dargestellt wird.
+**fontFamily** und **fontSize** geben jeweils die Schriftart und Schriftgröße des Elements an.
+
+#### Bilder
+```
+image: HTMLImageElement;
+imageId: number;
+imagePath: string;
+diagram: boolean;
+index: number;
+```
+
+Bei Bildern gibt es zu den Variablen, welche in jedem Typ vorhanden sind, die obigen Variablen.
+Dabei stellt **image** ein HTMLImageElement dar, welches ein neues window.Image()-Element mit der src von dem angefragten bzw. hochgeladenen Bild enthält.
+Konva erstellt über dieses Element das tatsächliche Bild auf dem Canvas.
+Die **imageId** ist die ID des Bildes im Backend und wird vom Backend gefetched, sie wird für die finale Erstellung des JSON-Objekted benötigt.
+**imagePath** enthält den Pfad des Bildes im Backend, dieser wird ebenfalls gefetched.
+**diagram** ist ein boolean, welches Beschreibt, ob ein Bild ein Diagramm ist oder nicht, da bei der Verarbeitung am Ende klar sein muss, wie das Bild im Backend gehandhabt werden muss.
+**index** gibt den Index des Bildes im Frontend an.
 
 #### Shapes
+
+Die folgenden Formen können auf dem Canvas hinzugefügt werden:
+* Kreise
+* Rechtecke
+* Sterne
+* Dreiecke
+
+Am Beispiel des Sterns kann man gut sehen, was passiert, wenn man ein Sternelement ausgewählt hat und dies auf dem Canvas hinzufügt.
+
+```
+case "Star": {
+    const arCopy = items.slice();
+    arCopy.push({
+        x: parseInt(localX.toFixed(0)),
+        y: parseInt(localY.toFixed(0)),
+        id: 'star-' + itemCounter.toString(),
+        color: "#000000",
+        rotation: 0,
+        width: 200,
+        height: 100,
+        scaleX: 1,
+        scaleY: 1,
+    } as CustomStar);
+    setItems(arCopy);
+    setCurrentItemColor(nextColor);
+    incrementCounterResetType();
+    return;
+}
+```
+
+Zunächst wird eine Kopie des Arrays mit allen Elementen erstellt. Hierbei geht es darum, Updateprobleme auf dem Canvas zu vermeiden.
 
 #### Backend-Typen
 

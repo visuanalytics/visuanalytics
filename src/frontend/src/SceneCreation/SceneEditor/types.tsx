@@ -106,24 +106,24 @@ export type BaseImg = {
 export type DataImage = {
     description: string,
     type: string,
-    pos_x: number, //X-Coordinate
-    pos_y: number, //Y-Coordinate
-    size_x: number, //Breite optional
-    size_y: number, //Höhe optional
+    pos_x: number,
+    pos_y: number,
+    size_x: number,
+    size_y: number,
     color: string,
-    path: string //Diagrammname "image_name" : "" eventuell
+    path: string
 }
 
 export type DataText = {
-    description: string, //optional
+    description: string,
     type: string,
     anchor_point: string,
-    pos_x: number, //item.x
-    pos_y: number, //item.y
-    color: string, //item.color
-    font_size: number, //item.fontSize
-    font: string // "fonts/{item.font}.ttf"
-    pattern: string // "Datum: {_req|api_key}"
+    pos_x: number,
+    pos_y: number,
+    color: string,
+    font_size: number,
+    font: string,
+    pattern: string,
     width: number
 }
 
