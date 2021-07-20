@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useRef} from "react";
 import {useStyles} from "./style";
-import {Diagram, ListItemRepresentation, diagramType, uniqueId, DataSource} from "../types"
+import {Diagram, ListItemRepresentation, diagramType, uniqueId, DataSource, SelectedStringAttribute} from "../types"
 import {StepFrame} from "../StepFrame";
 import {DiagramOverview} from "./DiagramOverview";
 import {DiagramTypeSelect} from "./DiagramTypeSelect";
@@ -82,6 +82,12 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
     const [diagramType, setDiagramType] = React.useState<diagramType>("verticalBarChart")
     //the amount of items selected to be taken from the array
     const [amount, setAmount] = React.useState<number>(1);
+    //true if the user has selected to use customLabels (only relevant for array diagrams)
+    const [customLabels, setCustomLabels] = React.useState(true);
+    //holds the custom labels set by the user
+    const [labelArray, setLabelArray] = React.useState<Array<string>>([]);
+    //holds the string attribute
+    const [selectedStringAttribute, setSelectedStringAttribute] = React.useState<SelectedStringAttribute>({key: "", array: ""})
     //the diagram currently selected for sending to the backend
     const [selectedDiagram, setSelectedDiagram] = React.useState<Diagram>({} as Diagram)
     //holds the url of the current image returned by the backend
@@ -106,6 +112,12 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
         setDiagramType(sessionStorage.getItem("diagramType-" + uniqueId) as diagramType || "verticalBarChart");
         //amount
         setAmount(Number(sessionStorage.getItem("amount-" + uniqueId) || 1));
+        //customLabels
+        setCustomLabels(sessionStorage.getItem("customLabels-" + uniqueId) === "true");
+        //labelArray
+        setLabelArray(sessionStorage.getItem("labelArray-" + uniqueId) === null ? new Array<string>() : JSON.parse(sessionStorage.getItem("labelArray-" + uniqueId)!));
+        //selectedStringAttribute
+        setSelectedStringAttribute(sessionStorage.getItem("selectedStringAttribute-" + uniqueId) === null ? {key: "", array: ""} : JSON.parse(sessionStorage.getItem("selectedStringAttribute-" + uniqueId)!));
     }, [])
     //store step in sessionStorage
     React.useEffect(() => {
@@ -135,6 +147,19 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
     React.useEffect(() => {
         sessionStorage.setItem("amount-" + uniqueId, amount.toString());
     }, [amount])
+    //store customLabels in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("customLabels-" + uniqueId, customLabels ? "true" : "false");
+    }, [customLabels])
+    //store labelArray in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("labelArray-" + uniqueId, JSON.stringify(labelArray));
+    }, [labelArray])
+    //store selectedStringAttribute in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("selectedStringAttribute-" + uniqueId, JSON.stringify(selectedStringAttribute));
+    }, [selectedStringAttribute])
+
 
     /**
      * Removes all items of this component from the sessionStorage.
@@ -152,6 +177,9 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
         sessionStorage.removeItem("selectedType-" + uniqueId);
         sessionStorage.removeItem("selectedHistorizedOrdinal-" + uniqueId);
         sessionStorage.removeItem("selectedArrayOrdinal-" + uniqueId);
+        sessionStorage.removeItem("customLabels-" + uniqueId);
+        sessionStorage.removeItem("labelArray-" + uniqueId);
+        sessionStorage.removeItem("selectedStringAttribute-" + uniqueId);
     }
 
 
@@ -185,7 +213,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
      * The standard hook "useCallFetch" is not used here since it seemingly caused method calls on each render.
      */
     const fetchPreviewImage = React.useCallback(() => {
-        //("fetcher called");
+        console.log("preview creation called");
         let url = "/visuanalytics/testdiagram"
         //if this variable is set, add it to the url
         if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
@@ -210,7 +238,10 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
                         sourceType: diagramSource,
                         historizedObjects: historizedObjects,
                         arrayObjects: arrayObjects,
-                        amount: amount
+                        amount: amount,
+                        customLabels: customLabels,
+                        labelArray: labelArray,
+                        stringAttribute: selectedStringAttribute
                     })
                 }
             }),
@@ -228,7 +259,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
             //only called when the component is still mounted
             if (isMounted.current) handleErrorDiagramPreview(err)
         }).finally(() => clearTimeout(timer));
-    }, [infoProviderName, diagramName, diagramType, diagramSource, historizedObjects, arrayObjects, createPlots, handleErrorDiagramPreview, amount])
+    }, [infoProviderName, diagramName, diagramType, diagramSource, historizedObjects, arrayObjects, createPlots, handleErrorDiagramPreview, amount, customLabels, labelArray, selectedStringAttribute])
 
     //defines a cleanup method that sets isMounted to false when unmounting
     //will signal the fetchMethod to not work with the results anymore
@@ -249,7 +280,10 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
             sourceType: diagramSource,
             historizedObjects: historizedObjects,
             arrayObjects: arrayObjects,
-            amount: amount
+            amount: amount,
+            customLabels: customLabels,
+            labelArray: labelArray,
+            stringAttribute: selectedStringAttribute
         }
         const arCopy = props.diagrams.slice();
         arCopy.push(diagramObject);
@@ -431,40 +465,31 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
         setCompatibleHistorized(getCompatibleHistorized(dataSources))
     }, [dataSources, getCompatibleHistorized])
 
-
+    /**
+     * Method that is used to change the amount value selected for the current diagram.
+     * Also changes the size of the labelArray as it is needed by the new value. Also
+     * changes the size of the intervalSizes array of all historizedObjects when in historized editing.
+     * @param newAmount
+     */
     const amountChangeHandler = (newAmount: number) => {
         setAmount(newAmount);
-        if (diagramStep === 2) {
-            //changes come from array creation
-            const newArrayObjects: Array<ArrayDiagramProperties> = new Array(arrayObjects.length);
-            arrayObjects.forEach((item, index) => {
-                const newLabels = new Array(newAmount).fill("");
-                for (let i = 0; i < newLabels.length && i < item.labelArray.length; i++) {
-                    newLabels[i] = item.labelArray[i];
-                }
-                newArrayObjects[index] = {
-                    ...item,
-                    labelArray: newLabels
-                };
-            })
-            setArrayObjects(newArrayObjects);
-        } else if (diagramStep === 3) {
-            //changes come from historized creation
+        //create an array of the new required size
+        const newLabels = new Array(newAmount).fill("");
+        //copy as many values from the old label Array as necessary
+        for (let i = 0; i < newLabels.length && i < labelArray.length; i++) {
+            newLabels[i] = labelArray[i];
+        }
+        //if the current step is creation of historized diagrams, changing the sizes of the intervalSizes arrays is also necessary
+        if (diagramStep === 3) {
             const newHistorizedObjects: Array<HistorizedDiagramProperties> = new Array(historizedObjects.length);
             historizedObjects.forEach((item, index) => {
-                //change label Array
-                const newLabels = new Array(newAmount).fill("");
-                for (let i = 0; i < newLabels.length && i < item.labelArray.length; i++) {
-                    newLabels[i] = item.labelArray[i];
-                }
                 //change interval Array
                 const newIntervalSizes = new Array(newAmount).fill(0);
-                for (let i = 0; i < newLabels.length && i < item.labelArray.length; i++) {
+                for (let i = 0; i < newIntervalSizes.length && i < item.intervalSizes.length; i++) {
                     newIntervalSizes[i] = item.intervalSizes[i];
                 }
                 newHistorizedObjects[index] = {
                     ...item,
-                    labelArray: newLabels,
                     intervalSizes: newIntervalSizes
                 };
             })
@@ -562,6 +587,12 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
                         fetchPreviewImage={fetchPreviewImage}
                         imageURL={imageURL}
                         setImageURL={(url: string) => setImageURL(url)}
+                        customLabels={customLabels}
+                        setCustomLabels={(customLabels: boolean) => setCustomLabels(customLabels)}
+                        labelArray={labelArray}
+                        setLabelArray={(labels: Array<string>) => setLabelArray(labels)}
+                        selectedStringAttribute={selectedStringAttribute}
+                        setSelectedStringAttribute={(stringAttribute: SelectedStringAttribute) => setSelectedStringAttribute(stringAttribute)}
                     />
                 );
             case 3:
@@ -582,6 +613,8 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
                         fetchPreviewImage={fetchPreviewImage}
                         imageURL={imageURL}
                         setImageURL={(url: string) => setImageURL(url)}
+                        labelArray={labelArray}
+                        setLabelArray={(labels: Array<string>) => setLabelArray(labels)}
                     />
                 );
             case 4:

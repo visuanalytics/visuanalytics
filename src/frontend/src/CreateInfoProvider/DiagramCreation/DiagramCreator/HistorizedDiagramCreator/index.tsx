@@ -34,6 +34,8 @@ interface HistorizedDiagramCreatorProps {
     fetchPreviewImage: () => void;
     imageURL: string;
     setImageURL: (url: string) => void;
+    labelArray: Array<string>;
+    setLabelArray: (labels: Array<string>) => void;
 }
 
 /**
@@ -80,27 +82,32 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
         sessionStorage.removeItem("historizedObjects-" + uniqueId);
         sessionStorage.removeItem("diagramType-" + uniqueId);
         sessionStorage.removeItem("diagramName-" + uniqueId);
+        sessionStorage.removeItem("labelArray-" + uniqueId);
         props.backHandler();
     }
 
 
     /**
      * Checks if proceeding is possible and returns true if this is the case.
-     * Checks if properties are selected for each object and/or a string is typed for custom labels when it is selected
+     * Checks if all customLabels are set.
      */
     const checkProceed = () => {
-        for (let i = 0; i < props.historizedObjects.length; i++) {
+        for(let index = 0; index < props.labelArray.length; index++) {
+            if(props.labelArray[index] === "") return false;
+        }
+        return true;
+        /*for (let i = 0; i < props.historizedObjects.length; i++) {
             const item = props.historizedObjects[i];
             //currently deactivated because there is no support for date labels
-            /*if (item.dateLabels) {
+            if (item.dateLabels) {
                 if (item.dateFormat === "") return false;
-            } else {*/
+            } else {
                 for (let j = 0; j < item.labelArray.length; j++) {
                     if (item.labelArray[j] === "") return false;
                 }
             //}
         }
-        return true;
+        return true;*/
     }
 
 
@@ -359,9 +366,8 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
                         </Box>) :*/
                         (<CustomLabels
                             amount={props.amount}
-                            historizedObjects={props.historizedObjects}
-                            selectedHistorizedOrdinal={selectedHistorizedOrdinal}
-                            changeObjectInHistorizedObjects={props.changeObjectInHistorizedObjects}
+                            labelArray={props.labelArray}
+                            setLabelArray={props.setLabelArray}
                         />)
                     }
                 </Grid>
