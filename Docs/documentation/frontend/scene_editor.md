@@ -1,4 +1,5 @@
 # Szeneneditor
+![SceneEditor.png](images/infoprovider/SceneEditor.png)
 # Infoprovider-Auswahl
 * Janek
 # Szenen-Erstellung
@@ -469,6 +470,7 @@ localItems[index] = {
     rotation: absRot,
 };
 ````
+
 Im ausgewählten Element wird scaleX und scaleY neu gesetzt.
 Dabei wird zunächst eine Konva-Methode aufgerufen, mit der man die absolute Transformation von Elementen abfragen kann. Anschließend wird, falls der Benutzer ein Element zu groß gezogen hat, die Größe korrigiert.
 Danach werden scaleX und scaleY auf den neuen Wert gesetzt, so wie die Rotation eines Elements.
@@ -476,9 +478,8 @@ Danach werden scaleX und scaleY auf den neuen Wert gesetzt, so wie die Rotation 
 ## "Bedienfeld"
 * Remove, Duplicate, ...
 ## Datenauswahl
-
-### ImageLists 
 => Janek
+### ImageLists
 #### Abfrage von Bildern
 #### Wiederherstellung
 #### Posten von Bildern
