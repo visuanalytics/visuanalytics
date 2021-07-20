@@ -243,10 +243,6 @@ export type StringReplacementData = {
     with: string;
 }
 
-export type BackenFormula = {
-
-}
-
 //TODO: document this!
 /**
  * Type that contains the information about a processable array.
