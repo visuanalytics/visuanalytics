@@ -1,6 +1,6 @@
 """
 Modul welches den Json Scheduler beeinhaltet.
-Sorgt dafür das ein Video zur richtigen Zeit gerendert wird.
+Sorgt dafür das ein Video zur richtigen Zeit gerendert und die Historisierung einer Datenquelle zur richtigen Zeit gestartet wird.
 """
 
 import json
