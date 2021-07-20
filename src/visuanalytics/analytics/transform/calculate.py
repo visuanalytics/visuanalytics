@@ -9,6 +9,7 @@ import numpy as np
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.transform.util.key_utils import get_new_keys
+from visuanalytics.server.db import queries
 
 CALCULATE_ACTIONS = {}
 """Ein Dictionary bestehend aus allen Calculate-Actions-Methoden."""
@@ -35,7 +36,7 @@ def calculate_mean(values: dict, data: StepData):
     """
     for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(key, values)
-        inner_key = values.get("innerKey", None)
+        inner_key = values.get("innerKey", None)[0]
         if inner_key:
             value = [x[inner_key] for x in value]
         new_key = get_new_keys(values, idx)
@@ -56,7 +57,7 @@ def calculate_max(values: dict, data: StepData):
     """
     for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(key, values)
-        inner_key = values.get("innerKey", None)
+        inner_key = values.get("innerKey", None)[0]
         if inner_key:
             value = [x[inner_key] for x in value]
         new_key = get_new_keys(values, idx)
@@ -76,7 +77,7 @@ def calculate_sum(values: dict, data: StepData):
     """
     for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(key, values)
-        inner_key = values.get("innerKey", None)
+        inner_key = values.get("innerKey", None)[0]
         if inner_key:
             value = [x[inner_key] for x in value]
         new_key = get_new_keys(values, idx)
@@ -96,7 +97,7 @@ def calculate_min(values: dict, data: StepData):
     """
     for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(key, values)
-        inner_key = values.get("innerKey", None)
+        inner_key = values.get("innerKey", None)[0]
         if inner_key:
             value = [x[inner_key] for x in value]
         new_key = get_new_keys(values, idx)
