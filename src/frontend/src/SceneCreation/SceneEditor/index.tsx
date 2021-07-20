@@ -110,8 +110,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const [currentFontColor, setCurrentFontColor] = React.useState("#000000");
     const [currentXCoordinate, setCurrentXCoordinate] = React.useState(0);
     const [currentYCoordinate, setCurrentYCoordinate] = React.useState(0);
-
-    // state for the delete button text
     const [deleteText, setDeleteText] = React.useState("Letztes Elem. entf.");
 
     // state for items, if an item is selected and a counter for the amount of items
