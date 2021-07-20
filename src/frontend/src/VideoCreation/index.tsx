@@ -19,7 +19,6 @@ import {
 import {ScheduleSelection} from "./ScheduleSelection";
 import {useCallFetch} from "../Hooks/useCallFetch";
 import {FullVideo} from "../Dashboard/types";
-import {DiagramInfo} from "../SceneCreation/types";
 
 /**
  TODO:
@@ -39,6 +38,7 @@ import {DiagramInfo} from "../SceneCreation/types";
 
 interface VideoCreationProps {
     video?: FullVideo;
+    videoId?: number;
 }
 
 /**
@@ -390,7 +390,7 @@ export const VideoCreation: React.FC<VideoCreationProps> = (props) => {
      */
         //TODO: add video_id
     const sendVideoToBackend = () => {
-        let url = (props.video !== undefined ? "visuanalytics/videojob" : "visuanalytics/videojob");
+        let url = ((props.video && props.videoId) ? "visuanalytics/videojob/" + props.videoId : "visuanalytics/videojob");
         //if this variable is set, add it to the url
         if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
         //setup a timer to stop the request after 5 seconds
@@ -398,7 +398,7 @@ export const VideoCreation: React.FC<VideoCreationProps> = (props) => {
         const timer = setTimeout(() => abort.abort(), 5000);
         //starts fetching the contents from the backend
         fetch(url, {
-            method: "POST",
+            method: props.video ? "PUT" : "POST",
             headers: {
                 "Content-Type": "application/json\n"
             },

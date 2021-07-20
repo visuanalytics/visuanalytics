@@ -73,7 +73,7 @@ export const VideoOverview: React.FC<VideoOverviewProps> = (props) => {
 
         const data = jsonData as FullVideo;
         console.log(data);
-        components?.setCurrent("videoCreator", {video: data})
+        components?.setCurrent("videoCreator", {video: data, videoId: currentVideo.videojob_id})
     }
 
     const handleErrorEdit = (err: Error) => {
