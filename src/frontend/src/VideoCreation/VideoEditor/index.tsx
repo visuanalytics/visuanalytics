@@ -76,6 +76,18 @@ export const VideoEditor: React.FC<VideoEditorProps> = (props) => {
         )
     }
 
+    /**
+     * This method checks if any of the scenes in the selected scenes includes spoken text
+     * If no scene contains a spoken text, the continue button will be disabled
+     * This is needed because the backend tool FFmpeg which generates the video expects atleast one audio
+     */
+    const videoIncludesAudio = () => {
+        for(let i = 0; i < props.sceneList.length; i++) {
+            if(props.sceneList[i].spokenText.length !== 0) return true;
+        }
+        return false;
+    }
+
     return (
         <Grid container>
             <Grid item container xs={12} justify="space-between">
@@ -95,7 +107,7 @@ export const VideoEditor: React.FC<VideoEditorProps> = (props) => {
                         </Button>
                     </Grid>
                     <Grid item className={classes.verticalAlignBlockableButtonPrimary}>
-                        <Button disabled={props.sceneList.length === 0} variant="contained" color="primary"
+                        <Button disabled={props.sceneList.length === 0 || !videoIncludesAudio() || props.videoJobName === ""} variant="contained" color="primary"
                                 onClick={props.continueHandler} className={classes.alignRightButton}>
                             weiter
                         </Button>
