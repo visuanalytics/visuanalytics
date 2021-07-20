@@ -38,8 +38,9 @@ export type DataSource = {
 export type BackendCalculate = {
     type: string;
     action: string;
-    keys: Array<String>;
-    new_keys: Array<String>;
+    keys: Array<string>;
+    innerKey?: Array<string>;
+    new_keys: Array<string>;
     decimal: number;
 }
 
@@ -224,7 +225,7 @@ export type Plots = {
 /* ArrayProcessings */
 export type ArrayProcessingData = {
     name: string;
-    array: string;
+    array: ProcessableArray;
     operation: Operation;
 }
 
@@ -244,4 +245,15 @@ export type StringReplacementData = {
 
 export type BackenFormula = {
 
+}
+
+//TODO: document this!
+/**
+ * Type that contains the information about a processable array.
+ * Used for displaying information in the ArrayProcessings and transforming to calculates.
+ */
+export type ProcessableArray = {
+    valueInObject: boolean; //true if this is a numeric value in an object contained in an array
+    key: string;
+    innerKey: string; //only used when valueInObject is 'true' - used to display the key path inside the object in the array
 }

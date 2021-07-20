@@ -19,7 +19,7 @@ export const extractKeysFromSelection = (selectedData: Array<SelectedDataItem>) 
     return keyArray;
 }
 
-//TODO: document addition of apiName
+//TODO: document addition of apiName and general new format
 /**
  * Method that transforms a list of array processings into a list of calculate
  * objects as they are needed by the backend
@@ -28,77 +28,28 @@ export const extractKeysFromSelection = (selectedData: Array<SelectedDataItem>) 
  */
 export const createCalculates = (processings: Array<ArrayProcessingData>, apiName: string) => {
     const calculates: Array<BackendCalculate> = [];
-    const sumNames: Array<string> = [];
-    const sumReplaceNames: Array<string> = [];
-    const meanNames: Array<string> = [];
-    const meanReplaceNames: Array<string> = [];
-    const minNames: Array<string> = [];
-    const minReplaceNames: Array<string> = [];
-    const maxNames: Array<string> = [];
-    const maxReplaceNames: Array<string> = [];
+    //loop through all created calculates
     processings.forEach((processing) => {
-        switch(processing.operation.name) {
-            case "sum": {
-                sumNames.push("_req|" + apiName + "|" + processing.array);
-                sumReplaceNames.push(processing.name);
-                break;
-            }
-            case "mean": {
-                meanNames.push("_req|" + apiName + "|" + processing.array);
-                meanReplaceNames.push(processing.name);
-                break;
-            }
-            case "min": {
-                minNames.push("_req|" + apiName + "|" + processing.array);
-                minReplaceNames.push(processing.name);
-                break;
-            }
-            case "max": {
-                maxNames.push("_req|" + apiName + "|" + processing.array);
-                maxReplaceNames.push(processing.name);
-            }
+        //check if the calulcate is a value in a complex array (array with object inside)
+        if(processing.array.valueInObject) {
+            calculates.push({
+                type: "calculate",
+                action: processing.operation.name,
+                keys: ["_req|" + apiName + "|" + processing.array.key],
+                innerKey: [processing.array.innerKey],
+                new_keys: [processing.name],
+                decimal: 2
+            });
+        } else {
+            calculates.push({
+                type: "calculate",
+                action: processing.operation.name,
+                keys: ["_req|" + apiName + "|" + processing.array.key],
+                new_keys: [processing.name],
+                decimal: 2
+            });
         }
     })
-    //add the object for the sum calculations
-    if(sumNames.length > 0) {
-        calculates.push({
-            type: "calculate",
-            action: "sum",
-            keys: sumNames,
-            new_keys: sumReplaceNames,
-            decimal: 2
-        });
-    }
-    //add the object for the mean calculations
-    if(meanNames.length > 0) {
-        calculates.push({
-            type: "calculate",
-            action: "mean",
-            keys: meanNames,
-            new_keys: meanReplaceNames,
-            decimal: 2
-        });
-    }
-    //add the object for the min calculations
-    if(minNames.length > 0) {
-        calculates.push({
-            type: "calculate",
-            action: "min",
-            keys: minNames,
-            new_keys: minReplaceNames,
-            decimal: 2
-        });
-    }
-    //add the object for the max calculations
-    if(maxNames.length > 0) {
-        calculates.push({
-            type: "calculate",
-            action: "max",
-            keys: maxNames,
-            new_keys: maxReplaceNames,
-            decimal: 2
-        });
-    }
     return calculates;
 }
 

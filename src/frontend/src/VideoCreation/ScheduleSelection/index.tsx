@@ -142,15 +142,6 @@ export const ScheduleSelection: React.FC<ScheduleSelectionProps> = (props) => {
     return (
         <Grid container>
             <Grid item xs={12}>
-                <FormControlLabel value="single" control={
-                    <Radio checked={props.schedule.type === "single"}
-                           value="single"
-                           onChange={changeToSingle}
-                    />
-                } label="Einmalig (sofort)"
-                />
-            </Grid>
-            <Grid item xs={12}>
                 <FormControlLabel value="weekly" control={
                     <Radio
                         checked={props.schedule.type === "weekly"}
