@@ -96,5 +96,14 @@ def left(draw, position, content, font_size, font_colour, font_path, width=None)
                   fill=font_colour)
 
 def calc_num_character(ttype, text, width):
+    """
+    Errechnet die maximale Anzahl an Character unter einer gegebenen Breite pro Zeile in Pixeln.
+
+    :param ttype: Font-Typ
+    :param text: Der Text, der u.U. umgebrochen werden muss
+    :param width: maximale Breite pro Zeile in Pixeln
+
+    :return: Anzahl an maximal erlaubten Character pro Zeile
+    """
     w = ttype.getsize(text)[0]
     return width // w

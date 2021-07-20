@@ -102,6 +102,14 @@ def default(values: dict, data: StepData, config: dict):
 
 
 def combine_audios(audio_list, data: StepData):
+    """
+    Funktion, um mehrere Audios zu einer großen Audio zu kombinieren
+
+    :param audio_list: Liste der Dateinamen der einzelnen Audios
+    :param data: Daten der Pipeline
+
+    :return: Pfad zu der kombinierten Audio
+    """
     audios = [AudioSegment.from_mp3(file_name) for file_name in audio_list]
     combined = AudioSegment.empty()
     for audio in audios:

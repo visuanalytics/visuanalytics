@@ -18,6 +18,9 @@ default_fontdict = {}
 
 
 def generate_diagram(values: dict, step_data: StepData, prev_paths):
+    """
+    Alte Implementierung der Diagramme für alte Job-Konfigurationen
+    """
     data = step_data.format(values["data"])
     data = data[1:len(data) - 1].split(", ")
     data = list(map(float, data))
@@ -143,19 +146,18 @@ def generate_diagram(values: dict, step_data: StepData, prev_paths):
     return file
 
 
-def generate_diagram_custom(values: dict, step_data: StepData, prev_paths):
-    # file = resources.new_temp_resource_path(f"{values['diagram_config']['infoprovider']}_{values['diagram_config']['name']}", "png")
+def generate_diagram_custom(values: dict, step_data: StepData):  # , prev_paths):
+    """
+    Erstellt ein Diagramm
+
+    :param values: Konfigurations-Dict für ein Diagramm
+    :param step_data: Daten der Pipeline
+
+    :return: Pfad zu dem erstellten Diagramm
+    """
     file = resources.get_image_path(f"diagrams/{values['diagram_config']['infoprovider']}_{values['diagram_config']['name']}.png")
     with resources.open_resource(file, "wt") as f:
         pass
-
-    #print("#####")
-    #print("#####")
-    #print("#####")
-    #step_data.print_data()
-    #print("#####")
-    #print("#####")
-    #print("#####")
 
     plot_wrapper(values["diagram_config"], file, step_data)
 
@@ -163,6 +165,15 @@ def generate_diagram_custom(values: dict, step_data: StepData, prev_paths):
 
 
 def generate_test_diagram(values, infoprovider_name=None, diagram_name=None):
+    """
+    Erstellt ein Testdiagramm mit zufälligen Werten, um eine Diagrammvorschau im Frontend anzuzeigen.
+
+    :param values: Konfiguration des Diagramms
+    :param inforprovider_name: Name des Infoproviders
+    :param diagram_name: Name des Diagramms
+
+    :return: Pfad zu dem erstellten Diagramm
+    """
     fig, ax = (None, None)
     for plot in values["diagram_config"]["plots"]:
         plot["plot"]["y"] = np.random.randint(1, 20, len(plot["plot"]["x"]))
@@ -195,12 +206,29 @@ def generate_test_diagram(values, infoprovider_name=None, diagram_name=None):
 
 
 def get_plot_vars(dpi=100):
+    """
+    Erstellt ein matplotlib.figure.Figure und matplotlib.axes.Axes für einen Plot.
+
+    :param dpi: Auflösung des Diagramms
+
+    :return: figure- und ax-Objekt für einen Plot
+    """
     fig = plt.figure(dpi=dpi)
     ax = fig.add_subplot()
     return fig, ax
 
 
 def line_plot(values, fig=None, ax=None, x=None):
+    """
+    Legt ein Liniendiagramm auf einen Plot.
+
+    :param values: Konfiguration des Diagramms
+    :param fig: figure-Objekt des Plots
+    :param ax: ax-Objekt des Plots
+    :param x: vordefinierte X-Werte des Diagramms
+
+    :return: bearbeitetes figure- und ax-Objekt für einen Plot
+    """
     if not x:
         x = values.get("x", np.arange(len(values["y"])) + 1)
     style = values.get("style", "-")
@@ -214,6 +242,15 @@ def line_plot(values, fig=None, ax=None, x=None):
 
 
 def bar_plot(values, fig=None, ax=None):
+    """
+    Legt ein Säulendiagramm auf einen Plot.
+
+    :param values: Konfiguration des Diagramms
+    :param fig: figure-Objekt des Plots
+    :param ax: ax-Objekt des Plots
+
+    :return: bearbeitetes figure- und ax-Objekt für einen Plot
+    """
     x = values.get("x", np.arange(len(values["y"])))
     width = values.get("width", 0.5)
     align = values.get("align", "center")
@@ -229,6 +266,15 @@ def bar_plot(values, fig=None, ax=None):
 
 
 def barh_plot(values, fig=None, ax=None):
+    """
+    Legt ein Balkendiagramm auf einen Plot.
+
+    :param values: Konfiguration des Diagramms
+    :param fig: figure-Objekt des Plots
+    :param ax: ax-Objekt des Plots
+
+    :return: bearbeitetes figure- und ax-Objekt für einen Plot
+    """
     y = values.get("x", np.arange(len(values["y"])))
     height = values.get("height", 0.5)
     align = values.get("align", "center")
@@ -244,6 +290,15 @@ def barh_plot(values, fig=None, ax=None):
 
 
 def scatter_plot(values, fig=None, ax=None):
+    """
+    Legt ein Streudiagramm auf einen Plot.
+
+    :param values: Konfiguration des Diagramms
+    :param fig: figure-Objekt des Plots
+    :param ax: ax-Objekt des Plots
+
+    :return: bearbeitetes figure- und ax-Objekt für einen Plot
+    """
     x = values.get("x", np.arange(len(values["y"])))
     marker = values.get("marker", "o")
     area = values.get("area", None)
@@ -260,6 +315,15 @@ def scatter_plot(values, fig=None, ax=None):
 
 
 def pie_plot(values, fig=None, ax=None):
+    """
+    Legt ein Kuchendiagramm auf einen Plot.
+
+    :param values: Konfiguration des Diagramms
+    :param fig: figure-Objekt des Plots
+    :param ax: ax-Objekt des Plots
+
+    :return: bearbeitetes figure- und ax-Objekt für einen Plot
+    """
     y = values["y"]
     explode = np.zeros(len(values["y"]))
     type_ = values.get("explode", None)
@@ -298,7 +362,19 @@ def pie_plot(values, fig=None, ax=None):
     return fig, ax
 
 
-def get_x_y(values, step_data, array_source, custom_labels=False, primitive=True, data_labels=False):
+def get_x_y(values, step_data, array_source, custom_labels=False, primitive=True):
+    """
+    Generiert die Y-Werte für das Diagramm aus den Daten der Datenquellen. Dabei werden u.U. nur bestimmte Indices eines Arrays
+    verwendet, je nachdem, wie der Nutzer das festlegt.
+
+    :param values: Konfiguration des Diagramms
+    :param step_data: Daten der Pipeline
+    :param array_source: Boolean, der aussagt, ob es sich um ein Array der API-Daten handelt, oder um historisierte Daten
+    :param custom_labels: Boolean, der aussagt, ob der Benutzer eigene Labels angegeben hat
+    :param primitive: Boolean, der aussagt, ob das Daten-Array primitiv ist, oder nicht
+
+    :return: aufbereitete Konbfiguration mit den tatsächlichen Y-Werten
+    """
     if array_source:
         if primitive:
             y_vals = step_data.format(values["y"])
@@ -327,6 +403,18 @@ def get_x_y(values, step_data, array_source, custom_labels=False, primitive=True
 
 
 def create_plot(values, step_data, array_source, get_xy=True, fig=None, ax=None):
+    """
+    Erstellt ein Diagramm je nach Typ der Konfiguration und setzt auch die Label der X-Achse (Y bei Balken)
+
+    :param values: Konfiguration des Diagramms
+    :param step_data: Daten der Pipeline
+    :param array_source: Boolean, der aussagt, ob es sich um ein Array der API-Daten handelt, oder um historisierte Daten
+    :param get_xy: Boolean, der aussagt, ob Y-Werte aus den Pipeline-Daten geholt werden müssen (False bei Testdiagrammen)
+    :param fig: figure-Objekt des Plots
+    :param ax: ax-Objekt des Plots
+
+    :return: bearbeitetes figure- und ax-Objekt für einen Plot
+    """
     t = values["plot"]["type"]
     if get_xy:
         values_new = get_x_y(values["plot"], step_data, array_source, custom_labels=values.get("customLabels", False), primitive=values.get("primitive", True), data_labels=values.get("data_labels", False))
@@ -354,6 +442,16 @@ def create_plot(values, step_data, array_source, get_xy=True, fig=None, ax=None)
 
 
 def create_plot_custom(values, step_data, fig=None, ax=None):
+    """
+    Erstellt mehrere Diagramme für einen Plot
+
+    :param values: Konfiguration des Diagramms
+    :param step_data: Daten der Pipeline
+    :param fig: figure-Objekt des Plots
+    :param ax: ax-Objekt des Plots
+
+    :return: bearbeitetes figure- und ax-Objekt für einen Plot
+    """
     array_source = values["sourceType"] == "Array"
     for plot in values["plots"]:
         fig, ax = create_plot(plot, step_data, array_source=array_source, fig=fig, ax=ax)
@@ -361,6 +459,13 @@ def create_plot_custom(values, step_data, fig=None, ax=None):
 
 
 def plot_wrapper(values, file, step_data):
+    """
+    Stößt die Erstellung eines Plots an und führt style-Optionen des Koordinatensystems aus.
+
+    :param values: Konfiguration des Diagramms
+    :param file: Pfad, unter dem das Diagramm abgespeichert werden soll
+    :param step_data: Daten der Pipeline
+    """
     fig, ax = create_plot_custom(values, step_data)
     title = values.get("title", None)
     x_label = values.get("x_label", None)
@@ -375,9 +480,6 @@ def plot_wrapper(values, file, step_data):
         plt.xlabel(x_label["text"], fontdict=x_label.get("fontdict", default_fontdict))
     if y_label:
         plt.ylabel(y_label["text"], fontdict=y_label.get("fontdict", default_fontdict))
-    # if x_ticks:
-    #     ax.set_xticklabels([None] + x_ticks["ticks"], fontdict=x_ticks.get("fontdict", default_fontdict),
-    #                        color=x_ticks.get("color", default_color))
     if grid:
         ax.grid(color=grid.get("color", "gray"), linestyle=grid.get("linestyle", "-"), linewidth=grid.get("linewidth", 1), axis=grid.get("axis", "both"))
     if face_color:

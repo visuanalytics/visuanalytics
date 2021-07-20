@@ -75,7 +75,7 @@ def get_content(obj):
     """
     Abstrahiert das übergebene Objekt je nach Typ (dict, list, str, int etc.)
 
-    :param obj: zu abstrahierendes Objekt
+    :param obj: Objekt, welches abstrahiert werden soll
     :return: Beschreibung des Datentyps eines Objektes
     """
     if type(obj) == list:
