@@ -55,13 +55,8 @@ def checkapi():
     """
     Endpunkt `/checkapi`.
 
-    Übermitteltes JSON enthält die API-Daten in dem Format:
-    {   'url': '<url + query>',
-        'api_key': '<api-key falls einer gegeben ist>',
-        'has_key': <true falls ein api-key gegeben ist>
-    }
-
-    Die Response enthält alle Keys die bei der gegebenen API abgefragt werden können
+    Übermitteltes JSON enthält die Keys 'url', 'api_key' und 'has_key'.
+    Die Response enthält alle Keys die bei der gegebenen API abgefragt werden können.
     """
     api_info = request.json
     try:
@@ -787,8 +782,7 @@ def add_scene_image(folder):
 
     Route über die ein neues Bild für eine Szene hinzugefügt werden kann.
     Request-Form muss den key name und das Bild selbst enthalten.
-    :param folder: Gibt den Ordner an in den das Bild gespeichert werden soll. Optionen sind hier "backgrounds",
-                   "pictures" oder "scene".
+    :param folder: Gibt den Ordner an in den das Bild gespeichert werden soll. Optionen sind hier "backgrounds", "pictures" oder "scene".
     """
     try:
         if folder != "backgrounds" and folder != "pictures" and folder != "scene":
@@ -901,11 +895,7 @@ def set_preview():
     Endpunkt `/thumbnailpreview`.
 
     Ermöglicht dass eine Szene als preview eines Videos gesetzt werden kann.
-    Request muss ein Json des folgenden Formats enthalten:
-    Format: {
-        videojob_id: ####,
-        scene_id: ####,
-    }
+    Request muss ein JSON mit den beiden Keys 'videojob_id' und 'scene_id' enthalten.
     """
     data = request.json
     try:
