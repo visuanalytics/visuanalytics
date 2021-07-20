@@ -110,8 +110,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const [currentFontColor, setCurrentFontColor] = React.useState("#000000");
     const [currentXCoordinate, setCurrentXCoordinate] = React.useState(0);
     const [currentYCoordinate, setCurrentYCoordinate] = React.useState(0);
-
-    // state for the delete button text
     const [deleteText, setDeleteText] = React.useState("Letztes Elem. entf.");
 
     // state for items, if an item is selected and a counter for the amount of items
@@ -490,7 +488,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     /**
      * Method that takes all necessary data of the scene creation and
      * forms a JSON object as specified by the backend to post the scene to the backend.
-     * @returns a JsonExport element
+     * @returns returnValue a JsonExport element
      */
     const createJSONExport = React.useCallback(() => {
         //empty array for all text and image elements (except background)
