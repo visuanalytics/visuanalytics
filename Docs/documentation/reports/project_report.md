@@ -254,7 +254,7 @@ Das nachfolgende Diagramm soll eine visuelle Übersicht über den Ablauf des Pro
 
 ![Übersicht](images/overview.png)
 
-## **Pflichtenheft**
+## **Anhang B: Pflichtenheft**
 
 
 
@@ -829,3 +829,644 @@ Per Pop-Up kann der Nutzer die Texte für die TTS-Ausgabe editieren und dabei au
 ![Mockup 27](images/27.png)
 
 Den Abschluss der Videoerstellung bildet die Auswahl der Zeitpunkte, an denen das Video generiert werden soll.
+
+## Anhang C: Protokolle / Statusberichte
+
+### Startbesprechung (08.04.2021)
+
+#### Aufgaben
+Wir haben festgelegt, dass bis zum nächsten Montag die folgenden Aufgaben von jedem Teammitglied erledigt werden sollten:
+1.	Jeder sollte sich einen Überblick darüber verschaffen, worum genau es bei einem Lastenheft geht, und welche Inhalte dieses umfassen sollte.
+2.	Die Aufgabenstellung des Projektes sollte von allen verstanden worden sein. Falls Fragen aufkommen sollten, können diese im Team gemeinsam besprochen werden.
+3.	Das bereits existierende Projekt sollte installiert / aufgesetzt werden, um sich damit auseinandersetzen zu können.
+4.	Jedes Mitglied sollte sich Notizen zum Entwurf eines Lastenhefts machen, damit am Montag eine gute Arbeit besser ermöglicht wird.
+
+#### Nächstes Treffen
+Das nächste Treffen unseres Teams findet am Montag den 12.04.2021 um 09:30 Uhr statt. Ziel dieses Meetings wird es sein, einen ersten Entwurf für das Lastenheft zu entwerfen.
+
+### Sprintplanung (12.04.2021)
+
+#### Inhalt des Lastenhefts
+Während des Meetings wurden für das Lastenheft die folgenden Punkte festgehalten. Diese umfassen dabei die zu implementierenden Features, welche nach „Must have“, „Nice to have“ und „If time allows“ sortiert werden sollen. Teilweise ist dies in der nachfolgenden Auflistung bereits passiert.
+* Infoprovider sollen mit API-Request, eigenem Schlüssel, Datenhistorisierung und Formeln aus den vorhandenen Attributen erstellt werden können
+* Videos mit einem Editor aus mehreren Szenen erstellen
+* In einer Szene sollen Hintergrundfarben, Bilder, Texte, API-Daten und Diagramme frei wählbar und platzierbar sein
+* Mehrere Infoprovider sollen für ein Video verfügbar sein (Nice-To-Have)
+* Infoprovider sollen bearbeitet werden können (Must-Have)
+* Wissensdatenbank (If-Time-Allows)
+* Eine Drag-&-Drop Sprache für Web-Scraper als alternative zu den API-Requests
+* Rechenaufgaben generieren (If-Time-Allows)
+* Infoprovider und Videovorlagen als JSON-Format exportieren / importieren (Nice-To-Have)
+
+#### Konfigurationsdatei
+Um den bisherigen Stand der Entwicklung vollständig testen zu können, besorgt Daniel Spengler die Konfigurationsdatei für das Projekt, in welcher die bisherigen API-Keys stehen.
+
+#### Entwicklerteam
+Im Meeting wurden die 6 Teammitglieder auf Front- und Backend verteilt, wobei hierbei die Interessen der Einzelnen berücksichtigt wurden.
+* Frontend: Janek Berg, Tristan Wolfram, Philipp Helfenritter
+* Backend: Tim Schwabe, Sören Clausen, Daniel Spengler
+
+#### Aufgaben
+Für den kommenden Sprint wurden die Folgenden Aufgaben definiert und in ihre Zuständigkeitsbereiche unterteilt.
+
+#### Aufgaben des Frontends
+* React beibringen
+* Recherche für ein passendes Framework, um einen Videoeditor einzubinden
+* Mockups erstellen
+* Farbkonzept für die Mockups erstellen
+
+#### Backend-Aufgaben
+* Die Benutzung von FFMPEG in der bisherigen Anwendung analysieren
+* Recherche für einen sinnvollen Einsatz von Web-Scrapern
+* Teile der aktuellen API und Datenbank auf Wiederverwendbarkeit überprüfen
+* Heraussuchen von APIs, welche zum Testen der entstehenden Anwendung verwendet werden können.
+
+#### Generell
+* Einen Durchlauf der Anwendung visualisieren (Janek Berg)
+* Regelwerk für Projektzeitenerfassung erstellen und Einarbeitung in Jira (Daniel Spengler)
+
+#### Aufteilung der einzelnen Aufgaben
+Die Front- und Backend-Aufgaben werden in den jeweiligen Teams in Eigenverantwortung aufgeteilt. Andere Aufgaben werden von den Personen erledigt, deren Namen in Klammern hinter der jeweiligen Aufgabe stehen.
+
+#### Nächste Termine
+* Donnerstag 09:45 Uhr: Treffen mit Prof. Dr. Kammer für die aktuelle Besprechung und offene Fragen
+* Freitag 17:00 Uhr: Sprint-Retrospektive
+* Montag 08:00 Uhr: Sprint-Planning
+
+### Statusbericht (16.04.2021)
+
+Thema: Vorstellung der Mockups und Informationen über das Backend
+
+#### Zusammenfassung
+
+Das Team des Frontends hat Mockups, zu den meisten Oberflächen erstellt und diese vorgestellt. Das restliche Entwicklerteam hatte keine Kritik an diesen Mockups, sodass nun die Gestaltung des Farbkonzepts angegangen werden kann. Dieses soll zeitlich so fertig werden, dass die Abbildungen in das Pflichtenheft aufgenommen werden können. Damit dies möglich ist, hat sich Sören Clausen bereit erklärt über das Wochenende am Farbdesign zu helfen. Außerdem hat jedes Mitglied des Frontend-Teams sich in React eingearbeitet und führt die Einarbeitung nun, durch das erlernen von Type Script, fort.
+
+Das Backend-Team hat auch Fortschritte gemacht und ist dabei sich in den bestehenden Code einzuarbeiten. An manchen Stellen fällt dies allerdings schwer, da nur wenige Kommentare enthalten sind. Für die geplanten Änderungen scheint sich die Notwendigkeit eines Umbaus der gesamten Datenbank zu ergeben. Ein konkretes Modell ist hierzu allerdings zum aktuellen Stand nicht vorhanden und auch nicht gefordert.
+
+
+
+#### Aufgaben bis zum nächsten Meeting
+
+Bis zum Meeting am Montag den 18.04.2021 sollen die folgenden Dinge erledigt werden:
+
+* Fortführen der Einarbeitung in das Back- und Frontend (Alle)
+* Recherche und Notizen zum Pflichtenheft (Alle)
+* Farbdesign der Mockups ausarbeiten (Frontend-Team + Sören Clausen)
+* Bearbeiten des Lastenhefts (Daniel Spengler)
+
+#### Nächstes Meeting
+
+Unser nächstes Meeting findet am 19.04.2021 statt. In diesem sollen kurz die Ergebnisse vom Wochenende zusammengetragen werden und der Plan für die nächste Woche erstellt werden.
+
+### Sprintplanung (19.04.2021)
+
+Thema: Besprechung der Ergebnisse vom Wochenende und Vergabe von weiteren Aufgaben.
+
+#### Zusammenfassung
+
+Am Wochenende hat Sören Clausen einen ersten Entwurf für das Farbdesign der App angefertigt, welches heute präsentiert wurde. Grundsätzlich hat das Team keine Einwände gegen das Farbdesign. Allerdings muss dieses noch weiter ausgearbeitet werden. Dies ist eines der Ziele für die laufende Woche.
+
+Weiterhin haben wir uns darauf geeinigt, dass Daniel Spengler die Notizen zum Pflichtenheft veröffentlicht, damit dazu unter Berücksichtigung der Kommentare des restlichen Teams, in der laufenden Woche ein erster Entwurf entstehen kann.
+
+
+#### Aufgaben für den Sprint
+
+Am Ende dieses Sprints soll ein geeignetes Datenbankmodell, so wie ein Prototyp des Erstellungsprozesses des Infoproviders vorliegen. Um dem Ende der Planungsphase näher zu kommen, ist es weiterhin wichtig einen ersten Entwurf für das Pflichtenheft zu erstellen. Hierzu werden die folgenden Aufgaben definiert.
+
+
+
+##### Frontend
+
+* Das Farbdesign der Anwendung soll weiter ausgearbeitet werden. (Janek)
+* Es soll ein erster Prototyp für das Erstellen eines Infoproviders entstehen. Hierbei ist es nicht schlimm, wenn dieser nicht vollständig fertig werden sollte, da die Implementierung im Backend hierfür noch nicht vorhanden ist. (Tristan / Janek / Philipp)
+* Um später die Szenen leicht erstellen zu können, wäre es gut auf ein SVG-Framework o.ä. zurückgreifen zu können. Über derartige Möglichkeiten wird sich das Frontend informieren. (Philipp)
+
+##### Backend
+
+* Die Einarbeitung in den Code sollte weitestgehend abgeschlossen werden. Dazu müssen Fragen an den ehemaligen Projektleiter gestellt werden. Eventuell ist es sogar möglich sich mit diesem in einer Konferenz zu treffen. (Tim)
+* Eine geeignete Datenstruktur für ein JSON-Objekt muss gefunden werden, mit welcher das Backend APIs abfragen kann. Zugehörig muss auch eine Struktur gefunden werden, mit welcher die Daten der API zurückkommen. (Sören)
+* Es soll ein Datenbankmodell entstehen, in welchem die Informationen für Infoprovider, Videos, etc. abgespeichert werden können. (Daniel)
+
+
+
+##### Generell
+
+* Es soll ein erster Entwurf für das Pflichtenheft entstehen. (Daniel)
+* Die User-Stories für das Projekt sollen in Jira übertragen werden. (Daniel)
+
+#### Nächstes Meeting
+
+Am Donnerstag um 09:45 Uhr gibt es eine Besprechung mit Prof. Dr. Kammer. Eventuell müssen wir hier aber nicht alle anwesend sein. Das nächste verpflichtende Meeting findet dann am Freitag um 17:00 Uhr statt.
+
+### Fortschrittsbesprechung (23.04.2021)
+
+Thema: Besprechung der bisherigen Ergebnisse und Klärung von Problemen.
+
+#### Zusammenfassung
+
+Sowohl das Front-, als auch das Backend-Team haben ihre Ergebnisse für diese Woche vorgestellt. Dabei ist im Frontend der Infoprovider schon in guten Teilen implementiert. Das Backend konnte zwar noch nicht mit der Implementierung beginnen, konnte aber grundlegende Dinge klären, welche den Arbeitsaufwand deutlich reduzieren, da das bisherige Backend vollständig übernommen werden kann, und im Grunde nur erweitert werden muss. Außerdem konnte das Backend-Team einen ersten Entwurf der erweiterten Datenbank vorstellen, gegen welchen das restliche Team nicht groß etwas einzuwenden hat. Es ist jedoch angemerkt worden, dass eine Szene mehrere Bilder beinhalten können soll. Dies erfordert eine kleinere Änderung im vorgestellten Modell. Da die Datenbank hier auch nur erweitert wird und die bisherigen Tabellen nicht umstrukturiert werden, ist eine Rückwärtskompatibilität auch bei Hinzufügen der neuen Tabellen möglich.
+
+#### Diskutierte Probleme
+
+##### Array als Wert in einem JSON-Objekt
+
+Wenn beispielsweise die Github-Jobs-API nach möglichen Jobs abgefragt wird, liefert diese ein Array zurück, in welchem gleichstrukturierte JSON-Objekte enthalten sind. Hierbei hat sich dem Team zum einen die Frage gestellt, wie diese Daten verarbeitet werden sollen, und zum anderen, wie eine Videogenerierung mit einem Array aussehen soll. Die Arraylänge ist in diesem Fall nicht voraussehbar und es ist auch unklar, ob bei einem späteren Zugriff auf das Array ein Element an dem festgelegten Index noch existiert. Da an dieser Stelle viele Fehler auftreten können und wir keinen sinnvollen Anwendungszweck von solchen Daten finden konnten, haben wir uns entschieden, einen Key, welcher ein Array als Wert enthält, nicht auswählbar zu machen. Sollte am Ende des Projektes noch Zeit sein, so ist es möglich, die Anwendung um einen Umgang mit Array-Werten zu erweitern.
+
+
+
+##### Speichern von API-Schlüsseln
+
+In der bisherigen Anwendung werden API-Schlüssel in einer privaten config.json gespeichert. Auf den zugehörigen Namen wurde dann von den Themenkonfigurationen zugegriffen. Wir haben uns entschieden den angegebenen API-Key mit einem Zufalls-String als Namen in dieser Konfigurationsdatei zu speichern, sobald der Infoprovider vom Nutzer final angelegt wird. Dadurch entsteht zwar grundsätzlich die Möglichkeit API-Keys doppelt zu speichern, jedoch ist es leichter API-Keys aus der Konfiguration zu entfernen, wenn ein Infoprovider gelöscht wird.
+
+
+#### Weitere Aufgaben
+
+Es wurden für das Wochenende keine Aufgaben verteilt. Jedoch werden Sören Clausen und Tim Schwabe weiter den Aufbau der Themenkonfigurationsdatei analysieren, um so die Details dieser Datei zu erfassen. Dies ist von substantieller Bedeutung, da die am Ende entstehende Datei eines Jobs den bisherigen Dateiformaten entsprechen muss. Andernfalls ist ein großer Umbau im Backend notwendig, welcher vermutlich zeitlich nicht in diesem Projekt zu bewältigen ist.
+
+Daniel Spengler wird außerdem die restlichen Beziehungen im Datenbankmodell ergänzen, damit dieses im Pflichtenheft vorgewiesen werden kann.
+
+### Sprintplanung (26.04.2021)
+
+Thema: Sprintplanung für VW4
+
+#### Zusammenfassung
+
+Insgesamt wurden die Ziele der letzten Woche größtenteils erreicht. Dabei ist der Infoprovider zwar noch nicht vollständig fertig, allerdings schon in gewissen Teilen. Die Aufgabe, einen Prototypen für API-Abfragen zu erstellen, wurde nicht direkt gelöst, allerdings ist den Entwicklern klar, an welchen Stellen sie für die Erweiterung ansetzen müssen. Für das Frontend steht noch kein eindeutiger Canvas-Editor fest, mit welchem die Szenen erstellt werden sollen. Im Team wurde sich nun allerdings darauf geeinigt, dass bis Dienstag / Mittwoch eine Lösung bereitstehen muss, damit diese in das Pflichtenheft mitaufgenommen werden kann. Weiterhin wurden die Aufgaben für die kommende Woche für Back- und Frontend aufgeteilt. Im Groben ist es das Idealziel, den Infoprovider spätestens im Laufe der nächsten Woche abzuschließen. Dafür sollen im Laufe dieser Woche die meisten Grundbausteine gelegt werden.
+
+Zusätzlich soll ein erster Entwurf für das Pflichtenheft entstehen, welcher Herrn Kammer eingereicht werden kann.
+
+#### Aufgaben der aktuellen Woche
+
+##### Frontend
+* Formeleditor: Entscheidung für eigene Implementierung oder Framework gefolgt von passender Umsetzung
+* Tiefenschachtelung in der Auswahl von API-Daten ermöglichen, wobei die Checkbox des Elternobjekts alle Kinder aktivieren sollte.
+* JSON-Objekt-Parser zur Erstellung der Listen schreiben
+* Gesamtübersicht über den Infoprovider schreiben
+* Absenden des fertigen Infoproviders im richtigen JSON-Format
+* Grundsätze des Designs für Infoprovider und der Barrierefreiheit für Infoprovider-Erstellung (Einarbeitung in MaterialUI)
+* Szeneneditor aussuchen: Eigene Implementierung oder Framework?
+
+
+
+##### Backend
+* API-Endpunkt implementieren, durch welchen Frontend eine Abfrage an eine API stellen kann.
+* Entworfenes Datenbankmodell in die Schema.sql übernehmen
+* Resources-Funktionen für Infoprovider implementieren
+* Frontend über die Struktur des JSON-Objekts des Infoproviders aufklären
+* Meeting mit Teilen des ehemaligen Entwicklerteams, um Fragen über das Backend stellen zu können.
+
+
+
+##### Dokumentation
+* Ersten Entwurf für das Pflichtenheft fertigstellen
+
+#### Nächste Treffen
+
+* Donnerstag 09:45 Uhr: Treffen mit Herr Prof. Dr. Kammer
+* Freitag 17:00 Uhr: Besprechung des aktuellen Zwischenstands
+
+### Fortschrittsbesprechung (30.04.2021)
+
+#### Zusammenfassung
+
+Insgesamt sind diese Woche einige Fortschritte zu verzeichnen. So ist im Frontend die Erstellung des Infoproviders deutlich voran gekommen. Im Backend konnten allerdings auch einige Fortschritte erzielt werden, sodass die Fertigstellung des Infoproviders bald abgeschlossen sein sollte. Im Frontend wurde diese Woche zusätzlich entschieden, dass der Szeneneditor ohne ein Framework entwickelt wird, da es keines gibt, welches den Anforderungen bzw. Voraussetzungen, welche wir stellen, gerecht wird.
+
+Durch diese Feststellung steigt der Arbeitsaufwand im Frontend weiter an. Aufgrund des sich dadurch ergebenden Mehraufwands des Frontends im Gegensatz zum Backend, haben wir uns nun dazu entschlossen, Daniel Spengler dem Frontend-Team zuzuordnen, damit die Aufgaben insgesamt im Projekt gleichmäßiger verteilt werden können.
+
+#### Arrays als Daten
+
+Wir haben uns dazu entschlossen, bei der Infoprovider-Erstellung zunächst immer das Element an dem Index 0 aus dem Array für die Weiterverarbeitung, beispielsweise in Formeln, zu wählen. Dies kann später noch angepasst werden, soll aber zunächst für erste Testzwecke so implementiert werden.
+
+
+#### Umfrage zur Zufriedenheit
+
+Die Teammitglieder haben eine Umfrage erhalten, an welcher sie anonymisiert teilnehmen können, um Kritik über das Projekt loszuwerden. Sollten hier Kritikpunkte gemeldet werden, so wird darüber in einer zukünftigen Sitzung gesprochen.
+
+#### Ziele
+Das Team des Backends hat geplant den API-Endpunkt für das registrieren neuer Infoprovider zur Verfügung zu stellen und das Schema der erweiterten Datenbank einzubinden. Im Frontend sollen die letzten Komponenten fertiggestellt werden, um eine erste Demo des gesamten Infoproviders vorlegen zu können. Später soll auf dieser Basis der Infoprovider noch erweitert werden.
+
+Daniel Spengler wird sich über das Wochenende in React einarbeiten, damit dieser ab der Woche vom 03.05. das Frontend bei der Entwicklung unterstützen kann.
+
+### Sprintplanung (03.05.2021)
+
+#### Zusammenfassung
+Die meisten Ziele der letzten Woche wurden erreicht. Lediglich die Gesamtübersicht für den Infoprovider und die Dokumentation des Frontends wurden auf diese Woche verschoben.
+
+Im Backend wurden über das Wochenende die meisten API-Endpunkte für den Infoprovider implementiert. Weiterhin wurden die passenden Queries für die Datenbank erstellt, und das Schema wurde ebenfalls erweitert.
+Im Frontend wurde weiterhin an Conva gearbeitet. Dieses Framework soll später für den Szeneneditor verwendet werden, da es eine Canvas-Funktionalität bereitstellt. Weiterhin wurde das Design des Infoproviders nahezu fertiggestellt.
+
+#### Aufgaben für die kommende Woche
+Da es viele kleinere Aufgaben gibt, sollen diese der Übersicht zu Gute hier nur zusammengefasst dargelegt werden. Die genauen Aufgaben werden auf dem Canban-Board von Jira veröffentlicht.
+
+Am Ende dieser Woche soll der Infoprovider in großen Teilen abgeschlossen sein, sodass eine erste Demo des Infoproviders im Grunde möglich ist. Dabei wird es noch einige kleine Features geben, welche durch das Pflichtenheft gefordert werden, aber noch nicht implementiert sind. Diese sollen zu einem späteren Zeitpunkt fertiggestellt werden. Neben der restlichen Implementierung sollen auch erste Tests und Dokumentationen zu den einzelnen Bereichen erfolgen.
+
+### Fortschrittsbesprechung (09.05.2021)
+
+#### Zusammenfassung
+Sowohl Back- als auch Frontend konnten beim heutigen Meeting gute Fortschritte präsentieren. Im Backend wurde die Datenbank angepasst und es wurden die benötigten API-Routen hinzugefügt. Außerdem hat sich das Backend-Team Gedanken darüber gemacht, welche Diagrammtypen unterstützt werden könnten.
+
+Im Frontend wurden die verbleibenden Schritte in einfacher Weise (es fehlen teils noch kleinere Features) implementiert. Dazu gehört die Zeitauswahl für die Historisierung und die Übersicht für die Infoprovider. Weiterhin wurden viele Fehler behoben, welche den Infoprovider und die zugehörigen Komponenten betroffen haben. Auch beim Canvas-Editor konnten Fortschritte erzielt werden. So ist es nun möglich Texte zu verschieben und zu vergrößern / verkleinern. Weiterhin gibt es Buttons zum Löschen des letzten Objektes oder zum Rückgängig machen der letzten Aktion.
+
+Das Frontend wird über das Wochenende hinweg den Branch zur Erstellung des Infoproviders in den Master mergen, sodass das neue Frontend in Kombination mit dem Backend getestet werden kann.
+
+#### Aufgaben für das Wochenende
+Janek wird sich mit der Implementierung der Diagramme im Frontend beschäftigen. Hierzu wird der Infoprovider um einen weiteren Schritt der Erstellung erweitert. Im Backend soll die Implementierung ebenfalls weitergehen und das restliche Frontend-Team will kleinere Verbesserungen am Infoprovider vornehmen.
+
+Außerdem soll spätestens nächste Woche eine Struktur für die Dokumentation unserer Version von VisuAnalytics entstehen, damit die einzelnen Dokumente zusammengetragen werden können.
+
+### Sprintplanung (10.05.2021)
+
+#### Zusammenfassung
+Grundsätzlich wurden die Ziele der letzten Woche alle erfüllt. Teilweise konnten sogar bereits Aufgaben begonnen werden, welche nicht auf der Liste der zu erledigenden Aufgaben standen, so z.B. das Umschreiben des Schedulers.
+
+Für diese Woche ist es u.a. das Ziel weitere Anpassungen am Infoprovider vorzunehmen, sodass dieser mit dem Backend gut zusammen funktioniert.
+
+#### Aufgaben für die Woche vom 10.05.2021 - 16.05.2021
+Im Folgenden werden die Aufgaben nach Zuständigkeitsbereich aufgelistet. Dabei stellt die Auflistung, wie nun auch in Zukunft, keine vollständig detaillierte Liste dar, sondern lediglich einen groben Überblick.
+
+##### Frontend
+Das Frontend soll diese Woche die Erstellung des Infoproviders verbessern, indem bei den Formeln der Datentyp hinzugefügt wird und die gewählte Zeit für die Historisierung bei der Gesamtübersicht angezeigt wird. Gleichzeitig sollten die einzelnen Komponenten alle dokumentiert werden, falls dies noch nicht geschehen ist. Weiterhin soll die Diagramm-Komponente fertiggestellt und die Dashboard-Komponente begonnen werden. Zuletzt soll ein Accessibility-Test der alten und neuen Frontend-Version vorgenommen werden und ggf. werden Verbesserungen für die neue Komponente diese Woche vorgenommen.
+
+Falls die Zeit reicht, sollen außerdem erste Schritte für die Bearbeitung eines Infoproviders im Frontend begonnen werden.
+
+##### Backend
+Um später eine Bearbeitung der Formeln für den Nutzer zu ermöglichen, muss im Backend ein Weg gefunden werden, die Strings der eigentlichen Formel abzuspeichern. Gleichzeitig soll aus dem Backend heraus dem Frontend geholfen werden, das Infoprovider-Objekt so zu adaptieren, dass das korrekte Format für das Backend entsteht.
+
+Weiterhin soll der Scheduler erweitert werden, damit dieser die Historisierung von Daten unterstützt. Zuletzt sollen noch weitere Routen hinzugefügt werden, durch welche es möglich wird, Videos und Szenen zu speichern. Hierfür existiert das zugehörige Frontend jedoch noch nicht.
+
+##### Generelles
+Einige Mockups müssen für das neue Pflichtenheft (Version 3) hinzugefügt oder verändert werden. Weiterhin sollte jedes Teammitglied das neue Pflichtenheft bis **spätestens Dienstag Mittag** korrekturgelesen haben, damit dieses Herrn Kammer zugesendet werden kann.
+
+Damit die Dokumentation der neuen Features geführt werden kann, soll ein neues Doku-Verzeichnis entstehen, welches die Wurzel der Dokumentation von Version 2 von VisuAnalytics bilden soll.
+
+### Fortschrittsbesprechung (14.05.2021)
+
+#### Zusammenfassung
+Im Frontend konnten weite Teile des Dashboards fertiggestellt werden. Es müssen lediglich noch wenige Funktionen und Design-Elemente angepasst werden. Gleichzeitig wurden viele Fortschritte in der Komponente für die Diagrammerstellung gemacht. Hier werden im Laufe der nächsten Woche noch kleinere Anpassungen vorgenommen, um diese Komponente abzuschließen. Der Szeneneditor hat auch weitere Fortschritte gemacht und enthält nun unter anderem die Möglichkeit, Objekte zu duplizieren, gezielt Objekte zu löschen und verschiedene Tools auszuwählen. Weiterhin wird in der Gesamtübersicht nun angezeigt, welche Historisierungszeitpunkte vom Nutzer ausgewählt wurden.
+
+Im Backend wurden auch weitere Anpassungen vorgenommen und Routen hinzugefügt. Hier soll viel Arbeit allerdings noch am Wochenende geschehen, da das Backend-Team unter der Woche wenig Zeit hatte.
+
+Das Dokumentationsverzeichnis wird von uns neu aufgebaut, da dass Alte gesichert werden kann und somit in der neuen Version nicht mehr von Nöten ist. Dies wurde dabei mit dem Teamleiter der ersten Version von VisuAnalytics so abgesprochen. Der genaue Aufbau der Dokumentation wird in den nächsten Tagen / Wochen dem Team in einem seperaten Dokument zur Verfügung gestellt, da dies im Grunde auch ein Teil der Dokumentation ist.
+
+### **Sprintplanung (17.05.2021)**
+
+#### **Zusammenfassung**
+Viele Ziele, welche für die vergangene Woche festgehalten wurden, konnten erreicht werden. Lediglich einige wenige Ziele passten der Zeit nach nicht mehr in die vergangene Woche:
+* Bearbeitung von Infoprovidern
+* Transformierung der Daten durch den Infoprovider in ein Format, welches für das Backend verständliches ist
+* Routen für Szenen, Bilder und Videos
+
+Die Aufgaben werden diese Woche nachgeholt. Es werden allerdings auch weitere Aufgaben erledigt, welche im Abschnitt **Aufgaben** beschrieben sind.
+
+Über das Wochenende hinweg hat Philipp noch weiter am Szeneneditor geschrieben. Dieser enthält nun fast alle wichtigen Elemente. So ist es nun beispielsweise möglich Hintergrundfarben und Bilder zu verwenden, sowie einen Text in seiner Schriftgröße und Farbe zu verändern.
+
+#### **Aufgaben**
+
+##### **Frontend**
+Diese Woche sollen im Frontend die neu entstandenen Teile der letzten Woche einem Review unterzogen werden und anschließend auch in den Master gemerged werden. Weiterhin soll die Diagrammerstellung abgeschlossen werden und es soll möglich werden, einem Infoprovider mehrere Datenquellen hinzuzufügen. Auch das Dashboard soll abgeschlossen werden. Von dort aus soll nun eine Möglichkeit gegeben werden, die bestehenden Infoprovider zu bearbeiten.
+
+Der Szeneneditor soll diese Woche in Typescript umgeschrieben werden und die Möglichkeit bekommen, API-Daten im Text zu verwenden.
+
+##### **Backend**
+Im Backend soll diese Woche der Scheduler auf Korrektheit getestet werden. Weiterhin wird ein Mitglied des Backend-Teams den Code für das Frontend zur Verfügung stellen, mit welchem die Infoprovider für das Backend transformiert werden. Außerdem sollen die benötigten Routen (siehe Pflichtenheft) für Videos und Szenen ergänzt werden.
+
+##### **Generelles**
+In dieser Woche soll die vierte Version des Pflichtenhefts entstehen. Dieses soll die Änderungswünsche von Herrn Prof. Dr. Kammer enthalten. Das Ziel ist es, dass Pflichtenheft mit dieser Version zum Abschluss zu bringen.
+
+### Fortschrittsbesprechung (21.05.2021)
+
+#### Zusammenfassung
+Im Backend wurde der neue Scheduler fertiggestellt und getestet. Diagramme können ebenfalls vom Backend mit angegebenen Daten generiert werden, d.h. sobald dieser Teil auch im Frontend abgeschlossen ist, sollten Diagramme nutzbar sein. Der Umbau der gespeicherten Daten im Frontend für den Infoprovider muss allerdings neu gemacht werden, da hier die zugehörigen Methoden falsch verstanden wurden. Damit wird nun allerdings gewartet, bis im Frontend die Auswahl mehrerer APIs fertig ist, um somit sicher zu gehen, dass die neue Methode auch mit mehreren Datenquellen funktioniert.
+
+Im Frontend wurden hauptsächlich verschiedene Fehler behoben. Ein großes Problem war dabei die bisherige Methode, mit welcher Daten vom Backend angefragt wurden. Diese funktioniert für unsere Anforderungen in den meisten Fällen nicht. Dies sorgte diese Woche für ein hohes Maß an Frustration.
+Der Szeneneditor und die Erstellung von Diagrammen im Frontend hat ebenfalls Fortschritte gemacht.
+Die Auswahl von mehreren Datenquellen für einen Infoprovider wurde nun auch implementiert und funktioniert soweit. Lediglich das Design muss an einigen Stellen ausgebessert werden.
+Die Dokumentation für das Frontend wurde ebenfalls erweitert, sodass einige der neuen Komponenten in dieser bereits enthalten sind.
+
+#### Aufgaben für das Wochenende
+Am Wochenende wird noch die Bearbeitung von Infoprovidern begonnen. Außerdem wird noch am Szeneneditor weitergearbeitet.
+
+### Planungsmeeting (24.05.2021)
+
+#### Zusammenfassung
+Es konnten wieder einige Ziele der letzten Woche erreicht werden. Bei einigen Punkten, wird allerdings im Laufe dieser Woche noch nachgebessert, damit die Features fehlerfrei implementiert und wie geplant eingebaut sind.
+
+Über das Wochenende hinweg wurde noch die Bearbeitung des Infoproviders begonnen und der Szeneneditor fortgeführt. In diesem ist es nun auch möglich, Daten von Infoprovidern einzupflegen. Dazu werden die entsprechenden Textstellen mit Unterstrichen getagged.
+
+#### Aufgaben
+
+##### Frontend
+Im Frontend soll diese Woche die Bearbeitung des Infoproviders fortgeführt werden. Gleichzeitig soll die Komponente für die Diagrammerstellung zum Review freigegeben und auch durchgeschaut werden. Außerdem soll es möglich werden, die angelegten Datenquellen wieder zu löschen und auch an das Backend zu senden, um diese abzuspeichern. Weiterhin sollen viele kleinere Bugs behoben werden. Schließlich soll auch der Szeneneditor weitergeführt werden und in das Repository übertragen werden.
+
+##### Backend
+Das Backend wird diese Woche den Scheduler etwas abändern müssen, damit eine Historisierung für die einzelnen Datenquellen möglich wird. Durch eine Unklarheit war bisher nur die Möglichkeit gegeben, den gesamten Infoprovider zu einem Zeitpunkt zu historisieren und nicht jede Datenquelle einzeln. Gleichzeitig sollen die neuen Diagramm-Funktionen getestet werden und die Unit-Tests dahingehend eventuell erweitert werden.
+
+##### Zwischenpräsentation
+Diese Woche wird vom Teamleiter eine grobe Struktur für die Zwischenpräsentation vorgeschlagen. Dafür wird ein Treffen mit jedem Teammitglied einzeln durchgeführt. In diesem Treffen soll herausgefunden werden, an welchen Teilen jedes Teammitglied mitgearbeitet hat und bei welchen Teilen es gerne in der Präsentation etwas beitragen würde. Auf diese Weise soll niemand etwas vorstellen müssen, was ihn nur halb interessiert hat.
+
+Nach diesen Meetings soll die Struktur finalisiert werden, damit anschließend an der Präsentation selbst gearbeitet werden kann.
+
+### Fortschrittsbesprechung (28.05.2021)
+
+#### Zusammenfassung
+Das Backend hat den Scheduler so umgestellt, dass dieser mit mehreren API-Quellen umgehen kann. Außerdem wurde die Diagramm-Funktion so angepasst, dass das Backend die vom Frontend gesendeten Daten versteht.
+Weiterhin wurden Absprachen getroffen, wie erstellte Szenen im Backend behandelt werden, bzw. wie diese an das Backend gesendet werden.
+
+Im Frontend wurde die Bearbeitung des Infoproviders fortgeführt und es wurden viele kleinere Dinge korrigiert. Einer der Bugs hatte dabei mit zyklischen Strukturen zu tun, weshalb das nachfolgend beschriebene Pattern für die weitere Entwicklung im Frontend verwendet werden soll:
+Jeder Typ, der in mehreren Komponenten verwendet wird, wird nun nicht mehr in einer Oberkomponente mittels `export` definiert, sondern zusammen mit anderen Typen in eine eigene Datei geschrieben. Jede Komponente, die diesen Typen verwenden will, importiert diesen dann aus der Datei. Dadurch können zyklische Strukturen vermieden werden.
+
+#### Stand der Zwischenpräsentation
+Es sind alle Gespräche abgeschlossen und die Themen wurden verteilt. Bis Anfang der nächsten Woche soll jedes Teammitglied sich Notizen zu seinem Thema machen. Diese sollen dem Teamleiter zugesendet werden, sodass sie ohne große Probleme auf eine Powerpoint-Präsentation übertragen werden können. Dabei umfassen die Notizen auch die zugehörigen Abbildungen.
+
+Vor dem abschicken sollte jedes Teammitglied durch Vorsprechen überprüfen, ob die angestrebten Inhalte in drei Minuten zu erklären sind. So soll ein späterer Umbau der Präsentation umgangen werden.
+
+#### Aufgaben für das Wochenende
+Der bisherige Diagramm-Branch soll nach den geschehenen Code-Reviews gemerged werden. Weiterhin soll im Backend begonnen werden, die Methode zu entwerfen, welche dazu verwendet werden soll, um die Daten des Frontends so umzubauen, dass das Backend das Format für die spätere Verwendung versteht. Falls noch Zeit ist, werden die bereits implementierten Routen für die Diagramme auch im Zusammenspiel mit dem Frontend getestet.
+
+Außerdem wollen einige Mitglieder über das Wochenende ihre Notizen zur Präsentation bereits erstellen.
+
+### Sprintplanung (31.05.2021)
+
+#### Zusammenfassung
+Insgesamt konnten alle Aufgaben für die letzte Woche erfüllt werden. Der Szeneneditor wurde zwar noch nicht in das Projekt integriert, dies wird aber zu Beginn dieser Woche nachgeholt werden.
+
+In dieser Woche soll der Infoprovider fertiggestellt werden, d.h. eine Kommunikation zwischen Back- und Frontend wird möglich. Gleichzeitig soll die Bearbeitung des Infoproviders fortgeführt, und der Szeneneditor in das Hauptprojekt transferiert werden.
+
+Die Transformierung, welche in den letzten Protokollen angedacht wurde, ist nun nicht mehr notwendig und kann daher ignoriert werden. Weiterhin haben wir uns im Team darauf geeinigt, Arrays bei der Datenauswahl zunächst so zu behandeln, wie dies bisher von uns implementiert wurde. Dies bedeutet, dass bei Arrays immer zuerst der Index 0 ausgewählt wird, und der Nutzer daran selbst nichts ändern kann. Sollte am Ende des Projektes noch Zeit sein, die Funktionalität dahingehend zu erweitern, so wird dies gemacht.
+
+#### Aufgaben
+
+##### Frontend
+Im Frontend werden diese Woche noch die restlichen Bugs gefixt, welche in den letzten Wochen aufgefallen sind. Gleichzeitig wird eine Möglichkeit gegeben, erstellte Datenquellen noch vor dem versenden an das Backend wieder zu löschen. Außerdem muss die Methode geschrieben werden, welche die Struktur des Frontends in eine für das Backend lesbare Struktur übersetzt. Nachdem auch die Diagramme dann auf mehrere Datenquellen umfunktioniert wurden, ist der Infoprovider in seiner Erstellung abgeschlossen.
+
+Der Szeneneditor soll, wie oben bereits erwähnt, in das Hauptprojekt übertragen werden. Außerdem sind auch hier Bugfixes und die Erstellung einer Dokumentation geplant. Zusätzlich soll noch das Dreieck als Form im Szeneneditor verfügbar gemacht werden.
+
+##### Backend
+Im Backend werden diese Woche einige Bugfixes bei bestehendem Code vorgenommen, und die Diagrammfunktionalität wird getestet. Weiterhin sollen bereits Routen für die Szenenerstellung implementiert werden. Das entsprechende Format, welches für die Erstellung von Videojobs benötigt wird, soll ebenfalls ausgearbeitet werden.
+
+Außerdem soll geschaut werden, in welcher Form das Backend bereits die bedingte Auswahl von Bildern unterstützt. "Bedingte Auswahl" meint dabei, dass ein Bild angezeigt wird, welches durch das eintreten einer bestimmten Bedingung gewählt wird. Diese Bedingung muss vom Nutzer vorher festgelegt worden sein. Wenn solch eine Funktionalität bereits vorhanden ist, so soll dokumentiert werden, in welchem Format solch eine Auswahl angegeben werden kann. Somit kann vom Frontend diese Information im Szeneneditor evtl. direkt genutzt werden.
+
+##### Präsentation
+Im Laufe des heutigen Tages oder des morgigen Tages, sollen die Notizen für die Zwischenpräsentation von allen Teammitgliedern fertiggestellt werden. Mit diesen Notizen werden Sören und Daniel diese Woche die Powerpoint-Präsentation erstellen. Ziel ist es, dass diese im Laufe der Woche entweder via Slack bereitgestellt, oder auf der Fortschrittsbesprechung gezeigt werden kann.
+
+### Wochenfortschritt (04.06.2021)
+
+#### Zusammenfassung
+Bisher wurden die restlichen Bugs im Frontend gefixt und der Szeneneditor wurde größtenteils in das eigentliche Projekt übertragen. Hier gibt es aber noch kleinere Probleme, wenn das Frontend zusammen mit dem Backend gestartet wird. Weiterhin wurden die Diagramme auf mehrere Datenquellen erweitert, und es wurde eine Methode geschrieben, welche einen Infoprovider an das Backend senden kann. Diese Methode muss jedoch noch getestet werden.
+
+Das Backend hat ebenfalls seine Aufgaben größtenteils erfüllt. Über das Wochenende wurde die Aufgabe erteilt, die erwähnte Methode zum senden von Infoprovidern aus dem Frontend zu testen, damit bei Fehlern nächste Woche noch daran gearbeitet werden kann.
+
+Weiterhin wurde der erste Entwurf der Zwischenpräsentation vorgestellt, welcher nur kleineren Verbesserungen unterzogen werden muss.
+
+#### Aufgaben für das Wochenende
+
+##### Frontend
+Über das Wochenende hinweg soll nach Möglichkeit ein "Löschen"-Button für Datenquellen implementiert werden. Wenn dieser allerdings erst nächste Woche gemacht wird, wäre dies auch nicht schlimm.
+
+##### Backend
+Das Backend soll über das Wochenende hinweg primär testen, ob das Übersenden von Infoprovidern vom Frontend funktioniert.
+
+##### Zwischenpräsentation
+Über das Wochenende hinweg soll die Zwischenpräsentation mit den Anmerkungen des Teams überarbeitet werden. Hierzu sind vor allem kleinere Anpassungen in der Rechtschreibung oder Formulierung zu machen. Weiterhin sind einige wenige Screenshots hinzuzufügen bzw. zu bearbeiten.
+
+### Sprintplanung (07.06.2021)
+
+#### Zusammenfassung
+Über das Wochenende hinweg ist die Dokumentation zum Dashboard und zur Bearbeitung des Infoproviders größtenteils fertiggeworden. Außerdem wurde die Integration des Szeneneditors in das Hauptprojekt fortgeführt. Diese soll diese Woche abgeschlossen werden und die restlichen Bugs sollen korrigiert werden. Auch ist es nun möglich bei der Erstellung von Infoprovidern Datenquellen wieder zu löschen. Eine Bearbeitung von bestehenden Quellen während der Erstellung ist nicht umgesetzt und auch nicht geplant.
+
+Im Backend wurden die Routen für die restlichen Features weitergeführt, sind aber noch nicht abgeschlossen.
+
+Auch wurde die Zwischenpräsentation bereits in Teilen überarbeitet und soll bis zum 08.06.2021 vollständig überarbeitet sein, um diese Herrn Kammer präsentieren zu können. Auch wurde eine Übersicht der erledigten und noch offenen Aufgaben für diese Woche erstellt, um abzuschätzen, welche Aufgaben noch machbar sind. Die Erstellung des Dokuments wurde deshalb in Auftrag gegeben, da vom Team eine Übersicht benötigt wurde, um einen Fokus setzen zu können. Dadurch soll das Projekt mit einem runden Abschluss abgegeben werden können.
+
+#### Aufgaben für die aktuelle Woche
+
+##### Frontend
+Im Frontend soll vorrangig die Bearbeitung von Infoprovidern abgeschlossen werden und die zugehörige Dokumentation soll in großen Teilen abgeschlossen werden. Gleichzeitig sollen die bisherigen Änderungen geprüft und zum Merge freigegeben werden. Auch soll der Szeneneditor diese Woche möglichst fertiggestellt werden.
+
+##### Backend
+Das Backend wird diese Woche vorrangig Funktionstests durchführen (auch zusammen mit der Frontend-Komponente). Dabei werden insbesondere die programmierten Routen getestet. Auch soll vom Backend her geschaut werden, ob es möglich ist, Bilder als BLOP zur versenden. Weiterhin  soll dem Frontend das Datenformat für die Erstellung von Videos zur Verfügung gestellt werden.
+
+### Fortschrittsbesprechung (11.06.2021)
+
+#### Zusammenfassung
+Die Aufgaben der Woche wurden größtenteils bereits erfüllt. Lediglich manche Reviews müssen noch durchgeführt werden und einige wenige Komponenten sind für die Bearbeitung des Infoproviders noch von Nöten. Der Szeneneditor hat ebenfalls Fortschritte gemacht, konnte allerdings noch nicht vollständig fertiggestellt werden.
+
+Selbst ein erster Entwurf für einen Videojob-Editor wurde erstellt. Dieser muss allerdings zunächst ohne Drag & Drop funktionieren, da hier die Frameworks für React und Type-Script allesamt massive Bugs aufweisen.
+
+Das Backend hat seine Aufgaben, welche es geplant hatte, erledigt und arbeitet weiter an den Routen, um neu hochgeladene Bilder speichern zu können.
+
+#### Aufgaben für das Wochenende
+
+##### Frontend
+Hier wird die Bearbeitung am Wochenende größtenteils fertiggestellt. Nächste Woche soll hier lediglich die Komponente für Basiseinstellungen hinzukommen, um die Bearbeitung abschließen zu können. Auch werden noch einige Reviews vorgenommen. Weiterhin sollen die Bugs im Szeneneditor korrigiert werden, welche momentan noch vorhanden sind.
+
+##### Zwischenpräsentation
+Bis Montagabend soll die Version der Präsentation fertig sein, welche auch für die Zwischenpräsentation verwendet wird. Dafür sollen über das Wochenende hinweg die einzelnen Anmerkungen von Herrn Kammer in die Präsentation mitaufgenommen werden. Sören wird die Präsentation größtenteils bearbeiten, benötigt aber dafür die Screenshots der einzelnen Teammitglieder. Diese sollten deshalb bis spätestens Montagmorgen fertiggestellt sein.
+
+### Planungsmeeting (14.06.2021)
+
+#### Zusammenfassung
+Über Das Wochenende hinweg wurde der Szeneneditor größtenteils an das Design des aktuellen Frontends angepasst. Hierbei müssen nun nur noch kleinere Dinge angepasst werden. Ebenfalls wurde die Bearbeitung von historisierten Daten implementiert. Dabei ist ein Bug aufgefallen, bei welchem in `EditDataSelection` fälschlicherweise angezeigt wird, dass sich API-Daten verändert haben und die bisherige Auswahl verloren geht, obwohl sich nichts zur ursprünglichen API geändert hat.
+
+Auch wurde am Wochenende der Code reviewt, welcher die Funktion bereitstellt, neue Datenquellen bei der Bearbeitung hinzuzufügen.
+
+#### Aufgaben für die aktuelle Woche
+
+##### Frontend
+Im Frontend soll an verschiedenen Stellen weitergearbeitet werden, welche hier grob skizziert werden:
+* Bugfixes in vielen Teilen des Frontends
+* Anzeige von allen Szenen und Videos im Dashboard
+* Erstellung von Videos (Texte hinzufügen)
+* Szeneneditor (Verwendung von API-Daten und Absenden einer Szene an das Backend)
+* Code-Reviews zu aktuell ausstehenden Branches
+* Dokumentation der neuen Frontend-Teile
+
+##### Backend
+Im Backend sollen die Routen für Szenen fertiggestellt werden und es sollen einige Tests durchgeführt werden. Weiterhin soll dabei geholfen werden, bei der Diagrammerstellung ein Preview des Diagramms anzuzeigen. Hierbei wird das Backend mit einem Frontend-Mitglied zusammenarbeiten.
+
+##### Zwischenpräsentation
+Bis heute Abend soll der finale Entwurf für die Zwischenpräsentation fertiggestellt werden. Gleichzeitig hat jedes Teammitglied die Aufgabe seinen eigenen Präsentationsteil zu üben. Am Dienstag um 09:30 Uhr wird die Präsentation dann zusammen geübt. Sollte diese Generalprobe gut funktionieren, so kann die Vorbereitung der Zwischenpräsentation als abgeschlossen betrachtet werden.
+
+### Fortschrittsbesprechung (18.06.2021)
+
+#### Zusammenfassung
+Die vergangene Woche steht im Zeichen der Zwischenpräsentation. Für diese wurde diese Woche viel Zeit investiert, um diese gut vortragen zu können. Dabei wurden viele Bugs und Test-Buttons behoben, damit die Benutzeroberfläche einen guten Eindruck machen kann. Weiterhin wurde an vielen Fehlern gearbeitet, welche nicht zwangsläufig für die Präsentation wichtig waren, jedoch trotzdem behoben werden sollten.
+
+Aber auch Feature-seitig wurde weiterhin gearbeitet. So ist die Einbindung der Komponente zum Bearbeiten der Basiseinstellungen bei der Editierung eines Infoproviders fast fertig. Das Backend hat außerdem die Routen für Szenen und Videos fertiggestellt. Hier ist es ebenfalls bereits möglich, Videos mit der neuen modularisierten Datenstruktur zu erstellen.
+
+#### Aufgaben für das Wochenende
+
+##### Frontend
+Im Frontend soll die Editierung der Basiseinstellungen fortgesetzt und der Szeneneditor soll weiter implementiert werden. Gleichzeitig soll die Doku zu den Bug-Fixes erstellt werden, die diese Woche gemacht wurden.
+
+#### Ergebnis der Zwischenpräsentation
+Das Team ist zufrieden mit dem Ergebnis der Zwischenpräsentation und nimmt das Feedback auf jeden Fall mit in die Endpräsentation. Die Arbeit an dieser soll in ca. 1,5 Wochen begonnen werden.
+
+### Planungsmeeting (21.06.2021)
+
+#### Zusammenfassung
+Über das Wochenende hinweg wurde die Möglichkeit fertiggestellt, auch die `BasicSettings` einer Datenquelle zu bearbeiten. Weiterhin wurde im Szeneneditor der Datentyp erstellt, mit welchem eine Szene an das Backend gesendet werden kann. Hier muss lediglich noch die Kommunikation mit dem Backend erfolgen.
+
+Insgesamt konnten viele Ziele der letzten Woche erreicht werden. Lediglich die Textbearbeitung beim Videoeditor und einige Teile der Dokumentation konnten letzte Woche nicht abgeschlossen werden. Diese Aufgabenteile werden allerdings diese Woche nachgeholt.
+
+#### Aufgaben
+
+##### Frontend
+Im Folgenden sollen die Aufgaben des Frontends für diese Woche grob skizziert werden:
+* Videoeditor: Anzeige von Infoprovidern und Daten für TTS.
+* Videoeditor: Option zum Hinzufügen von Texten, welche von einer TTS vorgelesen werden können.
+* Dokumentation (Frontend): Fehlende Abschnitte ergänzen, insbesondere soll hier eine Dokumentation zum Szeneneditor und zur Bearbeitung des Infoproviders entstehen.
+* Szeneneditor: Übermittlung einer Szene an das Backend.
+* Szeneneditor: Bilderupload für Hintergrundbilder.
+* Allgemeine Bugfixes für Fehler, welche in ersten Testläufen aufgefallen sind.
+
+##### Backend
+Das Backend soll insbesondere dabei helfen, den Datentyp des Szeneneditors richtig abzusenden. Hierzu setzen sich Mitglieder aus beiden Teams zusammen. Weiterhin ist ein Meeting geplant, um den Datentyp für die Videoerstellung richtig zu verstehen. Ansonsten fallen weiterhin einige Bugfixes an, welche diese Woche erledigt werden sollen. Hierbei soll insbesondere einem Bug auf den Grund gegangen werden, welcher dafür sorgt, dass der Server nach einigen Vorschau-Anfragen für Diagramme abstürzt. Bisher ist jedoch unklar, ob dieses Problem lösbar ist und falls ja, wie.
+
+##### Generell
+Bevor die Arbeit an der Abschlusspräsentation nächste Woche startet, soll sich jedes Teammitglied Gedanken darüber machen, was es im Zuge dieser Präsentation vorstellen möchte. Diese Gedanken sollen noch nicht finalisiert sein. Für einen schnelleren Ablauf in der Vorbereitung ist es jedoch nützlich, wenn jeder bereits eine grobe Idee hat.
+
+### Fortschrittsbesprechung (25.06.2021)
+
+#### Zusammenfassung
+Grundsätzlich konnten bis zu diesem Zeitpunkt der Woche im Grunde alle Aufgaben erledigt werden, welche angesetzt waren. Lediglich bei der Bearbeitung der TTS fehlt noch die Option, historisierte Daten zu verwenden. Diese soll allerdings über das Wochenende hinweg, falls möglich hinzugefügt werden. Was ebenfalls noch fehlt, ist die Möglichkeit, Bilder hochzuladen während der Erstellung einer Szene. Dies soll allerdings als Nächstes in Angriff genommen werden.
+
+Konkret wurde diese Woche der Videoeditor in vielen Teilen fertiggestellt. So ist es nun möglich, als ersten Schritt die verwendeten Infoprovider zu wählen und anschließend die Szenen. Dabei können die Szenen, wie bereits letzte Woche erwähnt, verschoben werden. Neu ist die Funktionalität, Texte oder Pausen für jede Szene hinzuzufügen. Dabei kann bei den Texten auf die Daten der Infoprovider zurückgegriffen werden. Diese werden dann immer in das aktuell ausgewählte Textfeld hinzugefügt. Weiterhin wurden viele Bugfixes im Frontend vorgenommen und ein erster Entwurf für die Szenen auf der Startseite ist entstanden. Dieser hat bisher noch das "Problem", dass um die Szenen zu laden, ein Button geklickt werden muss. Dies hängt mit React-spezifischen Problemen zusammen, welche in diesem Protokoll jedoch nicht weiter erklärt werden sollen.
+
+Im Backend wurden viele Bugfixes vorgenommen, sodass unter anderem der Server nicht mehr abstürzt, wenn einige Diagramme gerendert wurden. Weiterhin wurden einige neue Routen erstellt, um die Vorschau für Szenen anzuzeigen. Bereits bestehende Routen wurden ebenfalls teilweise angepasst, damit diese mehr den Wünschen und dem Format des Frontends entsprechen.
+
+### Planungsmeeting (28.06.2021)
+
+#### Zusammenfassung
+Im heutigen Meeting wurde zu Beginn der fertiggestellte Texteditor für die Erstellung von Texten für die TTS gezeigt. Am Freitag fehlten dem zugehörigen Dialog noch Optionen, um historisierte Daten einfügen zu können. Dies ist nun allerdings auch möglich. Dabei ist der Editor somit generell fertiggestellt und bedarf lediglich einer Design-technischen Überarbeitung.
+
+Weiterhin wurden diese Woche neue Aufgaben verteilt, welche maßgeblich in Bugfixes, Dokumentation und Code kommentieren bestehen. Allerdings müssen auch Dinge implementiert bzw. recherchiert werden, um neue Features fertigzustellen.
+
+#### Aufgaben für die Woche
+
+##### Backend
+* Format der Infoprovider anpassen, um String-Ersetzungen und Array-Verarbeitung zu unterstützen. Dieses Format soll dem Frontend mitgeteilt werden.
+* Format der Logs an das Frontend weitergeben.
+* Gegebenenfalls detaillierte Logs für Infoprovider erstellen (falls nicht vorhanden).
+* Dokumentationsreviews oder Protokollreviews.
+
+##### Frontend
+* Design-Überarbeitung für TTS-Editor.
+* Dokumentation des TTS-Editor.
+* Dokumentation des Szeneneditors.
+* Code-Review des bisherigen Szeneneditors.
+* Viele Bugfixes.
+* Möglicherweise Anzeige von Logs.
+* Review der Dokumentation zum bisherigen Video-Editor.
+* Review der Dokumentation des TTS-Editor nach Fertigstellung.
+
+##### Abschlusspräsentation
+Damit genug Zeit für die Abschlusspräsentation ist, beginnen wir bereits jetzt damit, diese vorzubereiten. Hierzu wurden heute die Themen grob verteilt. Dabei kamen folgende Themen zusammen:
+* Projektübersicht, Organisation und TTS-Editor (Daniel)
+* Datenbankmodell, Datenhaltung und Scheduler (Sören)
+* Ablauf der Pipeline (Theorie und Praxis) und Formelgenerierung (Tim)
+* Frontend-Architektur und Verwendung von `ListItemRepresentation` (Janek)
+* Szeneneditor: Recherchierte Frameworks, verwendetes Framework, Codebeispiele (Philipp)
+* Formeleditor: Verwendete Mechanismen und warum kein vorgefertigtes Framework? (Tristan) - Hier folgen eventuell noch weitere Themen
+
+Die Aufgabe ist es, die Themen bis zum nächsten Dienstag (06.07.2021) zu konkretisieren und so aufzubereiten, dass diese mit Formeln verwendet werden können.
+
+### Fortschrittsbesprechung (02.07.2021)
+
+#### Zusammenfassung
+Insgesamt wurde die vergangene Woche an vielen Kleinigkeiten weitergearbeitet, wobei das Backend mittlerweile den größten Teil für das Projekt abgeschlossen hat. Hier fehlen lediglich noch Tests im Zusammenspiel mit dem Frontend, einige Kleinere Features und eventuelle Bug-Fixes oder Anpassungen. Auch im Frontend geht die Implementierung an neuen Features eimälig dem Ende entgegen: Die letzteren größeren Features wurden mit der String- und Array-Verarbeitung hinzugefügt. Nun geht es primär darum, die Anwendung für die Endpräsentation vorzubereiten und die letzten Bugs zu beseitigen.
+
+Insbesondere der Szeneneditor bedarf noch etwas mehr Arbeit, um abgeschlossen zu werden. Deshalb werden hierfür ab nächste Woche mehrere Mitglieder aus dem Frontend dabei unterstützen, diesen fertig zu implementieren. Dabei geht es primär um das Einfügen von Diagrammen und Bugfixes beim laden von Bildern.
+
+Betrachtet man die Aufgabenliste des letzten Protokolls, so kann gesagt werden, dass alle Aufgaben erledigt wurden. Die Logs müssen lediglich noch auf das Format des Backends umgestellt werden und es muss für jeden Log ein Button hinzugefügt werden, welcher den Traceback anzeigt. Dies passiert nicht in der gleichen Darstellung, wie die letzten Werte, da es sein kann, dass dieser sehr lang ist. Somit wäre dieser in der aktuellen Darstellung (Tabelarisch) ungeeignet.
+
+Ebenfalls wurde während des Meetings angesprochen, dass in der Abschlussphase Probleme nach kurzer eigener "Probierzeit" mit dem Team geteilt werden sollten, um möglichst wenig Zeitverzug zu verursachen. Dies ist essentiell wichtig, um das Projekt zu einem guten Abschluss zu bringen.
+
+#### Aufgaben für das Wochenende
+Jedes Teammitglied sollte sich, falls noch nicht geschehen, weiter Gedanken für seinen Präsentationsteil machen, damit die Arbeit an den Folien Mitte nächster Woche beginnen kann. Auf diese Art und Weise ist genug Zeit, die Präsentation so vorzubereiten, dass ein zufriedenstellendes Ergebnis erreicht werden kann.
+
+### Planungsmeeting (05.07.2021)
+
+#### Zusammenfassung
+Über das Wochenende hinweg wurden noch einige Bugs gefixt, sodass die Erstellung von Infoprovidern nun wieder funktionieren sollte. Außerdem wurde die Route für Logs fertiggestellt und auch das Code-Review zum Szeneneditor ist soweit abgeschlossen.
+
+Diese Woche fallen sehr viele Aufgaben an, welche begonnene Features abschließen sollen. Hier ist insbesondere der Szeneneditor zu nennen, welcher fertig werden muss.
+
+#### Aufgaben für die aktuelle Woche
+
+##### Frontend
+* Abschluss des Szeneneditors (erste Version)
+* Bugfixes in der Bearbeitung von Infoprovidern
+* Reviews zu Dokumentationsteilen über String-Replacement und Array-Processing
+* String-Replacements und Array-Processings zu TTS im Videoeditor hinzufügen
+* Icons für Diagramm-Auswahl im Infoprovider erstellen / heraussuchen (Wird vom Backend erledigt, damit sich das Frontend auf die anderen Aufgaben konzentrieren kann)
+
+##### Backend
+* Route für generierte Vorschau-Bilder zur Verfügung stellen
+* Einige Bugfixes in bestehenden Routen
+* String-Replacement und Array-Processing fertig implementieren
+
+##### Abschlusspräsentation
+Bis zum Abend des 06.07.2021 hat jedes Teammitglied noch Zeit seinen Teil für die Präsentation fertigzustellen. In den darauffolgenden Tagen soll dann die Präsentation von Sören und Daniel erstellt werden, damit diese schon am Freitag eventuell dem restlichen Team gezeigt werden kann.
+
+### Fortschrittsbesprechung (09.07.2021)
+
+#### Zusammenfassung
+Viele der im vorhergehenden Protokoll erwähnten Aufgaben konnten diese Woche abgeschlossen werden. Einzig der Szeneneditor ist noch nicht vollständig abgeschlossen. Hier müssen noch einige kleinere Probleme behoben werden. Diese sollen nach Möglichkeit über das Wochenende hinweg gelöst werden. Außerdem ist im Laufe der Woche aufgefallen, dass bei den Diagrammen einige kleine Änderungen von Nöten sind. Dies betrifft das Backend: hier muss dafür gesorgt werden, dass bei Diagrammen mit historisierten Daten die richtigen Daten verwendet werden. Dazu muss die bestehende Funktionalität der Historisierung aus dem alten Backend erweitert werden. In diesem war es lediglich möglich einen einzelnen Wert, welcher historisiert wurde, abzufragen. Für unseren Anwendungszweck ist es jedoch notwendig eine Reihe von Werten abzufragen. Hierfür soll es das Backend möglich machen, ein Array von Werten zu erhalten, wenn man historisierte Daten abfragt. Dieser "neue" Typ der Abfrage soll dabei die bisherigen Features nicht ersetzen, sondern diese lediglich erweitern, damit eine Abwärtskompatibilität erhalten bleibt. Auch dies soll noch dieses Wochenende passieren.
+
+Weiterhin wurde während des Meetings die bisherige Präsentation vorgestellt, welche auch beim gesamten Team sehr gut ankam. Einige kleinere Dinge sollen aber noch verbessert werden. Um diese soll sich ebenfalls am Wochenende oder zu Beginn der neuen Woche gekümmert werden.
+
+#### Aufgaben für das Wochenende
+Wie bereits erwähnt, soll am Wochenende der Szeneneditor fertiggestellt und der neue Abfragetyp für historisierte Daten implementiert werden. Weiterhin wird auch probiert, die Präsentation, soweit bereits möglich, an den Stellen zu überarbeiten, wo es nötig ist.
+
+### Planungsmeeting (12.07.2021)
+
+#### Zusammenfassung
+Am Wochenende wurde der Upload für den Szeneneditor, bis auf einige wenige Punkte, fertiggestellt. Dabei wurde der bisherige Ablauf für diesen Prozess vollständig überarbeitet. Weiterhin wird nun der gesamte Fortschritt auf einer Szene nicht mehr verworfen, wenn die Seite neu geladen wird, da die Daten im Session Storage gehalten werden.
+
+Die Aufgaben für diese Woche umfassen vor allem die endgültige Fertigstellung des Szeneneditors. Hierzu wird die Methode zum Absenden an das Backend fertiggestellt. Weiterhin muss diese Woche auch das Format für Formeln beim Absenden an das Backend einer Bearbeitung unterzogen werden, da wir hier ein neues Array eingeführt haben, welches pro Formel existiert und jeweils die verwendeten Objekte für eine Formel speichert.
+
+Ansonsten wird die Woche verwendet, um den Use-Case für die Live-Demo in der Präsentation auszuarbeiten und sich generell auf die Präsentation vorzubereiten.
+
+#### Aufgaben für diese Woche
+
+##### Frontend
+* Overview für erstellte Videos einbauen
+* Formelformat für Backend anpassen
+* Kleine Anpassungen im Videoeditor
+* Fertigstellung des Mechanismus zum Absenden von Szenen
+
+
+##### Allgemein
+Die meisten Aufgaben aus dieser Kategorie werden vom Backend-Team erledigt, da das Frontend-Team noch damit beschäftigt ist, kleinere Bugs zu fixen. Weiterhin schreiben 2 von 4 Frontend-Mitgliedern in den kommenden Wochen mehr als eine Klausur, wodurch die Leistung vom Frontend in dieser Phase eingeschränkt ist.
+
+* Projektbericht schreiben
+* Frontend durchtesten (Vollständige Durchläufe)
+* Use-Case für Live-Demo ausarbeiten
+* Präsentationsteile üben
+
+#### Kommende Meetings
+Diese Woche stehen einige Meetings an, deshalb hier eine kurze Übersicht:
+* Dienstag, 14:00 Uhr: Meeting mit Herrn Kammer
+* Mittwoch, 16:00 Uhr: Erster Durchlauf der Präsentation
+* Freitag, 16:00 Uhr: Zweiter Durchlauf der Präsentation + Fortschrittsbesprechung
+
+### Präsentationsübung (16.07.2021)
+
+#### Zusammenfassung
+Das heutige Fortschrittsmeeting wurde maßgeblich durch die Übung der Abschlusspräsentation bestimmt. Hierbei stellte sich heraus, dass der Vortrag insgesamt schon ziemlich gut geübt wurde. Es gab eigentlich keine Kritik an einzelnen Teilen mehr. Lediglich einige wenige Folien sollen bis Montag eine kleinere Überarbeitung bekommen. 
+
+Weiterhin wurden im Meeting die Probleme besprochen, welche in der Anwendung bis Montag noch zu korrigieren sind. Hierbei handelt es sich primär um Fehler, welche während der Erstellung von Szenen entstehen. Allerdings gibt es auch Fehler beim Absenden eines fertigen Videos. Diese Fehler scheinen allerdings relativ gut behebbar zu sein.
+
+#### Aufgaben für das Wochenende
+Insgesamt sollen am Wochenende sowohl im Back- als auch im Frontend die Fehler korrigiert werden, welche die Live-Demo für die Präsentation verhindern. Weiterhin soll die erste Version des Projektberichts fertiggestellt werden und die Präsentation soll final überarbeitet werden und dem gesamten Team zur Verfügung gestellt werden.
+
+#### Letztes Planungsmeeting
+Das letzte Planungsmeeting wird nicht wie üblich am Montag stattfinden, da hier die Abschlusspräsentationen geplant sind. Stattdessen wird die letzte Planung auf den Dienstag verschoben und findet an diesem Tag um 08:30 Uhr statt.
+
+### Planungsmeeting (20.07.2021)
+
+### Zusammenfassung
+In den letzten Tagen sollen hauptsächlich die restlichen identifizierten Fehler behoben werden. Außerdem soll der Projektbericht fertiggestellt werden und vom Team gelesen werden.
+
+Auch wird diese Woche noch die Videobearbeitung implementiert, wobei hierfür nicht viel Arbeit notwendig sein sollte. Anschließend wird die Dokumentation an den Stellen ergänzt, an welchen es nötig ist.
