@@ -376,6 +376,7 @@ const [selectedInterval, setSelectedInterval] = React.useState("");
 const [intervalToUse, setIntervalToUse] = React.useState<number | undefined>(0);
 const [showHistorizedDialog, setShowHistorizedDialog] = React.useState(false);
 const [backDialogOpen, setBackDialogOpen] = React.useState(false);
+const [clickedSaveButton, setClickedSaveButton] = React.useState(false);
 ````
 
 Die letzten States werden für Daten aus dem backend und einen Dialog verwendet.
@@ -446,9 +447,7 @@ return (
 In der *return*-Methode wird ein Transformer zurückgegeben, welcher eine Reference auf eine Node enthält.
 ### Transformation von Elementen
 
-Die Transformation von Elementen geschieht mit Hilfe des Transformers.
-Dabei wird, wie bereits beschrieben, der Transformer zunächst an ein Element angehängt.
-Anschließend kann der Benutzer die Größe des Elementes verändern.
+Die Transformation von Elementen geschieht mit Hilfe des Transformers. Dabei wird, wie bereits beschrieben, der Transformer zunächst an ein Element angehängt. Anschließend kann der Benutzer die Größe des Elementes verändern.
 ````javascript
 let scaleX = absTrans.x;
 let scaleY = absTrans.y;
@@ -469,17 +468,27 @@ localItems[index] = {
 };
 ````
 
-Im ausgewählten Element wird scaleX und scaleY neu gesetzt.
-Dabei wird zunächst eine Konva-Methode aufgerufen, mit der man die absolute Transformation von Elementen abfragen kann. Anschließend wird, falls der Benutzer ein Element zu groß gezogen hat, die Größe korrigiert.
-Danach werden scaleX und scaleY auf den neuen Wert gesetzt, so wie die Rotation eines Elements.
+Im ausgewählten Element wird scaleX und scaleY neu gesetzt. Dabei wird zunächst eine Konva-Methode aufgerufen, mit der man die absolute Transformation von Elementen abfragen kann. Anschließend wird, falls der Benutzer ein Element zu groß gezogen hat, die Größe korrigiert. Danach werden scaleX und scaleY auf den neuen Wert gesetzt, so wie die Rotation eines Elements.
 
 ## "Bedienfeld"
 
 ![bedienfeld_szeneneditor.png](images/scenecreation/bedienfeld_szeneneditor.png)
 
-Im Bedienfeld des Editors sind mehrere Funktionen zum Anpassen von Elementen aufgeführt.
-Der erste Button "Zurücksetzen" setzt die folgenden Elemente auf ihre Standardwerte zurück:
-* 
+Im Bedienfeld des Editors sind mehrere Funktionen zum Anpassen von Elementen aufgeführt. Der erste Button "Zurücksetzen" setzt die folgenden Elemente auf ihre Standardwerte zurück:
+* Die Zeichenfläche
+* Alle in dem obigen Feld sichtbaren Elemente
+  * Farbe
+  * Schriftfarbe
+  * Koordinaten
+  * Sprunggröße
+  * Schriftart
+  * Schriftgröße
+  * Textbreite
+  * Breite und Höhe
+* Die als nächstes hinzuzufügende Form
+* Den Text, der als nächstes hinzugefügt werden soll
+
+Dabei werden intern auch die entsprechenden Variablen zurückgesetzt. Der zweite Knopf ermöglicht es dem Benutzer entweder das zuletzt hinzugefügte Element zu entfernen bzw. im Fall, dass der Benutzer aktuell ein Element ausgewählt hat, dieses gewählte Element zu entfernen. Dabei wir
 
 ## Datenauswahl
 => Janek

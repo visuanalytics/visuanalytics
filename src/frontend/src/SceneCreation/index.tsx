@@ -879,9 +879,8 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
                     hintContent={hintContents.typeSelection}
                     large={"xl"}
                 >
-                    <Dialog onClose={() => {
-                        setFetchImageDialogOpen(false);
-                    }} aria-labelledby="backDialog-title"
+                    <Dialog
+                        aria-labelledby="backDialog-title"
                             open={fetchImageDialogOpen}>
                         <DialogTitle id="backDialog-title">
                             Bilder erneut laden
