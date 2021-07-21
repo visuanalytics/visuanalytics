@@ -694,7 +694,7 @@ def get_max_use_last(diagrams=None):
             if temp_max > max_use_last:
                 max_use_last = temp_max
 
-    return max_use_last
+    return max_use_last + 1
 
 
 def delete_infoprovider(infoprovider_id):
