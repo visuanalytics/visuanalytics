@@ -17,7 +17,7 @@ import {StepFrame} from "../../CreateInfoProvider/StepFrame";
 import {hintContents} from "../../util/hintContents";
 import Konva from 'konva';
 import {Stage, Layer, Circle, Group, Text, Image, Rect, Line, Star} from 'react-konva';
-import {TransformerComponent} from './TransformerComponent'
+import {TransformerComponent} from './Transformer'
 import {
     FrontendInfoProvider,
     uniqueId

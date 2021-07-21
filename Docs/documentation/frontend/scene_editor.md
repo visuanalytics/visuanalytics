@@ -1,6 +1,6 @@
 # Szeneneditor
 
-![SceneEditor.png](images/scenecreation/SceneEditor.png)
+![SceneEditor.png](images/scenecreation/Szeneneditor.png)
 # Infoprovider-Auswahl
 * Janek
 # Szenen-Erstellung
