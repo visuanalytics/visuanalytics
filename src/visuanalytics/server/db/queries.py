@@ -317,7 +317,7 @@ def insert_video_job(video, update=False, job_id=None):
     schedule = video.get("schedule", None)
     delete_schedule = video.get("deleteSchedule", {
         "type": "keepCount",
-        "keepCount": 2
+        "keepCount": 5
     })
     if not schedule:
         return False if not update else {"err_msg": "could not read schedule from JSON"}
