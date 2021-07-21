@@ -1074,7 +1074,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 setCurrentFontSize((items[index] as any).fontSize);
                 setCurrentTextWidth((items[index] as any).width);
             }
-            if (!items[index].id.startsWith("image")) {
+            if (!items[index].id.startsWith("image") && !items[index].id.startsWith("text")) {
                 setCurrentItemColor(items[index].color!);
             }
             currentItemRotation.current = items[index].rotation
