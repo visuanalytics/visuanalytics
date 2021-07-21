@@ -2022,7 +2022,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
 
         <StepFrame
             heading={"Szenen-Editor"}
-            hintContent={hintContents.typeSelection}
+            hintContent={hintContents.sceneEditor}
             large={"xl"}
         >
             <Grid item container justify={"center"}>

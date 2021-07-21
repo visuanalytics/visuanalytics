@@ -19,6 +19,7 @@ import {
 import {ScheduleSelection} from "./ScheduleSelection";
 import {useCallFetch} from "../Hooks/useCallFetch";
 import {FullVideo} from "../Dashboard/types";
+import {hintContents} from "../util/hintContents";
 
 /**
  TODO:
@@ -552,7 +553,7 @@ export const VideoCreation: React.FC<VideoCreationProps> = (props) => {
     return (
         <StepFrame
             heading={"Video-Editor"}
-            hintContent={null}
+            hintContent={hintContents.videoEditor}
             large={"lg"}
         >
             {selectContent()}
