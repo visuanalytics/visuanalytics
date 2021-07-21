@@ -2,6 +2,8 @@ import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import json
+import operator
+from functools import reduce
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.util import resources
@@ -385,10 +387,11 @@ def get_x_y(values, step_data, array_source, custom_labels=False, primitive=True
             array = step_data.format(values["y"])
             array = literal_eval(array)
             array = list(map(array.__getitem__, values.get("x", np.arange(len(array)))))
-            y_vals = list(map(float, list(map(lambda x: x[values["numericAttribute"]], array))))
+            y_vals = [reduce(operator.getitem, values["numericAttribute"].split('|'), x) for x in array]
+            #print("y_vals", y_vals)
             if not custom_labels:
                 x_ticks = values.get("x_ticks", {})
-                x_ticks.update({"ticks": list(map(lambda x: x[values["stringAttribute"]], array))})
+                x_ticks.update({"ticks": [reduce(operator.getitem, values["stringAttribute"].split('|'), x) for x in array]})
                 values.update({"x_ticks": x_ticks})
     else:
         y_vals = step_data.format(values["y"])
