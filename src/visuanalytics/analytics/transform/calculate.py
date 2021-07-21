@@ -36,9 +36,9 @@ def calculate_mean(values: dict, data: StepData):
     """
     for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(key, values)
-        inner_key = values.get("innerKey", None)[0]
+        inner_key = values.get("innerKey", None)
         if inner_key:
-            value = [reduce(operator.getitem, inner_key.split('|'), x) for x in value]
+            value = [reduce(operator.getitem, inner_key[0].split('|'), x) for x in value]
         new_key = get_new_keys(values, idx)
         mean_value = float(np.mean(value))
         if values.get("decimal", None):
@@ -57,9 +57,9 @@ def calculate_max(values: dict, data: StepData):
     """
     for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(key, values)
-        inner_key = values.get("innerKey", None)[0]
+        inner_key = values.get("innerKey", None)
         if inner_key:
-            value = [reduce(operator.getitem, inner_key.split('|'), x) for x in value]
+            value = [reduce(operator.getitem, inner_key[0].split('|'), x) for x in value]
         new_key = get_new_keys(values, idx)
         new_value = max(value)
         data.insert_data(new_key, new_value, values)
@@ -77,9 +77,9 @@ def calculate_sum(values: dict, data: StepData):
     """
     for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(key, values)
-        inner_key = values.get("innerKey", None)[0]
+        inner_key = values.get("innerKey", None)
         if inner_key:
-            value = [reduce(operator.getitem, inner_key.split('|'), x) for x in value]
+            value = [reduce(operator.getitem, inner_key[0].split('|'), x) for x in value]
         new_key = get_new_keys(values, idx)
         new_value = sum(value)
         data.insert_data(new_key, new_value, values)
@@ -97,9 +97,9 @@ def calculate_min(values: dict, data: StepData):
     """
     for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(key, values)
-        inner_key = values.get("innerKey", None)[0]
+        inner_key = values.get("innerKey", None)
         if inner_key:
-            value = [reduce(operator.getitem, inner_key.split('|'), x) for x in value]
+            value = [reduce(operator.getitem, inner_key[0].split('|'), x) for x in value]
         new_key = get_new_keys(values, idx)
         new_value = min(value)
         data.insert_data(new_key, new_value, values)
