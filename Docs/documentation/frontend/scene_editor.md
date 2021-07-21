@@ -5,10 +5,11 @@
 # Szenen-Erstellung
 ## Canvas
 
-Als Canvasframework haben wir uns für KonvaJS entschieden. Konva ist eine 2D-Canvas Bibliothek, ursprünglich in und für JavaScript verfasst, mit einem Port für React und Vue.
+Als Canvasframework haben wir uns für KonvaJS entschieden. KonvaJS ist eine 2D-Canvas Bibliothek, ursprünglich in und für JavaScript verfasst, mit einem Port für React und Vue.
 In unserer Implementierung haben wir die folgenden Funktionen implementiert:
+
 * Hinzufügen von Elementen (Kreise, Rechtecke, Sterne und Dreiecke)
-* Hinzufügen und Beabeiten von Texten
+* Hinzufügen und Bearbeiten von Texten
 * Hochladen und Verwenden von eigenen Bildern
 * Anpassung der Farbe von Elementen
 * Anpassung von Schriftart, Schriftfarbe und Schriftgröße
@@ -488,15 +489,34 @@ Im Bedienfeld des Editors sind mehrere Funktionen zum Anpassen von Elementen auf
 * Die als nächstes hinzuzufügende Form
 * Den Text, der als nächstes hinzugefügt werden soll
 
-Dabei werden intern auch die entsprechenden Variablen zurückgesetzt. Der zweite Knopf ermöglicht es dem Benutzer entweder das zuletzt hinzugefügte Element zu entfernen bzw. im Fall, dass der Benutzer aktuell ein Element ausgewählt hat, dieses gewählte Element zu entfernen. Dabei wir
+Dabei werden intern auch die entsprechenden Variablen zurückgesetzt. Der zweite Knopf ermöglicht es dem Benutzer entweder das zuletzt hinzugefügte Element zu entfernen bzw. im Fall, dass der Benutzer aktuell ein Element ausgewählt hat, dieses gewählte Element zu entfernen. Dabei wird das Element in das *recentlyRemovedItems*-Array geschrieben, damit der Nutzer mit Hilfe des "Rückgängig"-Buttons das Element wieder herstellen kann. Mit Hilfe des "Klonen"-Buttons kann man ein ausgewähltes Element klonen. 
+
+Die nächsten beiden Elemente sind Farbauswahl und Schriftfarbauswahl. Mit ihnen kann man jeweils die Farbe von Formen und die Schriftfarbe ändern. Weiter kann man über "X Koordinate" und "Y Koordinate" die Koordinaten eines Elementes anpassen. Die Sprunggröße dient dazu, dass der Benutzer einstellen kann, wie viele Pixel er bei einer Änderung der X oder Y Koordinate springen möchte. 
+
+Für die Textanpassung stehen die nächsten drei Felder zur Verfügung. Im ersten Feld kann man eine der folgenden Schriftarten auswählen:
+
+* Arial
+* veranda
+* Tahoma
+* Georgia
+* Times New Roman
+
+(Tipp: Benutzen Sie den folgenden Satz, um die Schriftart zu testen: "Franz jagt im komplett verwahrlosten Taxi quer durch Bayern!?"). Mit dem zweiten Feld kann man die Schriftgröße anpassen und mit dem dritten Feld die Breite des Textfeldes.
+
+Die letzten beiden Felder werden dazu verwendet, die Höhe und Breite von Elementen anzupassen.
 
 ## Datenauswahl
+
 => Janek
+
 ### ImageLists
 #### Abfrage von Bildern
+
 #### Wiederherstellung
+
 #### Posten von Bildern
+
 ### DiagramsList
+
 ## Speichern der Szene
 
-* Stages (Background, Preview)
