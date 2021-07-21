@@ -2035,7 +2035,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                        disabled={props.sceneFromBackend !== undefined}
                                        color={"primary"} label={"Szenen-Titel"}
                                        value={sceneName}
-                                       onChange={event => (setSceneName(event.target.value.replace(' ', '_')))}>
+                                       onChange={event => (setSceneName(event.target.value.replace(' ', '_').toLowerCase()))}>
                             </TextField>
                         </Grid>
                         <Grid item>
@@ -2718,7 +2718,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                             "Das Zurückgehen zum vorherigen Schritt erfordert, dass die erstellte Szene verworfen wird."
                         }
                         { props.sceneFromBackend !== undefined &&
-                            "Wenn sie die Bearbeitung abbrechen, gehen sämtliche an der Szene vorgenommenen Änderungen verloren."
+                            "Wenn Sie die Bearbeitung abbrechen, gehen sämtliche an der Szene vorgenommenen Änderungen verloren."
                         }
                     </Typography>
                     <Typography gutterBottom>
