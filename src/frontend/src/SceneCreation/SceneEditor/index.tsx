@@ -1380,7 +1380,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         setCurrentFontFamily("Arial");
         setCurrentFontSize(20);
         setCurrentTextWidth(200);
+        setCurrentTextContent("");
         setStepSize(5);
+        //TODO remove console clear in production
         console.clear();
     }
 
@@ -1457,7 +1459,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 }
             }
             setRecentlyRemovedItems(lastElem);
-            // decrement the counter of element
+            // decrement the counter of elements
             setItemCounter(itemCounter - 1);
         } else {
             // get the index of the selected element

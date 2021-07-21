@@ -1,10 +1,8 @@
 # Szeneneditor
-![SceneEditor.png](images/infoprovider/SceneEditor.png)
+![SceneEditor.png](images/scenecreation/SceneEditor.png)
 # Infoprovider-Auswahl
 * Janek
 # Szenen-Erstellung
-
----
 ## Canvas
 
 Als Canvasframework haben wir uns für KonvaJS entschieden. Konva ist eine 2D-Canvas Bibliothek, ursprünglich in und für JavaScript verfasst, mit einem Port für React und Vue.
@@ -40,7 +38,7 @@ Sie werden über ein Array aus eigenen Datentypen über die forEach-Methode hinz
 * Funktionsweise
 ### Datentypen
 Alle Datentypen für Elemente enthalten die folgenden Eigenschaften:
-````typescript
+````javascript
 x: number;
 y: number;
 id: string;
@@ -63,7 +61,7 @@ Der Wert ist standardmäßig als eins festgelegt.
 Wenn das Element verkleinert wird, so wird der Wert kleiner als eins, ansonsten größer als eins.
 
 #### Texte
-````typescript
+````javascript
 textContent: string;
 fontFamily: string;
 fontSize: number;
@@ -75,7 +73,7 @@ In **textContent** wird der eigentliche Text gespeichert, welcher auf dem Canvas
 **fontFamily** und **fontSize** geben jeweils die Schriftart und Schriftgröße des Elements an.
 
 #### Bilder
-````typescript
+````javascript
 image: HTMLImageElement;
 imageId: number;
 imagePath: string;
@@ -101,7 +99,7 @@ Die folgenden Formen können auf dem Canvas hinzugefügt werden:
 
 Am Beispiel des Sterns kann man gut sehen, was passiert, wenn man ein Sternelement ausgewählt hat und dies auf dem Canvas hinzufügt.
 
-````
+````javascript
 case "Star": {
     const arCopy = items.slice();
     arCopy.push({
@@ -130,7 +128,7 @@ Als Standardfarbe haben wir uns für Schwarz entschieden.
 Höhe und Breite werden dabei passend zur Form gesetzt.
 
 #### Backend-Typen
-````typescript
+````javascript
 export type DataText = {
     description: string,
     type: string,
@@ -176,7 +174,7 @@ Die beiden Variablen werden dabei gerundet, da das Backend keine Floats unterst�
 **color** gibt die Farbart des Bildes an. Dies kann "RGBA" oder "L" sein.
 **path** gibt den Dateipfad zu dem Element auf dem Laufwerk an.
 
-````typescript
+````javascript
 export type BaseImg = {
     type: string;
     path: string;
@@ -187,7 +185,7 @@ export type BaseImg = {
 Das BaseImg stellt die Basis für die fertige Szene dar. Die Variable **type** muss dabei immer "pillow" sein. **path** enthält den Pfad zum aktuellen Hintergrundbild.
 **overlay** enthält ein Array aus den vorher beschriebenen DataText und DataImages.
 
-````typescript
+````javascript
 export type JsonExport = {
     scene_name: string;
     used_images: number[];
@@ -224,7 +222,7 @@ Frontenddaten:
 
 Das *items*-Array enthält alle Elemente, welche auf dem Canvas hinzugefügt werden, mit Ausnahme von Hintergrundfarbe und Hintergrundbild.
 Das Array wird mit Hilfe der folgenden Funktion im Hauptarray dargestellt:
-````
+````javascript
 {items.map((item: any) => (
     (item.id.startsWith('circle') &&
         <Circle
@@ -274,7 +272,7 @@ Darin wird definiert, was passieren soll, wenn der Benutzer das Element über ei
 Der Hintergrund wird über eine Abfrage verwaltet, bei der konditionelles Rendering eingesetzt wird. Mit Hilfe des **&&** wird nur ein Element gerendert, wenn das erste Statement *true* ist.
 Da der backGroundType ein String ist, kann auf keinen Fall beides gerendert werden.
 
-````
+````javascript
     {backGroundType === "COLOR" &&
         <Rect
             name="background"
@@ -306,7 +304,7 @@ Bei beiden werden die onClick und onMouseDown-Methoden der Stage übergeben.
 
 Für den Szeneneditor benötigen wir eine Reihe von State-Variablen, die wir im Folgenden erklären.
 
-````typescript
+````javascript
 const [backGroundType, setBackGroundType] = React.useState(props.sceneFromBackend !== undefined ? props.sceneFromBackend.backgroundType : "COLOR");
 const [backGroundColor, setBackGroundColor] = React.useState(props.sceneFromBackend !== undefined ? props.sceneFromBackend.backgroundColor :"#FFFFFF");
 const [backGroundColorEnabled, setBackGroundColorEnabled] = React.useState(props.sceneFromBackend !== undefined ? props.sceneFromBackend.backgroundColorEnabled : false);
@@ -318,7 +316,7 @@ Die ersten States, die wir anschauen möchten sind die States, welche zur Identi
 **backGroundColorEnabled** enthält einen Boolean, der *true* ist, wenn eine Hintergrundfarbe verwendet wird und ansonsten *false*.
 Alle diese States werden auch bei der Bearbeitung aus dem Backend geladen.
 
-````typescript
+````javascript
 const [currentlyEditing, setCurrentlyEditing] = React.useState(false)
 const [currentFontFamily, setCurrentFontFamily] = React.useState("Arial");
 const [currentFontSize, setCurrentFontSize] = React.useState(20);
@@ -337,7 +335,7 @@ const [stepSize, setStepSize] = React.useState(5);
 
 Diese States werden verwendet, um Elemente, welche auf der Webseite gerendert werden, zu verändern.
 
-````typescript
+````javascript
 const [items, setItems] = React.useState<Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>>(props.sceneFromBackend !== undefined ? props.sceneFromBackend.scene_items : []);
 const [itemSelected, setItemSelected] = React.useState(false);
 const [itemCounter, setItemCounter] = React.useState(props.sceneFromBackend !== undefined ? props.sceneFromBackend.itemCounter : 0);
@@ -357,7 +355,7 @@ Dieses Array wird zur Wiederherstellung von Elementen benutzt. **selectedObject*
 **sceneName** ist der Name der Szene. **selectedItemName** enthält den Namen des aktuell ausgewählten Elements.
 **selectedType** wird verwendet, um zu bestimmen, welches Element als nächstes auf dem Canvas hinzugefügt wird.
 
-````typescript
+````javascript
 const [textEditContent, setTextEditContent] = React.useState("");
 const [textEditVisibility, setTextEditVisibility] = React.useState(false);
 const [textEditX, setTextEditX] = React.useState(0);
@@ -372,7 +370,7 @@ In diesen States werden alle Eigenschaften der Textbearbeitung gespeichert.
 **textEditContent** enthält den neu bearbeiteten Text und **textEditVisibility** bestimmt, ob das Edit-Feld sichtbar ist oder nicht. 
 Die anderen States werden aus den Eigenschaften des zu bearbeitenden Elements geladen.
 
-````typescript
+````javascript
 const [selectedHistorizedElement, setSelectedHistorizedElement] = React.useState("");
 const [selectedInterval, setSelectedInterval] = React.useState("");
 const [intervalToUse, setIntervalToUse] = React.useState<number | undefined>(0);
@@ -388,7 +386,7 @@ TODO JANEK
 
 Der Transformer ist eine eigene Komponente, welche das Transformieren von Elementen ermöglicht.
 
-````typescript
+````javascript
 const [transformer, setTransformer] = React.useState(new Konva.Transformer())
 const [stage, setStage] = React.useState(transformer.getStage())
 const [currentNode, setCurrentNode] = React.useState<Konva.Node>()
@@ -397,7 +395,7 @@ const [currentNode, setCurrentNode] = React.useState<Konva.Node>()
 In den States des Transformers wird zunächst ein neuer Transformer von Konva angelegt. 
 Anschließend wird die Stage gesetzt, indem die Methode *getStage()* beim Transformer aufgerufen wird, und die gewählte Node auf *undefined* gesetzt.
 
-````typescript
+````javascript
 const checkNode = () => {
     if (transformer !== null) {
         setStage(transformer.getStage());
@@ -433,7 +431,7 @@ Falls er bereits angehängt ist, so wird die Methode abgebrochen. Ansonsten wird
 Falls die neue Node vom Typ Text ist, so wird das "Größe ändern" des Transformers deaktiviert. Falls die **currentNode** undefined oder null ist, so wird der Transformer generell entfernt.
 Auch falls kein Element ausgewählt ist, wird der Transformer entfernt.
 
-````
+````javascript
 return (
     <Transformer
         ref={node => {
@@ -451,7 +449,7 @@ In der *return*-Methode wird ein Transformer zurückgegeben, welcher eine Refere
 Die Transformation von Elementen geschieht mit Hilfe des Transformers.
 Dabei wird, wie bereits beschrieben, der Transformer zunächst an ein Element angehängt.
 Anschließend kann der Benutzer die Größe des Elementes verändern.
-````typescript
+````javascript
 let scaleX = absTrans.x;
 let scaleY = absTrans.y;
 if (absTrans.x > 960 / selectedObject.width) {
@@ -476,7 +474,13 @@ Dabei wird zunächst eine Konva-Methode aufgerufen, mit der man die absolute Tra
 Danach werden scaleX und scaleY auf den neuen Wert gesetzt, so wie die Rotation eines Elements.
 
 ## "Bedienfeld"
-* Remove, Duplicate, ...
+
+![bedienfeld_szeneneditor.png](images/scenecreation/bedienfeld_szeneneditor.png)
+
+Im Bedienfeld des Editors sind mehrere Funktionen zum Anpassen von Elementen aufgeführt.
+Der erste Button "Zurücksetzen" setzt die folgenden Elemente auf ihre Standardwerte zurück:
+* 
+
 ## Datenauswahl
 => Janek
 ### ImageLists
@@ -485,4 +489,5 @@ Danach werden scaleX und scaleY auf den neuen Wert gesetzt, so wie die Rotation 
 #### Posten von Bildern
 ### DiagramsList
 ## Speichern der Szene
+
 * Stages (Background, Preview)
