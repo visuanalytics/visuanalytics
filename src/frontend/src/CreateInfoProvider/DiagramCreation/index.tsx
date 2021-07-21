@@ -12,6 +12,7 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import FormControl from "@material-ui/core/FormControl";
 import {ArrayDiagramProperties, HistorizedDiagramProperties, Plots} from "../types";
+import {hintContents} from "../../util/hintContents";
 
 
 /* TODO: following steps for diagram creation:
@@ -657,7 +658,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
     return (
         <StepFrame
             heading="Diagrammerstellung"
-            hintContent={null}
+            hintContent={hintContents.diagramOverview}
         >
             {selectContent(diagramStep)}
         </StepFrame>

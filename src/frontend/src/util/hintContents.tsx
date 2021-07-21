@@ -73,7 +73,7 @@ export const hintContents = {
               API-Einstellungen
           </Typography>
           <Typography gutterBottom>
-              Auf dieser Seite legen sie die grundlegenden Einstellungen der aktuellen API fest:
+              Auf dieser Seite legen Sie die grundlegenden Einstellungen der aktuellen API fest:
           </Typography>
           <Typography variant="h6">API-Name</Typography>
           <Typography gutterBottom>Der Name, mit dem die API für diesen Info-Provider gespeichert wird.</Typography>
@@ -89,7 +89,7 @@ export const hintContents = {
                 API-Datenauswahl
             </Typography>
             <Typography gutterBottom>
-                Auf dieser Seite legen sie fest, welche der von der API-Request gelieferten Daten der Info-Proivder erfassen soll.
+                Auf dieser Seite legen Sie fest, welche der von der API-Request gelieferten Daten der Info-Proivder erfassen soll.
             </Typography>
 
         </div>
@@ -134,8 +134,7 @@ export const hintContents = {
                 Übersicht der InfoProvider
             </Typography>
             <Typography gutterBottom>
-                Hier sehen Sie alle erstellten Info-Provider. Sie können diese bearbeiten und exportieren oder Sie erstellen ein komplett Neuen.
-                Ebenfalls haben Sie Zugriff auf die Historisierungs-Datenbank.
+                Hier sehen Sie alle erstellten Info-Provider. Sie können diese bearbeiten und exportieren oder Sie erstellen einen komplett Neuen.
             </Typography>
         </div>
     ),
@@ -152,5 +151,58 @@ export const hintContents = {
                 Übersicht der erstellten Videos
             </Typography>
         </div>
-    )
+    ),
+    arrayProcessing: (
+        <div>
+            <Typography variant="h5" gutterBottom>
+                Array-Verarbeitung
+            </Typography>
+            <Typography gutterBottom>
+                Auf dieser Seite können Sie festlegen, wie Arrays verarbeitet werden.
+                Man kann hier die Summe der Werte im Array, den Mittelwert der Werte, das Maximum und das Minimum eines Arrays errechnen.
+            </Typography>
+        </div>
+    ),
+    stringProcessing: (
+        <div>
+            <Typography variant="h5" gutterBottom>
+                String-Verarbeitung
+            </Typography>
+            <Typography gutterBottom>
+                Auf dieser Seite können Sie innerhalb von Strings Substrings ersetzen.
+            </Typography>
+        </div>
+    ),
+    settingsOverview: (
+        <div>
+            <Typography variant="h5" gutterBottom>
+                Gesamtübersicht
+            </Typography>
+            <Typography gutterBottom>
+                Auf dieser Seite sehen Sie eine Gesamtübersicht über die von Ihnen gewählten Einstellungen.
+                Sie können außerdem dem Infoprovider einen Namen geben.
+            </Typography>
+        </div>
+    ),
+    diagramOverview: (
+        <div>
+            <Typography variant="h5" gutterBottom>
+                Diagrammübersicht
+            </Typography>
+            <Typography gutterBottom>
+                Auf dieser Seite sehen Sie eine Gesamtübersicht über die von Ihnen erstellten Diagramme.
+                Sie können ausßerdem neue Diagramme erstellen.
+            </Typography>
+            <Typography variant="h6">Auswahl des Typen</Typography>
+            <Typography gutterBottom>
+                Hier können Sie auswählen, ob Diagramme basierend auf historisierten Daten oder auf Arrays erstellt werden sollen.
+                Des Weiteren müssen Sie anschließend die Daten heraussuchen, die verwendet werden sollen.
+            </Typography>
+            <Typography variant="h6">Auswahl der Einstellungen</Typography>
+            <Typography gutterBottom>Hier müssen Sie das Diagramm erstellen. Wählen Sie eine Diagrammart, die Anzahl der Elemente, eine Farbe und die Beschriftung.</Typography>
+            <Typography variant="h6">Namensgebung</Typography>
+            <Typography gutterBottom>Hier legen Sie einen Namen für das Diagramm fest.</Typography>
+        </div>
+    ),
+
 };
