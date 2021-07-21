@@ -767,13 +767,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      */
     const saveHandler = (currentStage : Konva.Stage) => {
         // create the picture of the stage
-        let stageImage = ""
+        let stageImage = "Empty Stage"
         if (currentStage !== null && currentStage !== undefined){
            stageImage = currentStage?.toDataURL();
-        }
-        // if the content of the stage is empty, the stageImage is set to empty stage
-        if (stageImage === "") {
-            stageImage = "Empty Stage";
         }
         return stageImage;
     }
