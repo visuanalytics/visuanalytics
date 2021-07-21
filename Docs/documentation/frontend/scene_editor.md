@@ -1,4 +1,5 @@
 # Szeneneditor
+
 ![SceneEditor.png](images/scenecreation/SceneEditor.png)
 # Infoprovider-Auswahl
 * Janek
@@ -519,4 +520,21 @@ Die letzten beiden Felder werden dazu verwendet, die Höhe und Breite von Elemen
 ### DiagramsList
 
 ## Speichern der Szene
+
+```javascript
+const saveHandler = (currentStage : Konva.Stage) => {
+	// create the picture of the stage
+	let stageImage = "Empty Stage"
+	if (currentStage !== null && currentStage !== undefined){
+		stageImage = currentStage?.toDataURL();
+	}
+	return stageImage;
+}
+```
+
+Wenn man die Szene speichert, so wird zunächst ein Hintergrundbild erstellt, welches als Basis für die Szene dient. Dafür wird die oben gezeigt Methode *saveHandler* verwendet. Ihr wird eine modifizierte KonvaJS Stage übergeben, welche ausschließlich Formen und den Hintergrund (Farbe oder Bild) enthält und außerhalb des Bildschirms gerendert wird. Diese Stage wird mit der KonvaJS-Methode *toDataURL()* in einen String des Formats **data:image/png;base64** umgewandelt. Anschließend wird dieser String mit Hilfe der *fetch()*-Methode in einen Blob umgewandelt. Dieser wird dann mit dem *File*-Konstruktor in eine Datei umgewandelt, welche anschließend in einer *FormData* an das Backend gesendet wird.
+
+Wenn das Absenden des Hintergrundbildes erfolgreich war, so wird ein Vorschaubild erstellt, auf der alle sichtbaren Elemente angezeigt werden. Dafür wird die "normale" Stage verwendet. Der Ablauf ist dabei der gleiche, wie beim Hintergrundbild.
+
+Wenn diese beiden Bilder erstellt und erfolgreich hochgeladen wurden, so wird ein JsonExport, beschrieben in [Backenddatentypen](#backend-typen), erstellt. Ein erfolgreicher Upload schließt dann den Szeneneditor und sendet den Benutzer zurück zur Übersicht.
 

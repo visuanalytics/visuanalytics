@@ -478,7 +478,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             let formData = new FormData();
             formData.append('image', file);
             formData.append('name', sceneName + '_background');
-            console.log(formData.get("image"));
+            //console.log(formData.get("image"));
             postSceneBackground(formData);
         }
     }
