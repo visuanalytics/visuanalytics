@@ -662,7 +662,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         //starts fetching the contents from the backend
         fetch(url, {
             method: "POST",
-            headers: {},
+            headers: {
+            },
             body: formData,
             signal: abort.signal
         }).then((res: Response) => {
@@ -1793,7 +1794,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 x: 20,
                 y: 20,
                 id: 'text-' + itemCounter.toString(),
-                textContent: (handlingHistorizedItem && intervalToUse !== undefined) ? '{' + item + '{' + intervalToUse.toString() + '}}' : '{' + item + '}',
+                textContent: (handlingHistorizedItem && intervalToUse !== undefined) ? '{' + item + '{' + intervalToUse.toString() + '}}' : '{req|' + item + '}',
                 width: 200,
                 scaleX: 1,
                 scaleY: 1,
