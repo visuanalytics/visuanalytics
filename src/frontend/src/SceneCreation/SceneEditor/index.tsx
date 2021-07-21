@@ -161,7 +161,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
 
     //true when the dialog for going back is opened
     const [backDialogOpen, setBackDialogOpen] = React.useState(false);
-
+    const [clicked, setClicked] = React.useState(false);
 
     //extract imageList, backgroundImageList and diagramList from props to use in dependencies
     const imageList = props.imageList;
@@ -439,6 +439,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      */
     const saveButtonHandler = () => {
         setSelectedItemName("");
+        setClicked(true);
         //start the chain of fetching to communicate with the backend
         createBackgroundImage();
     }
@@ -2043,7 +2044,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                         </Grid>
                         <Grid item className={classes.blockableButtonSecondary}>
                             <Button size={"large"} color="secondary" variant={"contained"} className={classes.saveButton}
-                                    onClick={() => saveButtonHandler()} disabled={sceneName === ""}>
+                                    onClick={() => saveButtonHandler()} disabled={sceneName === "" || clicked}>
                                 Speichern
                             </Button>
                         </Grid>
