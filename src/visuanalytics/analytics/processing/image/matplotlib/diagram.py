@@ -367,7 +367,7 @@ def pie_plot(values, fig=None, ax=None):
 def get_x_y(values, step_data, array_source, custom_labels=False, primitive=True):
     """
     Generiert die Y-Werte für das Diagramm aus den Daten der Datenquellen. Dabei werden u.U. nur bestimmte Indices eines Arrays
-    verwendet, je nachdem, wie der Nutzer das festlegt.
+    verwendet (__getitem__), je nachdem, wie der Nutzer das festlegt.
 
     :param values: Konfiguration des Diagramms
     :param step_data: Daten der Pipeline
@@ -387,17 +387,17 @@ def get_x_y(values, step_data, array_source, custom_labels=False, primitive=True
             array = step_data.format(values["y"])
             array = literal_eval(array)
             array = list(map(array.__getitem__, values.get("x", np.arange(len(array)))))
-            y_vals = [reduce(operator.getitem, values["numericAttribute"].split('|'), x) for x in array]
+            y_vals = [reduce(operator.getitem, values["numericAttribute"].split('|'), x) for x in array]  # access values in nested objects via a list of keys
             #print("y_vals", y_vals)
             if not custom_labels:
                 x_ticks = values.get("x_ticks", {})
-                x_ticks.update({"ticks": [reduce(operator.getitem, values["stringAttribute"].split('|'), x) for x in array]})
+                x_ticks.update({"ticks": [reduce(operator.getitem, values["stringAttribute"].split('|'), x) for x in array]})  # access values in nested objects via a list of keys
                 values.update({"x_ticks": x_ticks})
     else:
         y_vals = step_data.format(values["y"])
         y_vals = y_vals.replace("[", "").replace("]", "").split(", ")
         y_vals = list(map(float, y_vals))
-        y_vals = list(map(y_vals.__getitem__, [i - 1 for i in values.get("x", np.arange(len(y_vals)))]))
+        y_vals = list(map(y_vals.__getitem__, values.get("x", np.arange(len(y_vals)))))
 
     values["y"] = y_vals
     values.pop("x", None)
@@ -469,7 +469,7 @@ def create_plot_custom(values, step_data, fig=None, ax=None):
             else:
                 min_y = min(y)
             if max_y:
-                if max(y) < max_y:
+                if max(y) > max_y:
                     max_y = max(y)
             else:
                 max_y = max(y)
