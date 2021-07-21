@@ -66,6 +66,26 @@ export const VideoCreation: React.FC<VideoCreationProps> = (props) => {
     const [sceneList, setSceneList] = React.useState<Array<SceneCardData>>(props.video ? props.video.sceneList : []);
     // A list with all infoprovider-IDs which are selected for the tts. This is needed for the backend format
     const [infoproviderIDs, setInfoproviderIDs] = React.useState<Array<number>>([]);
+    //flag that indicates if the edit mode is active, stored in sesssionStorage
+    const [editModeFlag, setEditModeFlag] = React.useState(props.video !== undefined);
+    //store local copies of the props passed for editing to hold them on reload
+    const [propsVideo, setPropsVideo] = React.useState(props.video)
+    const [propsVideoId, setPropsVideoId] = React.useState(props.videoId)
+
+
+    /**
+     * Resets all settings that are relevant for creating a scene.
+     */
+    const resetJobSettings = () => {
+        setSchedule({type: "", interval: "", time: "", weekdays: []});
+        setVideoJobName("");
+        setMinimalInfoProvObjects([]);
+        setAvailableScenes([]);
+        setSceneList([]);
+        //also set the complete settings to undefined when removing things in editing
+        //setPropsVideo(undefined);
+    }
+
 
     /**
      * setup for error notification
@@ -162,16 +182,17 @@ export const VideoCreation: React.FC<VideoCreationProps> = (props) => {
      * The sets need to be converted back from Arrays that were parsed with JSON.stringify.
      */
     React.useEffect(() => {
-        //videoCreationStep
-        setVideoCreationStep(Number(sessionStorage.getItem("videoCreationStep-" + uniqueId) || 0));
-        //infoProviderList
-        setInfoProviderList(sessionStorage.getItem("infoProviderList-" + uniqueId) === null ? new Array<InfoProviderData>() : JSON.parse(sessionStorage.getItem("infoProviderList-" + uniqueId)!));
-        //minimalInfoProvObjects
-        setMinimalInfoProvObjects(sessionStorage.getItem("minimalInfoProvObjects-" + uniqueId) === null ? new Array<MinimalInfoProvider>() : JSON.parse(sessionStorage.getItem("minimalInfoProvObjects-" + uniqueId)!));
-        //availableScenes
-        setAvailableScenes(sessionStorage.getItem("availableScenes-" + uniqueId) === null ? [] : JSON.parse(sessionStorage.getItem("availableScenes-" + uniqueId)!));
-
-        if (Number(sessionStorage.getItem("videoCreationStep-" + uniqueId)||0) === 1) {
+        //TODO: document this behaviour
+        //dont load data necessary for editing on the first load
+        if (sessionStorage.getItem("firstVideoCreationEntering-" + uniqueId) !== null) {
+            //editModeFlag
+            setEditModeFlag(sessionStorage.getItem("editModeFlag-" + uniqueId) === "true");
+            //propsVideo
+            setPropsVideo(sessionStorage.getItem("propsVideo-" + uniqueId) === null ? undefined : JSON.parse(sessionStorage.getItem("propsVideo-" + uniqueId)!));
+            //propsVideoId
+            setPropsVideoId(sessionStorage.getItem("propsVideoId-" + uniqueId) === null ? undefined : Number(sessionStorage.getItem("propsVideoId-" + uniqueId)!));
+            //selectedInfoProvider
+            setSelectedInfoProvider(sessionStorage.getItem("selectedInfoProvider-" + uniqueId) === null ? new Array<InfoProviderData>() : JSON.parse(sessionStorage.getItem("selectedInfoProvider-" + uniqueId)!));
             //videoJobName
             setVideoJobName(sessionStorage.getItem("videoJobName-" + uniqueId) || "");
             //schedule
@@ -181,11 +202,25 @@ export const VideoCreation: React.FC<VideoCreationProps> = (props) => {
                 time: "",
                 weekdays: []
             } : JSON.parse(sessionStorage.getItem("schedule-" + uniqueId)!))
-            //selectedInfoProvider
-            setSelectedInfoProvider(sessionStorage.getItem("selectedInfoProvider-" + uniqueId) === null ? new Array<InfoProviderData>() : JSON.parse(sessionStorage.getItem("selectedInfoProvider-" + uniqueId)!));
             //sceneList
             setSceneList(sessionStorage.getItem("sceneList-" + uniqueId) === null ? [] : JSON.parse(sessionStorage.getItem("sceneList-" + uniqueId)!));
-        } else if(Number(sessionStorage.getItem("sceneEditorStep-" + uniqueId)) === 0) {
+
+        } else {
+            //leave a marker in the sessionStorage to identify if this is the first entering
+            sessionStorage.setItem("firstVideoCreationEntering-" + uniqueId, "false");
+        }
+        if(sessionStorage)
+
+
+        //videoCreationStep
+        setVideoCreationStep(Number(sessionStorage.getItem("videoCreationStep-" + uniqueId) || 0));
+        //infoProviderList
+        setInfoProviderList(sessionStorage.getItem("infoProviderList-" + uniqueId) === null ? new Array<InfoProviderData>() : JSON.parse(sessionStorage.getItem("infoProviderList-" + uniqueId)!));
+        //minimalInfoProvObjects
+        setMinimalInfoProvObjects(sessionStorage.getItem("minimalInfoProvObjects-" + uniqueId) === null ? new Array<MinimalInfoProvider>() : JSON.parse(sessionStorage.getItem("minimalInfoProvObjects-" + uniqueId)!));
+        //availableScenes
+        setAvailableScenes(sessionStorage.getItem("availableScenes-" + uniqueId) === null ? [] : JSON.parse(sessionStorage.getItem("availableScenes-" + uniqueId)!));
+        if(Number(sessionStorage.getItem("sceneEditorStep-" + uniqueId)) === 0) {
             // when step 0 is loaded, reload the list of infoproviders from backend
             fetchAllInfoprovider();
         }
@@ -224,6 +259,21 @@ export const VideoCreation: React.FC<VideoCreationProps> = (props) => {
     React.useEffect(() => {
         sessionStorage.setItem("sceneList-" + uniqueId, JSON.stringify(sceneList));
     }, [sceneList])
+    //store editModeFlag in sessionStorage by using JSON.stringify on it
+    React.useEffect(() => {
+        console.log("setting editModeFlag: " + editModeFlag)
+        sessionStorage.setItem("editModeFlag-" + uniqueId, editModeFlag.toString());
+    }, [editModeFlag])
+    //store propsVideo in sessionStorage by using JSON.stringify on it
+    React.useEffect(() => {
+        if(propsVideo !== undefined)
+            sessionStorage.setItem("propsVideo-" + uniqueId, JSON.stringify(propsVideo));
+    }, [propsVideo])
+    //store propsVideo in sessionStorage
+    React.useEffect(() => {
+        if(propsVideoId !== undefined)
+            sessionStorage.setItem("propsVideoId-" + uniqueId, propsVideoId.toString());
+    }, [propsVideoId])
 
     /**
      * Removes all items of this component from the sessionStorage.
@@ -237,6 +287,10 @@ export const VideoCreation: React.FC<VideoCreationProps> = (props) => {
         sessionStorage.removeItem("minimalInfoProvObjects-" + uniqueId);
         sessionStorage.removeItem("availableScenes-" + uniqueId);
         sessionStorage.removeItem("sceneList-" + uniqueId);
+        sessionStorage.removeItem("editModeFlag-" + uniqueId);
+        sessionStorage.removeItem("firstVideoCreationEntering-" + uniqueId);
+        sessionStorage.removeItem("propsVideo-" + uniqueId);
+        sessionStorage.removeItem("propsVideoId-" + uniqueId);
     }
 
     /**
@@ -276,6 +330,9 @@ export const VideoCreation: React.FC<VideoCreationProps> = (props) => {
         const availableScenes: Array<string> = [];
         data.forEach((scene) => availableScenes.push(scene.scene_name));
         setAvailableScenes(availableScenes);
+        //remove the original selection array from sessionStorage stored there by InfoProviderSelection
+        sessionStorage.removeItem("originalSelectedInfoProvider-" + uniqueId);
+        sessionStorage.removeItem("firstInfoProvSelectionEntering-" + uniqueId)
         continueHandler();
     }
 
@@ -390,7 +447,7 @@ export const VideoCreation: React.FC<VideoCreationProps> = (props) => {
      */
         //TODO: add video_id
     const sendVideoToBackend = () => {
-        let url = ((props.video && props.videoId) ? "visuanalytics/videojob/" + props.videoId : "visuanalytics/videojob");
+        let url = ((propsVideo && propsVideoId) ? "visuanalytics/videojob/" + propsVideoId : "visuanalytics/videojob");
         //if this variable is set, add it to the url
         if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
         //setup a timer to stop the request after 5 seconds
@@ -398,7 +455,7 @@ export const VideoCreation: React.FC<VideoCreationProps> = (props) => {
         const timer = setTimeout(() => abort.abort(), 5000);
         //starts fetching the contents from the backend
         fetch(url, {
-            method: props.video ? "PUT" : "POST",
+            method: propsVideo ? "PUT" : "POST",
             headers: {
                 "Content-Type": "application/json\n"
             },
@@ -457,7 +514,8 @@ export const VideoCreation: React.FC<VideoCreationProps> = (props) => {
                         fetchAllScenes={() => fetchAllScenes()}
                         infoproviderIDs={infoproviderIDs}
                         setInfoproviderIDs={setInfoproviderIDs}
-                        isEditMode={!!props.video}
+                        isEditMode={editModeFlag}
+                        resetJobSettings={() => resetJobSettings()}
                     />
                 )
             }
