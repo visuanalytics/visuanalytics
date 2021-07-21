@@ -7,7 +7,7 @@ import StepLabel from "@material-ui/core/StepLabel";
 import {InfoProviderSelection} from "./InfoProviderSelection";
 import {SceneEditor} from "./SceneEditor";
 import {ComponentContext} from "../ComponentProvider";
-import {DataSource, FrontendInfoProvider, uniqueId} from "../CreateInfoProvider/types";
+import {DataSource, Diagram, FrontendInfoProvider, uniqueId} from "../CreateInfoProvider/types";
 import {DiagramInfo, HistorizedDataInfo, ImageBackendData, ImageFrontendData, InfoProviderData} from "./types";
 import {hintContents} from "../util/hintContents";
 import Typography from "@material-ui/core/Typography";
@@ -15,6 +15,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import {StepFrame} from "../CreateInfoProvider/StepFrame";
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid} from "@material-ui/core";
 import {FullScene} from "../Dashboard/types";
+import {CustomImage} from "./SceneEditor/types";
 
 interface SceneCreationProps {
     sceneFromBackend?: FullScene;
@@ -58,7 +59,8 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
     const [sceneFromBackend, setSceneFromBackend] = React.useState(props.sceneFromBackend);
     const [editId, setEditId] = React.useState(props.editId);
 
-    console.log(editId);
+
+
     /* mutable flag that is true when currently images are being fetched because of a reload
     * this is used to block the continueHandler call after successful fetches. This way,
     * no additional methods are required to fetch the images on reload.
@@ -71,6 +73,7 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
     //is also opened when starting editing mode first to fetch the images before entering the SceneEditor component - this will make them available from the start on
     //TODO: Document this!!
     const [fetchImageDialogOpen, setFetchImageDialogOpen] = React.useState(props.sceneFromBackend !== undefined);
+
     // contains the names of the steps to be displayed in the stepper
     const steps = [
         "Infoprovider-Auswahl",
@@ -638,7 +641,8 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
      */
     const fetchDiagramPreview = (diagram: DiagramInfo) => {
         //("fetcher called");
-        let url = "/visuanalytics/infoprovider/" + selectedId + "/" + diagram.name;
+        //differentiates between the source of the infoprovider name wether a new diagram is created or one is edited
+        let url = "/visuanalytics/infoprovider/" + (sceneFromBackend !== undefined ? sceneFromBackend.used_infoproviders[0] : selectedId) + "/" + diagram.name;
         //if this variable is set, add it to the url
         if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
         //setup a timer to stop the request after 5 seconds
@@ -664,6 +668,8 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
         }).finally(() => clearTimeout(timer));
     }
 
+    const sceneFromBackendMutable = React.useRef(props.sceneFromBackend)
+
 
     /**
      * Calls for sessionStorage handling
@@ -685,16 +691,17 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
         setDiagramList(sessionStorage.getItem("diagramList-" + uniqueId )=== null ? new Array<DiagramInfo>() : JSON.parse(sessionStorage.getItem("diagramList-" + uniqueId)!))
         //selectedId
         setSelectedId(Number(sessionStorage.getItem("selectedId-" + uniqueId)||0));
-        //sceneFromBackend
-        setSceneFromBackend(sessionStorage.getItem("sceneFromBackend-" + uniqueId )=== null ? undefined : JSON.parse(sessionStorage.getItem("sceneFromBackend-" + uniqueId)!))
 
         //TODO: document this
-        //dont set the fetchDialogOpen when fetching first, necessary for editing
+        //dont set the data for editing when fetching first
         if (sessionStorage.getItem("firstSceneCreationEntering-" + uniqueId) !== null) {
             //fetchImageDialogOpen
             setFetchImageDialogOpen(sessionStorage.getItem("fetchImageDialogOpen-" + uniqueId) === "true");
             //editId
             setEditId(Number(sessionStorage.getItem("editId-" + uniqueId)));
+            //sceneFromBackend
+            setSceneFromBackend(sessionStorage.getItem("sceneFromBackend-" + uniqueId) === null ? undefined : JSON.parse(sessionStorage.getItem("sceneFromBackend-" + uniqueId)!))
+            sceneFromBackendMutable.current = sessionStorage.getItem("sceneFromBackend-" + uniqueId) === null ? undefined : JSON.parse(sessionStorage.getItem("sceneFromBackend-" + uniqueId)!)
         } else {
             //leave a marker in the sessionStorage to identify if this is the first entering
             sessionStorage.setItem("firstSceneCreationEntering-" + uniqueId, "false");
@@ -789,6 +796,86 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
         sessionStorage.removeItem("sceneFromBackend-" + uniqueId);
         sessionStorage.removeItem("editId-" + uniqueId);
     }
+
+
+    /**
+     * Method that is used for calculating a list of diagrams in the
+     * representation a scene needs them. Used for restoring the
+     * diagrams in the editing mode.
+     * @param diagrams
+     */
+    const getDiagramFetchList = React.useCallback((diagrams: Array<Diagram>) => {
+        //go through all diagrams
+        const diagramList: Array<DiagramInfo> = [];
+        diagrams.forEach((diagram) => {
+            //transforms the type into a readable form
+            let typeString = "";
+            switch(diagram.variant) {
+                case "pieChart": {
+                    typeString = "Tortendiagramm";
+                    break;
+                }
+                case "lineChart": {
+                    typeString = "Liniendiagramm";
+                    break;
+                }
+                case "horizontalBarChart": {
+                    typeString = "Balkendiagramm";
+                    break;
+                }
+                case "verticalBarChart": {
+                    typeString = "Säulendiagramm";
+                    break;
+                }
+
+                case "dotDiagram":
+                    typeString = "Punktdiagramm";
+            }
+            diagramList.push({
+                name: diagram.name,
+                type: typeString,
+                url: ""
+            })
+        })
+        return diagramList;
+    }, [])
+
+    //extract the sceneFromBackend from the props - necessary to dont have endless loop
+    //which results of the usage of the state variable
+    const propsSceneFromBackend = props.sceneFromBackend;
+
+    /**
+     * When loading in editing mode, find all images in the items array
+     * and reset their Image HTML element to empty source.
+     * This is necessary to prevent failures.
+     * Also sets the diagramList to the list extracted from the backend data.
+     */
+    React.useEffect(() => {
+        //console.log("cleaning of image elements")
+        //check if editing is active
+        if(sceneFromBackendMutable.current !== undefined) {
+            const sceneItemsCopy = sceneFromBackendMutable.current.scene_items.slice();
+            for (let index = 0; index < sceneItemsCopy.length; index++) {
+                //check if the current item is an image
+                if(sceneItemsCopy[index].hasOwnProperty("image")) {
+                    let castedItem = sceneItemsCopy[index] as CustomImage;
+                    //create a new image
+                    castedItem.image = new window.Image();
+                    //if it is a diagram, we need to find it in the diagramList instead of the imageList
+                    castedItem.image.src = "";
+                    sceneItemsCopy[index] = castedItem;
+                }
+            }
+            setSceneFromBackend({
+                ...sceneFromBackendMutable.current,
+                scene_items: sceneItemsCopy
+            })
+            if(sceneFromBackendMutable.current.infoProvider !== undefined) {
+                diagramsToFetch.current = getDiagramFetchList(sceneFromBackendMutable.current.infoProvider.diagrams)
+            }
+            //console.log(diagramsToFetch.current);
+        }
+    }, [propsSceneFromBackend, getDiagramFetchList])
 
     /**
      * Sets a warning for reloading in step 1.

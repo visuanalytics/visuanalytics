@@ -7,7 +7,7 @@ import {
     DataText
 } from "../SceneCreation/SceneEditor/types";
 import {SceneCardData} from "../VideoCreation/types";
-import {Schedule} from "../CreateInfoProvider/types";
+import {FrontendInfoProvider, Schedule} from "../CreateInfoProvider/types";
 import {InfoProviderData} from "../SceneCreation/types";
 
 export type jsonRef = {
@@ -80,7 +80,9 @@ export type FullScene = {
     backgroundColorEnabled: boolean;
     itemCounter: number;
     scene_items: Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>;
+    infoProvider?: FrontendInfoProvider;
 }
+
 
 export type ImagesBackend = {
     type: string;

@@ -74,6 +74,7 @@ export type CustomImage = {
     imageId: number;
     imagePath: string;
     diagram: boolean;
+    diagramName: string; //TODO document
     index: number;
     width: number;
     height: number;

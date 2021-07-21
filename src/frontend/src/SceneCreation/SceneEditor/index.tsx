@@ -195,11 +195,68 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         }
     }, [backgroundImageList, propsSceneFromBackend])
 
-    React.useEffect(() => {
+    /**
+     * Goes through list of background-images and finds the right background to show.
+     * Only used for editing mode to restore the image by its backend id.
+     */
+    const findRightImages = React.useCallback(() => {
         if (propsSceneFromBackend !== undefined) {
-            findRightBackgroundImage();
+            const restoredItems = propsSceneFromBackend!.scene_items;
+            //find all images and set the new url by their id
+            for (let index = 0; index < restoredItems.length; index++) {
+                //check if the current item is an image
+                if(restoredItems[index].hasOwnProperty("image")) {
+                    let castedItem = restoredItems[index] as CustomImage;
+                    //create a new image
+                    castedItem.image = new window.Image();
+                    //if it is a diagram, we need to find it in the diagramList instead of the imageList
+                    if(castedItem.diagram) {
+                        //console.log(castedItem.diagramName)
+                        //loop through the diagramList and find the diagram with the same name to get its url
+                        for (let i = 0; i < diagramList.length; i++) {
+                            if (diagramList[i].name === castedItem.diagramName) {
+                                console.log("match")
+                                const img = new window.Image();
+                                img.src = diagramList[i].url;
+                                castedItem.image = img;
+                                //console.log(img);
+                                break;
+                            }
+                        }
+                    } else {
+                        //since this is an image, search through all images in the list and find the one with the same backend id
+                        //loop through the imageList
+                        for (let i = 0; i < imageList.length; i++) {
+                            if (imageList[i].image_id === castedItem.imageId) {
+                                const img = new window.Image();
+                                img.src = imageList[i].image_blob_url;
+                                castedItem.image = img;
+                                //console.log(img);
+                                break;
+                            }
+                        }
+                    }
+                    restoredItems[index] = castedItem;
+                }
+            }
+            setItems(restoredItems);
         }
-    }, [findRightBackgroundImage, propsSceneFromBackend])
+
+    }, [diagramList, imageList, propsSceneFromBackend])
+
+
+    /**
+     * When loading the editor in scene editing mode,
+     * find the correct ID for the background image
+     * and for all other images.
+     */
+    React.useEffect(() => {
+        if (propsSceneFromBackend !== undefined && sessionStorage.getItem("firstSceneEditorEntering-" + uniqueId) === null) {
+            findRightBackgroundImage();
+            findRightImages();
+        }
+    }, [findRightBackgroundImage, findRightImages, propsSceneFromBackend])
+
 
     /*
     * Code for saving to and restoring from sessionStorage
@@ -215,7 +272,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             //backgroundImage - stores the index in the list of background images to recreate it
             const newImg = new window.Image();
             const index = Number(sessionStorage.getItem("backgroundImageIndex-" + uniqueId) || 0);
-            newImg.src = backgroundImageList[index]!==undefined?backgroundImageList[index].image_blob_url:"";
+            newImg.src = backgroundImageList[index] !== undefined ? backgroundImageList[index].image_blob_url : "";
             setBackgroundImageIndex(index);
             setBackgroundImage(newImg);
             //sceneName
@@ -226,14 +283,17 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             for (let index = 0; index < restoredItems.length; index++) {
                 if(restoredItems[index].hasOwnProperty("image")) {
                     let castedItem = restoredItems[index] as CustomImage;
+                    //console.log("image item:");
+                    //console.log(castedItem)
                     castedItem.image = new window.Image();
                     //if it is a diagram, we need to find it in the diagramList instead of the imageList
                     if(castedItem.diagram) {
-                        castedItem.image.src = diagramList[castedItem.index].url;
+                        castedItem.image.src = diagramList[castedItem.index] !== undefined ? diagramList[castedItem.index].url : "";
                     } else {
-                        castedItem.image.src = imageList[castedItem.index].image_blob_url;
+                        castedItem.image.src = imageList[castedItem.index] !== undefined ? imageList[castedItem.index].image_blob_url : "";
                     }
                     restoredItems[index] = castedItem;
+                    console.log(restoredItems[index])
                 }
             }
             setItems(restoredItems);
@@ -247,7 +307,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             setItemCounter(Number(sessionStorage.getItem("itemCounter-" + uniqueId) || 0));
         } else {
             //leave a marker in the sessionStorage to identify if this is the first entering
-            //necessary to not overwrite the image on the first entering
+            //necessary to not overwrite the data on the first entering
             sessionStorage.setItem("firstSceneEditorEntering-" + uniqueId, "false");
         }
         //deleteText
@@ -315,6 +375,10 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         sessionStorage.removeItem("diagramList-" + uniqueId);
         sessionStorage.removeItem("imageList-" + uniqueId);
         sessionStorage.removeItem("firstSceneEditorEntering-" + uniqueId);
+        sessionStorage.removeItem("fetchImageDialogOpen-" + uniqueId);
+        sessionStorage.removeItem("firstSceneCreationEntering-" + uniqueId);
+        sessionStorage.removeItem("sceneFromBackend-" + uniqueId);
+        sessionStorage.removeItem("editId-" + uniqueId);
 
     }
 
@@ -455,9 +519,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const scenePreviewID = React.useRef(-1);
 
 
-
-
-
     /**
      * Method to create a FormData containing the background for the scene.
      * After fetching the background image successfully from the Konva stage, it starts the method for posting
@@ -559,7 +620,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             }
         });
         return returnValue;
-    }, [backgroundImageIndex, backgroundImageList, items, infoProviderId, sceneName, backGroundColor, backGroundColorEnabled, backGroundType, itemCounter, propsSceneFromBackend]);
+    }, [backgroundImageIndex, backgroundImageList, items, infoProviderId, sceneName, backGroundColorEnabled, backGroundType, currentBGColor, itemCounter, propsSceneFromBackend]);
 
     /**
      * Method to handle the results of posting the exported scene to the backend.
@@ -1233,8 +1294,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * @param path the path to the image located in the backend
      * @param index the index of the image in the frontend list of images
      * @param diagram Boolean flag indicating if the image is a diagram
+     * @param diagramName Name of the diagram, empty if it is an image
      */
-    const addImageElement = (image : HTMLImageElement, id: number, path: string, index: number, diagram: boolean) => {
+    const addImageElement = (image : HTMLImageElement, id: number, path: string, index: number, diagram: boolean, diagramName: string) => {
         console.log(image)
         let obj : CustomImage = {
             id: 'image-' + itemCounter.toString(),
@@ -1245,6 +1307,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             imageId: id,
             imagePath: path,
             diagram: diagram,
+            diagramName: diagramName,
             index: index,
             width: image.width,
             height: image.height,
@@ -1878,6 +1941,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         )
     }
 
+    //TODO document the new diagramName property
     /**
      * Method to handle the click on an image loaded form the backend
      * @param src the image URL (blob) of the selected image
@@ -1885,8 +1949,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * @param path the path/URL of the selected image in the backend
      * @param index index of the image in the frontend list of all images
      * @param diagram Boolean flag indicating if the image is a diagram
+     * @param diagramName Name of the diagram, empty if it is an image
      */
-    const handleImageClick = (src : string, id: number, path: string, index: number, diagram: boolean) => {
+    const handleImageClick = (src : string, id: number, path: string, index: number, diagram: boolean, diagramName: string) => {
         //create the image object for the image to be displayed
         console.log(src)
         let image = new window.Image();
@@ -1894,7 +1959,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         console.log(image)
         //push the id to the array of used images if it is not already used - also not pushing for diagrams
         if(!imageIDArray.current.includes(id) && !diagram) imageIDArray.current.push(id);
-        addImageElement(image, id, path, index, diagram);
+        addImageElement(image, id, path, index, diagram, diagramName);
     }
 
     const handleBackgroundImageClick = (src : string, index : number) => {

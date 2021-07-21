@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useRef} from "react";
 import {StepFrame} from "../../../CreateInfoProvider/StepFrame";
 import {hintContents} from "../../../util/hintContents";
 import {Dialog, DialogActions, DialogContent, DialogTitle, Grid, Typography} from "@material-ui/core";
@@ -10,6 +10,8 @@ import {centerNotifcationReducer, CenterNotification} from "../../../util/Center
 import {SceneList} from "./SceneList";
 import {useCallFetch} from "../../../Hooks/useCallFetch";
 import {ComponentContext} from "../../../ComponentProvider";
+import {InfoProviderFromBackend} from "../../../CreateInfoProvider/types";
+import {transformBackendInfoProvider} from "../../../CreateInfoProvider/helpermethods";
 
 interface SceneOverviewProps {
     scenes: Array<BackendScene>;
@@ -48,10 +50,81 @@ export const SceneOverview: React.FC<SceneOverviewProps> = (props) => {
         dispatchMessage({ type: "reportError", message: message });
     };
 
+
+
+    //TODO: document this
+
+    //this static value will be true as long as the component is still mounted
+    //used to check if handling of a fetch request should still take place or if the component is not used anymore
+    const isMounted = useRef(true);
+
+    const handleFetchInfoProviderSuccess = (jsonData: any, scene: FullScene) => {
+        //get the infoprovider used by the scene and fetch its data
+        const data = jsonData as InfoProviderFromBackend;
+        //transform the infoProvider to frontend format
+        const infoProvider = transformBackendInfoProvider(data);
+        components?.setCurrent("sceneEditor", {sceneFromBackend: {
+            ...scene,
+            infoProvider: infoProvider
+        }, editId: currentScene.scene_id})
+    };
+
+    const handleFetchInfoProviderError = (err: Error) => {
+        reportError("Fehler beim Laden des Infoproviders: " + err);
+    }
+
+    /**
+     * Method to send a diagram to the backend for testing.
+     * The standard hook "useCallFetch" is not used here since we need an input parameter.
+     */
+    const fetchInfoProvider = (id: number, scene: FullScene) => {
+        //console.log("fetcher called");
+        let url = "/visuanalytics/infoprovider/" + id;
+        //if this variable is set, add it to the url
+        if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
+        //setup a timer to stop the request after 5 seconds
+        const abort = new AbortController();
+        const timer = setTimeout(() => abort.abort(), 5000);
+        //starts fetching the contents from the backend
+        fetch(url, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json\n"
+            },
+            signal: abort.signal
+        }).then((res: Response) => {
+            //handles the response and gets the data object from it
+            if (!res.ok) throw new Error(`Network response was not ok, status: ${res.status}`);
+            return res.status === 204 ? {} : res.json();
+        }).then((data) => {
+            //success case - the data is passed to the handler
+            //only called when the component is still mounted
+            if (isMounted.current) handleFetchInfoProviderSuccess(data, scene)
+        }).catch((err) => {
+            //error case - the error code ist passed to the error handler
+            //only called when the component is still mounted
+            if (isMounted.current) handleFetchInfoProviderError(err)
+        }).finally(() => clearTimeout(timer));
+    }
+
+    //defines a cleanup method that sets isMounted to false when unmounting
+    //will signal the fetchMethod to not work with the results anymore
+    useEffect(() => {
+        return () => {
+            isMounted.current = false;
+        };
+    }, []);
+
     const handleFetchSceneSuccess = (jsonData: any) => {
         const data = jsonData as FullScene;
         //console.log(data);
-        components?.setCurrent("sceneEditor", {sceneFromBackend: data, editId: currentScene.scene_id})
+        //get the infoprovider used by the scene and fetch its data
+        if(data.used_infoproviders[0] !== undefined) {
+            fetchInfoProvider(data.used_infoproviders[0], data)
+        } else {
+            //for the case that in the future no infoproviders are allowed
+            components?.setCurrent("sceneEditor", {sceneFromBackend: data, editId: currentScene.scene_id})
+        }
         //TODO: change component with the fetched Scene in props...
     };
 
