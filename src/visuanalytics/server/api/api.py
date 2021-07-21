@@ -378,12 +378,8 @@ def update_videojob(videojob_id):
     """
     updated_data = request.json
     try:
-        if "name" not in updated_data:
-            err = flask.jsonify({"err_msg": "Missing Name"})
-            return err, 400
-
-        if "infoprovider_names" not in updated_data:
-            err = flask.jsonify({"err_msg": "Missing Infoprovider-Names"})
+        if "videojob_name" not in updated_data:
+            err = flask.jsonify({"err_msg": "Missing Videojob-name"})
             return err, 400
 
         if "images" not in updated_data:
@@ -400,6 +396,14 @@ def update_videojob(videojob_id):
 
         if "schedule" not in updated_data:
             err = flask.jsonify({"err_msg": "Missing Schedule"})
+            return err, 400
+
+        if "sceneList" not in updated_data:
+            err = flask.jsonify({"err_msg": "Missing field 'sceneList'"})
+            return err, 400
+
+        if "selectedInfoprovider" not in updated_data:
+            err = flask.jsonify({"err_msg": "Missing field 'selectedInfoProvider'"})
             return err, 400
 
         update_info = queries.insert_video_job(updated_data, update=True, job_id=videojob_id)

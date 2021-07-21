@@ -118,22 +118,6 @@ export type authDataDialogElement = {
     method: string;
 }
 
-//Type providing constants for all supported diagram types
-export type diagramType = "dotDiagram" | "lineChart" | "horizontalBarChart" | "verticalBarChart" | "pieChart"
-
-/**
- * Represents a diagram created by the user.
- * @param name Name of the diagram, has to be unique
- * @param variant displays the type of diagram defined.
- */
-export type Diagram = {
-    name: string;
-    variant: diagramType;
-    sourceType: string;
-    arrayObjects?: Array<ArrayDiagramProperties>;
-    historizedObjects?: Array<HistorizedDiagramProperties>;
-    amount: number;
-}
 
 //unique application id used to avoid collisions in session storage
 export const uniqueId = "ddfdd278-abf9-11eb-8529-0242ac130003"
@@ -175,18 +159,36 @@ export type customDataBackendAnswer = {
 
 
 /* DiagramCreation */
+//Type providing constants for all supported diagram types
+export type diagramType = "dotDiagram" | "lineChart" | "horizontalBarChart" | "verticalBarChart" | "pieChart"
+
+/**
+ * Represents a diagram created by the user.
+ * @param name Name of the diagram, has to be unique
+ * @param variant displays the type of diagram defined.
+ */
+export type Diagram = {
+    name: string;
+    variant: diagramType;
+    sourceType: string;
+    arrayObjects?: Array<ArrayDiagramProperties>;
+    historizedObjects?: Array<HistorizedDiagramProperties>;
+    amount: number;
+    customLabels: boolean;
+    labelArray: Array<string>;
+    stringAttribute: SelectedStringAttribute;
+}
+
+
 /**
  * Represents an array selected for diagram creation and holds attributes for all settings
  */
 export type ArrayDiagramProperties = {
     listItem: ListItemRepresentation;
     numericAttribute: string;
-    stringAttribute: string;
-    labelArray: Array<string>;
     color: string;
     numericAttributes: Array<ListItemRepresentation>;
     stringAttributes: Array<ListItemRepresentation>
-    customLabels: boolean;
 }
 
 /**
@@ -194,12 +196,21 @@ export type ArrayDiagramProperties = {
  */
 export type HistorizedDiagramProperties = {
     name: string;
-    labelArray: Array<string>;
     color: string;
     intervalSizes: Array<number>;
     //dateLabels: boolean; //both are deactivated since there is no support for date labels by the backend
     //dateFormat: string;
 }
+
+/**
+ * Represents a string attribute selected for labeling,
+ * containing its name and the array it belongs to.
+ */
+export type SelectedStringAttribute = {
+    key: string;
+    array: string;
+}
+
 
 /**
  * Plot typed which is used for sending diagrams to the backend in fitting format.
@@ -241,10 +252,6 @@ export type StringReplacementData = {
     string: string;
     replace: string;
     with: string;
-}
-
-export type BackenFormula = {
-
 }
 
 //TODO: document this!

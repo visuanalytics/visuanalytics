@@ -8,6 +8,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 interface VideoListProps {
     videos: BackendVideoList;
     handleDeleteVideo: (video: BackendVideo) => void;
+    handleEditVideo: (video: BackendVideo) => void;
 }
 
 export const VideoList: React.FC<VideoListProps> = (props) => {
@@ -31,7 +32,7 @@ export const VideoList: React.FC<VideoListProps> = (props) => {
                             <Grid item>
                                 <Button variant={"contained"} size={"small"} color={"primary"}
                                         startIcon={<SettingsRounded fontSize="small"/>}
-                                        onClick={() => console.log("Edit!")}
+                                        onClick={() => props.handleEditVideo(data)}
                                 >
                                     bearbeiten
                                 </Button>

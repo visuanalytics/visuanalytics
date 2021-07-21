@@ -6,7 +6,7 @@ import {useStyles} from "../../style";
 import Button from "@material-ui/core/Button";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import {ComponentContext} from "../../../ComponentProvider";
-import {BackendVideo, BackendVideoList} from "../../types";
+import {BackendVideo, BackendVideoList, FullVideo} from "../../types";
 import {VideoList} from "./VideoList";
 import {useCallFetch} from "../../../Hooks/useCallFetch";
 import {centerNotifcationReducer, CenterNotification} from "../../../util/CenterNotification";
@@ -22,8 +22,10 @@ export const VideoOverview: React.FC<VideoOverviewProps> = (props) => {
 
     const [videos, setVideos] = React.useState<BackendVideoList>(props.videos);
 
-    const [currentDeleteVideo, setCurrentDeleteVideo] = React.useState<BackendVideo>({} as BackendVideo);
+    const [currentVideo, setCurrentVideo] = React.useState<BackendVideo>({} as BackendVideo);
     const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
+
+    const [editDialogOpen, setEditDialogOpen] = React.useState(false);
 
     /**
      * setup for error notification
@@ -42,7 +44,7 @@ export const VideoOverview: React.FC<VideoOverviewProps> = (props) => {
 
         setVideos(
             videos.filter((data) => {
-                return data.videojob_id !== currentDeleteVideo.videojob_id
+                return data.videojob_id !== currentVideo.videojob_id
             })
         );
 
@@ -54,7 +56,7 @@ export const VideoOverview: React.FC<VideoOverviewProps> = (props) => {
         reportError("Ein Fehler ist aufgetreten!: " + err);
     }
 
-    const deleteVideoInBackend = useCallFetch("visuanalytics/videojob/" + currentDeleteVideo.videojob_id, {
+    const deleteVideoInBackend = useCallFetch("visuanalytics/videojob/" + currentVideo.videojob_id, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json\n"
@@ -63,8 +65,32 @@ export const VideoOverview: React.FC<VideoOverviewProps> = (props) => {
     );
 
     const handleDeleteVideo = (video: BackendVideo) => {
-        setCurrentDeleteVideo(video);
+        setCurrentVideo(video);
         setDeleteDialogOpen(true);
+    }
+
+    const handleSuccessEdit = (jsonData: any) => {
+
+        const data = jsonData as FullVideo;
+        console.log(data);
+        components?.setCurrent("videoCreator", {video: data, videoId: currentVideo.videojob_id})
+    }
+
+    const handleErrorEdit = (err: Error) => {
+        reportError("Ein Fehler ist aufgetreten!: " + err);
+    }
+
+    const editVideo = useCallFetch("visuanalytics/videojob/" + currentVideo.videojob_id, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json\n"
+            }
+        }, handleSuccessEdit, handleErrorEdit
+    );
+
+    const handleEditVideo = (video: BackendVideo) => {
+        setCurrentVideo(video);
+        setEditDialogOpen(true);
     }
 
     return(
@@ -92,23 +118,24 @@ export const VideoOverview: React.FC<VideoOverviewProps> = (props) => {
                     <VideoList
                         videos={videos}
                         handleDeleteVideo={(video: BackendVideo) => handleDeleteVideo(video)}
+                        handleEditVideo={(video: BackendVideo) => handleEditVideo(video)}
                     />
                 </Grid>
             </Grid>
             <Dialog
                 onClose={() => {
                     setDeleteDialogOpen(false);
-                    setCurrentDeleteVideo({} as BackendVideo)
+                    setCurrentVideo({} as BackendVideo)
                     window.setTimeout(() => {}, 200);}
                 }
                 aria-labelledby="deleteDialog-title"
                 open={deleteDialogOpen}
             >
                 <DialogTitle id="deleteDialog-title">
-                    {currentDeleteVideo.videojob_name}
+                    {currentVideo.videojob_name}
                 </DialogTitle>
                 <DialogContent dividers>
-                    Wollen sie "{currentDeleteVideo.videojob_name}" wirklich löschen?
+                    Wollen sie "{currentVideo.videojob_name}" wirklich löschen?
                 </DialogContent>
                 <DialogActions>
                     <Grid container justify="space-between">
@@ -126,6 +153,42 @@ export const VideoOverview: React.FC<VideoOverviewProps> = (props) => {
                                     onClick={() => deleteVideoInBackend()}
                             >
                                 Löschen
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </DialogActions>
+            </Dialog>
+            <Dialog
+                onClose={() => {
+                    setEditDialogOpen(false);
+                    setCurrentVideo({} as BackendVideo)
+                    window.setTimeout(() => {}, 200);}
+                }
+                aria-labelledby="editDialog-title"
+                open={editDialogOpen}
+            >
+                <DialogTitle id="editDialog-title">
+                    {currentVideo.videojob_name}
+                </DialogTitle>
+                <DialogContent dividers>
+                    Wollen sie "{currentVideo.videojob_name}" bearbeiten?
+                </DialogContent>
+                <DialogActions>
+                    <Grid container justify="space-between">
+                        <Grid item>
+                            <Button variant="contained"
+                                    color={"primary"}
+                                    onClick={() => setEditDialogOpen(false)}
+                            >
+                                Zurück
+                            </Button>
+                        </Grid>
+                        <Grid item>
+                            <Button variant="contained"
+                                    color={"secondary"}
+                                    onClick={() => editVideo()}
+                            >
+                                Bearbeiten
                             </Button>
                         </Grid>
                     </Grid>

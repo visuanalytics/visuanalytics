@@ -717,31 +717,68 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
         }
         if (diagram.sourceType === "Array") {
             if (diagram.arrayObjects !== undefined) {
-                diagram.arrayObjects.forEach((item) => {
-                    const plots = {
-                        customLabels: item.customLabels,
-                        primitive: !Array.isArray(item.listItem.value),
-                        plot: {
-                            type: type,
-                            x: Array.from(Array(diagram.amount).keys()),
-                            y: "{_req|" + (item.listItem.parentKeyName === "" ? item.listItem.keyName : item.listItem.parentKeyName + "|" + item.listItem.keyName) + "}",
-                            color: item.color,
-                            numericAttribute: item.numericAttribute,
-                            stringAttribute: item.stringAttribute,
-                            x_ticks: {
-                                ticks: item.labelArray
+                //when the diagram uses customLabels, we need to use the method that adds the ticks on the last cycle
+                if(diagram.customLabels) {
+                    //loop through all arrays used in the diagram
+                    for (let index = 0; index < diagram.arrayObjects.length; index++) {
+                        const item = diagram.arrayObjects[index];
+                        const plots = {
+                            customLabels: true,
+                            primitive: !Array.isArray(item.listItem.value),
+                            plot: {
+                                type: type,
+                                x: Array.from(Array(diagram.amount).keys()),
+                                y: "{_req|" + (item.listItem.parentKeyName === "" ? item.listItem.keyName : item.listItem.parentKeyName + "|" + item.listItem.keyName) + "}",
+                                color: item.color,
+                                numericAttribute: item.numericAttribute,
+                                stringAttribute: "",
+                                x_ticks: {
+                                    //only set the ticks on the last Plot - this is necessary to render it last when layering the Plots in the diagrams
+                                    ticks: index === diagram.arrayObjects.length-1 ? diagram.labelArray : []
+                                }
                             }
                         }
+                        plotArray.push(plots);
                     }
-                    plotArray.push(plots);
-                })
+                } else {
+                    //this diagram uses a stringAttribute to generate its labels - find the Plot that belongs to its array and add it last
+                    //this behaviour is necessary in order to render the diagrams in the correct order in backend Plot layering
+                    let plotWithStringAttribute = {} as Plots;
+                    //loop through all arrays used in the diagram
+                    for (let index = 0; index < diagram.arrayObjects.length; index++) {
+                        const item = diagram.arrayObjects[index];
+                        const isArrayWithAttribute = (item.listItem.parentKeyName === "" ? item.listItem.keyName : item.listItem.parentKeyName + "|" + item.listItem.keyName) === diagram.stringAttribute.array;
+                        const plots = {
+                            customLabels: false,
+                            primitive: !Array.isArray(item.listItem.value),
+                            plot: {
+                                type: type,
+                                x: Array.from(Array(diagram.amount).keys()),
+                                y: "{_req|" + (item.listItem.parentKeyName === "" ? item.listItem.keyName : item.listItem.parentKeyName + "|" + item.listItem.keyName) + "}",
+                                color: item.color,
+                                numericAttribute: item.numericAttribute,
+                                stringAttribute: isArrayWithAttribute ? diagram.stringAttribute.key : "",
+                                x_ticks: {
+                                    //only set the ticks on the last Plot - this is necessary to render it last when layering the Plots in the diagrams
+                                    ticks: []
+                                }
+                            }
+                        }
+                        //if the current array is the one that contains the string attribute, dont push it instantly to the plots array
+                        if (isArrayWithAttribute) plotWithStringAttribute = plots;
+                        else plotArray.push(plots);
+                    }
+                    //push the array with the stringAttribute as the last item so it will be last in backend layering
+                    plotArray.push(plotWithStringAttribute);
+                }
             }
         } else {
             //"Historized"
             if (diagram.historizedObjects !== undefined) {
-                diagram.historizedObjects.forEach((item) => {
+                for (let index = 0; index < diagram.historizedObjects.length; index++) {
+                    const item = diagram.historizedObjects[index];
                     const plots = {
-                        //dateLabels: item.dateLabels,  //deactivated since there is currently no support for date labels by the backend
+                        //dateLabels: item.dateLabels, //deactivated since there is currently no support for date labels by the backend
                         plot: {
                             type: type,
                             x: item.intervalSizes,
@@ -749,12 +786,13 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                             color: item.color,
                             //dateFormat: item.dateFormat,
                             x_ticks: {
-                                ticks: item.labelArray
+                                //only set the ticks on the last Plot - this is necessary to render it last when layering the Plots in the diagrams
+                                ticks: index === diagram.historizedObjects.length-1 ? diagram.labelArray : []
                             }
                         }
                     }
                     plotArray.push(plots);
-                })
+                }
             }
         }
         return plotArray;
@@ -1061,9 +1099,10 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                 setAuthDataDialogOpen={(open: boolean) => setAuthDataDialogOpen(open)}
                 method={""}
                 apiKeyInput1={""}
-                setApiKeyInput1={(input: string) => console.log("NOT IMPLEMENTED: setApiKeyInput1")}
+                //it is not necessary to pass anything here since the principle of having a current data source is not used in editing
+                setApiKeyInput1={(input: string) => {return;}}
                 apiKeyInput2={""}
-                setApiKeyInput2={(input: string) => console.log("NOT IMPLEMENTED: setApiKeyInput1")}
+                setApiKeyInput2={(input: string) => {return;}}
                 dataSourcesKeys={infoProvDataSourcesKeys}
                 setDataSourcesKeys={(map: Map<string, DataSourceKey>) => setInfoProvDataSourcesKeys(map)}
                 selectionDataSources={buildDataSourceSelection()}
