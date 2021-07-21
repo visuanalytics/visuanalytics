@@ -92,7 +92,7 @@ Die angesprochenen Automatisierungen in den ersten beiden Abschnitten dieses Kap
 ### Dokumentation
 Für das Backend haben wir die Dokumentation mit dem Tool **Sphinx** aus Doc-Strings generiert. Dabei wurde möglichst jede Methode in ihrer Funktionsweise beschrieben. Weiterhin haben wir innerhalb der Funktionen Kommentare hinzugefügt, um komplexere Abschnitte in Funktionen möglichst verständlich zu halten.
 
-Das Frontend hingegen hat die zugehörige Dokumentation nicht aus Doc-Strings generiert, sondern händisch eine erstellt. Hierbei haben wir nicht Methode für Methode dokumentiert, da dies einem Leser der Dokumentation gerade im Frontend nicht unbedingt weiterhilft. Dies liegt primär daran, dass die einzelnen Funktionen meist relativ simpel sind und es auf das Zusammenspiel zwischen den Funktionen ankommt. Dieses Zusammenspiel lässt sich in einer ausformulierten Dokumentation besser beschreiben, als in Doc-Strings, welche einer einzelnen Funktion zugeordnet werden. Neben dieser händisch erstellten Dokumentation hat das Frontend-Team allerdings auch Doc-Strings hinzugefügt, damit für Leser des Codes schnell klar wird, was eine einzelne Funktion für eine Aufgabe hat. Auch haben wir hier probiert innerhalb weniger Wörter darauf einzugehen, wofür diese Funktion später gebraucht wird.
+Das Frontend hingegen hat die zugehörige Dokumentation nicht aus Doc-Strings generiert, sondern händisch erstellt. Hierbei haben wir nicht Methode für Methode dokumentiert, da dies einem Leser der Dokumentation gerade im Frontend nicht unbedingt weiterhilft. Dies liegt primär daran, dass die einzelnen Funktionen meist relativ simpel sind und es auf das Zusammenspiel zwischen den Funktionen ankommt. Dieses Zusammenspiel lässt sich in einer ausformulierten Dokumentation besser beschreiben, als in Doc-Strings, welche einer einzelnen Funktion zugeordnet werden. Neben dieser händisch erstellten Dokumentation hat das Frontend-Team allerdings auch Doc-Strings hinzugefügt, damit für Leser des Codes schnell klar wird, was eine einzelne Funktion für eine Aufgabe hat. Auch haben wir hier probiert innerhalb weniger Wörter darauf einzugehen, wofür diese Funktion später gebraucht wird.
 
 #### Bereitstellung der Dokumentation
 Die Dokumentation wurde dem Auftraggeber als Ordner mit den folgenden Dateien übergeben:
@@ -106,7 +106,7 @@ Zusätzlich zu dieser Abgabe existiert im Repository des Projekts ebenfalls die 
 1. Sphinx installieren, indem die Projekt-Abhängigkeiten installiert werden.
 2. Im Repository in den Ordner `docs` wechseln.
 3. Den Befehl `make html` aufrufen.
-4. Im Ordner `build` liegt nun die generierte Dokumentation. Hier die `index.html` aufrufen und somit die Startseite der Dokumentation öffnen.
+4. Im Ordner `build` liegt nun die generierte Dokumentation. Hier kann man die `index.html` aufrufen und somit die Startseite der Dokumentation öffnen.
 
 ## Entwicklungsumgebung, Programmiersprachen
 
@@ -326,9 +326,9 @@ Hervorgehoben sei an dieser Stelle, dass die Anwendung jede beliebige API zur In
 
 Um eine bessere Struktur in das Projekt und über die anstehenden Aufgaben zu bekommen, soll die folgende Auflistung einen kurzen Überblick über die einzelnen Etappen liefern:
 
-1. **Infoprovider erstellen:** Nach Abschluss dieser Etappe soll es möglich sein, einen Infoprovider vollumfänglich nutzen zu können. Es wird also möglich sein, eine API abzufragen, die verfügbaren Daten anzuzeigen und diese auszuwählen. Weiterhin wird der Nutzer zu diesem Zeitpunkt in der Lage sein, Daten auszuwählen, welche historisiert werden sollen. Außerdem wird es hier möglich sein, eine Regel für die Historisierungszeit festzulegen (Wöchentlich, Täglich, Intervall). Zuletzt soll es dabei möglich sein, den Infoprovider bearbeiten und löschen zu können.
+1. **Infoprovider erstellen:** Nach Abschluss dieser Etappe soll es möglich sein, einen Infoprovider vollumfänglich nutzen zu können. Es wird also möglich sein, eine API abzufragen und die verfügbaren Daten anzuzeigen und diese auszuwählen. Weiterhin wird der Nutzer zu diesem Zeitpunkt in der Lage sein, Daten auszuwählen, welche historisiert werden sollen. Außerdem wird es hier möglich sein, eine Regel für die Historisierungszeit festzulegen (wöchentlich, täglich, Intervall). Zuletzt soll es dabei möglich sein, den Infoprovider bearbeiten und löschen zu können.
 2. **Szeneneditor erstellen:** Mit dem Abschluss des Szeneneditors wird der Nutzer in der Lage sein, die Grundlagen für die späteren Videos zu erstellen. Auf Szenen befinden sich Text, Diagramme, Bilder und Hintergrundbilder oder Hintergrundfarben. Der Text und die Diagramme können dabei Informationen von den vorher erstellten Infoprovidern beziehen. Später soll es auch möglich sein, eine Szene mit Daten aus der Wissensdatenbank zu befüllen.
-3. **Erstellung von Videojobs:** Nach Abschluss dieser Etappe wird es möglich sein, aus den vorher erstellten Szenen ein zusammenhängendes Video in Form eines Videojobs zu erstellen. Dabei kann für jeden Videojob kann noch eine Sprachausgabe eingebunden werden, mit welcher zusätzliche Texte vorgelesen werden können. Ein Videojob beschreibt dabei ein Video, welches auf feste Art und Weise zu definierten Zeitpunkten mit aktuellen Informationen von APIs generiert wird.
+3. **Erstellung von Videojobs:** Nach Abschluss dieser Etappe wird es möglich sein, aus den vorher erstellten Szenen ein zusammenhängendes Video in Form eines Videojobs zu erstellen. Dabei kann für jeden Videojob noch eine Sprachausgabe eingebunden werden, mit welcher zusätzliche Texte vorgelesen werden können. Ein Videojob beschreibt dabei ein Video, welches auf feste Art und Weise zu definierten Zeitpunkten mit aktuellen Informationen von APIs generiert wird.
 
 
 
@@ -368,13 +368,13 @@ Zusätzlich kann mit Jira die Arbeitszeit für jede Aufgabe von jedem Teammitgli
 
 #### **GitHub zur Verwaltung des Quellcodes**
 
-Wenn in einem Team an einer Software entwickelt wird, ist eine Möglichkeit von Nöten, den Code über verschiedene Rechner hinweg synchron zu halten. Hierfür verwenden wir die Plattform GitHub, mit einem bereitgestellten Repository. Dieses enthält bereits bestimmte Automationen, wie z.B. das Erstellen eines neuen Branches, sobald ein Issue den Status "In Progress" erhält. Durch diese Automation ist es leicht möglich, zu erkennen, welches Mitglied gerade an welchem Feature arbeitet.
+Wenn in einem Team an einer Software entwickelt wird, ist eine Möglichkeit von Nöten, den Code über verschiedene Rechner hinweg synchron zu halten. Hierfür verwenden wir die Plattform GitHub, mit einem bereitgestellten Repository. Dieses enthält bereits bestimmte Automatisierungen, wie z.B. das Erstellen eines neuen Branches, sobald ein Issue den Status "In Progress" erhält. Durch diese Automatisierung ist es leicht möglich, zu erkennen, welches Mitglied gerade an welchem Feature arbeitet.
 
 
 
 #### **Meetings**
 
-Alle sechs Teammitglieder treffen sich pro Woche insgesamt drei Mal zu Meetings:
+Alle sechs Teammitglieder treffen sich pro Woche insgesamt drei Mal für Meetings:
 
 * Montags: Hier wird die Planung für neue Aufgaben besprochen und es können eventuell aufgetretene Probleme diskutiert werden.
 * Donnerstags: Hier trifft sich das Team mit Herrn Prof. Dr. Kammer und es werden wichtige Informationen ausgetauscht.
@@ -386,7 +386,7 @@ Dabei kommt als Konferenzsoftware die Plattform Pilos mit Big Blue Button (BBB) 
 
 
 
-Zusätzlich ist es nicht ausgeschlossen, dass sich einzelne Mitglieder zu Meetings außerhalb der genannten treffen, um interne Dinge zu diskutieren, wie z.B. die Tauglichkeit eines Datenbankmodells. Dies ermöglicht einen schnelleren Ablauf bei der Vorstellung vor dem restlichen Team.
+Zusätzlich ist es nicht ausgeschlossen, dass sich einzelne Mitglieder zu Meetings außerhalb der genannten Termine treffen, um interne Dinge zu diskutieren, wie z.B. die Tauglichkeit eines Datenbankmodells. Dies ermöglicht einen schnelleren Ablauf bei der Vorstellung vor dem restlichen Team.
 
 <br>
 
@@ -410,20 +410,20 @@ Im Folgenden sollen die Anforderungen an das Projekt detailliert beschrieben und
 
 Die Implementierung der geforderten Features für das Frontend erfolgt mit dem Framework React.js und der Sprache TypeScript. Für das Design wird dabei auf das CSS-Framework MaterialUI gesetzt. Damit unterscheidet sich die Umsetzung des Frontends in den verwendeten Technologien nicht zum Ursprungsprojekt.
 
-Da jedoch die geforderten Funktionalitäten des Frontends kaum Übereinstimmung mit denen des Vorgängerprojektes haben, wird das Frontend komplett neu aufgebaut, wobei jedoch möglichst viel Code des bisherigen Frontends wiederverwertet werden soll.
+Da jedoch die geforderten Funktionalitäten des Frontends kaum Übereinstimmung mit denen des Vorgängerprojektes haben, wird das Frontend komplett neu aufgebaut, wobei jedoch möglichst viel Code des bisherigen Frontends wiederverwertet werden soll, so wie z.B. die Funktion zur Kommunikation mit dem Backend.
 Der Code des bisherigen Frontends soll dabei weitgehend unangetastet bleiben, sodass auch dieses noch funktional bleibt.
 
 
 
 ##### **Startseite / Dashboard**
 
-Hier soll es dem Nutzer möglich sein, zwischen der Erstellung eines neuen Infoproviders, der Erstellung einer Szene oder eines Videojobs zu wählen. Mit Klick auf die entsprechenden Schaltflächen, werden die dafür benötigten Komponenten geladen. Weiterhin soll es möglich sein, bestehende Infoprovider, Szenen und Videojobs einzusehen, diese zu bearbeiten und gegebenenfalls zu löschen.
+Hier soll es dem Nutzer möglich sein, zwischen der Erstellung eines neuen Infoproviders, einer Szene oder eines Videojobs zu wählen. Mit einem Klick auf die entsprechenden Schaltflächen, werden die dafür benötigten Komponenten geladen. Weiterhin soll es möglich sein, bestehende Infoprovider, Szenen und Videojobs einzusehen, diese zu bearbeiten und gegebenenfalls zu löschen.
 
 
 
 ##### **Erstellen des Infoproviders**
 
-Um einen Infoprovider erstellen zu können, wird von dem Nutzer zunächst die Eingabe einer Request-URL, eines API-Namen und eines API-Schlüssels erwartet. Außerdem muss dieser die Parameter für die Abfrage angeben, damit die entsprechenden Attribute angezeigt werden können. Diese Parameter können dabei entweder direkt an die URL angehängt werden oder in eigenen Feldern angegeben werden. Um den API-Key sicher speichern zu können, sollte dieser nicht in der finalen JSON-Datei gespeichert sein, sondern weiterhin in der privaten config.json. In der Realität gibt es dabei verschiedene Möglichkeiten, den API-Key anzugeben. Das Projekt wird davon die Folgenden unterstützen:
+Um einen Infoprovider erstellen zu können, wird von dem Nutzer zunächst die Eingabe einer Request-URL und eines API-Namen erwartet. Falls die API eine Authentifizierung benötigt, muss ein API-Schlüssel angegeben werden. Außerdem muss der Benutzer die Parameter für die Abfrage angeben, damit die entsprechenden Attribute angezeigt werden können. Diese Parameter können dabei entweder direkt an die URL angehängt, oder in eigenen Feldern angegeben werden. Um den API-Key sicher speichern zu können, sollte dieser nicht in der finalen JSON-Datei gespeichert sein, sondern weiterhin in der privaten `config.json`. In der Realität gibt es dabei verschiedene Möglichkeiten, den API-Key anzugeben. Das Projekt wird davon die Folgenden unterstützen:
 * Kein Key
 * Key im Header
 * Key in der Query
@@ -440,29 +440,29 @@ Alternativ zu einer API-Abfrage soll hier im späteren Verlauf noch die Möglich
 
 Mit diesen Daten wendet sich das Frontend an den Server, welcher durch einen zur Verfügung gestellten API-Endpunkt die Daten entgegen nimmt und eine Abfrage an die geforderte API stellt. Die erhaltene Antwort wird anschließend an das Frontend zurückgeschickt. Dieses könnte die Ziel-API zwar auch direkt anfragen, dadurch wäre aber der Mechanismus des Abfragens einer API sowohl im Front- als auch im Backend vorhanden.
 
-Nach dem Erhalt der API-Antwort extrahiert das Frontend das JSON-Objekt / die XML-Datei, damit der Nutzer auswählen kann, welche Daten er behalten möchte. Im nächsten Schritt kann ein Nutzer noch Formeln hinzufügen, mit welchen er neue Daten aus den bestehenden Attributen gewinnen kann. Dabei muss darauf geachtet werden, dass keine Typinkompatibilität entsteht (es darf also beispielsweise nicht ein String mit einem Integer addiert werden).
+Nach dem Erhalt der API-Antwort extrahiert das Frontend das JSON-Objekt, damit der Nutzer auswählen kann, welche Daten er behalten möchte. Im nächsten Schritt kann ein Nutzer noch Formeln hinzufügen, mit welchen er neue Daten aus den bestehenden Attributen gewinnen kann. Dabei muss darauf geachtet werden, dass keine Typinkompatibilität entsteht (es darf also beispielsweise nicht ein String mit einem Integer addiert werden).
 
 Formeln sollen dabei einfache Rechenoperationen ermöglichen, sollen aber auch eine Formatierung ermöglichen. So soll der Nutzer beispielsweise wählen können, ob die Kommatrennung durch einen Punkt oder ein Komma verwendet werden soll. Dies ist im Video von Vorteil, da die Werte mit den bekannten Zeichen formatiert werden. Der Punkt könnte hier zu Missverständnissen führen. Dabei könnte es beispielsweise die folgenden Formatierungen und Rechenoperationen geben:
 * Einfache Rechenoperationen: +, -, \*, /
 * Benutzung von Klammern
-* Händische Ersetzung von Strings. Beispielsweise ersetzen von "Und so weiter" durch "usw."
+* Händische Ersetzung von Strings. Beispielsweise das Ersetzen von "Und so weiter" durch "usw."
 * String-Erweiterung: Anhängen einer Zeichenfolge an den String. Hiermit könnte aus "10" beispielsweise "10 %" entstehen.
 * Trimmfunktion: Entfernen von Leerzeichen und Leerzeilen.
 
 Nun kann der Nutzer noch auswählen, welche Daten zu welchen Zeitpunkten historisiert werden sollen. Weiterhin soll es möglich sein, Daten zu verwenden, um Diagramme zu generieren. Dabei sollen die folgenden Diagrammtypen unterstützt werden:
-* Punktdiagramm
+* Streu- / Punktdiagramm
 * Liniendiagramm
 * Balkendiagramm
 * Tortendiagramm
 * Säulendiagramm
 
-Für jedes dieser Diagramme kann der Nutzer dabei ein oder mehrere Arrays aus dem Infoprovider verwenden. Dabei dürfen in dem Array nur Zahlen enthalten sein, da andernfalls die Verarbeitung keinen Sinn macht. Diese Arrays werden für die y-Achse (Werte des Diagramms) verwendet. Die x-Achse (Beschriftung) kann der Nutzer selbst wähen. Sollte ein Array aus Objekten bestehen, so kann der Nutzer genau ein String-Attribut des Objekts wählen, welches zur Auswertung verwendet wird. Dieses Attribut muss dabei auch wieder eine Zahl sein. Sollte der Nutzer die Beschriftung nicht selbst wählen wollen, so kann er im Falle eines Objekts ein Attribut aus dem gleichen Objekt für diese wählen. Wenn ein Array jedoch wiederum Unterarrays enthält, so kann dieses Array nicht zur Verwendung in Diagrammen gewählt werden. Die Verwendung von mehreren Arrays pro Diagramm ist dabei sinnvoll, um z.B. den Wetterverlauf in mehreren Städten gleichzeitig anzeigen zu können.
+Für jedes dieser Diagramme kann der Nutzer dabei ein oder mehrere Arrays aus dem Infoprovider verwenden. Diese Arrays werden für die y-Achse (Werte des Diagramms) verwendet. Die x-Achse (Beschriftung) kann der Nutzer selbst wählen. Sollte ein Array aus Objekten bestehen, so kann der Nutzer genau ein Attribut des Objekts wählen, welches zur Auswertung verwendet wird. Dieses Attribut muss dabei auch wieder eine Zahl sein. Sollte der Nutzer die Beschriftung nicht selbst wählen wollen, so kann er im Falle eines Objekts dafür ein Attribut aus dem gleichen Objekt wählen. Wenn ein Array jedoch wiederum Unterarrays enthält, so kann dieses Array nicht zur Verwendung in Diagrammen gewählt werden. Die Verwendung von mehreren Arrays pro Diagramm ist dabei sinnvoll, um z.B. den Wetterverlauf in mehreren Städten gleichzeitig anzeigen zu können.
 
 Ebenfalls ist es bei Diagrammen möglich historisierte Daten zu verwenden. Hierfür können mehrere Daten verwendet werden, welche eine eigene Beschriftung erhalten. Durch das festlegen einer Intervalldifferenz (Beispiel: Aktuell - 3 Intervalle) legt man fest, wie viele historisierte Daten auf dem Diagramm abgebildet werden.
 
 Generell ist es bei Diagrammen möglich, festzulegen, wie viele Werte abgebildet werden sollen, es muss also nicht zwangsläufig ein ganzes Array für ein Diagramm verwendet werden. Gleichzeitig lässt sich für jedes gewählte Datum der Historisierung, bzw. für jedes Array, eine eigene Farbe für die spätere Darstellung wählen.
 
-Nach diesen Schritten kann ein Nutzer den Infoprovider entweder fertigstellen oder eine weitere API hinzufügen. Wählt er die letztere Option, so beginnt der beschriebene Prozess von neuem. Wählt er hingegen die erste Option, so werden die eingegebenen Daten vom Frontend so verpackt, dass ein JSON-Objekt entsteht, welches die Datengrundlage  für die Steps *api*, *transform* und *storing* der bisherigen Themenkonfiguration enthält. 
+Nach diesen Schritten kann ein Nutzer den Infoprovider entweder fertigstellen oder eine weitere API hinzufügen. Wählt er die letztere Option, so beginnt der beschriebene Prozess von neuem. Wählt er hingegen die erste Option, so werden die eingegebenen Daten vom Frontend so verpackt, dass ein JSON-Objekt entsteht, welches die Datengrundlage für die Steps *api*, *transform* und *storing* der bisherigen Themenkonfiguration enthält. 
 
 Bevor dieses Objekt final fertiggestellt wird, muss der Nutzer noch einen Namen für den Infoprovider spezifizieren, unter welchem dieser einsehbar sein wird. 
 
@@ -472,7 +472,7 @@ Natürlich ist es später für den Nutzer möglich, die angelegten Infoprovider 
 
 ##### **Bearbeitung von Infoprovidern**
 
-Wenn ein Infoprovider bearbeitet werden soll, so fragt das Frontend beim Backend nach der entsprechenden JSON-Datei und bereitet die enthaltenen Informationen für den Nutzer leserlich auf. Nach Abschluss der Bearbeitung wird die aktualisierte JSON-Datei zurückgesendet, damit das Backend diese verarbeiten kann.
+Wenn ein Infoprovider bearbeitet werden soll, so fragt das Frontend beim Backend nach der entsprechenden JSON-Datei und bereitet die enthaltenen Informationen für den Nutzer leserlich auf. Die Bearbeitung erfolgt nach dem gleichen Prinzip, wie die Erstellung, wobei die einzelnen Werte schon im vorhinein eingetragen sind. Nach Abschluss der Bearbeitung wird die aktualisierte JSON-Datei zurückgesendet, damit das Backend diese verarbeiten kann.
 
 
 
@@ -480,7 +480,7 @@ Wenn ein Infoprovider bearbeitet werden soll, so fragt das Frontend beim Backend
 
 Da kein passendes Framework für die Erstellung einer Szene gefunden werden konnte (die meisten sind zu unmodular oder nicht Open Source), wurde beschlossen, den Canvas-Editor selbst zu implementieren und gegebenenfalls auf kleinere Frameworks zurückzugreifen, welche einen Teil der Funktionalität erfüllen. Dabei stellt [Konva.js](https://konvajs.org) die technische Grundlage für unsere Implementierung dar.
 
-Bei der Erstellung einer Szene kann ein Infoprovider gewählt werden, von welchem die Informationen einer API (oder auch mehreren APIs) verwendet werden können.
+Bei der Erstellung einer Szene kann ein Infoprovider gewählt werden, über den die Informationen einer API (oder auch mehreren APIs) verwendet werden können.
 
 Eine Szene enthält weiterhin Hintergrundfarben, Hintergrundbilder, Bilder, Texte oder Symbole, welche auf der Fläche des Canvas frei platziert werden können. Auch wird es hier möglich sein, Diagramme hinzuzufügen, welche durch den gewählten Infoprovider für die Szene zur Verfügung stehen.
 
@@ -509,11 +509,11 @@ Natürlich muss der Nutzer bei der Erstellung eines Videojobs auch die Generieru
 ##### **Logs anzeigen**
 In der Datenbank der Anwendung werden bei Durchläufen von Jobs detaillierte Logs gespeichert. Diese sollen vom Frontend abgerufen und angezeigt werden können.
 
-Diese Logs sollen sehr aussagekräftig sein, damit der Nutzer Fehler in seiner Konfiguration leicht finden kann. Bei Bedarf kann der Nutzer die Logs löschen, um Speicherplatz auf der Festplatte zurückzugewinnen. Dabei kann der Nutzer die Logs manuell löschen oder eine Regel festlegen, nach welcher Logs automatisiert gelöscht werden werden.
+Diese Logs sollen sehr aussagekräftig sein, damit der Nutzer Fehler in seiner Konfiguration leicht finden kann. Bei Bedarf kann der Nutzer die Logs löschen, um Speicherplatz auf der Festplatte zurückzugewinnen. Dabei kann der Nutzer die Logs manuell löschen oder eine Regel festlegen, nach welcher Logs automatisiert gelöscht werden.
 
 #### **Backend**
 
-Das Backend wird ebenfalls in der Sprache, in welcher es begonnen wurde, weiterentwickelt. Dies bedeutet, dass Python genutzt wird. Für das Networking wird auch weiterhin Flask verwendet. Ziel ist es im Backend, ohne große Teile des Codes neu schreiben zu müssen, die geforderte Funktionalität umzusetzen. Bleibt der Code vollständig erhalten, so ist es sogar möglich, dass alle bisher erstellten Jobs verwendbar sind. Hauptsächlich muss im Backend dafür die Datenbank erweitert werden, und es müssen neue API-Endpunkte hinzugefügt werden.
+Das Backend wird ebenfalls in der Sprache, in welcher es begonnen wurde, weiterentwickelt. Dies bedeutet, dass für die Implementierung Python und für das Networking weiterhin Flask verwendet wird. Ziel ist es im Backend, ohne große Teile des Codes neu schreiben zu müssen, die geforderte Funktionalität umzusetzen. Bleibt der Code vollständig erhalten, so ist es sogar möglich, dass alle bisher erstellten Jobs verwendbar sind. Hauptsächlich muss im Backend dafür die Datenbank erweitert werden, und es müssen neue API-Endpunkte hinzugefügt werden.
 
 
 
@@ -525,13 +525,11 @@ Das Backend wird ebenfalls in der Sprache, in welcher es begonnen wurde, weitere
 
 Mit diesem Endpunkt soll das Backend eine beliebige API abfragen können. Der Request muss dabei ein JSON-Objekt enthalten, welches die notwendigen Daten für einen API-Aufruf enthält. Konkret also die URL der API und den zugehörigen API-Key, insofern einer von Nöten ist.
 
-Als Antwort auf die Anfrage, schickt das Backend ein JSON-Objekt zurück, welches die Daten der abgefragten API enthält. Gleichzeitig enthält das Objekt einen Statuscode, welcher auf Fehler hinweisen kann. Sollte die angefragte API dabei ein XML-Objekt geliefert haben, so wird dieses im Backend zunächst zu einem JSON-Objekt konvertiert.
+Als Antwort auf die Anfrage, schickt das Backend ein JSON-Objekt zurück, welches eine abstrahierte Form der  Daten der abgefragten API enthält. Gleichzeitig enthält das Objekt einen Statuscode, welcher auf Fehler hinweisen kann. Sollte die angefragte API dabei ein XML-Objekt geliefert haben, so wird dieses im Backend zuerst zu einem JSON-Objekt konvertiert.
 
 ###### **/infoprovider (POST)**
 
 Hierbei wird ein neuer Infoprovider in der erweiterten Datenbank angelegt und eine zugehörige JSON-Datei entsteht im Ordner Resources. Als Antwort erhält der Anfrager, ob die Operation erfolgreich war oder nicht.
-
-
 
 ###### **/infoprovider/all (GET)**
 
@@ -547,23 +545,16 @@ Das Backend sendet bei dieser Anfrage das konkrete JSON-Objekt des Infoproviders
 Dieser API-Endpunkt löscht den Infoprovider mit der übergebenen ID.
 
 ###### **/testformula**
-Dieser API-Endpunkt wird benötigt, damit der Nutzer bei der Erstellung von Formeln über eine Schaltfläche prüfen kann, ob seine eingegebene Formel syntaktisch korrekt ist. Mit Klick auf die genannte Schaltfläche, wird die Formel dabei an den Endpunkt **/testformula** übersendet.
+Dieser API-Endpunkt wird benötigt, damit der Nutzer bei der Erstellung von Formeln über eine Schaltfläche prüfen kann, ob seine eingegebene Formel syntaktisch korrekt ist. Mit Klick auf die genannte Schaltfläche, wird die Formel dabei an den Endpunkt **/testformula** übersendet. Zur überprüfung der syntatkischen Korrektheit wird im Backend die Python-Bibliothek *ast* verwendet, welche aus einem Formelstring einen abstrakten Syntaxbaum generieren kann.
 
 ###### **/scene (POST)**
-
-Hierfür muss der Anfrager das JSON-Objekt mitsenden, welches eine Szene enthält. Dieses Objekt entspricht dabei dem Step images aus der bisherigen Themenkonfigurationsdatei. Dieses wird anschließend vom Backend in der Datenbank aufgenommen und eine zugehörige JSON-Datei wird erstellt, welche auf dem Server abgelegt werden kann. Sollte eine Szene mit gleichem Namen bereits existieren, so ist ein Fehler an das Frontend zu übersenden.
-
-
+Hierfür muss der Anfrager das JSON-Objekt mitsenden, welches eine Szene enthält. Dieses Objekt entspricht dabei dem Step *images* aus der bisherigen Themenkonfigurationsdatei. Dieses wird anschließend vom Backend in der Datenbank aufgenommen und eine zugehörige JSON-Datei wird erstellt, welche auf dem Server abgelegt werden kann. Sollte eine Szene mit gleichem Namen bereits existieren, so ist ein Fehler an das Frontend zu übersenden.
 
 ###### **/scene/all (GET)**
-
 Hierbei sendet das Backend eine Liste aller vorhandenen Szenen an den Anfrager.
 
-
-
 ###### **/scene/\<id\> (GET)**
-
-Das zugehörige JSON-Objekt zu der ID wird an den Anfrager übersendet. Falls dieses nicht vorhanden sein sollte, wird ein Fehler geworfen.
+Das zugehörige JSON-Objekt zu der Szene mit der übergebenen ID wird an den Anfrager übersendet. Falls dieses nicht vorhanden sein sollte, wird ein Fehler geworfen.
 
 ###### **/scene/\<id\> (PUT)**
 Mit diesem API-Endpunkt ersetzt das Backend die spezifizierte Szene mit dem neuen übergebenen Objekt. Gleichzeitig wird der Eintrag in der Datenbank aktualisiert.
@@ -572,14 +563,10 @@ Mit diesem API-Endpunkt ersetzt das Backend die spezifizierte Szene mit dem neue
 Mit diesem API-Endpunkt wird die übergebene Szene gelöscht.
 
 ###### **/image/all (GET)**
-
 Mit dieser Abfrage werden dem Abfrager alle Pfade zu den Bildern gesendet, welche vorhanden sind. Diese kann das Frontend anschließend anzeigen.
 
-
-
 ###### **/image (POST)**
-
-Bei Upload eines Bildes, wird dieses vom Backend der Datenbank hinzugefügt und die entsprechende Datei wird im Ordner Images abgelegt.
+Beim Upload eines Bildes, wird dieses vom Backend der Datenbank hinzugefügt und die entsprechende Datei wird im Ordner Images abgelegt.
 
 ###### **/image/\<id\> (DELETE)**
 Mit diesem API-Endpunkt wird das Bild mit der übergebenen ID gelöscht.
@@ -587,19 +574,33 @@ Mit diesem API-Endpunkt wird das Bild mit der übergebenen ID gelöscht.
 ###### **/thumbnailpreview (POST)**
 Hierbei wird dem Backend die Information übergeben, welche Szene als Vorschau generiert werden soll. Das generierte Bild wird anschließend als Antwort zurückgesendet. Somit kann ein Vorschaubild mit konkreten Werten angezeigt werden.
 
+###### **/videojob (POST)**
+
+Hierbei wird ein neuer Videojob in der erweiterten Datenbank angelegt und eine zugehörige JSON-Datei entsteht im Ordner Resources. Als Antwort erhält der Anfrager, ob die Operation erfolgreich war oder nicht.
+
+###### **/videojob/all (GET)**
+
+Als Antwort auf diese Anfrage sendet das Backend eine Liste mit den verfügbaren Videojobs. Diese können dann vom Frontend dem Nutzer beispielsweise aufgelistet werden.
+
+###### **/videojob/\<id\> (PUT)**
+An diesen Endpunkt wird ein aktualisierter Videojob gesendet. Die zugehörige JSON-Datei wird anschließend im Backend ersetzt und der entsprechende Datenbankeintrag wird angepasst.
+
+###### **/videojob/\<id\> (GET)**
+Das Backend sendet bei dieser Anfrage das konkrete JSON-Objekt des Videojobs. Sollte dies nicht vorhanden sein, so wird ein Fehler gesendet.
+
+###### **/videojob/\<id\> (DELETE)**
+Dieser API-Endpunkt löscht den Videojob mit der übergebenen ID.
+
 ###### **Weitere API-Endpunkte**
-
 Für die restlichen Operationen können die bisherigen API-Endpunkte übernommen werden. So kann beispielsweise mittels **/topics** die endgültige Themenkonfiguration an das Backend übergeben werden und mit **/add** ein zugehöriger Job erstellt werden.
-
-
 
 ##### **Erweiterung der Resources**
 
 Im Ordner Resources müssen folgende neue Ordner angelegt werden:
 
-* Infoprovider: Hier werden die JSON-Dateien der Infoprovider aufbewahrt. Diese umfassen dabei die Steps api, transform und storing der bisherigen Themenkonfiguration.
-* Scenes: Hier werden die JSON-Dateien für die Szenen abgelegt. Diese umfassen dabei den Step images.
-* diagrams: Hier werden die Daten für Diagramme abgespeichert.
+* Infoprovider: Hier werden die JSON-Dateien der Infoprovider aufbewahrt. Diese umfassen dabei die Steps *api*, *transform* und *storing* der bisherigen Themenkonfiguration.
+* Scenes: Hier werden die JSON-Dateien für die Szenen abgelegt. Diese umfassen dabei den Step *images*.
+* Diagrams: Hier werden die Daten für Diagramme abgespeichert.
   
 
 Um einfache Abfragen an die neuen Ordner stellen zu können, werden entsprechend auch die Methoden für den Zugriff auf die Pfade ergänzt.
@@ -608,14 +609,14 @@ Um einfache Abfragen an die neuen Ordner stellen zu können, werden entsprechend
 
 ##### **Erweiterung des Datenbankmodells**
 
-Um den neuen Anforderungen des Projekts gerecht zu werden, ist es notwendig die bestehende Datenbank zu erweitern. Beim Entwurf der zusätzlichen Tabellen wurde dabei darauf geachtet, dass die bisherige Struktur erhalten bleibt. So sollten alle bisher gespeicherten Jobs auch mit der neuen Funktionalität kompatibel sein. Es ist allerdings ausdrücklich darauf hinzuweisen, dass es in der GUI nicht möglich sein wird Parameter bei Erstellung des Jobs anzugeben. Die Entität run_config wird also keine weiteren Einträge mehr erhalten. Eine Tabelle für Diagramme ist hierbei nicht von Nöten, da ein Array von Diagrammen im Ordner **diagrams** abgelegt wird. Die Datei soll dabei den Namen des Infoproviders erhalten und ist somit über den Eintrag des Infoproviders in der Datenbank abrufbar.
+Um den neuen Anforderungen des Projekts gerecht zu werden, ist es notwendig die bestehende Datenbank zu erweitern. Beim Entwurf der zusätzlichen Tabellen wurde dabei darauf geachtet, dass die bisherige Struktur erhalten bleibt. So sollten alle bisher gespeicherten Jobs auch mit der neuen Funktionalität kompatibel sein. Es ist allerdings ausdrücklich darauf hinzuweisen, dass es in der GUI nicht möglich sein wird, Parameter bei Erstellung des Jobs anzugeben. Die Entität run_config wird also keine weiteren Einträge mehr erhalten. Eine Tabelle für Diagramme ist hierbei nicht von Nöten, da ein Array von Diagrammen im Ordner **diagrams** abgelegt wird. Die Datei soll dabei den Namen des Infoproviders erhalten und ist somit über den Eintrag des Infoproviders in der Datenbank abrufbar.
 
 ![Datenbankmodell](images/db.png)
 
 
 ##### **Erhaltung der bisherigen Datei zur Themenkonfiguration**
 
-Wie erkennbar sein sollte, wird mit den geplanten Erweiterungen versucht, so zu verfahren, dass am Ende (bei Erstellung eines Jobs) die einzelnen Bereiche (Infoprovider, Scenes und Videojobs) wieder zur bisher existierenden Themenkonfiguration zusammengesetzt werden können. Dies sorgt für einen relativ geringen Aufwand im Backend, da das Erstellen der Videos mit dieser Datei als Basis schon implementiert ist. Es muss lediglich eine Möglichkeit gefunden werden, Steps auch einzeln zu durchlaufen, damit beispielsweise für die Historisierung nur die Steps bis inklusive "storing" durchlaufen werden.
+Wie erkennbar sein sollte, wird mit den geplanten Erweiterungen versucht, so zu verfahren, dass am Ende (bei Erstellung eines Jobs) die einzelnen Bereiche (Infoprovider, Scenes und Videojobs) wieder zur bisher existierenden Themenkonfiguration zusammengesetzt werden können. Dies sorgt für einen relativ geringen Aufwand im Backend, da das Erstellen der Videos mit dieser Datei als Basis schon implementiert ist. Es muss lediglich eine Möglichkeit gefunden werden, Steps auch einzeln zu durchlaufen, damit beispielsweise für die Historisierung nur die Steps bis inklusive *storing* durchlaufen werden.
 
 
 
@@ -658,7 +659,7 @@ Als Qualitätskontrolle sollen Tests von jedem Teammitglied der Anwendung dienen
 
 #### **Abnahmekriterien**
 
-Das Programm bietet die fehlerfreie Möglichkeit, Videos zu allen Themenbereichen zu generieren. Videos können von Nutzern einfach selbst erstellt werden, wobei grundlegendes Wissen von Nutzern in der IT vorausgesetzt wird.
+Das Programm bietet die fehlerfreie Möglichkeit, Videos zu verschiedenen Themenbereichen zu generieren. Videos können von Nutzern einfach selbst erstellt werden, wobei grundlegendes Wissen von Nutzern in der IT vorausgesetzt wird.
 
 
 
@@ -670,9 +671,7 @@ Das Programm bietet die fehlerfreie Möglichkeit, Videos zu allen Themenbereiche
 * Zwischenpräsentation (17.06.2021): In der Zwischenpräsentation sollen alle Schritte des Infoproviders vorgestellt werden können. Weiterhin soll ein erster, nutzbarer, Szeneneditor gezeigt werden. Dabei ist es nicht das Ziel, dass zu diesem Zeitpunkt alle Details der beiden Features vollständig implementiert sind. Viel mehr soll ein minimaler Use-Case vorgestellt werden können.
 * Endpräsentation: Diese wird kurz vor Abschluss des Projekts stattfinden. Hier soll ein umfänglicher Use-Case der Anwendung präsentiert werden. Es ist auch möglich, dass hier mehr als nur ein Use-Case präsentiert wird.
 
-Weitere Aspekte sollen in diesen Zeitplan vorerst nicht einfließen, da es schwer ist abzuschätzen, welche Features wie viel Zeit benötigen werden. Es ist allerdings geplant nach Abschluss der oben genannten Schritte weitere Punkte der Kategorien "Must-Have", "Nice-To-Have" und "If-Time-Allows" abzuarbeiten.
-
-
+Weitere Aspekte sollen in diesen Zeitplan vorerst nicht einfließen, da es schwer ist abzuschätzen, wie viel Zeit die einzelnen Features benötigen werden. Es ist allerdings geplant nach Abschluss der oben genannten Schritte weitere Punkte der Kategorien "Must-Have", "Nice-To-Have" und "If-Time-Allows" abzuarbeiten.
 
 Die Dokumentation des Projekts soll simultan zur Implementierung erfolgen, damit diese möglichst mit "frischen" Erinnerungen verfasst werden kann. Sollte diese erst im Nachhinein entstehen, so ist es möglich, dass wichtige Aspekte vergessen werden oder nur unzureichend erklärt werden.
 
@@ -708,7 +707,7 @@ Der Überblick über erstellte Videojobs liefert alle existierenden Videojobs mi
 
 ![Mockup 6](images/6.png)
 
-Durch das Anklicken eines Videojobs in der Liste erhält man Detailinformationen über das Video mit der Möglichkeit, Aktualisierungs- zeitpunkte zu Bearbeiten. Über einen weiteren Button gelangt man zur Veränderung des Videos im Editor, sowie den Logs.
+Durch das Anklicken eines Videojobs in der Liste erhält man Detailinformationen über das Video mit der Möglichkeit, Aktualisierungszeitpunkte zu bearbeiten. Über einen weiteren Button gelangt man zur Veränderung des Videos im Editor, sowie den Logs.
 
 <hr>
 
@@ -738,7 +737,7 @@ Der Nutzer wartet auf Rückmeldung des Backends, welches eine Anfrage mit den ge
 
 ![Mockup 11](images/11.png)
 
-Der Nutzer erhält nun eine Auflistung aller vom Backend gelieferten Daten in einer Tabelle. Hierbei werden auch die Schachtelungen von Objekten oder Arrays soweit möglich dargestellt, indem eine Einrückung der Elemente erfolgt. Durch das Anklicken wird ein Datum ausgewählt.
+Der Nutzer erhält nun eine Auflistung aller vom Backend gelieferten Daten in einer Tabelle. Hierbei werden auch die Schachtelungen von Objekten oder Arrays, soweit möglich, dargestellt, indem eine Einrückung der Elemente erfolgt. Durch das Anklicken wird ein Datum ausgewählt.
 
 <hr>
 
@@ -746,7 +745,7 @@ Der Nutzer erhält nun eine Auflistung aller vom Backend gelieferten Daten in ei
 
 Im Formel-Editor kann der Nutzer anhand der in einer Liste zur Verfügung stehenden Daten und einem Textfeld mit Button-Bedienung eigene Formeln erstellen. Die Eingabe assistiert ihn dabei, indem sie auf korrekte Nutzung von Klammern und Operatoren achtet.
 
-Per Button prüft das Backend den Syntax der Formel. Das Speichern einer Formel fügt diese der Liste rechts hinzu, der Nutzer kann also eine beliebige Menge Formeln erstellen, bis er fortfährt.
+Per Button prüft das Backend die Syntax der Formel. Das Speichern einer Formel fügt diese der Liste rechts hinzu. Der Nutzer kann also eine beliebige Menge Formeln erstellen bevor er fortfährt.
 
 <hr>
 
@@ -764,13 +763,13 @@ Anschließend wählt er Zeitpunkte der Historisierung aus. Wenn keine Daten gew�
 
 ![Mockup 15](images/15.png)
 
-Bei der Diagrammerstellung erhält der Nutzer zunächst eine Übersicht aller erstellten Programme mit der Option, diese zu bearbeiten oder wieder zu löschen. Er kann zudem neue Diagramme erstellen.
+Bei der Diagrammerstellung erhält der Nutzer zunächst eine Übersicht aller erstellten Diagramme mit der Option, diese zu bearbeiten oder wieder zu löschen. Er kann zudem neue Diagramme erstellen.
 
 <hr>
 
 ![Mockup 16](images/16.png)
 
-Beim Erstellen eines neuen Diagramms muss zuerst gewählt werden, ob dieses auf Arrays oder historisierten Datenwerten basieren soll. Diese können dabei aus allen Datenquellen des Info-Providers stammen. Der Nutzer wählt dann die entsprechenden Array / die entsprechenden Werte.
+Beim Erstellen eines neuen Diagramms muss zuerst gewählt werden, ob dieses auf Arrays oder historisierten Datenwerten basieren soll. Diese können dabei aus allen Datenquellen des Info-Providers stammen. Der Nutzer wählt dann die entsprechenden Array bzw. Werte.
 
 <hr>
 
@@ -779,8 +778,8 @@ Beim Erstellen eines neuen Diagramms muss zuerst gewählt werden, ob dieses auf 
 Wenn ein Array mit Objekten gewählt wird, muss der Nutzer neben dem Diagrammtyp wählen, welches Zahl-Attribut des Objekts auf dem Diagramm abgetragen werden soll.
 Weiterhin muss er ein String-Attribut zur Beschriftung der Werte wählen oder aber eigene Beschriftungen erstellen. Außerdem kann man eine Farbe wählen, welche für die Daten des Arrays im Diagramm verwendet wird.
 
-Mit einer Drop-Down-Auswahl kann ein Nutzer zwischen den verschiedenen vorher ausgewählten Arrays wechseln - es wird dabei für jedes Array individuell gespeichert, ob man String-Attribute oder eigene Beschriftungen nutzen möchte, genauso wie Farbe und gewählte Daten.
-Weiterhin wählt man die Anzahl der zu berücksichtigenden Werte. Überschreitet diese die Länge eines der Arrays bei der Test-Abfrage, erhält der Nutzer eine Warnung.
+Mit einer Drop-Down-Auswahl kann ein Nutzer zwischen den verschiedenen vorausgewählten Arrays wechseln - es wird dabei für jedes Array individuell gespeichert, welche Farbe und Daten genutzt werden sollen.
+Weiterhin wählt man die Anzahl der zu berücksichtigenden Werte. Überschreitet diese die Länge eines der Arrays von der Test-Abfrage, erhält der Nutzer eine Warnung, da zukünfitge Anfragen an die API ein kürzeres Array zurückliefern könnten.
 
 Über einen Button wird eine Vorschau der gewählten Einstellungen (mit Zufallsdaten) generiert, die der Nutzer dann in einem Dialog/Modal betrachten kann.
 
@@ -803,7 +802,7 @@ Die Komponente zeigt zudem bei jedem Wert an, welches Intervall vorher für die 
 
 ![Mockup 20](images/20.png)
 
-Im Abschluss beider Schritte, muss ein Name festgelegt werden, um das Diagramm zu erstellen.
+Zum Abschluss beider Schritte, muss ein Name festgelegt werden, um das Diagramm zu erstellen.
 
 <hr>
 
@@ -829,7 +828,7 @@ Der Szenen-Editor ermöglicht das Erstellen des Layouts der Szene auf einer frei
 
 ![Mockup 24](images/24.png)
 
-In der Übersicht aller Bilder sieht der Nutzer alle Bilder, die bereits hochgeladen und im Backend gespeichert wurden. Er wählt aus diesen aus, um sie der Szene hinzuzufügen. Denkbar wäre auch die Einbindung einer Symbol-Bibliothek, wie der von Material.
+In der Übersicht aller Bilder sieht der Nutzer alle Bilder, die bereits hochgeladen und im Backend gespeichert wurden. Er wählt aus diesen aus, um sie der Szene hinzuzufügen. Denkbar wäre auch die Einbindung einer Symbol-Bibliothek, wie der von Material-UI.
 
 <hr>
 
