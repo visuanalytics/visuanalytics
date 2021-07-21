@@ -378,7 +378,8 @@ def get_x_y(values, step_data, array_source, custom_labels=False, primitive=True
     if array_source:
         if primitive:
             y_vals = step_data.format(values["y"])
-            y_vals = list(map(float, y_vals[1: -1].split(", ")))
+            y_vals = y_vals.replace("[", "").replace("]", "").split(", ")
+            y_vals = list(map(float, y_vals))
             y_vals = list(map(y_vals.__getitem__, values.get("x", np.arange(len(y_vals)))))
         else:
             array = step_data.format(values["y"])
@@ -391,7 +392,8 @@ def get_x_y(values, step_data, array_source, custom_labels=False, primitive=True
                 values.update({"x_ticks": x_ticks})
     else:
         y_vals = step_data.format(values["y"])
-        y_vals = list(map(float, y_vals[1: -1].split(", ")))
+        y_vals = y_vals.replace("[", "").replace("]", "").split(", ")
+        y_vals = list(map(float, y_vals))
         y_vals = list(map(y_vals.__getitem__, [i - 1 for i in values.get("x", np.arange(len(y_vals)))]))
 
     values["y"] = y_vals
