@@ -317,7 +317,7 @@ def insert_video_job(video, update=False, job_id=None):
     schedule = video.get("schedule", None)
     delete_schedule = video.get("deleteSchedule", {
         "type": "keepCount",
-        "keepCount": 2
+        "keepCount": 5
     })
     if not schedule:
         return False if not update else {"err_msg": "could not read schedule from JSON"}
@@ -694,7 +694,7 @@ def get_max_use_last(diagrams=None):
             if temp_max > max_use_last:
                 max_use_last = temp_max
 
-    return max_use_last
+    return max_use_last + 1
 
 
 def delete_infoprovider(infoprovider_id):

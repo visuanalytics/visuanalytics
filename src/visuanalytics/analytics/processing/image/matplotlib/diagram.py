@@ -178,7 +178,7 @@ def generate_test_diagram(values, infoprovider_name=None, diagram_name=None):
     for plot in values["diagram_config"]["plots"]:
         plot["plot"]["y"] = np.random.randint(1, 20, len(plot["plot"]["x"]))
         plot["plot"].pop("x", None)
-        fig, ax = create_plot(plot, None, None, get_xy=False, fig=fig, ax=ax)
+        fig, ax, _ = create_plot(plot, None, None, get_xy=False, fig=fig, ax=ax)
 
     file = get_test_diagram_resource_path(infoprovider_name=infoprovider_name, diagram_name=diagram_name)
     title = values.get("title", None)
@@ -378,7 +378,8 @@ def get_x_y(values, step_data, array_source, custom_labels=False, primitive=True
     if array_source:
         if primitive:
             y_vals = step_data.format(values["y"])
-            y_vals = list(map(float, y_vals[1: -1].split(", ")))
+            y_vals = y_vals.replace("[", "").replace("]", "").split(", ")
+            y_vals = list(map(float, y_vals))
             y_vals = list(map(y_vals.__getitem__, values.get("x", np.arange(len(y_vals)))))
         else:
             array = step_data.format(values["y"])
@@ -391,7 +392,8 @@ def get_x_y(values, step_data, array_source, custom_labels=False, primitive=True
                 values.update({"x_ticks": x_ticks})
     else:
         y_vals = step_data.format(values["y"])
-        y_vals = list(map(float, y_vals[1: -1].split(", ")))
+        y_vals = y_vals.replace("[", "").replace("]", "").split(", ")
+        y_vals = list(map(float, y_vals))
         y_vals = list(map(y_vals.__getitem__, [i - 1 for i in values.get("x", np.arange(len(y_vals)))]))
 
     values["y"] = y_vals
@@ -436,7 +438,7 @@ def create_plot(values, step_data, array_source, get_xy=True, fig=None, ax=None)
         else:
             ax.set_yticklabels([None] + x_ticks["ticks"], fontdict=x_ticks.get("fontdict", default_fontdict), color=x_ticks.get("color", default_color))
 
-    return fig, ax
+    return fig, ax, values_new['y']
 
 
 def create_plot_custom(values, step_data, fig=None, ax=None):
@@ -451,8 +453,22 @@ def create_plot_custom(values, step_data, fig=None, ax=None):
     :return: bearbeitetes figure- und ax-Objekt für einen Plot
     """
     array_source = values["sourceType"] == "Array"
+    min_y = None
+    max_y = None
     for plot in values["plots"]:
-        fig, ax = create_plot(plot, step_data, array_source=array_source, fig=fig, ax=ax)
+        fig, ax, y = create_plot(plot, step_data, array_source=array_source, fig=fig, ax=ax)
+        if min_y:
+            if min(y) < min_y:
+                min_y = min(y)
+        else:
+            min_y = min(y)
+        if max_y:
+            if max(y) < max_y:
+                max_y = max(y)
+        else:
+            max_y = max(y)
+    diff = max_y - min_y
+    plt.ylim((min_y - 0.10 * diff, max_y + 0.10 * diff))
     return fig, ax
 
 
