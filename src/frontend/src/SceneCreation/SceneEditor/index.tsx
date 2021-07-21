@@ -2425,8 +2425,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                 </Grid>
                                 <Grid item xs={3}>
                                     <Button className={classes.button} id="undo" onClick={undo}
-                                            disabled={recentlyRemovedItems.length === 0}> RÜCKGÄNGIG
-                                        MACHEN </Button><br/><br/>
+                                            disabled={recentlyRemovedItems.length === 0}> RÜCKGÄNGIG </Button><br/><br/>
                                     <TextField
                                         className={classes.buttonNumber}
                                         id="coordinatesY"
