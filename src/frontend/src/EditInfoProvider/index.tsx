@@ -1098,11 +1098,11 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                 authDataDialogOpen={authDataDialogOpen}
                 setAuthDataDialogOpen={(open: boolean) => setAuthDataDialogOpen(open)}
                 method={""}
-                apiKeyInput1={""}
+                apiKeyInput1={infoProvDataSourcesKeys.get(infoProvDataSources[selectedDataSource].apiName) === undefined ? "" : infoProvDataSourcesKeys.get(infoProvDataSources[selectedDataSource].apiName)!.apiKeyInput1}
                 //it is not necessary to pass anything here since the principle of having a current data source is not used in editing
-                setApiKeyInput1={(input: string) => {return;}}
-                apiKeyInput2={""}
-                setApiKeyInput2={(input: string) => {return;}}
+                setApiKeyInput1={setApiKeyInput1}
+                apiKeyInput2={infoProvDataSourcesKeys.get(infoProvDataSources[selectedDataSource].apiName) === undefined ? "" : infoProvDataSourcesKeys.get(infoProvDataSources[selectedDataSource].apiName)!.apiKeyInput2}
+                setApiKeyInput2={setApiKeyInput2}
                 dataSourcesKeys={infoProvDataSourcesKeys}
                 setDataSourcesKeys={(map: Map<string, DataSourceKey>) => setInfoProvDataSourcesKeys(map)}
                 selectionDataSources={buildDataSourceSelection()}
