@@ -49,7 +49,7 @@ export const HistoryDataSelection: React.FC<HistoryDataSelectionProps> = (props)
 
     //true when the dialog for going back and reverting changes is open
     const [backDialogOpen, setBackDialogOpen] = React.useState(false);
-    
+
     //store the copy of the old historizedData in the sessionStorage
     React.useEffect(() => {
         if (sessionStorage.getItem("firstHistDataSelectionEntering-" + uniqueId) !== null) {
