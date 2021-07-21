@@ -441,7 +441,7 @@ def create_plot(values, step_data, array_source, get_xy=True, fig=None, ax=None)
         else:
             ax.set_yticklabels([None] + x_ticks["ticks"], fontdict=x_ticks.get("fontdict", default_fontdict), color=x_ticks.get("color", default_color))
 
-    return fig, ax, values_new['y']
+    return fig, ax, values_new['y'], t == 'barh'
 
 
 def create_plot_custom(values, step_data, fig=None, ax=None):
@@ -458,20 +458,24 @@ def create_plot_custom(values, step_data, fig=None, ax=None):
     array_source = values["sourceType"] == "Array"
     min_y = None
     max_y = None
+    ylim_deprecated = False
     for plot in values["plots"]:
-        fig, ax, y = create_plot(plot, step_data, array_source=array_source, fig=fig, ax=ax)
-        if min_y:
-            if min(y) < min_y:
+        fig, ax, y, barh = create_plot(plot, step_data, array_source=array_source, fig=fig, ax=ax)
+        if not ylim_deprecated:
+            ylim_deprecated = barh
+            if min_y:
+                if min(y) < min_y:
+                    min_y = min(y)
+            else:
                 min_y = min(y)
-        else:
-            min_y = min(y)
-        if max_y:
-            if max(y) < max_y:
+            if max_y:
+                if max(y) < max_y:
+                    max_y = max(y)
+            else:
                 max_y = max(y)
-        else:
-            max_y = max(y)
-    diff = max_y - min_y
-    plt.ylim((min_y - 0.10 * diff, max_y + 0.10 * diff))
+    if not ylim_deprecated:
+        diff = max_y - min_y
+        plt.ylim((min_y - 0.10 * diff, max_y + 0.10 * diff))
     return fig, ax
 
 
