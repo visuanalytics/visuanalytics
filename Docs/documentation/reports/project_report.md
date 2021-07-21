@@ -89,6 +89,25 @@ Der Review-Prozess fand nur in den Fällen nicht statt, in welchen mindestens zw
 ### Verwendung der angesprochenen Automatisierungen
 Die angesprochenen Automatisierungen in den ersten beiden Abschnitten dieses Kapitels wurden nicht eigenständig von uns entwickelt, sondern wurden bereits vom Vorgängerteam implementiert. Für eine genauere Dokumentation zu diesen Features empfehlen wir die Abschnitte der [zugehörigen Dokumentation](https://visuanalytics.readthedocs.io/de/latest/mainreport/Projektbericht.html) zu lesen. In diesen gibt es weitere Informationen zu diesen Features.
 
+### Dokumentation
+Für das Backend haben wir die Dokumentation mit dem Tool **Sphinx** aus Doc-Strings generiert. Dabei wurde möglichst jede Methode in ihrer Funktionsweise beschrieben. Weiterhin haben wir innerhalb der Funktionen Kommentare hinzugefügt, um komplexere Abschnitte in Funktionen möglichst verständlich zu halten.
+
+Das Frontend hingegen hat die zugehörige Dokumentation nicht aus Doc-Strings generiert, sondern händisch eine erstellt. Hierbei haben wir nicht Methode für Methode dokumentiert, da dies einem Leser der Dokumentation gerade im Frontend nicht unbedingt weiterhilft. Dies liegt primär daran, dass die einzelnen Funktionen meist relativ simpel sind und es auf das Zusammenspiel zwischen den Funktionen ankommt. Dieses Zusammenspiel lässt sich in einer ausformulierten Dokumentation besser beschreiben, als in Doc-Strings, welche einer einzelnen Funktion zugeordnet werden. Neben dieser händisch erstellten Dokumentation hat das Frontend-Team allerdings auch Doc-Strings hinzugefügt, damit für Leser des Codes schnell klar wird, was eine einzelne Funktion für eine Aufgabe hat. Auch haben wir hier probiert innerhalb weniger Wörter darauf einzugehen, wofür diese Funktion später gebraucht wird.
+
+#### Bereitstellung der Dokumentation
+Die Dokumentation wurde dem Auftraggeber als Ordner mit den folgenden Dateien übergeben:
+* Projektbericht (Dieses Dokument)
+* Frontend-Dokumentation
+* Backend-Dokumentation
+
+Die Dateien liegen dabei alle als PDF-Datei vor.
+
+Zusätzlich zu dieser Abgabe existiert im Repository des Projekts ebenfalls die Dokumentation. Möchte man sich diese anschauen, so kann man dies beispielsweise tun, indem man mittels Sphinx eine HTML-Repräsentation generiert:
+1. Sphinx installieren, indem die Projekt-Abhängigkeiten installiert werden.
+2. Im Repository in den Ordner `docs` wechseln.
+3. Den Befehl `make html` aufrufen.
+4. Im Ordner `build` liegt nun die generierte Dokumentation. Hier die `index.html` aufrufen und somit die Startseite der Dokumentation öffnen.
+
 ## Entwicklungsumgebung, Programmiersprachen
 
 ### Entwicklungsumgebungen
