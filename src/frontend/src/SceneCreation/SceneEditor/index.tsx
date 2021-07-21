@@ -559,7 +559,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             }
         });
         return returnValue;
-    }, [backgroundImageIndex, backgroundImageList, items, infoProviderId, sceneName, backGroundColor, backGroundColorEnabled, backGroundType, itemCounter, propsSceneFromBackend]);
+    }, [backgroundImageIndex, backgroundImageList, items, infoProviderId, sceneName, currentBGColor, backGroundColorEnabled, backGroundType, itemCounter, propsSceneFromBackend]);
 
     /**
      * Method to handle the results of posting the exported scene to the backend.
@@ -575,7 +575,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         sessionStorage.removeItem("selectedId-" + uniqueId);
         components?.setCurrent("dashboard")
     }, [components]);
-
 
     /**
      * Method for displaying an error message for errors happening while posting the
