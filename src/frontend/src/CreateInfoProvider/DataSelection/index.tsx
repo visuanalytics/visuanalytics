@@ -45,7 +45,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
     const [historizedToRemove, setHistorizedToRemove] = React.useState<Array<string>>([]);
     //true when the dialog for deleting formulas and diagrams is open
     const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
-    
+
     //store the copy of the old selectedData in the sessionStorage
     React.useEffect(() => {
         if (sessionStorage.getItem("firstDataSelectionEntering-" + uniqueId) !== null) {

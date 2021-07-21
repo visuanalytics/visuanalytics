@@ -11,7 +11,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ListItem from "@material-ui/core/ListItem";
 import {useStyles} from "../../style";
 import {FormelObj} from "../../DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
-import {ArrayProcessingData, Diagram, Schedule, StringReplacementData} from "../../types";
+import {ArrayProcessingData, Diagram, Schedule, StringReplacementData, uniqueId} from "../../types";
 import {Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
 
 interface HistoryDataSelectionProps {
@@ -39,7 +39,7 @@ export const HistoryDataSelection: React.FC<HistoryDataSelectionProps> = (props)
     const classes = useStyles();
 
     //holds the selection on start to compare for diagram deletion detection
-    const [oldHistorizedData] = React.useState(props.historizedData);
+    const [oldHistorizedData, setOldHistorizedData] = React.useState(props.historizedData);
 
     //holds the names of all diagrams that need to be removed because of data removed from selection
     const [diagramsToRemove, setDiagramsToRemove] = React.useState<Array<string>>([]);
@@ -49,6 +49,23 @@ export const HistoryDataSelection: React.FC<HistoryDataSelectionProps> = (props)
 
     //true when the dialog for going back and reverting changes is open
     const [backDialogOpen, setBackDialogOpen] = React.useState(false);
+    
+    //store the copy of the old historizedData in the sessionStorage
+    React.useEffect(() => {
+        if (sessionStorage.getItem("firstHistDataSelectionEntering-" + uniqueId) !== null) {
+            setOldHistorizedData(sessionStorage.getItem("oldHistorizedData-" + uniqueId) === null ? [] : JSON.parse(sessionStorage.getItem("oldHistorizedData-" + uniqueId)!))
+        } else {
+            //leave a marker in the sessionStorage to identify if this is the first entering
+            sessionStorage.setItem("firstHistDataSelectionEntering-" + uniqueId, "false");
+        }
+    }, [])
+    React.useEffect(() => {
+        sessionStorage.setItem("oldHistorizedData-" + uniqueId, JSON.stringify(oldHistorizedData))
+    }, [oldHistorizedData])
+    const clearSessionStorage = () => {
+        sessionStorage.removeItem("oldHistorizedData-" + uniqueId)
+        sessionStorage.removeItem("firstHistDataSelectionEntering-" + uniqueId)
+    }
 
     //TODO: document this and why it is needed
     /**
@@ -61,7 +78,10 @@ export const HistoryDataSelection: React.FC<HistoryDataSelectionProps> = (props)
         oldHistorizedData.forEach((item) => {
             if(!props.historizedData.includes(item)) missingSelections.push(item);
         })
-        if(missingSelections.length===0) props.handleBack();
+        if(missingSelections.length===0) {
+            clearSessionStorage();
+            props.handleBack();
+        }
         else setBackDialogOpen(true);
     }
 
@@ -71,6 +91,7 @@ export const HistoryDataSelection: React.FC<HistoryDataSelectionProps> = (props)
      */
     const revertAndBack= () => {
         props.setHistorizedData(oldHistorizedData);
+        clearSessionStorage();
         props.handleBack();
     }
 
@@ -92,6 +113,7 @@ export const HistoryDataSelection: React.FC<HistoryDataSelectionProps> = (props)
      */
     const checkAndProceed = () => {
         //console.log(props.historizedData.length === 0);
+        clearSessionStorage();
         if (props.historizedData.length === 0) {
             props.handleSkipProceed();
         } else {
