@@ -851,7 +851,7 @@ def insert_scene(scene):
     """
     con = db.open_con_f()
 
-    scene_name = scene["scene_name"]
+    scene_name = scene["scene_name"].lower()
     used_images = scene["used_images"]
     used_infoproviders = scene["used_infoproviders"]
     images = scene["images"]
