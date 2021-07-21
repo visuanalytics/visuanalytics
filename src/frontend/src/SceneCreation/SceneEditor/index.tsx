@@ -94,7 +94,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
 
     // states used to determine the type of background
     const [backGroundType, setBackGroundType] = React.useState(props.sceneFromBackend !== undefined ? props.sceneFromBackend.backgroundType : "COLOR");
-    const [backGroundColor, setBackGroundColor] = React.useState(props.sceneFromBackend !== undefined ? props.sceneFromBackend.backgroundColor :"#FFFFFF");
+    const [backGroundColor, setBackGroundColor] = React.useState("#FFFFFF");
     const [backGroundColorEnabled, setBackGroundColorEnabled] = React.useState(props.sceneFromBackend !== undefined ? props.sceneFromBackend.backgroundColorEnabled : false);
 
     // states used to adjust HTML elements
@@ -106,7 +106,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const [currentTextWidth, setCurrentTextWidth] = React.useState(200);
     const [currentTextContent, setCurrentTextContent] = React.useState("");
     const [currentItemColor, setCurrentItemColor] = React.useState("#000000")
-    const [currentBGColor, setCurrentBGColor] = React.useState("#FFFFFF");
+    const [currentBGColor, setCurrentBGColor] = React.useState(props.sceneFromBackend !== undefined ? props.sceneFromBackend.backgroundColor : "#FFFFFF");
     const [currentFontColor, setCurrentFontColor] = React.useState("#000000");
     const [currentXCoordinate, setCurrentXCoordinate] = React.useState(0);
     const [currentYCoordinate, setCurrentYCoordinate] = React.useState(0);
@@ -516,7 +516,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             images:  base,
             backgroundImage: backgroundImageList[backgroundImageIndex].image_id,
             backgroundType: backGroundType,
-            backgroundColor: backGroundColor,
+            backgroundColor: currentBGColor,
             backgroundColorEnabled: backGroundColorEnabled,
             itemCounter: itemCounter,
             scene_items: items,
@@ -583,6 +583,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      */
     const handleExportSceneError= React.useCallback((err: Error) => {
         reportError("Fehler beim Senden des Exports der Szene: " + err);
+        setClickedSaveButton(false);
     }, [reportError]);
 
     //extract editId from props to use in dependencies
@@ -644,6 +645,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      */
     const handlePostScenePreviewError= React.useCallback((err: Error) => {
         reportError("Fehler beim Senden des Szenen-Preview: " + err);
+        setClickedSaveButton(false);
     }, [reportError]);
 
     /**
@@ -725,6 +727,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      */
     const handlePostSceneBGError = React.useCallback((err: Error) => {
         reportError("Fehler beim Senden des Hintergrunds: " + err);
+        setClickedSaveButton(false);
     }, [reportError]);
 
     /**
@@ -807,6 +810,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      */
     const postBackgroundImageErrorHandler = (err: Error) => {
         props.reportError("Fehler beim Senden eines Hintergrundbildes: " + err);
+        setClickedSaveButton(false);
     }
 
     /**
