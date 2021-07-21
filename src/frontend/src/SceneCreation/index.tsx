@@ -32,7 +32,7 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
     //the current step of the creation process, numbered by 0 to 1
     //setting one in editing is not necessary since the dialog will be displayed directly
     //TODO: document this behaviour!!!
-    const [sceneEditorStep, setSceneEditorStep] = React.useState(0);
+    const [sceneEditorStep, setSceneEditorStep] = React.useState(props.sceneFromBackend !== undefined ? 1 : 0);
     //the list of all infoproviders fetched from the backend
     const [infoProviderList, setInfoProviderList] = React.useState<Array<InfoProviderData>>([]);
     //object of the infoprovider to be used in the scene creation, selected in first step
@@ -54,6 +54,9 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
     const [selectedId, setSelectedId] = React.useState(0);
     //true if the message for loading the data from the backend is displayed
     const [displayLoadMessage, setDisplayLoadMessage] = React.useState(false);
+    //copy of the sceneFromBackend props and the editId props - necessary to not loose on reload in editing
+    const [sceneFromBackend, setSceneFromBackend] = React.useState(props.sceneFromBackend);
+    const [editId, setEditId] = React.useState(props.editId);
 
     /* mutable flag that is true when currently images are being fetched because of a reload
     * this is used to block the continueHandler call after successful fetches. This way,
@@ -681,6 +684,19 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
         setDiagramList(sessionStorage.getItem("diagramList-" + uniqueId )=== null ? new Array<DiagramInfo>() : JSON.parse(sessionStorage.getItem("diagramList-" + uniqueId)!))
         //selectedId
         setSelectedId(Number(sessionStorage.getItem("selectedId-" + uniqueId)||0));
+        //sceneFromBackend
+        setSceneFromBackend(sessionStorage.getItem("sceneFromBackend-" + uniqueId )=== null ? undefined : JSON.parse(sessionStorage.getItem("sceneFromBackend-" + uniqueId)!))
+        //editId
+        setEditId(Number(sessionStorage.getItem("editId-" + uniqueId)));
+        //TODO: document this
+        //dont set the fetchDialogOpen when fetching first, necessary for editing
+        if (sessionStorage.getItem("firstSceneCreationEntering-" + uniqueId) !== null) {
+            //fetchImageDialogOpen
+            setFetchImageDialogOpen(sessionStorage.getItem("fetchImageDialogOpen-" + uniqueId) === "true");
+        } else {
+            //leave a marker in the sessionStorage to identify if this is the first entering
+            sessionStorage.setItem("firstSceneCreationEntering-" + uniqueId, "false");
+        }
 
         // Reload all images, background images and diagram previews when reloading the component
         // only do this when currently in the editor itself
@@ -736,7 +752,22 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
     React.useEffect(() => {
         sessionStorage.setItem("selectedId-" + uniqueId, selectedId.toString());
     }, [selectedId])
-
+    //store fetchImageDialogOpen in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("fetchImageDialogOpen-" + uniqueId, fetchImageDialogOpen ? "true" : "false");
+    }, [fetchImageDialogOpen])
+    //store sceneFromBackend in sessionStorage
+    React.useEffect(() => {
+        //storing is only necessary if the value is defined
+        if(sceneFromBackend !== undefined)
+            sessionStorage.setItem("sceneFromBackend-" + uniqueId, JSON.stringify(sceneFromBackend));
+    }, [sceneFromBackend])
+    //store editId in sessionStorage
+    React.useEffect(() => {
+        //storing is only necessary if the value is defined
+        if(editId !==undefined)
+            sessionStorage.setItem("editId-" + uniqueId, editId.toString());
+    }, [editId])
 
     /**
      * Removes all items of this component from the sessionStorage.
@@ -751,6 +782,10 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
         sessionStorage.removeItem("diagramList-" + uniqueId);
         sessionStorage.removeItem("imageList-" + uniqueId);
         sessionStorage.removeItem("selectedId-" + uniqueId);
+        sessionStorage.removeItem("fetchImageDialogOpen-" + uniqueId);
+        sessionStorage.removeItem("firstSceneCreationEntering-" + uniqueId);
+        sessionStorage.removeItem("sceneFromBackend-" + uniqueId);
+        sessionStorage.removeItem("editId-" + uniqueId);
     }
 
     /**
@@ -844,9 +879,9 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
                             reportError={(message: string) => reportError(message)}
                             fetchImageById={fetchImageById}
                             fetchBackgroundImageById={fetchBackgroundImageById}
-                            sceneFromBackend={props.sceneFromBackend}
+                            sceneFromBackend={sceneFromBackend !== undefined ? sceneFromBackend : props.sceneFromBackend}
                             sessionStorageFullClear={clearSessionStorage}
-                            editId={props.editId}
+                            editId={editId !== undefined ? editId : props.editId}
                         />
                     )
                 }

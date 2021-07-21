@@ -1662,6 +1662,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         }
     }
 
+    console.log(props.sceneFromBackend)
+
     /**
      * Method to change the color of an element selected by a user
      */
