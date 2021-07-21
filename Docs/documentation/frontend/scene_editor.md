@@ -1,6 +1,6 @@
 # Szeneneditor
 
-![SceneEditor.png](images/scenecreation/Szeneneditor.png)
+![SceneEditor.png](images/scenecreation/SzenenEditor.png)
 # Infoprovider-Auswahl
 * Janek
 # Szenen-Erstellung
@@ -22,23 +22,10 @@ Die generelle Struktur vom Editor ist wie folgt aufgebaut:
 * Ebene 1: "Stage"
 * Ebene 2: "Layer" mit Elementen
 
-Die Stage bildet dabei die unterste Ebene. 
-Sie dient als DOM-Wrapper für alle Layer und höheren Ebenen. 
-Auf der Stage liegt ein Layer, welcher die eigentlichen Elemente enthält.
-Ein Beispiel dafür wäre ein Kreis, welchen man hinzufügt. 
-Auf dem Layer kann außerdem ein Hintergrundbild oder eine Hintergrundfarbe gewählt werden. 
-Dazu wird je nach Wahl ein Element erstellt, welches ein Bild oder ein vollflächiges Rechteck ist.
-Diese beiden Elemente haben jeweils **keine** "draggable" Eigenschaft, d.h. man kann sie nicht anwählen oder verschieben.
-Darauf folgt eine sogenannte "Group".
-In dieser Gruppe sind alle Elemente, welche der Benutzer selbst auf dem Canvas hinzufügt.
-Sie werden über ein Array aus eigenen Datentypen über die forEach-Methode hinzugefügt.
+Die Stage bildet dabei die unterste Ebene. Sie dient als DOM-Wrapper für alle Layer und höheren Ebenen. Auf der Stage liegt ein Layer, welcher die eigentlichen Elemente enthält. Ein Beispiel dafür wäre ein Kreis, welchen man hinzufügt. Auf dem Layer kann außerdem ein Hintergrundbild oder eine Hintergrundfarbe gewählt werden. Dazu wird je nach Wahl ein Element erstellt, welches ein Bild oder ein vollflächiges Rechteck ist. Diese beiden Elemente haben jeweils **keine** "draggable" Eigenschaft, d.h. man kann sie nicht anwählen oder verschieben. Darauf folgt eine sogenannte "Group". In dieser Gruppe sind alle Elemente, welche der Benutzer selbst auf dem Canvas hinzufügt. Sie werden über ein Array aus eigenen Datentypen über die forEach-Methode hinzugefügt.
 
----
-
-* generelle Implementierung
-* Framework
-* Funktionsweise
 ### Datentypen
+
 Alle Datentypen für Elemente enthalten die folgenden Eigenschaften:
 ````javascript
 x: number;
@@ -52,15 +39,14 @@ scaleX: number;
 scaleY: number;
 ````
 
-Über die Variablen **x** und **y** werden die Koordinaten des Elements gespeichert.
-Die **id** enthält immer die eindeutige ID des Elements.
-**width** gibt die Breite des Elements an.
-**height** gibt die Höhe des Elements an.
-**rotation** gibt an, um wieviel Grad ein Element gedreht ist.
-**color** wird für die Schriftfarbe verwendet.
-**scaleX** und **scaleY** werden für die Transformation verwendet. 
-Der Wert ist standardmäßig als eins festgelegt.
-Wenn das Element verkleinert wird, so wird der Wert kleiner als eins, ansonsten größer als eins.
+* Über die Variablen **x** und **y** werden die Koordinaten des Elements gespeichert.
+* Die **id** enthält immer die eindeutige ID des Elements.
+* **width** gibt die Breite des Elements an.
+* **height** gibt die Höhe des Elements an.
+* **rotation** gibt an, um wieviel Grad ein Element gedreht ist.
+* **color** wird für die Schriftfarbe verwendet.
+* **scaleX** und **scaleY** werden für die Transformation verwendet. Der Wert ist standardmäßig als eins festgelegt.
+  Wenn das Element verkleinert wird, so wird der Wert kleiner als eins, ansonsten größer als eins.
 
 #### Texte
 ````javascript
@@ -69,10 +55,10 @@ fontFamily: string;
 fontSize: number;
 ````
 
-Für alle Elemente, welche man auf dem Layer hinzufügen kann, haben wir einen eigenen Datentyp hinzugefügt. 
-Hier oben sieht man den Datentyp für Texte jeglicher Art (API-Texte und eigene Texte).
-In **textContent** wird der eigentliche Text gespeichert, welcher auf dem Canvas dargestellt wird.
-**fontFamily** und **fontSize** geben jeweils die Schriftart und Schriftgröße des Elements an.
+Für alle Elemente, welche man auf dem Layer hinzufügen kann, haben wir einen eigenen Datentyp hinzugefügt. Hier oben sieht man den Datentyp für Texte jeglicher Art (API-Texte und eigene Texte):
+
+* In **textContent** wird der eigentliche Text gespeichert, welcher auf dem Canvas dargestellt wird.
+* **fontFamily** und **fontSize** geben jeweils die Schriftart und Schriftgröße des Elements an.
 
 #### Bilder
 ````javascript
@@ -83,13 +69,13 @@ diagram: boolean;
 index: number;
 ````
 
-Bei Bildern gibt es zu den Variablen, welche in jedem Typ vorhanden sind, die obigen Variablen.
-Dabei stellt **image** ein HTMLImageElement dar, welches ein neues window.Image()-Element mit der src von dem angefragten bzw. hochgeladenen Bild enthält.
-Konva erstellt über dieses Element das tatsächliche Bild auf dem Canvas.
-Die **imageId** ist die ID des Bildes im Backend und wird vom Backend gefetched, sie wird für die finale Erstellung des JSON-Objekted benötigt.
-**imagePath** enthält den Pfad des Bildes im Backend, dieser wird ebenfalls gefetched.
-**diagram** ist ein boolean, welches Beschreibt, ob ein Bild ein Diagramm ist oder nicht, da bei der Verarbeitung am Ende klar sein muss, wie das Bild im Backend gehandhabt werden muss.
-**index** gibt den Index des Bildes im Frontend an.
+Bei Bildern gibt es zu den Variablen, welche in jedem Typ vorhanden sind, die obigen Variablen:
+
+* Dabei stellt **image** ein HTMLImageElement dar, welches ein neues window.Image()-Element mit der src von dem angefragten bzw. hochgeladenen Bild enthält. Konva erstellt über dieses Element das tatsächliche Bild auf dem Canvas.
+* Die **imageId** ist die ID des Bildes im Backend und wird vom Backend gefetched, sie wird für die finale Erstellung des JSON-Objekted benötigt.
+* **imagePath** enthält den Pfad des Bildes im Backend, dieser wird ebenfalls gefetched.
+* **diagram** ist ein boolean, welches Beschreibt, ob ein Bild ein Diagramm ist oder nicht, da bei der Verarbeitung am Ende klar sein muss, wie das Bild im Backend gehandhabt werden muss.
+* **index** gibt den Index des Bildes im Frontend an.
 
 #### Shapes
 
@@ -122,14 +108,10 @@ case "Star": {
 }
 ````
 
-Zunächst wird eine Kopie des Arrays mit allen Elementen erstellt. 
-Hierbei geht es darum, Updateprobleme auf dem Canvas zu vermeiden.
-Anschließend wird in dieser Kopie ein neues Element hinzugefügt, welches die Koordinaten vom Klick auf den Canvas enthält.
-Die ID wird dabei eindeutig auf "star-" und der aktuellen Menge an Elementen gesetzt.
-Als Standardfarbe haben wir uns für Schwarz entschieden.
-Höhe und Breite werden dabei passend zur Form gesetzt.
+Zunächst wird eine Kopie des Arrays mit allen Elementen erstellt. Hierbei geht es darum, Updateprobleme auf dem Canvas zu vermeiden. Anschließend wird in dieser Kopie ein neues Element hinzugefügt, welches die Koordinaten vom Klick auf den Canvas enthält. Die ID wird dabei eindeutig auf "star-" und der aktuellen Menge an Elementen gesetzt. Als Standardfarbe haben wir uns für Schwarz entschieden. Höhe und Breite werden dabei passend zur Form gesetzt.
 
 #### Backend-Typen
+
 ````javascript
 export type DataText = {
     description: string,
@@ -158,23 +140,22 @@ export type DataImage = {
 DataText und DataImage enthalten das Datenformat, mit welchem das Backend später Texte oder Bild auf der fertigen Szene hinzufügt.
 Die benötigten Typen wurden vom Backend vorgegeben.
 
-**description** ist ein optionaler Parameter. Er beschreibt den Text.
-**type** beschreibt die Art des Elementes. **type** ist entweder "text" oder "image".
-**anchor_point** gibt an, an welcher Stelle der Text verankert wird. Dies kann man mit dem klassischen linksbündig, rechtsbündig oder zentriert setzen.
-**pos_x** gibt die Position des Elements in Pixel auf der X-Achse an.
-**pos_y** gibt dementsprechend die Position des Elements auf der Y-Achse an.
-**color** gibt die Schriftfarbe an.
-**font_size** gibt die Schriftgröße des Textes an.
-**font** gibt die Schriftart an.
-**pattern** enthält den eigentlichen Text.
-**width** enthält die Breite des Textes.
+* **description** ist ein optionaler Parameter. Er beschreibt den Text.
+* **type** beschreibt die Art des Elementes. **type** ist entweder "text" oder "image".
+* **anchor_point** gibt an, an welcher Stelle der Text verankert wird. Dies kann man mit dem klassischen linksbündig, rechtsbündig oder zentriert setzen.
+* **pos_x** gibt die Position des Elements in Pixel auf der X-Achse an.
+* **pos_y** gibt dementsprechend die Position des Elements auf der Y-Achse an.
+* **color** gibt die Schriftfarbe an.
+* **font_size** gibt die Schriftgröße des Textes an.
+* **font** gibt die Schriftart an.
+* **pattern** enthält den eigentlichen Text.
+* **width** enthält die Breite des Textes.
 
 Bei den Bildern gibt es noch folgende Parameter:
 
-**size_x** gibt dabei die Breite des Bildes und **size_y** die Höhe des Bildes an.
-Die beiden Variablen werden dabei gerundet, da das Backend keine Floats unterstützt. Sie werden durch die Variablen **width** und **scaleX** bzw. **height** und **scaleY** des Elementes errechnet.
-**color** gibt die Farbart des Bildes an. Dies kann "RGBA" oder "L" sein.
-**path** gibt den Dateipfad zu dem Element auf dem Laufwerk an.
+* **size_x** gibt dabei die Breite des Bildes und **size_y** die Höhe des Bildes an. Die beiden Variablen werden dabei gerundet, da das Backend keine Floats unterstützt. Sie werden durch die Variablen **width** und **scaleX** bzw. **height** und **scaleY** des Elementes errechnet.
+* **color** gibt die Farbart des Bildes an. Dies kann "RGBA" oder "L" sein.
+* **path** gibt den Dateipfad zu dem Element auf dem Laufwerk an.
 
 ````javascript
 export type BaseImg = {
@@ -206,10 +187,10 @@ Der Typ **JsonExport** enthält die finalen Werte, welche das Backend direkt ver
 Die Variablen kann man dabei grob in Backenddaten und Frontenddaten unterscheiden.
 Backenddaten:
 
-**scene_name** ist ein String und beschreibt den Szenennamen.
-**used_images** ist ein Array aus ID's der im Backend verwendeten Bilder.
-**used_infoproviders** ist ein Array aus Zahlen, welches die benutzten Infoprovider enthält. Allerdings wird im Frontend nur ein Infoprovider pro Szene unterstützt.
-**images** enthält das BaseImg, welches vorher beschrieben wurde.
+* **scene_name** ist ein String und beschreibt den Szenennamen.
+* **used_images** ist ein Array aus ID's der im Backend verwendeten Bilder.
+* **used_infoproviders** ist ein Array aus Zahlen, welches die benutzten Infoprovider enthält. Allerdings wird im Frontend nur ein Infoprovider pro Szene unterstützt.
+* **images** enthält das BaseImg, welches vorher beschrieben wurde.
 
 Frontenddaten:
 
@@ -262,12 +243,7 @@ Das Array wird mit Hilfe der folgenden Funktion im Hauptarray dargestellt:
         />)
     }
 ````
-Im obigen Beispiel sieht man die generelle Darstellung eines Kreises auf dem Canvas. Es werden die Elemente mit Hilfe der *map*-Methode des Arrays auf dem Canvas hinzugefügt.
-Je nachdem, mit welchem Wort die ID des Elements beginnt, wird ein neues Konva-Element des zugehörigen Typs erstellt. Diesem Element werden bestimmte Eigenschaften zugewiesen, welche das Verhalten auf dem Canvas bestimmen.
-Jedes Element benötigt eine *key*-Eigenschaft und einen Namen, worüber es eindeutig identifiziert werden kann. Dies liegt an der internen Struktur von Konva.
-Wichtige Eigenschaften sind außerdem **draggable** und **fill**. Wenn **draggable** definiert ist, so wird das native Drag & Drop von KonvaJS aktiviert.
-**fill** entspricht der *color*-Variable der Elemente, hier wird die Farbe festgelegt. Des Weiteren werden einige Methoden übergeben. Hierbei ist die dragBoundFunc interessant.
-Darin wird definiert, was passieren soll, wenn der Benutzer das Element über eine bestimmte Koordinate zieht.
+Im obigen Beispiel sieht man die generelle Darstellung eines Kreises auf dem Canvas. Es werden die Elemente mit Hilfe der *map*-Methode des Arrays auf dem Canvas hinzugefügt. Je nachdem, mit welchem Wort die ID des Elements beginnt, wird ein neues Konva-Element des zugehörigen Typs erstellt. Diesem Element werden bestimmte Eigenschaften zugewiesen, welche das Verhalten auf dem Canvas bestimmen. Jedes Element benötigt eine *key*-Eigenschaft und einen Namen, worüber es eindeutig identifiziert werden kann. Dies liegt an der internen Struktur von Konva. Wichtige Eigenschaften sind außerdem **draggable** und **fill**. Wenn **draggable** definiert ist, so wird das native Drag & Drop von KonvaJS aktiviert. **fill** entspricht der *color*-Variable der Elemente, hier wird die Farbe festgelegt. Des Weiteren werden einige Methoden übergeben. Hierbei ist die dragBoundFunc interessant. Darin wird definiert, was passieren soll, wenn der Benutzer das Element über eine bestimmte Koordinate zieht.
 
 #### Hintergrund
 
@@ -298,8 +274,10 @@ Da der backGroundType ein String ist, kann auf keinen Fall beides gerendert werd
 ````
 
 Je nach dem, ob der Hintergrundtyp "COLOR" oder "IMAGE" ist, wird der Hintergrund festgelegt.
-Bei "COLOR" wird ein vollflächiges Rechteck erstellt, welches keine **draggable** Eigenschaft besitzt und bei dem auch der Transformer deaktiviert ist.
-Bei "IMAGE" wird ein Bild erstellt, welches den Hintergrund komplett ausfüllt.
+
+* Bei "COLOR" wird ein vollflächiges Rechteck erstellt, welches keine **draggable** Eigenschaft besitzt und bei dem auch der Transformer deaktiviert ist.
+* Bei "IMAGE" wird ein Bild erstellt, welches den Hintergrund komplett ausfüllt.
+
 Bei beiden werden die onClick und onMouseDown-Methoden der Stage übergeben.
 
 ### States für die Verwaltung
@@ -313,9 +291,11 @@ const [backGroundColorEnabled, setBackGroundColorEnabled] = React.useState(props
 ````
 
 Die ersten States, die wir anschauen möchten sind die States, welche zur Identifizierung und Verwendung des Hintergrundes verwendet werden.
-**backGroundType** enthält den Typ des Hintergrundes ("COLOR" / "IMAGE").
-**backgroundColor** enthält den hexadezimalen Farbwert des Hintergrunds (Standardmäßig "#FFFFFF").
-**backGroundColorEnabled** enthält einen Boolean, der *true* ist, wenn eine Hintergrundfarbe verwendet wird und ansonsten *false*.
+
+* **backGroundType** enthält den Typ des Hintergrundes ("COLOR" / "IMAGE").
+* **backgroundColor** enthält den hexadezimalen Farbwert des Hintergrunds (Standardmäßig "#FFFFFF").
+* **backGroundColorEnabled** enthält einen Boolean, der *true* ist, wenn eine Hintergrundfarbe verwendet wird und ansonsten *false*
+
 Alle diese States werden auch bei der Bearbeitung aus dem Backend geladen.
 
 ````javascript
@@ -348,14 +328,15 @@ const [selectedType, setSelectedType] = React.useState("");
 const [selectedObject, setSelectedObject] = React.useState<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>({} as CustomCircle);
 ````
 
-Diese States werden benutzt, um Elemente, welche direkt mit dem Canvas zusammenhängen, zu setzen.
-Am wichtigsten sind dabei die States **items**, **recentlyRemovedItems** und **selectedObject**.
-**items** enthält das Array mit allen Elementen. **recentlyRemovedItems** enthält alle Elemente, welche kürzlich vom Canvas entfernt wurden.
-Dieses Array wird zur Wiederherstellung von Elementen benutzt. **selectedObject** ist immer das aktuell ausgewählte Element.
-**itemSelected** ist ein Boolean, mit dem festgehalten wird, ob aktuell ein Element ausgewählt ist.
-**itemCounter** ist die aktuelle Anzahl an Elementen auf dem Canvas.
-**sceneName** ist der Name der Szene. **selectedItemName** enthält den Namen des aktuell ausgewählten Elements.
-**selectedType** wird verwendet, um zu bestimmen, welches Element als nächstes auf dem Canvas hinzugefügt wird.
+Diese States werden benutzt, um Elemente, welche direkt mit dem Canvas zusammenhängen, zu setzen. Am wichtigsten sind dabei die States **items**, **recentlyRemovedItems** und **selectedObject**. **items** enthält das Array mit allen Elementen. 
+
+* **recentlyRemovedItems** enthält alle Elemente, welche kürzlich vom Canvas entfernt wurden. Dieses Array wird zur Wiederherstellung von Elementen benutzt. 
+* **selectedObject** ist immer das aktuell ausgewählte Element.
+* **itemSelected** ist ein Boolean, mit dem festgehalten wird, ob aktuell ein Element ausgewählt ist. 
+* **itemCounter** ist die aktuelle Anzahl an Elementen auf dem Canvas. 
+* **sceneName** ist der Name der Szene. 
+* **selectedItemName** enthält den Namen des aktuell ausgewählten Elements. 
+* **selectedType** wird verwendet, um zu bestimmen, welches Element als nächstes auf dem Canvas hinzugefügt wird.
 
 ````javascript
 const [textEditContent, setTextEditContent] = React.useState("");
@@ -368,9 +349,7 @@ const [textEditFontFamily, setTextEditFontFamily] = React.useState("");
 const [textEditFontColor, setTextEditFontColor] = React.useState("#000000");
 ````
 
-In diesen States werden alle Eigenschaften der Textbearbeitung gespeichert.
-**textEditContent** enthält den neu bearbeiteten Text und **textEditVisibility** bestimmt, ob das Edit-Feld sichtbar ist oder nicht. 
-Die anderen States werden aus den Eigenschaften des zu bearbeitenden Elements geladen.
+In diesen States werden alle Eigenschaften der Textbearbeitung gespeichert. **textEditContent** enthält den neu bearbeiteten Text und **textEditVisibility** bestimmt, ob das Edit-Feld sichtbar ist oder nicht. Die anderen States werden aus den Eigenschaften des zu bearbeitenden Elements geladen.
 
 ````javascript
 const [selectedHistorizedElement, setSelectedHistorizedElement] = React.useState("");
@@ -428,11 +407,7 @@ const checkNode = () => {
 }
 ````
 
-Die Methode *checkNode()* wird verwendet, um den Transformer an ein Element anzuhängen bzw. ihn zu entfernen.
-Zunächst werden Stage und currentNode neu gesetzt, anschließend wird überprüft, ob der Transformer bereits **currentNode** angehängt ist oder nicht.
-Falls er bereits angehängt ist, so wird die Methode abgebrochen. Ansonsten wird er an die neue Node angehängt.
-Falls die neue Node vom Typ Text ist, so wird das "Größe ändern" des Transformers deaktiviert. Falls die **currentNode** undefined oder null ist, so wird der Transformer generell entfernt.
-Auch falls kein Element ausgewählt ist, wird der Transformer entfernt.
+Die Methode *checkNode()* wird verwendet, um den Transformer an ein Element anzuhängen bzw. ihn zu entfernen. Zunächst werden Stage und currentNode neu gesetzt, anschließend wird überprüft, ob der Transformer bereits **currentNode** angehängt ist oder nicht. Falls er bereits angehängt ist, so wird die Methode abgebrochen. Ansonsten wird er an die neue Node angehängt. Falls die neue Node vom Typ Text ist, so wird das "Größe ändern" des Transformers deaktiviert. Falls die **currentNode** undefined oder null ist, so wird der Transformer generell entfernt. Auch falls kein Element ausgewählt ist, wird der Transformer entfernt.
 
 ````javascript
 return (
