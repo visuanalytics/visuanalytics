@@ -10,7 +10,7 @@ import Grid, {GridSize} from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import {transformJSON, extractKeysFromSelection} from "../helpermethods";
-import {Diagram, ListItemRepresentation, SelectedDataItem} from "../types";
+import {Diagram, ListItemRepresentation, SelectedDataItem, uniqueId} from "../types";
 import {Dialog, DialogActions, DialogContent, DialogTitle, Divider} from "@material-ui/core";
 import {FormelObj} from "../DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 
@@ -36,7 +36,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
     const classes = useStyles();
 
     //save the value selectedData on loading to compare if any deletions were made
-    const [oldSelectedData] = React.useState(props.selectedData);
+    const [oldSelectedData, setOldSelectedData] = React.useState(props.selectedData);
     //save the formulas that need to be removed
     const [formulasToRemove, setFormulasToRemove] = React.useState<Array<string>>([]);
     //save the diagrams that need to be removed
@@ -45,6 +45,23 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
     const [historizedToRemove, setHistorizedToRemove] = React.useState<Array<string>>([]);
     //true when the dialog for deleting formulas and diagrams is open
     const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
+    
+    //store the copy of the old selectedData in the sessionStorage
+    React.useEffect(() => {
+        if (sessionStorage.getItem("firstDataSelectionEntering-" + uniqueId) !== null) {
+            setOldSelectedData(sessionStorage.getItem("oldSelectedData-" + uniqueId) === null ? [] : JSON.parse(sessionStorage.getItem("oldSelectedData-" + uniqueId)!))
+        } else {
+            //leave a marker in the sessionStorage to identify if this is the first entering
+            sessionStorage.setItem("firstDataSelectionEntering-" + uniqueId, "false");
+        }
+    }, [])
+    React.useEffect(() => {
+        sessionStorage.setItem("oldSelectedData-" + uniqueId, JSON.stringify(oldSelectedData))
+    }, [oldSelectedData])
+    const clearSessionStorage = () => {
+        sessionStorage.removeItem("oldSelectedData-" + uniqueId)
+        sessionStorage.removeItem("firstDataSelectionEntering-" + uniqueId)
+    }
 
     //sample JSON-data to test the different depth levels and parsing
     const sample2 = {
@@ -314,7 +331,10 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
         oldSelectedData.forEach((item) => {
             if(!props.selectedData.includes(item)) missingSelections.push(item.key);
         })
-        if(missingSelections.length===0) props.backHandler();
+        if(missingSelections.length===0) {
+            clearSessionStorage();
+            props.backHandler();
+        }
         else setBackDialogOpen(true);
     }
 
@@ -324,6 +344,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
      */
     const revertAndBack= () => {
         props.setSelectedData(oldSelectedData);
+        clearSessionStorage();
         props.backHandler();
     }
 
@@ -343,6 +364,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
             setDeleteDialogOpen(true);
         } else {
             removeFromHistorized(removalObj.historizedToRemove);
+            clearSessionStorage();
             props.continueHandler();
         }
     }
@@ -504,7 +526,9 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                 </Grid>
                 <Grid item container xs={12} justify="space-between" className={classes.elementLargeMargin}>
                     <Grid item>
-                        <Button variant="contained" size="large" color="primary" onClick={backHandler}>
+                        <Button variant="contained" size="large" color="primary" onClick={() => {
+                            backHandler();
+                        }}>
                             zurück
                         </Button>
                     </Grid>
@@ -593,6 +617,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                             <Button variant="contained"
                                     onClick={() => {
                                         deleteDependentElements();
+                                        clearSessionStorage();
                                         props.continueHandler();
                                     }}
                                     className={classes.redDeleteButton}>
