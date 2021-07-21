@@ -21,6 +21,7 @@ import {
     StringReplacementData
 } from "../../types";
 import {FormelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
+import {hintContents} from "../../../util/hintContents";
 
 
 interface ArrayProcessingProps {
@@ -383,7 +384,7 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
     return (
         <StepFrame
             heading="Array-Verarbeitung"
-            hintContent={null}
+            hintContent={hintContents.arrayProcessing}
         >
             <Grid container justify="space-between">
                 <Grid item xs={12}>

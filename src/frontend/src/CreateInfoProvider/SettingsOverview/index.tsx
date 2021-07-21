@@ -295,7 +295,7 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
     return (
         <StepFrame
             heading={"Übersicht"}
-            hintContent={hintContents.basicSettings}
+            hintContent={hintContents.settingsOverview}
         >
             <Grid container justify="space-between">
                 <Grid item xs={12}>

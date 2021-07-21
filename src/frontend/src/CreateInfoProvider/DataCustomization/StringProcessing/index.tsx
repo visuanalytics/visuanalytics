@@ -15,6 +15,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import {getListItemsNames} from "../../helpermethods";
 import {ArrayProcessingData, Diagram, ListItemRepresentation, StringReplacementData} from "../../types";
 import {FormelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
+import {hintContents} from "../../../util/hintContents";
 
 
 interface StringProcessingProps {
@@ -244,7 +245,7 @@ export const StringProcessing: React.FC<StringProcessingProps> = (props) => {
     return (
         <StepFrame
             heading="String-Ersetzungen"
-            hintContent={null}
+            hintContent={hintContents.stringProcessing}
         >
             <Grid container justify="space-between">
                 <Grid item xs={12}>

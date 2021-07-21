@@ -622,6 +622,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         return returnValue;
     }, [backgroundImageIndex, backgroundImageList, items, infoProviderId, sceneName, backGroundColorEnabled, backGroundType, currentBGColor, itemCounter, propsSceneFromBackend]);
 
+
     /**
      * Method to handle the results of posting the exported scene to the backend.
      * When this handler is called, the process of posting everything necessary is finished.
@@ -636,7 +637,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         sessionStorage.removeItem("selectedId-" + uniqueId);
         components?.setCurrent("dashboard")
     }, [components]);
-
 
     /**
      * Method for displaying an error message for errors happening while posting the
@@ -724,7 +724,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         //starts fetching the contents from the backend
         fetch(url, {
             method: "POST",
-            headers: {},
+            headers: {
+            },
             body: formData,
             signal: abort.signal
         }).then((res: Response) => {
@@ -1857,7 +1858,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 x: 20,
                 y: 20,
                 id: 'text-' + itemCounter.toString(),
-                textContent: (handlingHistorizedItem && intervalToUse !== undefined) ? '{' + item + '{' + intervalToUse.toString() + '}}' : '{' + item + '}',
+                textContent: (handlingHistorizedItem && intervalToUse !== undefined) ? '{' + item + '{' + intervalToUse.toString() + '}}' : '{req|' + item + '}',
                 width: 200,
                 scaleX: 1,
                 scaleY: 1,
@@ -2087,7 +2088,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
 
         <StepFrame
             heading={"Szenen-Editor"}
-            hintContent={hintContents.typeSelection}
+            hintContent={hintContents.sceneEditor}
             large={"xl"}
         >
             <Grid item container justify={"center"}>
@@ -2098,7 +2099,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                        disabled={props.sceneFromBackend !== undefined}
                                        color={"primary"} label={"Szenen-Titel"}
                                        value={sceneName}
-                                       onChange={event => (setSceneName(event.target.value.replace(' ', '_')))}>
+                                       onChange={event => (setSceneName(event.target.value.replace(' ', '_').toLowerCase()))}>
                             </TextField>
                         </Grid>
                         <Grid item>
@@ -2781,7 +2782,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                             "Das Zurückgehen zum vorherigen Schritt erfordert, dass die erstellte Szene verworfen wird."
                         }
                         { props.sceneFromBackend !== undefined &&
-                            "Wenn sie die Bearbeitung abbrechen, gehen sämtliche an der Szene vorgenommenen Änderungen verloren."
+                            "Wenn Sie die Bearbeitung abbrechen, gehen sämtliche an der Szene vorgenommenen Änderungen verloren."
                         }
                     </Typography>
                     <Typography gutterBottom>

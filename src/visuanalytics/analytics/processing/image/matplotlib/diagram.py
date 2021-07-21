@@ -2,6 +2,8 @@ import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import json
+import operator
+from functools import reduce
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.util import resources
@@ -365,7 +367,7 @@ def pie_plot(values, fig=None, ax=None):
 def get_x_y(values, step_data, array_source, custom_labels=False, primitive=True):
     """
     Generiert die Y-Werte für das Diagramm aus den Daten der Datenquellen. Dabei werden u.U. nur bestimmte Indices eines Arrays
-    verwendet, je nachdem, wie der Nutzer das festlegt.
+    verwendet (__getitem__), je nachdem, wie der Nutzer das festlegt.
 
     :param values: Konfiguration des Diagramms
     :param step_data: Daten der Pipeline
@@ -385,16 +387,17 @@ def get_x_y(values, step_data, array_source, custom_labels=False, primitive=True
             array = step_data.format(values["y"])
             array = literal_eval(array)
             array = list(map(array.__getitem__, values.get("x", np.arange(len(array)))))
-            y_vals = list(map(float, list(map(lambda x: x[values["numericAttribute"]], array))))
+            y_vals = [reduce(operator.getitem, values["numericAttribute"].split('|'), x) for x in array]  # access values in nested objects via a list of keys
+            #print("y_vals", y_vals)
             if not custom_labels:
                 x_ticks = values.get("x_ticks", {})
-                x_ticks.update({"ticks": list(map(lambda x: x[values["stringAttribute"]], array))})
+                x_ticks.update({"ticks": [reduce(operator.getitem, values["stringAttribute"].split('|'), x) for x in array]})  # access values in nested objects via a list of keys
                 values.update({"x_ticks": x_ticks})
     else:
         y_vals = step_data.format(values["y"])
         y_vals = y_vals.replace("[", "").replace("]", "").split(", ")
         y_vals = list(map(float, y_vals))
-        y_vals = list(map(y_vals.__getitem__, [i - 1 for i in values.get("x", np.arange(len(y_vals)))]))
+        y_vals = list(map(y_vals.__getitem__, values.get("x", np.arange(len(y_vals)))))
 
     values["y"] = y_vals
     values.pop("x", None)
@@ -438,7 +441,7 @@ def create_plot(values, step_data, array_source, get_xy=True, fig=None, ax=None)
         else:
             ax.set_yticklabels([None] + x_ticks["ticks"], fontdict=x_ticks.get("fontdict", default_fontdict), color=x_ticks.get("color", default_color))
 
-    return fig, ax, values_new['y']
+    return fig, ax, values_new['y'], t == 'barh'
 
 
 def create_plot_custom(values, step_data, fig=None, ax=None):
@@ -455,20 +458,24 @@ def create_plot_custom(values, step_data, fig=None, ax=None):
     array_source = values["sourceType"] == "Array"
     min_y = None
     max_y = None
+    ylim_deprecated = False
     for plot in values["plots"]:
-        fig, ax, y = create_plot(plot, step_data, array_source=array_source, fig=fig, ax=ax)
-        if min_y:
-            if min(y) < min_y:
+        fig, ax, y, barh = create_plot(plot, step_data, array_source=array_source, fig=fig, ax=ax)
+        if not ylim_deprecated:
+            ylim_deprecated = barh
+            if min_y:
+                if min(y) < min_y:
+                    min_y = min(y)
+            else:
                 min_y = min(y)
-        else:
-            min_y = min(y)
-        if max_y:
-            if max(y) < max_y:
+            if max_y:
+                if max(y) > max_y:
+                    max_y = max(y)
+            else:
                 max_y = max(y)
-        else:
-            max_y = max(y)
-    diff = max_y - min_y
-    plt.ylim((min_y - 0.10 * diff, max_y + 0.10 * diff))
+    if not ylim_deprecated:
+        diff = max_y - min_y
+        plt.ylim((min_y - 0.10 * diff, max_y + 0.10 * diff))
     return fig, ax
 
 
