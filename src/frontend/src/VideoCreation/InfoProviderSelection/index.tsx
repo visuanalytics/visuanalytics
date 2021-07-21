@@ -58,7 +58,7 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
         sessionStorage.removeItem("originalSelectedInfoProvider-" + uniqueId)
         sessionStorage.removeItem("firstInfoProvSelectionEntering-" + uniqueId)
     }
-    console.log(originalSelectedInfoProvider)
+
     // holds all infoProviders that still need to be fetched
     // we use useFetch since we often need to change to value without new rendering
     const infoProviderToFetch= React.useRef<Array<InfoProviderData>>([]);

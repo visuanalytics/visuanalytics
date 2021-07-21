@@ -60,25 +60,44 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
     //state variable that manages toggling between input and loading spinner
     const [displaySpinner, setDisplaySpinner] = React.useState(false);
     //the values when the component is initially mounted - used for change detection
-    const [oldApiName] = React.useState(props.apiName);
-    const [oldQuery] = React.useState(props.query);
-    //const [oldMethod] = React.useState(props.method);
-    //const [oldApiKeyInput1] = React.useState(props.apiKeyInput1);
-    //const [oldApiKeyInput2] = React.useState(props.apiKeyInput2);
-    //const [oldNoKey] = React.useState(props.noKey);
+    const [oldApiName, setOldApiName] = React.useState(props.apiName);
+    const [oldQuery, setOldQuery] = React.useState(props.query);
     //true when the dialog for confirming the deletion of diagrams
     const [removeDialogOpen, setRemoveDialogOpen] = React.useState(false);
     //const components = React.useContext(ComponentContext);
+
+    //store the copies of original values in the sessionStorage
+    React.useEffect(() => {
+        if (sessionStorage.getItem("firstBasicSettingsEntering-" + uniqueId) !== null) {
+            setOldApiName(sessionStorage.getItem("oldApiName-" + uniqueId) || "")
+            setOldQuery(sessionStorage.getItem("oldQuery-" + uniqueId) || "")
+        } else {
+            //leave a marker in the sessionStorage to identify if this is the first entering
+            sessionStorage.setItem("firstBasicSettingsEntering-" + uniqueId, "false");
+        }
+    }, [])
+    React.useEffect(() => {
+        sessionStorage.setItem("oldApiName-" + uniqueId, oldApiName)
+    }, [oldApiName])
+    React.useEffect(() => {
+        sessionStorage.setItem("oldQuery-" + uniqueId, oldQuery)
+    }, [oldQuery])
+    const clearSessionStorage = () => {
+        sessionStorage.removeItem("oldApiName-" + uniqueId)
+        sessionStorage.removeItem("oldQuery-" + uniqueId)
+        sessionStorage.removeItem("firstBasicSettingsEntering-" + uniqueId)
+    }
 
     /**
      * Handler method for clicking the "proceed" button.
      * Sends the API data for testing to the backend and displays a loading animation.
      * If the dataSource was renamed, all elements in diagrams are also renamed.
      * If the query changes, a dialog is opened, asking the user for confirmation to delete all data related to the dataSource.
-     * If this component is called from the editation of an infoprovider the given continue handler will be called. The function terminates afterwards
+     * If this component is called from the editing mode of an infoprovider the given continue handler will be called. The function terminates afterwards
      */
     const handleProceed = () => {
         if(props.isInEditMode) {
+            clearSessionStorage();
             props.continueHandler();
             return;
         }
@@ -136,6 +155,7 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
             setDisplaySpinner(true);
         }else {
             //just continue when there were no changes
+            clearSessionStorage();
             props.continueHandler();
         }
     }
@@ -210,6 +230,7 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
             deleteAllDependencies();
             props.setListItems(transformJSON(data.api_keys));
             //console.log(transformJSON(data.api_keys));
+            clearSessionStorage();
             props.continueHandler();
         }
     }
@@ -279,6 +300,7 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
     }
 
     const handleTestContinue = () => {
+        clearSessionStorage();
         props.continueHandler()
     }
 
@@ -425,7 +447,10 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
                             <Grid item container xs={12} justify="space-between" className={classes.elementSmallMargin}>
                                 <Grid item>
                                     <Button variant="contained" size="large" color="primary"
-                                            onClick={props.backHandler}>
+                                            onClick={() => {
+                                                clearSessionStorage();
+                                                props.backHandler();
+                                            }}>
                                         zurück
                                     </Button>
                                 </Grid>
