@@ -2,14 +2,14 @@ import React from "react";
 import {InfoProviderData, MinimalInfoProvider} from "../types";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import {ListItem, ListItemText} from "@material-ui/core";
+import {Dialog, DialogActions, DialogContent, DialogTitle, ListItem, ListItemText} from "@material-ui/core";
 import List from "@material-ui/core/List";
 import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
 import {useStyles} from "../style";
 import Checkbox from "@material-ui/core/Checkbox";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
-import {InfoProviderFromBackend} from "../../CreateInfoProvider/types";
+import {InfoProviderFromBackend, uniqueId} from "../../CreateInfoProvider/types";
 import {Alert} from "@material-ui/lab";
 
 
@@ -25,6 +25,7 @@ interface InfoProviderSelectionProps {
     infoproviderIDs: Array<number>;
     setInfoproviderIDs: (infoproviderIDs: Array<number>) => void;
     isEditMode?: boolean;
+    resetJobSettings: () => void;
 }
 
 /**
@@ -36,12 +37,32 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
 
     // true when the continue button is disabled because a fetching from the backend is currently running
     const [continueDisabled, setContinueDisabled] = React.useState(false);
+    //store a copy of the selection passed on mounting to later check for removed scenes
+    const [originalSelectedInfoProvider, setOriginalSelectedInfoProvider] = React.useState(props.selectedInfoProvider)
+    //true if the dialog for deleting settings on proceeding is opened
+    const [proceedDialogOpen, setProceedDialogOpen] = React.useState(false);
 
+    //store this copy in the sessionStorage
+    React.useEffect(() => {
+        if (sessionStorage.getItem("firstInfoProvSelectionEntering-" + uniqueId) !== null) {
+            setOriginalSelectedInfoProvider(sessionStorage.getItem("originalSelectedInfoProvider-" + uniqueId) === null ? [] : JSON.parse(sessionStorage.getItem("originalSelectedInfoProvider-" + uniqueId)!))
+        } else {
+            //leave a marker in the sessionStorage to identify if this is the first entering
+            sessionStorage.setItem("firstInfoProvSelectionEntering-" + uniqueId, "false");
+        }
+    }, [])
+    React.useEffect(() => {
+        sessionStorage.setItem("originalSelectedInfoProvider-" + uniqueId, JSON.stringify(originalSelectedInfoProvider))
+    }, [originalSelectedInfoProvider])
+    const clearSessionStorage = () => {
+        sessionStorage.removeItem("originalSelectedInfoProvider-" + uniqueId)
+        sessionStorage.removeItem("firstInfoProvSelectionEntering-" + uniqueId)
+    }
 
     // holds all infoProviders that still need to be fetched
     // we use useFetch since we often need to change to value without new rendering
     const infoProviderToFetch= React.useRef<Array<InfoProviderData>>([]);
-    // holds all minimal infoProvider fetched so far - necessary since the parent state wont change between fetchesg
+    // holds all minimal infoProvider fetched so far - necessary since the parent state wont change between fetches
     const minimalInfoProvObjects= React.useRef<Array<MinimalInfoProvider>>([]);
 
     /**
@@ -173,6 +194,31 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
         };
     }, []);
 
+    //TODO: document this new feature
+    /**
+     * Method that checks if any infoproviders were unselected compared to the original state.
+     * Returns true if this is the case.
+     */
+    const checkProceedDialog = () => {
+        //if the amount is smaller, we can instantly say there was something removed
+        if(props.selectedInfoProvider.length < originalSelectedInfoProvider.length) return true;
+        //get the ids of both sets
+        const idArrayOriginal: Array<number> = [];
+        originalSelectedInfoProvider.forEach((selection) => {
+            idArrayOriginal.push(selection.infoprovider_id);
+        })
+        const idArray: Array<number> = [];
+        props.selectedInfoProvider.forEach((selection) => {
+            idArray.push(selection.infoprovider_id);
+        })
+        //for each id that was used originally, check if it is still in use
+        for (let index = 0; index < idArrayOriginal.length; index++) {
+            if(!idArray.includes(idArrayOriginal[index])) return true;
+        }
+        return false;
+    }
+
+    console.log(originalSelectedInfoProvider)
 
     /**
      * Method to check if a certain infoProviderID is included in the list of selected infoproviders
@@ -237,43 +283,92 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
 
 
     return (
-        <Grid container justify="space-around">
-            <Grid item xs={12}>
-                <Typography variant="body1">
-                    Bitte wählen sie die Infoprovider, deren Datenwerte in der Videoerstellung für Text-to-Speech zur Verfügung stehen sollen:
-                </Typography>
-            </Grid>
-            <Grid item xs={10}>
-                <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.listFrame}>
-                    <List disablePadding={true}>
-                        {props.infoProviderList.map((infoProvider) => renderListItem(infoProvider))}
-                    </List>
-                </Box>
-            </Grid>
-            <Grid item xs={12} className={classes.fixedWarningContainer}>
-                {props.selectedInfoProvider.length > 5 &&
-                <Alert severity="warning">
-                    <strong>Warnung:</strong> Es müssen die Informationen aller ausgewählten Infoprovider gleichzeitig geladen werden.<br/>
-                    Bitte berücksichtigen sie, dass bei einer größeren Menge und sehr großen Infoprovidern Performance-Einbußen auftreten können.
-                </Alert>
-                }
-            </Grid>
-            <Grid item container xs={12} justify="space-between" className={classes.elementLargeMargin}>
-                <Grid item>
-                    <Button variant="contained" size="large" color="primary" onClick={props.backHandler}>
-                        zurück
-                    </Button>
+        <React.Fragment>
+            <Grid container justify="space-around">
+                <Grid item xs={12}>
+                    <Typography variant="body1">
+                        Bitte wählen sie die Infoprovider, deren Datenwerte in der Videoerstellung für Text-to-Speech zur Verfügung stehen sollen:
+                    </Typography>
                 </Grid>
-                <Grid item className={classes.blockableButtonPrimary}>
-                    <Button disabled={continueDisabled} variant="contained" size="large" color="primary" onClick={() => {
-                       infoProviderToFetch.current = props.selectedInfoProvider;
-                       setContinueDisabled(true);
-                       fetchNextInfoProvider();
-                    }}>
-                        weiter
-                    </Button>
+                <Grid item xs={10}>
+                    <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.listFrame}>
+                        <List disablePadding={true}>
+                            {props.infoProviderList.map((infoProvider) => renderListItem(infoProvider))}
+                        </List>
+                    </Box>
+                </Grid>
+                <Grid item xs={12} className={classes.fixedWarningContainer}>
+                    {props.selectedInfoProvider.length > 5 &&
+                    <Alert severity="warning">
+                        <strong>Warnung:</strong> Es müssen die Informationen aller ausgewählten Infoprovider gleichzeitig geladen werden.<br/>
+                        Bitte berücksichtigen sie, dass bei einer größeren Menge und sehr großen Infoprovidern Performance-Einbußen auftreten können.
+                    </Alert>
+                    }
+                </Grid>
+                <Grid item container xs={12} justify="space-between" className={classes.elementLargeMargin}>
+                    <Grid item>
+                        <Button variant="contained" size="large" color="primary" onClick={() => {
+                            clearSessionStorage();
+                            props.backHandler();
+                        }}>
+                            zurück
+                        </Button>
+                    </Grid>
+                    <Grid item className={classes.blockableButtonPrimary}>
+                        <Button disabled={continueDisabled} variant="contained" size="large" color="primary" onClick={() => {
+                            if(checkProceedDialog()) setProceedDialogOpen(true);
+                            else {
+                                infoProviderToFetch.current = props.selectedInfoProvider;
+                                setContinueDisabled(true);
+                                fetchNextInfoProvider();
+                            }
+                        }}>
+                            weiter
+                        </Button>
+                    </Grid>
                 </Grid>
             </Grid>
-        </Grid>
+            <Dialog onClose={() => {
+                setProceedDialogOpen(false);
+            }} aria-labelledby="backDialog-title"
+                    open={proceedDialogOpen}>
+                <DialogTitle id="backDialog-title">
+                    Zurücksetzen der Szenen-Einstellungen
+                </DialogTitle>
+                <DialogContent dividers>
+                    <Typography gutterBottom>
+                        Durch das Abwählen von Infoprovidern wird es notwendig, die bisher vorgenommenen Szeneneinstellungen zurücksetzen.
+                    </Typography>
+                    <Typography gutterBottom>
+                        Wirklich fortfahren?
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Grid container justify="space-between">
+                        <Grid item>
+                            <Button variant="contained"
+                                    onClick={() => {
+                                        setProceedDialogOpen(false);
+                                    }}>
+                                abbrechen
+                            </Button>
+                        </Grid>
+                        <Grid item>
+                            <Button variant="contained"
+                                    onClick={() => {
+                                        props.resetJobSettings();
+                                        infoProviderToFetch.current = props.selectedInfoProvider;
+                                        setContinueDisabled(true);
+                                        fetchNextInfoProvider();
+                                    }}
+                                    color="primary"
+                            >
+                                weiter
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </DialogActions>
+            </Dialog>
+        </React.Fragment>
     )
 }

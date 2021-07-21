@@ -58,6 +58,7 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
     const [sceneFromBackend, setSceneFromBackend] = React.useState(props.sceneFromBackend);
     const [editId, setEditId] = React.useState(props.editId);
 
+    console.log(editId);
     /* mutable flag that is true when currently images are being fetched because of a reload
     * this is used to block the continueHandler call after successful fetches. This way,
     * no additional methods are required to fetch the images on reload.
@@ -686,13 +687,14 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
         setSelectedId(Number(sessionStorage.getItem("selectedId-" + uniqueId)||0));
         //sceneFromBackend
         setSceneFromBackend(sessionStorage.getItem("sceneFromBackend-" + uniqueId )=== null ? undefined : JSON.parse(sessionStorage.getItem("sceneFromBackend-" + uniqueId)!))
-        //editId
-        setEditId(Number(sessionStorage.getItem("editId-" + uniqueId)));
+
         //TODO: document this
         //dont set the fetchDialogOpen when fetching first, necessary for editing
         if (sessionStorage.getItem("firstSceneCreationEntering-" + uniqueId) !== null) {
             //fetchImageDialogOpen
             setFetchImageDialogOpen(sessionStorage.getItem("fetchImageDialogOpen-" + uniqueId) === "true");
+            //editId
+            setEditId(Number(sessionStorage.getItem("editId-" + uniqueId)));
         } else {
             //leave a marker in the sessionStorage to identify if this is the first entering
             sessionStorage.setItem("firstSceneCreationEntering-" + uniqueId, "false");
