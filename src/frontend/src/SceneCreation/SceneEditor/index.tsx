@@ -567,7 +567,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * Cleans up the sessionStorage and returns to the dashboard.
      * @param data The JSON returned by the backend.
      */
-    const handleExportSceneSuccess = React.useCallback((jsonData: any) => {
+    const handleExportSceneSuccess = React.useCallback(() => {
         console.log("successful export post");
         clearSessionStorage();
         sessionStorage.removeItem("sceneEditorStep-" + uniqueId);
@@ -614,10 +614,10 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             //handles the response and gets the data object from it
             if (!res.ok) throw new Error(`Network response was not ok, status: ${res.status}`);
             return res.status === 204 ? {} : res.blob();
-        }).then((data) => {
+        }).then(() => {
             //success case - the data is passed to the handler
             //only called when the component is still mounted
-            if (isMounted.current) handleExportSceneSuccess(data)
+            if (isMounted.current) handleExportSceneSuccess()
         }).catch((err) => {
             //error case - the error code ist passed to the error handler
             //only called when the component is still mounted
