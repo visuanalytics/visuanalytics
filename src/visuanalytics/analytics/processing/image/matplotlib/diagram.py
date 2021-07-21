@@ -415,7 +415,7 @@ def create_plot(values, step_data, array_source, get_xy=True, fig=None, ax=None)
     """
     t = values["plot"]["type"]
     if get_xy:
-        values_new = get_x_y(values["plot"], step_data, array_source, custom_labels=values.get("customLabels", False), primitive=values.get("primitive", True), data_labels=values.get("data_labels", False))
+        values_new = get_x_y(values["plot"], step_data, array_source, custom_labels=values.get("customLabels", False), primitive=values.get("primitive", True))
     else:
         values_new = values["plot"]
     if t == "line":

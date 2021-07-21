@@ -77,7 +77,7 @@ def insert_infoprovider(infoprovider):
     assert_private_exists()
     infoprovider_name = infoprovider["infoprovider_name"]
     datasources = copy.deepcopy(infoprovider["datasources"])
-    diagrams = infoprovider["diagrams"]
+    diagrams = remove_toplevel_key(infoprovider["diagrams"])
     diagrams_original = infoprovider["diagrams_original"]
     arrays_used_in_diagrams = infoprovider["arrays_used_in_diagrams"]
     transform_step = []
@@ -579,7 +579,7 @@ def update_infoprovider(infoprovider_id, updated_data):
     infoprovider_json.update({"name": updated_data["infoprovider_name"]})
     infoprovider_json.update({"api": api_step_new})
     infoprovider_json.update({"transform": new_transform})
-    infoprovider_json.update({"images": deepcopy(updated_data["diagrams"])})
+    infoprovider_json.update({"images": deepcopy(remove_toplevel_key(updated_data["diagrams"]))})
     infoprovider_json.update({"diagrams_original": updated_data["diagrams_original"]})
     infoprovider_json.update({"datasources": datasources_copy})
 
@@ -1425,7 +1425,7 @@ def remove_toplevel_key(obj):
         for key in list(obj.keys()):
             obj[key] = remove_toplevel_key(obj[key])
     elif type(obj) == str:
-        obj = obj.replace("$toplevel_array$", "").replace("||", "|").replace("| ", " ")
+        obj = obj.replace("$toplevel_array$", "").replace("||", "|").replace("| ", " ").replace("|}", "}")
         if len(obj) > 0 and obj[-1] == "|":
             obj = obj[:-1]
         if len(obj) > 0 and obj[0] == "|":
