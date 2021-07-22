@@ -327,40 +327,18 @@ def pie_plot(values, fig=None, ax=None):
     :return: bearbeitetes figure- und ax-Objekt für einen Plot
     """
     y = values["y"]
-    explode = np.zeros(len(values["y"]))
-    type_ = values.get("explode", None)
-    if type_:
-        type_ = type_["type"]
-        explode_value = 0.1 if not values["shadow"] else 0.2
-        if type_ == "min":
-            explode[y.index(min(y))] = explode_value
-        elif type_ == "max":
-            explode[y.index(max(y))] = explode_value
-        elif type_ == "list":
-            for index in type_["indices"]:
-                explode[index] = explode_value
-    shadow = values.get("shadow", False)
-    colors = values.get("colors", None)
     x_ticks = values.get("x_ticks", None)
     if x_ticks:
         labels = x_ticks.get("ticks", np.arange(len(y)))
     else:
         labels = np.arange(len(y))
-    # textprobs = values.get("textprobs", default_textprobs)
-    donut_style = values.get("donut_style", None)
+    if len(labels) != len(y):
+        labels = np.arange(len(y))
 
     if not fig and not ax:
         fig, ax = get_plot_vars(dpi=values.get("dpi", dpi_default))
-        #ax.set_xticks(np.concatenate((np.array([0]), y)))
-    if colors:
-        ax.pie(y, explode=explode, autopct="%1.1f%%", shadow=shadow, colors=colors,
-               labels=labels)  # , textprobs=textprobs)
-    else:
-        ax.pie(y, explode=explode, autopct="%1.1f%%", shadow=shadow, labels=labels)  # , textprobs=textprobs)
-    if donut_style:
-        circle = plt.Circle((0, 0), donut_style.get("area", 0.25), color=donut_style.get("color", "#ffffff"))
-        p = plt.gcf()
-        p.gca().add_artist(circle)
+
+    ax.pie(y, labels=labels)
     return fig, ax
 
 

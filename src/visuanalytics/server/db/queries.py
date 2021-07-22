@@ -1059,8 +1059,15 @@ def delete_scene(scene_id):
     # testen ob scene vorhanden ist
     res = con.execute("SELECT * FROM scene WHERE scene_id=?", [scene_id]).fetchone()
 
-    if res is not None:
+    if res:
         file_path = get_scene_file(scene_id)
+
+        image_files = con.execute("SELECT image_name FROM scene_uses_image AS uses INNER JOIN image ON uses.image_id = image.image_id WHERE uses.scene_id = ? AND image.folder = ?", [scene_id, "scene"])
+
+        for image_file in image_files:
+            if re.search(".*[_preview|_background]\.[png|jpe?g]", image_file["image_name"]):
+                path = get_image_path(image_file["image_name"].rsplit(".", 1)[0], "scene", image_file["image_name"].rsplit(".", 1)[1])
+                os.remove(path)
 
         # Eintrag aus scene_uses_image entfernen
         con.execute("DELETE FROM scene_uses_image WHERE scene_id=?", [scene_id])
