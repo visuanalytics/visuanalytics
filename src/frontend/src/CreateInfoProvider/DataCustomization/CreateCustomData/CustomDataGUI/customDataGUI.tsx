@@ -45,8 +45,7 @@ interface CustomDataGUIProps {
 export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
 
     const classes = useStyles();
-    //TODO: document this and the new collapse mechanism!!!
-    // boolean values used to indicate if the collapse of the corresponding element ist openend
+    //boolean values used to indicate if the collapse of the corresponding element ist opened
     const [showCustomData, setShowCustomData] = React.useState(false);
     const [showSelectedData, setShowSelectedData] = React.useState(false);
     const [showArrayProcessings, setShowArrayProcessings] = React.useState(false);

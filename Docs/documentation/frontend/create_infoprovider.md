@@ -233,6 +233,7 @@ Der angesprochene Dialog wird deshalb eingesetzt, da Formeln und Diagramme ander
 * Der Dialog enthält eine aus **diagramsToRemove** und **formulaToRemove** generierte Auflistung aller Formeln und Diagramme, die wegen dem Abwählen von Elementen gelöscht werden würden.
 * Der Nutzer kann auf "abbrechen" klicken, um zurück zur Auswahl zu kommen und Checkboxen wieder setzen, um das Löschen zu verhindern..
 * Mit "Löschen bestätigen" löst er hingegen das Löschen aller historisierten Daten, Diagramme und Formeln aus, die wegen abgewählten Elementen nicht mehr gültig sind. Anschließend sorgt der Aufruf von **props.continueHandler** für das Weitergehen zum nächsten Schritt.
+    * Hinweis: Das Löschen von Formeln erfordert ein kaskadierendes Löschen, welches hier angewendet wird. Die genaue Beschreibung des Mechanismus ist in dem Abschnitt zum Löschen der Dokumentation der Komponente **CreateCustomData** zu finden.
 
 <div style="page-break-after: always;"></div>
 
@@ -286,6 +287,7 @@ Auf Basis dieser Liste wird mit **renderProcessingsListItem** für alle Verarbei
 
 Das Prinzip ist hierbei gleich wie bei allen anderen Umsetzungen von Löschabhängigkeiten - wenn nur historisierte Daten gelöscht werden, geschieht dies ohne Fragen. Wenn jedoch eine Formel oder ein Diagramm gelöscht werden müsste, wird ein **Dialog** angezeigt, der die entsprechenden Formeln und Diagramme auflistet (gespeichert in **formulasToRemove** und **diagramsToRemove**) und Bestätigung verlangt.
 * Die Prüfung auf Abhängigkeiten übernimmt **checkDeleteDependencies**, das Löschen wird durch die Methode **removeProcessing** umgesetzt.
+* Es findet dabei eine kaskadierende Prüfung hinsichtlich der Löschung von Formeln statt, die genauer im Abschnitt zur Löschung von **CreateCustomData** beschrieben ist.
 
 <div style="page-break-after: always;"></div>
 
@@ -297,10 +299,15 @@ Die GUI besteht aus 5 wichtigen Bereichen.
 * Ein *Text-Feld*, um der zu erstellenden Formel einen Namen zu geben, 
 * ein *Input-Feld*, in dem die erstellte Formel erscheint,
 * *Eingabe-Tasten* in einem Block für ein Ziffern-Feld, Klammern, Rechenoperationen und einer "zurück"- und "löschen"-Option,
-* eine Liste aus den *ausgewählten Daten* aus der **DataSelection**, die auch als Eingabe-Tasten dargestellt werden
+* eine Liste aus den *ausgewählten Daten* aus der **DataSelection**, erstellten Formeln sowie Array-Verarbeitungen aus **ArrayProcessing**, die auch als Eingabe-Tasten dargestellt werden
 * und eine Fußleiste, in der man wie bei den anderen Komponenten mit "zurück" und "weiter" durch die Schritte der InfoProvider-Erstellung navigieren kann und in der sich die "Speichern"-Schaltfläche befindet
 
-Zu der Liste der ausgewählten Daten werden automatisch auch die Namen neu erstellter Formeln hinzugefügt, um diese in neuen Formeln mit zu benutzen. Ausschlaggebend dafür sind **selectedData** und **customData** aus der umschließenden Komponente. Dabei gibt es bei diesen zusätzlich die Möglichkeit die Formel über eine eigene Taste zu löschen. Wie bei einem Taschenrechner mit der zusätzlichen Option die ausgewählten Daten einzugeben, kann der Nutzer nun frei Eingaben tätigen und sich so seine Formel zusammenstellen.
+Die Liste einfügbarer Daten wird dabei in der Komponente **CustomDataGUI** generiert und besteht grundsätzlich aus drei Sektionen Formeln, API-Daten und Array-Verarbeitungen. Damit die Ansicht insgesamt übersichtlicher ist wird für alle drei Sektionen ein eigenes **Collapse**-Element verwendet, um die Liste aufzuklappen und auch wieder zu schließen.
+* Es gibt drei States **showCustomData**, **showSelectedData** und **showArrayProcessings**, die jeweils Boolean-Variablen sind und den Wert **true** haben, wenn das Collapse geöffnet ist. Über ein entsprechendes Icon (situativ zwischen **ExpandLess** und **ExpandMore** ausgewählt) wird dabei der jeweilige Wert invertiert.
+* Durch die dynamische Generierung der Liste an Formeln, welche bei jedem Render alle Elemente aus **customData** darstellt werden neu hinzugefügte Formeln automatisch der Liste angehängt, um diese in neuen Formeln weiterverwenden zu können.
+* Die Generierung funktioniert über drei Methoden **renderListItemCustomData**, **renderListItemSelectedData** und **renderArrayProcessing**, von denen sich die erstere insofern abhebt, dass sie als einzige eine Option zum Löschen einer Formel bietet.
+
+Wie bei einem Taschenrechner mit der zusätzlichen Option, die ausgewählten Daten einzugeben, kann der Nutzer nun frei Eingaben tätigen und sich so seine Formel zusammenstellen.
 
 ### Überprüfung der Syntax
 Durch die oben genannte Freiheit könnte man mit Leichtigkeit Berechnungen eingeben, die syntaktisch keinen Sinn ergeben. Also muss sichergestellt werden, dass ein Nutzer richtige Eingaben tätigt. Das geschieht in zwei Schritten.
@@ -382,7 +389,18 @@ if (dataAsObj.length <= 1) {
 ```
 
 ### Das Löschen einer Formel
-Der Nutzer hat die Möglichkeit, eine Formel zu löschen. In der erstellten Liste der Datenwerte wird für Formeln auch eine Schaltfläche zum Löschen generiert. Betätigt man diese, wird die Formel mit **deleteCustomData()** aus **customData** entfernt und steht somit nicht mehr zur Verfügung. Die Komponente Wird neu generiert und die gelöschte Formel erscheint nicht mehr in der Auswahlliste.
+Der Nutzer hat die Möglichkeit, eine Formel zu löschen. In der erstellten Liste der Datenwerte wird für Formeln auch eine Schaltfläche zum Löschen generiert. Betätigt man diese, wird die Formel aus **customData** entfernt und steht somit nicht mehr zur Verfügung. Die Komponente Wird neu generiert und die gelöschte Formel erscheint nicht mehr in der Auswahlliste.
+
+Bei dieser Löschung gibt es jedoch einige komplexe Abhängigkeiten, die berücksichtigt werden müssen: Formeln können in anderen Formeln verwendet werden, in Diagrammen verwendet werden und auch historisiert werden. Löscht man eine Formel, so muss man auch alle von ihr abhängigen Elemente löschen.
+* Dazu durchsucht **deleteCustomDataCheck** für die zu löschende Formel zunächst alle Diagramme und Formeln danach, ob diese die Formel nutzen und speichert sie in diesem Fall in zwei Arrays **diagramsToRemove** und **formulasToRemove**. Anschließend wird ein Dialog geöffnet, in dem der Nutzer um Bestätigung zum Löschen gebeten wird.
+* In diesem Dialog werden, sofern abhängige Diagramme und Formeln gefunden wurden, diese mit dem Hinweis aufgelistet, dass sie und weitere von ihnen abhängige Formeln und Diagramme mit der Formel gelöscht werden müssen.
+* Bestätigt der Nutzer das Löschen wird die Funktion **deleteCustomData** aufgerufen.
+
+Diese entfernt zunächst einmal alle abhängigen Formeln aus **customData**, entfernt dann die entfernte Formel aus den historisierten Daten. Abschließend werden alle in **diagramsToRemove** definierten Diagramme entfernt. Da die auf diese Weise jedoch Formeln gelöscht wurden, die eventuell das Löschen weiterer Formeln und Diagramme bedingen können wird nun für jede gelöschte Formel die Funktion **deleteFormulaDependents** aufgerufen.
+* In dieser Funktion wird zunächst einmal das Datum selbst aus den historisierten Daten entfernt (das stand noch aus) und dann überprüft, ob die Formel in anderen Formeln oder Diagrammen genutzt wird. Falls ja, so werden diese ebenfalls gelöscht und dann rekursiv **deleteFormulaDependents** für jede in Abhängigkeit gelöschte Formel aufgerufen.
+* Auf diese Weise entsteht eine rekursive Löschkaskade, durch die zuverlässig alle notwendigen Daten entfernt werden. Nur so kann Konsistenz durch alle Verarbeitungsschritte hinweg gewährleistet werden.
+
+**Anmerkung:** Dieser Mechanismus wird auch an allen anderen Stellen, an denen Formeln als Abhängigkeiten gelöscht werden (**DataSelection**, **ArrayProcessings**) werden eingesetzt.
 
 ### Abschließende Überprüfungen
 

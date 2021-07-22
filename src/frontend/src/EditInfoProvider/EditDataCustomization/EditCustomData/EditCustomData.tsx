@@ -95,7 +95,7 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
         console.log(formelName);
         //check if any formula needs to be removed
         props.infoProvDataSources[props.selectedDataSource].customData.forEach((formula) => {
-            if (formula.formelString.includes(formelName + " ") || formula.formelString.endsWith(formelName)) {
+            if (formula.usedFormulaAndApiData.includes(formelName + " ") || formula.formelString.endsWith(formelName)) {
                 formulasToRemove.push(formula.formelName);
             }
         })
@@ -182,7 +182,7 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
         //find all formulas depending on the formula
         const dependentFormulas: Array<string> = [];
         newCustomData.current.forEach((formula) => {
-            if (formula.formelString.includes(formelName + " ") || formula.formelString.endsWith(formelName)) dependentFormulas.push(formula.formelName);
+            if (formula.usedFormulaAndApiData.includes(formelName + " ") || formula.formelString.endsWith(formelName)) dependentFormulas.push(formula.formelName);
         })
         //remove all dependent formulas
         if (dependentFormulas.length > 0) {

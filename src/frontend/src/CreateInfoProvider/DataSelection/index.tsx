@@ -205,9 +205,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
         const formulas: Array<string> = [];
         props.customData.forEach((formula) => {
             //if the name is included, it is used by the formula
-            //TODO: if another data that includes the name followed by a whitespace, there would be a match
-            //possible solutions: no whitespaces or array of data for each formula
-            if(formula.formelString.includes(data + " ") || formula.formelString.endsWith(data)) formulas.push(formula.formelName)
+            if(formula.usedFormulaAndApiData.includes(data)) formulas.push(formula.formelName)
         })
         return formulas;
     }
@@ -240,6 +238,8 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
         oldSelection.forEach((oldItem) => {
             if(!newSelection.includes(oldItem)) missingSelections.push(oldItem)
         })
+        console.log("missing selections: ");
+        console.log(missingSelections)
         if(missingSelections.length > 0) {
             //check if removal of formula is necessary
             let formulasToRemove: Array<string> = [];
@@ -302,20 +302,109 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
         props.setHistorizedData(newHistorizedData);
     }
 
+
+
+    //mutable list of formulas - used because multiple modifications in one render are necessary in two functions at the same time
+    const newHistorizedData = React.useRef<Array<string>>([]);
+    //mutable list of diagrams - used because multiple modifications in one render are necessary in two functions at the same time
+    const newDiagrams = React.useRef<Array<Diagram>>([]);
+    //mutable list of formulas - used because multiple modifications in one render are necessary in two functions at the same time
+    const newCustomData = React.useRef<Array<FormelObj>>([]);
+
+    /**
+     * Method that finds all diagrams that depend on a certain formula, returns an array with their names.
+     * @param formelName The name of the formula to search for.
+     */
+    const findDependentDiagrams = (formelName: string) => {
+        const diagramsToRemove: Array<string> = [];
+        //check for diagrams
+        props.diagrams.forEach((diagram) => {
+            if (diagram.sourceType === "Historized" && diagram.historizedObjects !== undefined) {
+                for (let index = 0; index < diagram.historizedObjects.length; index++) {
+                    const historized = diagram.historizedObjects[index];
+                    //the dataSource name needs to be added in front of the formula name since historizedObjects has dataSource name in it paths too
+                    if (props.apiName + "|" + formelName === historized.name) {
+                        diagramsToRemove.push(diagram.name);
+                        break;
+                    }
+                }
+            }
+        })
+        return diagramsToRemove;
+    }
+
+
     /**
      * Method that deletes all historizedData, formulas and diagrams from their
      * state in the wrapper component that need to be because of unchecking.
      * Uses formulasToRemove, diagramsToRemove and historizedToRemove to check which values these are.
      */
     const deleteDependentElements = () => {
+        //initialize the lists of data to be edited
+        newHistorizedData.current = props.historizedData.slice();
+        newDiagrams.current = props.diagrams.slice();
+        newCustomData.current = props.customData.slice();
         removeFromHistorized(historizedToRemove);
-        props.setCustomData(props.customData.filter((formula) => {
+        newHistorizedData.current = newHistorizedData.current.filter((item) => {
+            return !historizedToRemove.includes(item);
+        })
+        newCustomData.current = newCustomData.current.filter((formula) => {
             return !formulasToRemove.includes(formula.formelName);
-        }));
-        props.setDiagrams(props.diagrams.filter((diagram) => {
+        });
+        newDiagrams.current = props.diagrams.filter((diagram) => {
             return !diagramsToRemove.includes(diagram.name);
-        }))
+        })
+        //start the cascading deletion of formulas
+        if(formulasToRemove.length > 0) {
+            formulasToRemove.forEach((formula) => {
+                deleteFormulaDependents(formula)
+            })
+        }
+        //delete the data that resulted from the delete cascade
+        props.setHistorizedData(newHistorizedData.current);
+        props.setDiagrams(newDiagrams.current);
+        props.setCustomData(newCustomData.current);
+        //reset the list of formulas, historized data and diagrams to remove
+        setFormulasToRemove([]);
+        setDiagramsToRemove([])
     }
+
+
+    /**
+     * Method that searches all diagrams and formulas depending on a formula to delete them.
+     * For each formula found, it will recursively repeat this process.
+     * Also removes from historizedData.
+     * @param formelName The formula to be deleted.
+     */
+    const deleteFormulaDependents = (formelName: string) => {
+        //remove the formula from historized data if it is contained
+        newHistorizedData.current = newHistorizedData.current.filter((data) => {
+            return data !== formelName;
+        })
+        //search all diagrams and delete them
+        const diagramsToRemove = findDependentDiagrams(formelName);
+        if (diagramsToRemove.length > 0) {
+            newDiagrams.current = newDiagrams.current.filter((diagram) => {
+                return !diagramsToRemove.includes(diagram.name);
+            })
+        }
+        //find all formulas depending on the formula
+        const dependentFormulas: Array<string> = [];
+        newCustomData.current.forEach((formula) => {
+            if (formula.usedFormulaAndApiData.includes(formelName + " ") || formula.formelString.endsWith(formelName)) dependentFormulas.push(formula.formelName);
+        })
+        //remove all dependent formulas
+        if (dependentFormulas.length > 0) {
+            newCustomData.current = newCustomData.current.filter((formula) => {
+                return !dependentFormulas.includes(formula.formelName);
+            })
+        }
+        //for each dependent formula, recursively repeat this
+        dependentFormulas.forEach((dependentFormula) => {
+            deleteFormulaDependents(dependentFormula);
+        })
+    }
+
 
     //true when the dialog for going back and reverting changes is open
     const [backDialogOpen, setBackDialogOpen] = React.useState(false);
@@ -356,6 +445,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
      */
     const handleContinue = () => {
         const removalObj = calculateItemsToRemove();
+        console.log(removalObj);
         //if checkRemoval returns false, no removal dialog is necessary and proceeding is possible
         if(removalObj.formulasToRemove.length > 0 || removalObj.diagramsToRemove.length > 0) {
             setHistorizedToRemove(removalObj.historizedToRemove);
