@@ -20,7 +20,7 @@ interface TypeSelectionProps {
  */
 export const TypeSelection: React.FC<TypeSelectionProps> = (props) => {
     const classes = useStyles();
-    const [newSource, setNewSource] = React.useState(false);
+    const [newSource, setNewSource] = React.useState(true);
     //duplicate is necessary to disable both options at the beginning
     const [importSource, setImportSource] = React.useState(false);
     //contains the uploaded file if the user uses the import function
@@ -114,7 +114,7 @@ export const TypeSelection: React.FC<TypeSelectionProps> = (props) => {
                     />
                 </Grid>
                 <Grid item xs={12}>
-                    <FormControlLabel
+                    <FormControlLabel disabled={true}
                         control={
                             <Checkbox checked={importSource} onChange={(e) => {
                                 if (importSource) setImportSource(false);
