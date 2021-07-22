@@ -246,19 +246,20 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
         //stringReplacementList
         setStringReplacementList(sessionStorage.getItem("stringReplacementList-" + uniqueId) === null ? new Array<StringReplacementData>() : JSON.parse(sessionStorage.getItem("stringReplacementList-" + uniqueId)!));
 
+
+        //create default values in the key map for all dataSources
+        //necessary to not run into undefined values
+        const map = new Map();
+        const data: Array<DataSource> = sessionStorage.getItem("dataSources-" + uniqueId) === null ? new Array<DataSource>() : JSON.parse(sessionStorage.getItem("dataSources-" + uniqueId)!)
+        data.forEach((dataSource) => {
+            map.set(dataSource.apiName, {
+                apiKeyInput1: "",
+                apiKeyInput2: ""
+            })
+        });
+        setDataSourcesKeys(map);
         //open the dialog for reentering authentication data
         if (authDialogNeeded()) {
-            //create default values in the key map for all dataSources
-            //necessary to not run into undefined values
-            const map = new Map();
-            const data: Array<DataSource> = sessionStorage.getItem("dataSources-" + uniqueId) === null ? new Array<DataSource>() : JSON.parse(sessionStorage.getItem("dataSources-" + uniqueId)!)
-            data.forEach((dataSource) => {
-                map.set(dataSource.apiName, {
-                    apiKeyInput1: "",
-                    apiKeyInput2: ""
-                })
-            });
-            setDataSourcesKeys(map);
             setAuthDataDialogOpen(true);
         }
     }, [])
