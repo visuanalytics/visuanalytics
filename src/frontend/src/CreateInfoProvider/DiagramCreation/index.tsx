@@ -267,6 +267,8 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
         setArrayObjects([]);
         setHistorizedObjects([]);
         setAmount(1);
+        setCustomLabels(true);
+        setLabelArray([])
         //since we dont want default values in sessionStorage we empty it here
         clearSessionStorage();
         //go back to overview

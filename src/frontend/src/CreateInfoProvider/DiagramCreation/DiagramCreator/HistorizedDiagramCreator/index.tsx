@@ -78,6 +78,7 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
         props.setHistorizedObjects([]);
         props.setDiagramType("verticalBarChart");
         props.setDiagramName("");
+        props.setLabelArray([]);
         sessionStorage.removeItem("amount-" + uniqueId);
         sessionStorage.removeItem("historizedObjects-" + uniqueId);
         sessionStorage.removeItem("diagramType-" + uniqueId);
