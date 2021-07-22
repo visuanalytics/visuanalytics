@@ -293,7 +293,7 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
     const handleMethodChange = (e: React.ChangeEvent<{ value: unknown }>) => {
         if (e.target !== null) {
             //check if the categories of the elements change, in this case empty the input
-            const methodIndexList = ["KeyInHeader", "KeyInHeader", "BearerToken", "BasicAuth", "DigestAuth"];
+            const methodIndexList = ["KeyInHeader", "KeyInHeader", "BearerToken", "BasicAuth"];
             const methodIndex = methodIndexList.indexOf(props.method);
             const targetIndex = methodIndexList.indexOf(e.target.value as string)
             if ((methodIndex <= 1 && targetIndex > 1) || (methodIndex === 2 && targetIndex !== 2) || (methodIndex > 2 && targetIndex <= 2)) {
@@ -414,13 +414,12 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
                                             <MenuItem value="KeyInHeader">Key in Header</MenuItem>
                                             <MenuItem value="BearerToken">Bearer Token</MenuItem>
                                             <MenuItem value="BasicAuth">Basic Auth</MenuItem>
-                                            <MenuItem value="DigestAuth">Digest Auth</MenuItem>
                                         </Select>
                                     </FormControl>
                                 </Grid>
                                 <Grid item xs={props.method === "BearerToken" ? 8 : 4}>
                                     <APIInputField
-                                        defaultValue={(props.method === "BasicAuth" || props.method === "DigestAuth") ? "Nutzername" : props.method === "BearerToken" ? "Token" : "Name Key-Parameter"}
+                                        defaultValue={(props.method === "BasicAuth") ? "Nutzername" : props.method === "BearerToken" ? "Token" : "Name Key-Parameter"}
                                         value={props.apiKeyInput1}
                                         changeHandler={(s) => props.setApiKeyInput1(s)}
                                         noKey={props.noKey}
@@ -430,7 +429,7 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
                                 {props.method !== "BearerToken" &&
                                 <Grid item xs={4}>
                                     <APIInputField
-                                        defaultValue={(props.method === "BasicAuth" || props.method === "DigestAuth") ? "Passwort" : "API-Key"}
+                                        defaultValue={(props.method === "BasicAuth") ? "Passwort" : "API-Key"}
                                         value={props.apiKeyInput2}
                                         changeHandler={(s) => {
                                             props.setApiKeyInput2(s);

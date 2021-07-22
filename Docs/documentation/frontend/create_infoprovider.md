@@ -960,7 +960,7 @@ Wie man sehen kann, umfasst das Format auf höchster Ebene fünf Informationen:
 ## Datenquellen-Format
 Jede Datenquelle besitzt einen Namen, der in **datasource_name** gespeichert wird. Weiterhin hat die Datenquelle ein Objekt **api**, welches die grundlegenden Informationen zur angefragten Datenquelle umfasst:
 * Das Unterobjekt **api_info** listet die Informationen zur Anfrage: **type** ist immer gleich gesetzt und wird für das Backend benötigt, **api_key_name** enthält die Authentifizierungsdaten. Dabei unterscheidet sich das Format je nach der Methode:
-    * Bei **BearerToken** ist nur ein String dargestellt, der das Token ist. Bei **BasicAuth** und **DigestAuth** sind Nutzername und Passwort getrennt durch zwei Pipe-Symbole dargestellt. Bei **KeyInHeader** und **KeyInQuery** sind Attributsname und Wert des Keys durch die Pipe-Symbole getrennt dargestellt.
+    * Bei **BearerToken** ist nur ein String dargestellt, der das Token ist. Bei **BasicAuth** sind Nutzername und Passwort getrennt durch zwei Pipe-Symbole dargestellt. Bei **KeyInHeader** und **KeyInQuery** sind Attributsname und Wert des Keys durch die Pipe-Symbole getrennt dargestellt.
     * **url_pattern** ist die angefragte URL, ggf. mit Query-Parametern.
 * **method** gibt die Authentifizierungsmethode an.
 * Unter **response_type** listen wir den erwarteten Rückgabetyp - das ist entweder **json** oder **xml**, wir haben derzeit nur **json** genutzt.
