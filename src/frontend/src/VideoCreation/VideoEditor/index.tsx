@@ -79,14 +79,14 @@ export const VideoEditor: React.FC<VideoEditorProps> = (props) => {
 
     /**
      * This method checks if any of the scenes in the selected scenes includes spoken text
-     * If no scene contains a spoken text, the continue button will be disabled
-     * This is needed because the backend tool FFmpeg which generates the video expects atleast one audio
+     * If any scene doesn't contain a spoken text, the continue button will be disabled
+     * This is needed because the backend tool FFmpeg which generates the video expects atleast one audio per scene
      */
     const videoIncludesAudio = () => {
         for(let i = 0; i < props.sceneList.length; i++) {
-            if(props.sceneList[i].spokenText.length !== 0) return true;
+            if(props.sceneList[i].spokenText.length === 0) return false;
         }
-        return false;
+        return true;
     }
 
     return (
@@ -138,7 +138,7 @@ export const VideoEditor: React.FC<VideoEditorProps> = (props) => {
                 </Grid>
                 <Grid container item xs={12}>
                     <Grid item>
-                        <Alert severity="info">Es muss in den gewählten Szenen mindestens eine Szene vorhanden sein, welche einen Textabschnitt verwendet. Dies ist aus technischen Gründen von Nöten.</Alert>
+                        <Alert severity="info">Jede für das Video gewählte Szene muss einen TTS-Abschnitt enthalten. Dies ist aus technischen Gründen von Nöten.</Alert>
                     </Grid>
                 </Grid>
             </Grid>
