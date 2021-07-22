@@ -981,6 +981,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                         setListItems={(listItems: Array<ListItemRepresentation>) => {
                             return
                         }}
+                        setArrayProcessingsList={setArrayProcessingsList}
+                        setStringReplacementList={setStringReplacementList}
                     />
                 )
             case 2:

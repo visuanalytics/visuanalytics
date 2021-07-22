@@ -805,6 +805,8 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                         diagrams={diagrams}
                         setDiagrams={(diagrams: Array<Diagram>) => setDiagrams(diagrams)}
                         setListItems={(array: Array<ListItemRepresentation>) => setListItems(array)}
+                        setArrayProcessingsList={(processings: Array<ArrayProcessingData>) => setArrayProcessingsList(processings)}
+                        setStringReplacementList={(replacements: Array<StringReplacementData>) => setStringReplacementList(replacements)}
                         isInEditMode={false}
                     />
                 );

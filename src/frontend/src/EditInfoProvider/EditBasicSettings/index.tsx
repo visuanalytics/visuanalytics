@@ -9,7 +9,13 @@ import {
 } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import {useStyles} from "../style";
-import {Diagram, ListItemRepresentation, Schedule, SelectedDataItem} from "../../CreateInfoProvider/types";
+import {
+    ArrayProcessingData,
+    Diagram,
+    ListItemRepresentation,
+    Schedule,
+    SelectedDataItem, StringReplacementData
+} from "../../CreateInfoProvider/types";
 import {BasicSettings} from "../../CreateInfoProvider/BasicSettings";
 import {FormelObj} from "../../CreateInfoProvider/DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 
@@ -38,6 +44,8 @@ interface EditBasicSettingsProps {
     diagrams: Array<Diagram>
     setDiagrams: (diagrams: Array<Diagram>) => void;
     setListItems: (array: Array<ListItemRepresentation>) => void;
+    setArrayProcessingsList: (processings: Array<ArrayProcessingData>) => void;
+    setStringReplacementList: (replacements: Array<StringReplacementData>) => void;
 }
 
 export const EditBasicSettings: React.FC<EditBasicSettingsProps> = (props) => {
@@ -122,6 +130,8 @@ export const EditBasicSettings: React.FC<EditBasicSettingsProps> = (props) => {
                 diagrams={props.diagrams}
                 setDiagrams={props.setDiagrams}
                 setListItems={props.setListItems}
+                setArrayProcessingsList={props.setArrayProcessingsList}
+                setStringReplacementList={props.setStringReplacementList}
                 isInEditMode={true}
             />
             <Dialog onClose={() => setOpenBackDialog(false)} aria-labelledby="backDialog"

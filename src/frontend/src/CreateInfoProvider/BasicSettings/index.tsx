@@ -14,7 +14,15 @@ import FormControl from "@material-ui/core/FormControl";
 import Button from "@material-ui/core/Button";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import {Diagram, ListItemRepresentation, Schedule, SelectedDataItem, testDataBackendAnswer, uniqueId} from "../types";
+import {
+    ArrayProcessingData,
+    Diagram,
+    ListItemRepresentation,
+    Schedule,
+    SelectedDataItem, StringReplacementData,
+    testDataBackendAnswer,
+    uniqueId
+} from "../types";
 import {transformJSON} from "../helpermethods";
 import {Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
 import {FormelObj} from "../DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
@@ -45,6 +53,8 @@ interface BasicSettingsProps {
     diagrams: Array<Diagram>
     setDiagrams: (diagrams: Array<Diagram>) => void;
     setListItems: (array: Array<ListItemRepresentation>) => void;
+    setArrayProcessingsList: (processings: Array<ArrayProcessingData>) => void;
+    setStringReplacementList: (replacements: Array<StringReplacementData>) => void;
     isInEditMode: boolean;
 }
 
@@ -167,13 +177,6 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
      */
     const deleteAllDependencies = () => {
         //reset all following settings when a new api request is made
-        // Clean up the session storage for all following steps
-        sessionStorage.removeItem("selectedData-" + uniqueId);
-        sessionStorage.removeItem("customData-" + uniqueId);
-        sessionStorage.removeItem("historizedData-" + uniqueId);
-        sessionStorage.removeItem("schedule-" + uniqueId);
-        sessionStorage.removeItem("historySelectionStep-" + uniqueId);
-        //sessionStorage.removeItem("listItems-" + uniqueId);
 
         // Reset the states of the following steps
         //props.setApiData({});
@@ -182,6 +185,8 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
         props.setHistorizedData(new Array<string>());
         props.setSchedule({type: "", interval: "", time: "", weekdays: []});
         props.setHistorySelectionStep(1);
+        props.setArrayProcessingsList([]);
+        props.setStringReplacementList([]);
         //props.setListItems(new Array<ListItemRepresentation>());
         //find all diagrams with this dataSource and delete them
         const diagramsToDelete: Array<string> = [];
