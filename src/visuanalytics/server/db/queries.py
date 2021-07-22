@@ -176,7 +176,8 @@ def insert_infoprovider(infoprovider):
         }
 
         # Datasource obj vorbereiten
-        transform_step = datasource["transform"]
+        transform_step = []
+        transform_step += datasource["transform"]
         transform_step += datasource["calculates"]
         formulas = copy.deepcopy(datasource["formulas"])
         custom_keys = _extract_custom_keys(datasource["calculates"], datasource["formulas"], datasource["replacements"])
@@ -625,7 +626,8 @@ def update_infoprovider(infoprovider_id, updated_data):
         }
 
         # Datasource obj vorbereiten
-        transform_step = datasource['transform']
+        transform_step = []
+        transform_step += datasource['transform']
         transform_step += datasource["calculates"]
         formulas = copy.deepcopy(datasource["formulas"])
         custom_keys = _extract_custom_keys(datasource["calculates"], datasource["formulas"], datasource["replacements"])

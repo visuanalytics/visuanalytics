@@ -62,6 +62,10 @@ def calculate_max(values: dict, data: StepData):
             value = [reduce(operator.getitem, inner_key[0].split('|'), x) for x in value]
         new_key = get_new_keys(values, idx)
         new_value = max(value)
+        if values.get("decimal", None):
+            new_value = round(new_value, data.get_data(values["decimal"], values, numbers.Number))
+        else:
+            new_value = round(new_value)
         data.insert_data(new_key, new_value, values)
 
         if values.get("save_idx_to", None):
@@ -82,6 +86,10 @@ def calculate_sum(values: dict, data: StepData):
             value = [reduce(operator.getitem, inner_key[0].split('|'), x) for x in value]
         new_key = get_new_keys(values, idx)
         new_value = sum(value)
+        if values.get("decimal", None):
+            new_value = round(new_value, data.get_data(values["decimal"], values, numbers.Number))
+        else:
+            new_value = round(new_value)
         data.insert_data(new_key, new_value, values)
 
         if values.get("save_idx_to", None):
@@ -102,6 +110,10 @@ def calculate_min(values: dict, data: StepData):
             value = [reduce(operator.getitem, inner_key[0].split('|'), x) for x in value]
         new_key = get_new_keys(values, idx)
         new_value = min(value)
+        if values.get("decimal", None):
+            new_value = round(new_value, data.get_data(values["decimal"], values, numbers.Number))
+        else:
+            new_value = round(new_value)
         data.insert_data(new_key, new_value, values)
 
         if values.get("save_idx_to", None):
