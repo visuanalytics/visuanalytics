@@ -91,7 +91,7 @@ def request_memory(values: dict, data: StepData, name: str, save_key, ignore_tes
             for offset in range(1, use_last + 1):
                 with resources.open_specific_memory_resource(folder, values["name"], skip, offset) as fp:
                     hist_data.append(json.loads(fp.read()))
-            data.insert_data(save_key, list(reversed(hist_data)), values)
+            data.insert_data(save_key, hist_data, values)
         else:  # different semantic for use_last. was not changed, because not used
             with resources.open_memory_resource(folder,
                                                 values["name"], values["timedelta"]) as fp:

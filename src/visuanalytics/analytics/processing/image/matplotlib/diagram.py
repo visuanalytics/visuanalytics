@@ -180,7 +180,7 @@ def generate_test_diagram(values, infoprovider_name=None, diagram_name=None):
     for plot in values["diagram_config"]["plots"]:
         plot["plot"]["y"] = np.random.randint(1, 20, len(plot["plot"]["x"]))
         plot["plot"].pop("x", None)
-        fig, ax, y_vals = create_plot(plot, None, None, get_xy=False, fig=fig, ax=ax)
+        fig, ax, _, _ = create_plot(plot, None, None, get_xy=False, fig=fig, ax=ax)
 
     file = get_test_diagram_resource_path(infoprovider_name=infoprovider_name, diagram_name=diagram_name)
     title = values.get("title", None)
@@ -398,6 +398,7 @@ def get_x_y(values, step_data, array_source, custom_labels=False, primitive=True
         y_vals = y_vals.replace("[", "").replace("]", "").split(", ")
         y_vals = list(map(float, y_vals))
         y_vals = list(map(y_vals.__getitem__, values.get("x", np.arange(len(y_vals)))))
+        y_vals = list(reversed(y_vals))
 
     values["y"] = y_vals
     values.pop("x", None)

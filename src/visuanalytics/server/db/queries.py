@@ -517,7 +517,6 @@ def update_infoprovider(infoprovider_id, updated_data):
     old_infoprovider_name = con.execute("SELECT infoprovider_name FROM infoprovider WHERE infoprovider_id=?",
                                         [infoprovider_id]).fetchone()["infoprovider_name"]
     con.commit()
-    _remove_datasources(con, infoprovider_id, datasource_names=[x["datasource_name"] for x in updated_data["datasources"]])
 
     if count > 0 and old_infoprovider_name != updated_data["infoprovider_name"]:
         return {"err_msg": f"There already exists an infoprovider with the name {updated_data['infoprovider_name']}"}
@@ -597,6 +596,7 @@ def update_infoprovider(infoprovider_id, updated_data):
     for diagram_name, diagram in updated_data["diagrams"].items():
         generate_test_diagram(diagram, infoprovider_name=updated_data["infoprovider_name"], diagram_name=diagram_name)
 
+    _remove_datasources(con, infoprovider_id, datasource_names=[x["datasource_name"] for x in updated_data["datasources"]])
     for datasource in updated_data["datasources"]:
         datasource_name = datasource["datasource_name"]
 
