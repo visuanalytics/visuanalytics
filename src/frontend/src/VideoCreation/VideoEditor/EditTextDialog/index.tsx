@@ -176,7 +176,7 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
      */
     const isInvalidCombination = () => {
         for(let i = 0; i < audioElements.length; i++) {
-            if(audioElements[i].type === "text" && audioElements[i].text === "") return true;
+            if(audioElements[i].type === "text" && (audioElements[i].text === "" || audioElements[i].text!.replace(/\s/g, "").length === 0)) return true;
             else if(audioElements[i].type === "pause" && (audioElements[i].duration === undefined || audioElements[i].duration! < 0)) return true;
         }
         return false;
@@ -400,7 +400,7 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
                                         <TextField fullWidth error={newPause === undefined || newPause < 0} label="Pause vor nächstem Text in ms" type="number" value={newPause} onChange={event => setNewPause(event.target.value === "" ? undefined : Number(event.target.value))}/>
                                     </Grid>
                                     <Grid item xs={12} className={classes.blockableButtonPrimaryMarginTop}>
-                                        <Button variant="contained" color="primary" disabled={newPause === undefined || newPause < 0 || audioElements[audioElements.length - 1].text === ""} onClick={addNewText}>
+                                        <Button variant="contained" color="primary" disabled={newPause === undefined || newPause < 0 || audioElements[audioElements.length - 1].text === "" || audioElements[audioElements.length - 1].text!.replace(/\s/g, "").length === 0} onClick={addNewText}>
                                             Neuen Abschnitt hinzufügen
                                         </Button>
                                     </Grid>
