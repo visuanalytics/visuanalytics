@@ -10,6 +10,7 @@ import List from "@material-ui/core/List";
 import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
 import {useStyles} from "../style";
+import { Alert } from "@material-ui/lab";
 
 
 
@@ -133,6 +134,11 @@ export const VideoEditor: React.FC<VideoEditorProps> = (props) => {
                                 {props.availableScenes.map((scene) => renderAvailableScene(scene))}
                             </List>
                         </Box>
+                    </Grid>
+                </Grid>
+                <Grid container item xs={12}>
+                    <Grid item>
+                        <Alert severity="info">Es muss in den gewählten Szenen mindestens eine Szene vorhanden sein, welche einen Textabschnitt verwendet. Dies ist aus technischen Gründen von Nöten.</Alert>
                     </Grid>
                 </Grid>
             </Grid>
