@@ -220,14 +220,10 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
                 </Grid>
                 <Grid item xs={3}>
                     <ListItemSecondaryAction>
-                        <IconButton aria-label="preview" color="primary" onClick={() => openPreviewDialog(item.name)}>
+                        <IconButton aria-label="Diagrammvorschau" color="primary" onClick={() => openPreviewDialog(item.name)}>
                             <ImageIcon/>
                         </IconButton>
-                        <IconButton aria-label="edit" color="primary"
-                                    onClick={() => console.log("EDIT NOT IMPLEMENTED YET")}>
-                            <EditIcon/>
-                        </IconButton>
-                        <IconButton aria-label="delete" className={classes.redDeleteIcon}
+                        <IconButton aria-label="Diagramm löschen" className={classes.redDeleteIcon}
                                     onClick={() => openDeleteDialog(item.name)}>
                             <DeleteIcon/>
                         </IconButton>

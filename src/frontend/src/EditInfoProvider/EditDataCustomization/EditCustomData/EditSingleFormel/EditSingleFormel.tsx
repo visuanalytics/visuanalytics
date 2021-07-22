@@ -470,7 +470,7 @@ export const EditSingleFormel: React.FC<EditSingleFormelProps> = (props) => {
                             abbrechen
                         </Button>
                     </Grid>
-                    <Grid item>
+                    <Grid item className={classes.blockableButtonSecondary}>
                         <Button variant={"contained"} size={"large"} color={"secondary"}
                                 disabled={!(rightParenCount >= leftParenCount) || opFlag}
                                 onClick={() => handleSave(name)}>

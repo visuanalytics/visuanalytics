@@ -176,7 +176,8 @@ def insert_infoprovider(infoprovider):
         }
 
         # Datasource obj vorbereiten
-        transform_step = datasource["transform"]
+        transform_step = []
+        transform_step += datasource["transform"]
         transform_step += datasource["calculates"]
         formulas = copy.deepcopy(datasource["formulas"])
         custom_keys = _extract_custom_keys(datasource["calculates"], datasource["formulas"], datasource["replacements"])
@@ -265,8 +266,16 @@ def insert_video_job(video, update=False, job_id=None):
         return False
 
     # Daten aller verwendeten Infoprovider sammeln und kombinieren
-    for infoprovider_name in infoprovider_names:
-        with open_resource(_get_infoprovider_path(infoprovider_name.replace(" ", "-")), "r") as f:
+    scene_names = [x["sceneName"] for x in video["sceneList"]]
+    infoprovider_id_list = [list(con.execute("SELECT infoprovider_id FROM scene INNER JOIN scene_uses_infoprovider AS uses ON scene.scene_id = uses.scene_id WHERE scene_name=?", [scene_name])) for scene_name in scene_names]
+    infoprovider_ids = []
+    for id in infoprovider_id_list:
+        infoprovider_ids += id
+    infoprovider_ids = [x["infoprovider_id"] for x in infoprovider_ids]
+    infoprovider_file_names = [get_infoprovider_file(id) for id in infoprovider_ids]
+    infoprovider_names = [get_infoprovider_name(id) for id in infoprovider_ids]
+    for infoprovider_name, file_name in zip(infoprovider_names, infoprovider_file_names):
+        with open_resource(file_name, "r") as f:
             infoprovider = json.load(f)
 
         datasource_files = [x for x in os.listdir(get_datasource_path("")) if x.startswith(infoprovider_name + "_")]
@@ -508,7 +517,6 @@ def update_infoprovider(infoprovider_id, updated_data):
     old_infoprovider_name = con.execute("SELECT infoprovider_name FROM infoprovider WHERE infoprovider_id=?",
                                         [infoprovider_id]).fetchone()["infoprovider_name"]
     con.commit()
-    _remove_datasources(con, infoprovider_id, datasource_names=[x["datasource_name"] for x in updated_data["datasources"]])
 
     if count > 0 and old_infoprovider_name != updated_data["infoprovider_name"]:
         return {"err_msg": f"There already exists an infoprovider with the name {updated_data['infoprovider_name']}"}
@@ -588,6 +596,7 @@ def update_infoprovider(infoprovider_id, updated_data):
     for diagram_name, diagram in updated_data["diagrams"].items():
         generate_test_diagram(diagram, infoprovider_name=updated_data["infoprovider_name"], diagram_name=diagram_name)
 
+    _remove_datasources(con, infoprovider_id, datasource_names=[x["datasource_name"] for x in updated_data["datasources"]])
     for datasource in updated_data["datasources"]:
         datasource_name = datasource["datasource_name"]
 
@@ -617,11 +626,12 @@ def update_infoprovider(infoprovider_id, updated_data):
         }
 
         # Datasource obj vorbereiten
-        transform_step = datasource['transform']
+        transform_step = []
+        transform_step += datasource["transform"]
         transform_step += datasource["calculates"]
         formulas = copy.deepcopy(datasource["formulas"])
         custom_keys = _extract_custom_keys(datasource["calculates"], datasource["formulas"], datasource["replacements"])
-        transform_step += _generate_transform(_extend_formula_keys(formulas, datasource_name, custom_keys),
+        transform_step = _generate_transform(_extend_formula_keys(formulas, datasource_name, custom_keys),
                                               remove_toplevel_key(transform_step))
         transform_step += remove_toplevel_key(datasource["replacements"])
         datasource_json = {
@@ -1049,8 +1059,15 @@ def delete_scene(scene_id):
     # testen ob scene vorhanden ist
     res = con.execute("SELECT * FROM scene WHERE scene_id=?", [scene_id]).fetchone()
 
-    if res is not None:
+    if res:
         file_path = get_scene_file(scene_id)
+
+        image_files = con.execute("SELECT image_name FROM scene_uses_image AS uses INNER JOIN image ON uses.image_id = image.image_id WHERE uses.scene_id = ? AND image.folder = ?", [scene_id, "scene"])
+
+        for image_file in image_files:
+            if re.search(".*[_preview|_background]\.[png|jpe?g]", image_file["image_name"]):
+                path = get_image_path(image_file["image_name"].rsplit(".", 1)[0], "scene", image_file["image_name"].rsplit(".", 1)[1])
+                os.remove(path)
 
         # Eintrag aus scene_uses_image entfernen
         con.execute("DELETE FROM scene_uses_image WHERE scene_id=?", [scene_id])
@@ -1368,9 +1385,11 @@ def generate_request_dicts(api_info, method, api_key_name=None):
     """
     header = {}
     parameter = {}
-    if method != "noAuth":
+    if method != "noAuth" and method != "BearerToken":
         api_key_for_query = api_info["api_key_name"].split("||")[0]
         api_key = api_info["api_key_name"].split("||")[1]
+    elif method == "BearerToken":
+        api_key = api_info["api_key_name"]
     else:
         return header, parameter
 

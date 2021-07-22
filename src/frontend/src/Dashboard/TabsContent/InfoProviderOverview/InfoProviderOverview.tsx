@@ -322,11 +322,6 @@ export const InfoProviderOverview: React.FC = () => {
                         </Box>
                     </Grid>
                     <Grid item container xs={12} justify={"space-evenly"}>
-                        <Grid item>
-                            <Button variant={"contained"} size={"large"} color={"primary"}>
-                                Historisierungs-Datenbank
-                            </Button>
-                        </Grid>
                         {/*<Grid item>
                             <Button variant={"contained"} size={"large"} color={"primary"}
                                     onClick={() => testInfo()}>
