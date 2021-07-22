@@ -31,33 +31,6 @@ import {DiagramCreation} from "./DiagramCreation";
 import {DataCustomization} from "./DataCustomization";
 
 
-/* TODO: list of bugfixes to be made by Janek
-DONE:
-task 1: load the object sent from the backend in step 3, test it
-task 1.5: fix circular dependencies by sourcing out all type definitions
-task 2: formulas are not allowed to have a name that appears in selectedData (or better listItems?)
-task 3: deleting a formula also has to delete it from historizedData if it is used there
-task 4: when sending a new API-Request in step 2, all following settings need to be cleaned
-task 4.5: also make a check for changes before sending a new request
-task 5: add a dialog when deleting a formula
-task 6: keep the componentContext in sessionStorage, fix unmount problem
-task 7: if possible, display a warning before reloading
-task 8: reloading needs to ask the user to put in all api key inputs again
-task 10: unchecking in selectedData also needs to delete all formulas using the item and delete it from historizedData
-task 12: search for other TODOs that remain in the code
-task 14: remove the name input from step 1
-task 15: going back to dashboard should empty the sessionStorage
-
-TO DO:
-task 11: when deleting data, formula or unchecking historized, delete warning which diagrams will be removed and remove them
-
-SHOULD BE DONE:
-task 9: check all usages of useCallFetch for buggy behaviour
-task 13: repair format problems with backend communication in step 3
-task 16: find problem with data writing on unmounted component in dashboard -> possibly solved by wrong isMounted usage
- */
-
-
 interface CreateInfoproviderProps {
     finishDataSourceInEdit?: (dataSource: DataSource, apiKeyInput1: string, apiKeyInput2: string) => void;
     cancelNewDataSourceInEdit?: () => void;
@@ -839,11 +812,10 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                     <DataSelection
                         continueHandler={handleContinue}
                         backHandler={handleBack}
-                        //apiData={apiData}
                         selectedData={selectedData}
                         setSelectedData={(set: Array<SelectedDataItem>) => setSelectedData(set)}
                         listItems={listItems}
-                        setListItems={(array: Array<ListItemRepresentation>) => setListItems(array)}
+                        //setListItems={(array: Array<ListItemRepresentation>) => setListItems(array)}
                         historizedData={historizedData}
                         setHistorizedData={(array: Array<string>) => setHistorizedData(array)}
                         customData={customData}

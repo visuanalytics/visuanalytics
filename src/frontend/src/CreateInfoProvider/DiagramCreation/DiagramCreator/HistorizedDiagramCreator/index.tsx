@@ -266,8 +266,7 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
                 }
             }
         }
-        //TODO: ??? what should happen here?
-        return "TO BE DONE"
+        return ""
     }
 
     /**

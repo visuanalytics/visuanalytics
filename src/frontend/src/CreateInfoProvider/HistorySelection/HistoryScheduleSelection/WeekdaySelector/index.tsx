@@ -55,7 +55,7 @@ export const WeekdaySelector: React.FC<WeekdaySelectorProps>  = (props) => {
      * @param weekday The weekday that should be rendered.
      */
     const renderWeekday = (weekday: Weekday) => {
-        // TODO possibily switch to toggle buttons for better accessibility, but current solution is working too.
+        // TODO possibly switch to toggle buttons for better accessibility, but current solution is working too.
         return (
             <Button color="primary" key={getDayIndex(weekday)} variant="contained" size="small" className={props.days?.includes(weekday) ? classes.weekdaySelected : ""} onClick={() => props.toggleSelectedDay(weekday)} aria-label={props.days?.includes(weekday) ? getWeekdayLabel(weekday) + " ausgewählt" : getWeekdayLabel(weekday) + " nicht ausgewählt"}>
                 {getWeekdayLabel(weekday)}

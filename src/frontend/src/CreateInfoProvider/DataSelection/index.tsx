@@ -17,11 +17,10 @@ import {FormelObj} from "../DataCustomization/CreateCustomData/CustomDataGUI/for
 interface DataSelectionProps {
     continueHandler: () => void;
     backHandler: () => void;
-    //apiData: any;
     selectedData: Array<SelectedDataItem>;
     setSelectedData: (array: Array<SelectedDataItem>) => void;
     listItems: Array<ListItemRepresentation>;
-    setListItems: (array: Array<ListItemRepresentation>) => void; //TODO: only used for "janek test", remove in production
+    //setListItems: (array: Array<ListItemRepresentation>) => void; //only used for "janek test", remove in production
     historizedData: Array<string>;
     setHistorizedData: (array: Array<string>) => void;
     customData: Array<FormelObj>;
@@ -64,7 +63,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
     }
 
     //sample JSON-data to test the different depth levels and parsing
-    const sample2 = {
+    /*const sample2 = {
         "season_helper": {
             "Envelope": {
                 "Body": {
@@ -193,7 +192,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
         },
         "Vorherige-Season": "Text",
         "Test-ZahlABCDEFGHIJKLMNOPQRSTUVWXYZ123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789": "Zahl"
-    };
+    };*/
 
 
     /**
@@ -626,7 +625,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                         <Button variant="contained" size="large" color="primary" disabled={props.selectedData.length===0} onClick={handleContinue}>
                             weiter
                         </Button>
-                        {<Button variant="contained" size="large" onClick={() => {props.setListItems(transformJSON(sample2))}}>Janek Test</Button>}
+                        {/*<Button variant="contained" size="large" onClick={() => {props.setListItems(transformJSON(sample2))}}>Janek Test</Button>*/}
                     </Grid>
                 </Grid>
             </Grid>

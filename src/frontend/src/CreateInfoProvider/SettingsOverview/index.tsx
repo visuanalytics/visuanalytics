@@ -76,7 +76,7 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
     //true when the dialog for deleting a datasource is open
     const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
     //holds the name of all diagrams that need to be removed when deleting the current selection
-    const [diagramsToRemove, setDiagramsToRemove] = React.useState<Array<string>>([]);
+    const diagramsToRemove = React.useRef<Array<string>>([]);
 
     //TODO: document delete mechanism
     /**
@@ -86,15 +86,14 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
      * Opens the dialog asking the user for confirmation afterwards
      */
     const deleteDataSourceHandler = () => {
-        //TODO: search for diagrams depending on this
-        const diagramsToRemove: Array<string> = [];
+        const localDiagramsToRemove: Array<string> = [];
         const dataSourceName = props.dataSources[selectedDataSource].apiName;
         props.diagrams.forEach((diagram) => {
             if (diagram.sourceType === "Array" && diagram.arrayObjects !== undefined) {
                 //diagram with arrays
                 for (let index = 0; index < diagram.arrayObjects.length; index++) {
                     if (diagram.arrayObjects[index].listItem.parentKeyName.split("|")[0] === dataSourceName) {
-                        diagramsToRemove.push(diagram.name);
+                        localDiagramsToRemove.push(diagram.name);
                         break;
                     }
                 }
@@ -102,19 +101,19 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
                 //diagrams with historized
                 for (let index = 0; index < diagram.historizedObjects.length; index++) {
                     if (diagram.historizedObjects[index].name.split("|")[0] === dataSourceName) {
-                        diagramsToRemove.push(diagram.name);
+                        localDiagramsToRemove.push(diagram.name);
                         break;
                     }
                 }
             }
         })
-        if (diagramsToRemove.length > 0) setDiagramsToRemove(diagramsToRemove);
+        if (localDiagramsToRemove.length > 0) diagramsToRemove.current = localDiagramsToRemove;
         setDeleteDialogOpen(true);
     }
 
     /**
      * Method that deletes the currently selected dataSource.
-     * Checks if the state diagramsToRemove contains any items and removes them too, if necessary.
+     * Checks if the ref diagramsToRemove contains any items and removes them too, if necessary.
      * Also sets the selected dataSource to the now last dataSource in the dataSources array.
      */
     const deleteSelectedDataSource = (deleteDiagrams: boolean) => {
@@ -133,13 +132,13 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
 
         if (deleteDiagrams) {
             //if diagrams need to be removed, remove them
-            if (diagramsToRemove.length > 0) {
+            if (diagramsToRemove.current.length > 0) {
                 props.setDiagrams(props.diagrams.filter((diagram) => {
-                    return !diagramsToRemove.includes(diagram.name);
+                    return !diagramsToRemove.current.includes(diagram.name);
                 }))
             }
-            //reset the states
-            setDiagramsToRemove([]);
+            //reset the ref
+            diagramsToRemove.current = [];
         }
 
         setDeleteDialogOpen(false);
@@ -385,7 +384,7 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
             <Dialog onClose={() => {
                 setDeleteDialogOpen(false);
                 window.setTimeout(() => {
-                    setDiagramsToRemove([]);
+                    diagramsToRemove.current = [];
                 }, 200);
             }} aria-labelledby="deleteDialog-title"
                     open={deleteDialogOpen}>
@@ -396,11 +395,11 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
                     <Typography gutterBottom className={classes.wrappedText}>
                         Die Datenquelle "{props.dataSources[selectedDataSource].apiName}" wird unwiderruflich gelöscht.
                     </Typography>
-                    {diagramsToRemove.length > 0 &&
+                    {diagramsToRemove.current.length > 0 &&
                     <Typography gutterBottom className={classes.wrappedText}>
                         Das Löschen der Datenquelle wird außerdem alle Diagramme löschen, die diese Datenquelle
-                        nutzen.<br/><br/><br/>Folgende Diagramme sind
-                        betroffen: <strong>{diagramsToRemove.join(", ")}</strong>
+                        nutzen.<br/><br/>Folgende Diagramme sind
+                        betroffen: <strong>{diagramsToRemove.current.join(", ")}</strong>
                     </Typography>
                     }
                 </DialogContent>
@@ -411,7 +410,7 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
                                     onClick={() => {
                                         setDeleteDialogOpen(false);
                                         window.setTimeout(() => {
-                                            setDiagramsToRemove([]);
+                                            diagramsToRemove.current = [];
                                         }, 200);
                                     }}>
                                 abbrechen

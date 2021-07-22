@@ -269,7 +269,6 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
                 </StepFrame>
             )
         } else {
-            //TODO: remove the debugging thing by removing the possibility of "test janek"
             return (
                 <DataSelection
                     continueHandler={() => handleStepForward()}
@@ -277,7 +276,7 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
                     selectedData={props.dataSource.selectedData}
                     setSelectedData={props.setSelectedData}
                     listItems={newListItems} //TODO: exchange for "props.infoProvDataSources[props.selectedDataSource].listItems" when listItems are in backend data format
-                    setListItems={() => console.log("THIS IS ONLY FOR DEBUGGING AND NOT ALLOWED IN EDIT MODE!")}
+                    //setListItems={() => console.log("THIS IS ONLY FOR DEBUGGING AND NOT ALLOWED IN EDIT MODE!")}
                     historizedData={props.dataSource.historizedData}
                     setHistorizedData={props.setHistorizedData}
                     customData={props.dataSource.customData}

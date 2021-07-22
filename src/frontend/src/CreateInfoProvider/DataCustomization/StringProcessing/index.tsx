@@ -35,18 +35,6 @@ interface StringProcessingProps {
     apiName: string;
 }
 
-/**
- DONE:
- 1: grundlegende Datenstrukturen für alle Strings sowie Operationen auf diesen anlegen
- 2: Anzeige im Interface mit zwei Textfeldern für Ersetzung und einem Textfeld für den Namen
- 3: Methode zum Hinzufügen neu erstellter Operationen
- TODO:
-
- 4: Möglichkeit zum Löschen von Operationen
- 5:
- 6:
-
- */
 
 /**
  * Component for processing of strings - user can define replacing of certain sequences by others.

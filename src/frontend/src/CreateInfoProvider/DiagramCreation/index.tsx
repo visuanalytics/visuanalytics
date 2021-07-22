@@ -15,35 +15,6 @@ import {ArrayDiagramProperties, HistorizedDiagramProperties, Plots} from "../typ
 import {hintContents} from "../../util/hintContents";
 
 
-/* TODO: following steps for diagram creation:
-task 1: pass listItems from dataSelection and history selection from HistorySelection -> DONE
-task 2: write method that lists all arrays that fit the requirements -> DONE
-task 3: show overview of existing diagrams and give option to use a new one -> DONE
-task 4: choose if array or historized data
-task 5: choose the array (filter all arrays from apiData) - can only contain numbers or objects that contain numbers
-     if object: choose which property is meant for y/value (number) and which is meant for x/name (string)
-task 6: choose diagram type
-task 7: for arrays: set the maximum amount of items to be used, display warning that it could possibly deliver less values
-task 8: enable usage with multiple arrays and multiple historized data
-task 9: for historized data: choosing options for y/values: currentDate - n * interval between historizations
-task 10: for historized data: choose names for the axis,
-task 11: create data format to represent created diagrams, create with finalizing, show in overview, delete functionality
-task 12: formula support (formula will only contain numbers), add functionality for date/timestamp as names on historized
-task 13: sessionStorage compatibility
-task 14: rearrange structure
-task 15: height and alignment of texts and inputs, color-input
-task 16: data format for backend
-task 17: write custom fetcher for using in useEffect in Overview and general Creation
-task 18: use the fetcher based on the current diagram in both creators to get the preview
-task 19: code cleanup
-task 20: as soon as available: fetch the arrays and historized data from all data sources and not only the current one
-NOT DONE:
-task 21: edit feature
-task 22: add hintContents
- */
-
-
-
 
 interface DiagramCreationProps {
     continueHandler: () => void;
