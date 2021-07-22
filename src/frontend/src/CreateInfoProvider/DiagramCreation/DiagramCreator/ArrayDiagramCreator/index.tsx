@@ -120,7 +120,7 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
         props.setDiagramType("verticalBarChart");
         props.setDiagramName("");
         props.setCustomLabels(true);
-        props.setLabelArray([]);
+        props.setLabelArray(Array(1).fill(""));
         props.setSelectedStringAttribute({array: "", key: ""})
         sessionStorage.removeItem("amount-" + uniqueId);
         sessionStorage.removeItem("arrayObjects-" + uniqueId);

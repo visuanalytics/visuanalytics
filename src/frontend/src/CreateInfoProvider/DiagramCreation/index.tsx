@@ -57,7 +57,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
     //true if the user has selected to use customLabels (only relevant for array diagrams)
     const [customLabels, setCustomLabels] = React.useState(true);
     //holds the custom labels set by the user
-    const [labelArray, setLabelArray] = React.useState<Array<string>>([]);
+    const [labelArray, setLabelArray] = React.useState<Array<string>>(Array(1));
     //holds the string attribute
     const [selectedStringAttribute, setSelectedStringAttribute] = React.useState<SelectedStringAttribute>({key: "", array: ""})
     //the diagram currently selected for sending to the backend
@@ -87,7 +87,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
         //customLabels
         setCustomLabels(sessionStorage.getItem("customLabels-" + uniqueId) === "true");
         //labelArray
-        setLabelArray(sessionStorage.getItem("labelArray-" + uniqueId) === null ? new Array<string>() : JSON.parse(sessionStorage.getItem("labelArray-" + uniqueId)!));
+        setLabelArray(sessionStorage.getItem("labelArray-" + uniqueId) === null ? new Array<string>(1) : JSON.parse(sessionStorage.getItem("labelArray-" + uniqueId)!));
         //selectedStringAttribute
         setSelectedStringAttribute(sessionStorage.getItem("selectedStringAttribute-" + uniqueId) === null ? {key: "", array: ""} : JSON.parse(sessionStorage.getItem("selectedStringAttribute-" + uniqueId)!));
     }, [])
@@ -268,7 +268,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
         setHistorizedObjects([]);
         setAmount(1);
         setCustomLabels(true);
-        setLabelArray([])
+        setLabelArray(Array(1).fill(""))
         //since we dont want default values in sessionStorage we empty it here
         clearSessionStorage();
         //go back to overview
