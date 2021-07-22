@@ -180,7 +180,7 @@ def generate_test_diagram(values, infoprovider_name=None, diagram_name=None):
     for plot in values["diagram_config"]["plots"]:
         plot["plot"]["y"] = np.random.randint(1, 20, len(plot["plot"]["x"]))
         plot["plot"].pop("x", None)
-        fig, ax, _ = create_plot(plot, None, None, get_xy=False, fig=fig, ax=ax)
+        fig, ax, y_vals = create_plot(plot, None, None, get_xy=False, fig=fig, ax=ax)
 
     file = get_test_diagram_resource_path(infoprovider_name=infoprovider_name, diagram_name=diagram_name)
     title = values.get("title", None)

@@ -627,11 +627,11 @@ def update_infoprovider(infoprovider_id, updated_data):
 
         # Datasource obj vorbereiten
         transform_step = []
-        transform_step += datasource['transform']
+        transform_step += datasource["transform"]
         transform_step += datasource["calculates"]
         formulas = copy.deepcopy(datasource["formulas"])
         custom_keys = _extract_custom_keys(datasource["calculates"], datasource["formulas"], datasource["replacements"])
-        transform_step += _generate_transform(_extend_formula_keys(formulas, datasource_name, custom_keys),
+        transform_step = _generate_transform(_extend_formula_keys(formulas, datasource_name, custom_keys),
                                               remove_toplevel_key(transform_step))
         transform_step += remove_toplevel_key(datasource["replacements"])
         datasource_json = {
