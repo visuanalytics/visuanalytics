@@ -340,6 +340,7 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
     return (
         <Grid container justify="space-between">
             <BasicDiagramSettings
+                historizedObjects={props.historizedObjects}
                 diagramType={props.diagramType}
                 setDiagramType={props.setDiagramType}
                 amount={props.amount}

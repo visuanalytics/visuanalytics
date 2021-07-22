@@ -7,12 +7,13 @@ import Select from "@material-ui/core/Select";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import {Alert} from "@material-ui/lab";
-import {ArrayDiagramProperties, diagramType} from "../../../types";
+import {ArrayDiagramProperties, diagramType, HistorizedDiagramProperties} from "../../../types";
 import {FormControlLabel} from "@material-ui/core";
 import {getUrl} from "../../../../util/fetchUtils";
 
 interface BasicDiagramSettingsProps {
     arrayObjects?: Array<ArrayDiagramProperties>;
+    historizedObjects?: Array<HistorizedDiagramProperties>
     diagramType: diagramType;
     setDiagramType: (type: diagramType) => void;
     amount: number;
@@ -118,7 +119,10 @@ export const BasicDiagramSettings: React.FC<BasicDiagramSettingsProps> = (props)
                         >
                             <MenuItem value={"verticalBarChart"}>Säulendiagramm</MenuItem>
                             <MenuItem value={"horizontalBarChart"}>Balkendiagramm</MenuItem>
-                            <MenuItem value={"pieChart"}>Tortendiagramm</MenuItem>
+                            <MenuItem value={"pieChart"}
+                                      disabled={(props.arrayObjects !== undefined && props.arrayObjects.length > 1) || (props.historizedObjects !== undefined && props.historizedObjects.length > 1)}>
+                                Tortendiagramm (nur bei max. einem {props.arrayObjects !== undefined ? "Array" : "historisiertes Datum"})
+                            </MenuItem>
                             <MenuItem value={"dotDiagram"}>Punktdiagramm</MenuItem>
                             <MenuItem value={"lineChart"}>Liniendiagramm</MenuItem>
                         </Select>
