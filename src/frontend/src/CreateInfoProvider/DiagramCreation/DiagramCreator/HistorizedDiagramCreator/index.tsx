@@ -96,18 +96,6 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
             if(props.labelArray[index] === "") return false;
         }
         return true;
-        /*for (let i = 0; i < props.historizedObjects.length; i++) {
-            const item = props.historizedObjects[i];
-            //currently deactivated because there is no support for date labels
-            if (item.dateLabels) {
-                if (item.dateFormat === "") return false;
-            } else {
-                for (let j = 0; j < item.labelArray.length; j++) {
-                    if (item.labelArray[j] === "") return false;
-                }
-            //}
-        }
-        return true;*/
     }
 
 
@@ -339,37 +327,11 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
                     </Box>
                 </Grid>
                 <Grid item container xs={6}>
-                    {//the possibility of using dates as labeling is not supported in the backend so far
-                        /*props.historizedObjects[selectedHistorizedOrdinal].dateLabels ?
-                        (<Box borderColor="primary.main" border={4} borderRadius={5}
-                              className={classes.choiceListFrame}>
-                            <Grid item xs={12} className={classes.elementLargeMargin}>
-                                <Typography variant="body1">
-                                    Zu jedem Datenwert wird das Datum angezeigt, an dem er gespeichert wurde.<br/>Bitte
-                                    wählen sie das Anzeigeformat:
-                                </Typography>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <FormControl fullWidth variant="outlined" className={classes.elementLargeMargin}>
-                                    <Select
-                                        value={props.historizedObjects[selectedHistorizedOrdinal].dateFormat}
-                                        onChange={dateFormatChangeHandler}
-                                    >
-                                        <MenuItem value={"dd.mm.yyyy"}>Tag.Monat.Jahr (tt:mm:jjjj)</MenuItem>
-                                        <MenuItem value={"dd.mm"}>Tag.Monat (tt.mm)</MenuItem>
-                                        <MenuItem value={"dd"}>Tag (tt)</MenuItem>
-                                        <MenuItem value={"hh:mm"}>Stunde:Minute (ss:mm) Uhr</MenuItem>
-                                        <MenuItem value={"hh"}>Stunde (ss) Uhr</MenuItem>
-                                    </Select>
-                                </FormControl>
-                            </Grid>
-                        </Box>) :*/
-                        (<CustomLabels
-                            amount={props.amount}
-                            labelArray={props.labelArray}
-                            setLabelArray={props.setLabelArray}
-                        />)
-                    }
+                    <CustomLabels
+                        amount={props.amount}
+                        labelArray={props.labelArray}
+                        setLabelArray={props.setLabelArray}
+                    />
                 </Grid>
             </Grid>
         )
@@ -423,13 +385,6 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
                         Vorschau generieren
                     </Button>
                 </Grid>
-                { //this possibility of using dates as labels is not supported in the backend so far
-                    /*<Grid item>
-                    <Button variant="contained" size="large" color="primary" onClick={() => toggleDateLabels()}>
-                        {props.historizedObjects[selectedHistorizedOrdinal].dateLabels ? "eigene Beschriftungen" : "Datum-Beschriftungen"}
-                    </Button>
-                </Grid>
-                */}
             </Grid>
             <Grid item container xs={12} justify="space-between" className={classes.elementLargeMargin}>
                 <Grid item>

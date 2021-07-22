@@ -149,12 +149,9 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
                 const arrayObject = {
                     listItem: item,
                     numericAttribute: "",
-                    stringAttribute: "",
-                    labelArray: new Array(1).fill(""),
                     color: "#000000",
                     numericAttributes: numericAttributes,
                     stringAttributes: stringAttributes,
-                    customLabels: stringAttributes.length === 0
                 }
                 arrayObjects.push(arrayObject);
             }
@@ -171,11 +168,8 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
         selectedHistorized.forEach((item) => {
             const historizedObject = {
                 name: item,
-                labelArray: new Array(1).fill(""),
                 color: "#000000",
                 intervalSizes: new Array(1).fill(0),
-                dateLabels: false,
-                dateFormat: "dd.mm.yyyy"
             }
             historizedObjects.push(historizedObject);
         })

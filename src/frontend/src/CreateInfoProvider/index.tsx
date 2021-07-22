@@ -460,7 +460,6 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                     historized_data: dataSource.historizedData,
                     arrayProcessingsList: dataSource.arrayProcessingsList,
                     stringReplacementList: dataSource.stringReplacementList,
-                    //TODO: ADD THIS TO DOCUMENTATION!!!
                     listItems: dataSource.listItems
                 })
             }
@@ -561,13 +560,11 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                 for (let index = 0; index < diagram.historizedObjects.length; index++) {
                     const item = diagram.historizedObjects[index];
                     const plots = {
-                        //dateLabels: item.dateLabels, //deactivated since there is currently no support for date labels by the backend
                         plot: {
                             type: type,
                             x: item.intervalSizes,
                             y: "{_req|" + item.name + "}",
                             color: item.color,
-                            //dateFormat: item.dateFormat,
                             x_ticks: {
                                 //only set the ticks on the last Plot - this is necessary to render it last when layering the Plots in the diagrams
                                 ticks: index === diagram.historizedObjects.length-1 ? diagram.labelArray : []
@@ -581,6 +578,11 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
         return plotArray;
     }, [])
 
+    /**
+     * Method that generates the object 'diagram' the backend needs
+     * for the configuration of the infoprovider by using the values from
+     * the created diagram and transforming them to the backend format.
+     */
     const createBackendDiagrams = React.useCallback(() => {
         //TODO: possibly find smarter solution without any type
         const diagramsObject: any = {};

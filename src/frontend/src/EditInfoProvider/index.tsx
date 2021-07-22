@@ -798,7 +798,11 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
         return plotArray;
     }, [])
 
-
+    /**
+     * Method that generates the object 'diagram' the backend needs
+     * for the configuration of the infoprovider by using the values from
+     * the created diagram and transforming them to the backend format.
+     */
     const createBackendDiagrams = React.useCallback(() => {
         //TODO: possibly find smarter solution without any type
         const diagramsObject: any = {};

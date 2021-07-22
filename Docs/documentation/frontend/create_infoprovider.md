@@ -530,8 +530,9 @@ Das Rendering der Komponente generiert dann anhand des Arrays, welches durch `ge
 Die Komponente **DiagramCreation** stellt die umschließende Wrapper-Komponente für die Diagrammerstellung dar, welche der letzte Schritt in der Erstellung eines Infoprovider ist.
 
 ### Disclaimer
-Ursprünglich war vorgesehen, dass als Labels für historisierte Daten in Diagrammen das Datum der Historisierung des jeweils angezeigten Wertes genutzt werden könnte und im Frontend auch ein entsprechender Support dafür realisiert. Im Verlauf des Projekts konnte jedoch aus zeitlichen Gründen die Umsetzung dieses Features im Backend nicht mehr realisiert werden, da die Implementierung weniger simpel als ursprünglich vorgesehen war. Aus diesem Grund besteht kein Backend-Support für das Feature, sodass im Frontend-Code alle relevanten Zeilen auskommentiert und dieses Variante der Label-Generierung somit deaktiviert wurde.
-Diese Dokumentation beschreibt den Frontend-Zustand mit Unterstützung dieses Features - wir haben uns dafür entschieden, die Beschreibungen dazu beizubehalten, da so der Code bei einer möglichen zukünftigen Realisierung des Features wieder einkommentiert werden könnte.
+Ursprünglich war vorgesehen, dass als Labels für historisierte Daten in Diagrammen das Datum der Historisierung des jeweils angezeigten Wertes genutzt werden könnte und im Frontend auch ein entsprechender Support dafür realisiert. Weiterhin sollte es möglich sein, dass man für jedes Array oder historisierte Datum in einem Diagramm eine eigene Beschriftung in Form von Labels erstellen könnte.
+Hinsichtlich des ersten Features stellte sich im späteren Projektverlauf heraus, dass die Generierung eines Datums zu einer Historisierung weniger simpel zu implementieren ist als anfänglich gedacht, sodass der Backend-Support nicht mehr erstellt werden konnte. Hinsichtlich der Beschriftungen sind wir beim Testen auf die Limitation gestoßen, dass die eingesetzte Backend-Bibliothek nur ein Array mit Beschriftungen zulässt, sodass auch dieses Features gestrichen werden musste.
+Die diesbezüglichen funktionierenden Frontend-Implementierungen können entsprechend in älteren Versionen des Projekts im Repository eingesehen werden.
 
 
 ### State-Inhalte
@@ -540,7 +541,7 @@ Als Wrapper-Komponente werden im State der Komponente alle Informationen gehalte
 * **diagramSource** unterscheidet, ob das Diagramm auf Arrays oder historisierten Daten basiert.
 * **compatibleArrays** und **compatibleHistorized** halten alle mit Diagrammen kompatiblen Arrays bzw. historisierten Daten.
 * **arrayObjects** und **historizedObjects** dienen als Speicher für die Konfiguration des aktuell erstellten Diagramms.
-* **diagramName**, **diagramType** und **amount** sind Basisinformationen über das aktuell erstellte Diagrammm.
+* **diagramName**, **diagramType**, **amount**, **customLabels**, **labelArray** und **selectedStringAttribute** sind Basisinformationen über das aktuell erstellte Diagrammm.
 * **selectedDiagram** und **imageURL** dienen der Anzeige einer vom Backend erstellten Diagramm-Vorschau in anderen Komponenten.
 
 Anzumerken ist, dass wie auch in **CreateInfoProvider** die Informationen, bei welchen es notwendig ist, auch im sessionStorage gespeichert werden. Sie können aus diesem beim Neuladen der Seite wieder entnommen werden.
@@ -552,35 +553,27 @@ In dieser Wrapper-Komponente werden zusätzlich drei Datentypen definiert, die i
 export type ArrayDiagramProperties = {
     listItem: ListItemRepresentation;
     numericAttribute: string;
-    stringAttribute: string;
-    labelArray: Array<string>;
     color: string;
     numericAttributes: Array<ListItemRepresentation>;
     stringAttributes: Array<ListItemRepresentation>
-    customLabels: boolean;
 }
 ```
-* Enthalten ist das **listItem**, welches in der früheren Datenauswahl generiert wurde. Weiterhin gibt es ein numerisches Attribut und ein String-Attribut, die vom Nutzer in der späteren Diagrammerstellung als auf dem Diagramm anzuzeigende Daten ausgewählt werden (siehe **ArrayDiagramCreator**).
-* **labelArray** enthält eigene Beschriftungen, sofern diese genutzt werden (markiert durch **customLabels**).
+* Enthalten ist das **listItem**, welches in der früheren Datenauswahl generiert wurde. Weiterhin gibt es ein numerisches Attribut, für welches der Nutzer später ein Attribut aus Arrays mit Objekten wählen kann, dessen Werte auf das Diagramm abgetragen werden sollen (siehe **ArrayDiagramCreator**).
 * **color** ist eine Farbe zur Darstellung im Diagramm.
 * Zuletzt werden als **numericAttributes** und **stringAttributes** Listen geeigneter Attribute der im Array enthaltenen Objekte gespeichert (sofern es solche enthält).
     * Für den Fall, dass ein Array Zahlen enthält, werden einige Attribute schlicht mit default-Werten belegt.
 ```javascript
 export type HistorizedDiagramProperties = {
     name: string;
-    labelArray: Array<string>;
     color: string;
     intervalSizes: Array<number>;
-    dateLabels: boolean;
-    dateFormat: string;
 }
 ```
-* Der Datentyp für historisierte Daten ist ähnlich. Statt einem Objekt wie listItem genügt hier ein einfacher Name **name**. **labelArray** und **color** erfüllen die gleiche Funktion.
+* Der Datentyp für historisierte Daten ist ähnlich. Statt einem Objekt wie listItem genügt hier ein einfacher Name **name**. **color** erfüllt die gleiche Funktion.
 * Darüber hinaus werden in **intervalSizes** die Intervallabstände für die einzelnen Daten gespeichert (mehr dazu in der zugehörigen Komponente).
-* **dateFormat** ist eine Formatangabe für Datums-Beschriftungen, die durch **dateLabels** aktiviert werden.
 
 
-Ein Diagramm als gesamtes wird in einem Objekt des Datentypen **Diagram** gespeichert, welcher in der Komponente **CreateInfoProvider** angelegt wird. Grund dafür ist, dass die Liste aller erstellten Diagramme als Array von **Diagram**-Objekten in dieser Komponente als **diagrams** im State gehalten wird, um sie dann später als Bestandteil des gesamten Infoproviders an das Backend zu senden.
+Ein Diagramm als vollständige Einheit wird in einem Objekt des Datentypen **Diagram** gespeichert, welcher in der Komponente **CreateInfoProvider** angelegt wird. Grund dafür ist, dass die Liste aller erstellten Diagramme als Array von **Diagram**-Objekten in dieser Komponente als **diagrams** im State gehalten wird, um sie dann später als Bestandteil des gesamten Infoproviders an das Backend zu senden.
 ```javascript
 export type diagramType = "dotDiagram" | "lineChart" | "horizontalBarChart" | "verticalBarChart" | "pieChart"
 
@@ -590,6 +583,10 @@ export type Diagram = {
     sourceType: string;
     arrayObjects?: Array<ArrayDiagramProperties>;
     historizedObjects?: Array<HistorizedDiagramProperties>;
+    amount: number;
+    customLabels: boolean;
+    labelArray: Array<string>;
+    stringAttribute: SelectedStringAttribute;
 }
 ```
 * Jedes Diagramm besitzt einen mit **name** repräsentierten Namen sowie einen Diagrammtyp/eine Diagrammart, die durch **variant** festgehalten wird.
@@ -597,11 +594,15 @@ export type Diagram = {
 * Der **sourceType** eines Diagrammes gibt an, ob es sich um ein Diagramm basierend auf Arrays oder historisierten Daten handelt. Diese Information ist für die Verarbeitung im Backend relevant und wird bei der Generierung des Datensatzes zur Backend-Kommunikation genutzt.
 * **arrayObjects** und **historizedObjects** enthalten für jedes im Diagramm genutzte Array bzw. historisierte Datum ein Objekt mit allen relevanten Konfigurationsparametern - die Datentypen wurden im vorherigen Abschnitt bereits erläutert.
     * Die Parameter sind optional, da zwischen diesen beiden Arten von Datengrundlagen für ein Diagramm gewählt werden muss und man daher immer nur eines der beiden Arrays erstellt. Selbst wenn man bei einem Diagramm mit Arrays einen Wert für **historizedObjects** setzen würde (oder umgekehrt) würde dieser durch die Unterscheidung anhand von **sourceType** nicht genutzt werden.
+* **amount** gibt an, wie viele Werte (d.h. Einträge eines Arrays oder historisierte Werte) in dem Diagramm dargestellt werden sollen.
+* **labelArray** enthält eine Reihe an Strings, die der Nutzer selbstständig als Beschriftungen des Diagramms festlegen kann. Ob er diese Option nutzt wird durch das Flag **customLabels** markiert und ist entsprechend für die Generierung der Diagramme relevant.
+* **stringAttribute** hält ein ausgewähltes String-Attribut aus einem Objekt innerhalb eines durch das Diagramm verwendete Array. Dieses kann alternativ zu den Beschriftungen des **labelArray** zur Beschriftung des Diagramm genutzt werden.
+    * Das Attribut hat daher nur Relevanz, wenn **sourceType** den Wert **Array** hat, wird aber der Einfachheit halber immer auf einen default-Wert gesetzt.
 
 
 ### Bestimmung von mit Diagrammen kompatibler Daten
 Logischerweise kann man nicht alle Arten von Daten (Arrays, Strings, Zahlen, ...) eines Infoproviders sinnvoll in einem Diagramm verwenden, weshalb wir gewisse Regeln aufgestellt haben:
-* Es können jegliche historisierte Daten in Diagrammen abgebildet werden, sofern diese numerisch sind. Darunter fallen auch historisierte Formeln. Weiterhin kann der erste Index von Arrays genutzt werden, die nur Zahlen enthalten.
+* Es können jegliche historisierte Daten in Diagrammen abgebildet werden, sofern diese numerisch sind. Darunter fallen auch historisierte Formeln und String-Verarbeitungen. Weiterhin kann der erste Index von Arrays genutzt werden, die nur Zahlen enthalten.
     * Das Diagramm enthält dann Werte verschiedener historischer Zeitpunkte. Man konfiguriert dabei immer mit der Anzahl an Abständen vom aktuellen Datum in Intervallen.
 * Weiterhin können Arrays in Diagrammen abgebildet werden, wenn gilt:
     * Es handelt sich um ein Array, welches Zahlen enthält...
@@ -612,11 +613,11 @@ Logischerweise kann man nicht alle Arten von Daten (Arrays, Strings, Zahlen, ...
 Für die Diagrammerstellung müssen nun aus den Daten aller Datenquellen der Infoprovider die kompatiblen Werte gefiltert werden, wozu die Methoden **getCompatibleArrays** und **getCompatibleHistorized** genutzt werden.
 * **getCompatibleArrays** nimmt ein Array von *ListItemRepresentation*-Objekten entgegen (dies ist der in der Datenauswahl genutzte Typ, der alle Informationen zu einem API-Datum hält). Die Methode erstellt dann ein eigenes Array, in welches alle kompatiblen *ListItemRepresentation*-Objekte gelegt werden.
     * Dazu werden alle Daten durchgegangen und zunächst geprüft, ob ein Array vorliegt (mit dem Attribut *arrayRep*). Dann wird geprüft, ob *value* ein Array ist - dann enthält das Array Objekte. Der Aufruf von **checkObjectForNumeric** prüft, ob die Objekte mindestens ein "Zahl"-Attribut enthalten - wenn ja, dann wird es zu den kompatiblen Arrays hinzugefügt.
-    * Wenn keine Objekte enthalten sind wird geprüft, ob das Array primitive Werte des gleichen Typs enthält. In diesem Fall wird getestet, ob der Typ "Zahl" ist. Anschließend wird das Array gespeichert.
+    * Wenn keine Objekte enthalten sind wird geprüft, ob das Array primitive Werte des gleichen Typs enthält. In diesem Fall wird getestet, ob der Typ "Zahl" oder "Gleitkommazahl" ist. Anschließend wird das Array gespeichert.
     * Der Letzte Fall ist, dass kein Array, sondern ein Objekt vorliegt. Dann werden rekursiv alle Attribute des Objekts untersucht und das zurückgegebene Array mit unseren Array konkateniert.
 * **getCompatibleHistorized** hat ein deutlich einfacheres Schema. Es wird hier ein Array mit historisierten Daten eingegeben (Array von Strings) und über dieses iteriert. Man findet dann per Namensabgleich das Objekt des zugehörigen API-Datums oder der zugehörigen Formel.
-    * Es wird dann über die Typinformation, die sich dazu in **selectedData** finden lässt, geprüft, ob ein Element den Typ "Zahl" hat, wenn ja wird es als kompatibel gespeichert.
-    * Die gleiche Prüfung wird für **customData** durchgeführt. Hier entfällt aber die Typprüfung, da Formeln nur Zahlen enthalten.
+    * Es wird dann über die Typinformation, die sich dazu in **selectedData** finden lässt, geprüft, ob ein Element den Typ "Zahl" oder "Gleitkommazahl" hat, wenn ja, so wird es als kompatibel gespeichert.
+    * Die gleiche Prüfung wird für **customData** und **arrayProcessingsList** durchgeführt. Hier entfällt aber die Typprüfung, da Formeln und Array-Verarbeitungen nur Zahlen enthalten.
 
 Wie bereits bei den Erläuterungen zu States beschrieben speichern die State-Variablen **compatibleArrays** und **compatibleHistorized** die Ergebnisse dieser beiden Methoden. Dazu gibt es zwei *useEffect*-Hooks, welche immer dann aufgerufen werden, wenn sich **listItems** bzw. **historizedData** ändern - d.h. die Datengrundlage verändert wird.
 * Das ist normalerweise nur dann der Fall, wenn man erstmalig die Komponente mounted/aufbaut. Sollte es aber Änderungen geben, so kann auf diese diese reagiert werden.
@@ -657,19 +658,19 @@ Die Komponente bietet einige weitere Hilfsmethoden, welche zum Großteil an die 
     * Im Anschluss führt finishCreate einige Aufräumarbeiten durch, um Probleme mit noch verbliebenen Datenresten zu vermeiden: Die States der Diagrammerstellung werden auf ihren default-Wert zurückgesetzt und die zugehörigen Einträge aus dem sessionStorage entfernt.
     * Abschließend sorgt die Methode dafür, dass man zurück zur Übersicht gelangt.
 * **amountChangeHandler** ist eine Handler-Methode für Änderungen an der State-Variable **amount**, die speichert, wie viele Datenwerte das aktuell erstellte Diagramm umfassen soll.
-    * Die Methode ist notwendig, weil ein einfaches Ändern des amount nicht genügt. Stattdessen ist es notwendig, die Arrays für Beschriftungen und (bei historisierten Daten) für Intervallgrößen ebenfalls zu ändern. Nur so sieht der Nutzer immer genau so viele Eingabefelder, wie er auch Daten haben möchte.
-    * In der Methode wird dazu anhand des aktuellen **diagramStep** unterschieden, ob der Aufruf aus der Erstellung mit Arrays oder der Erstellung mit historisierten Daten kommt.
-        * Bei Arrays wird jedes Objekt in **arrayObjects** durchgegangen und ein neues Label-Array erstellt, dessen Größe dem neuen amount entspricht. Dann werden die alten Werte in das neue Array (soweit aufgrund der Größe möglich) übertragen und das Objekt überschrieben.
-        * Bei historisierten Daten läuft es sehr ähnlich ab, jedoch wird hier zusätzlich auch noch das Array **intervalSizes** mit der neuen Größe erstellt und die alten Werte übertragen.
+    * Die Methode ist notwendig, weil ein einfaches Ändern des amount nicht genügt. Stattdessen ist es notwendig, das Array für Beschriftungen und bei historisierten Daten die Arrays für Intervallgrößen ebenfalls zu ändern. Nur so sieht der Nutzer immer genau so viele Eingabefelder, wie er auch Daten haben möchte.
+    * In der Methode wird zunächst das **labelArray** des Diagramms aktualisiert, es folgt die Bearbeitung der **intervalSizes** aller historisierten Daten, sofern der Aufruf aus der Komponente zur Bearbeitung historisierter Daten stammt - das erkennt man daran, dass der **diagramStep** 3 ist.
+        * Es wird ein neues Label-Array erstellt, dessen Größe dem neuen amount entspricht. Dann werden die alten Werte in das neue Array (soweit aufgrund der Größe möglich) übertragen und das Objekt überschrieben.
+        * Bei historisierten Daten läuft es sehr ähnlich ab, jedoch wird hier zusätzlich auch noch das Array **intervalSizes** mit der neuen Größe erstellt und die alten Werte übertragen. Weiterhin erfolgt dieser Prozess entsprechend nicht nur einmal, sondern für jedes Element in **historizedObjects**.
 
 <div style="page-break-after: always;"></div>
 
 ## DiagramOverview
-Die erste für den Nutzer sichtbare Komponente zur Diagrammerstellung stellt **DiagramOverview** dar, in welcher eine Übersicht aller bisher erstellten Diagramme angezeigt wird. Außerdem gibt es die Möglichkeiten zur Generierung einer Vorschau, einer Bearbeitung und dem Löschen des Diagramms. Weiterhin gelangt man von hier mit einem Button zur Erstellung eines neuen Diagramms oder zurück zur Gesamtübersicht.
+Die erste für den Nutzer sichtbare Komponente zur Diagrammerstellung stellt **DiagramOverview** dar, in welcher eine Übersicht aller bisher erstellten Diagramme angezeigt wird. Außerdem gibt es die Möglichkeiten zur Generierung einer Vorschau und dem Löschen des Diagramms. Weiterhin gelangt man von hier mit einem Button zur Erstellung eines neuen Diagramms oder zurück zur Gesamtübersicht.
 
 Die Darstellung alle Diagramme findet wie schon in vielen anderen Komponenten per **List**-Komponente statt, in welcher für jedes Diagramm im Array **diagrams** (enthält alle Diagramme und wird per props übergeben) die Methode **renderDiagramListItem** aufgerufen wird.
 * Diese erstellt ein **ListItem**, welches den Namen des Diagramms sowie eine Information über den Typ enthält. Weiterhin wird angegeben, ob das Diagramm auf Arrays oder historisierten Daten basiert.
-* Für jedes Element der Liste wird über eine **ListItemSecondaryAction**-Komponente eine Reihe von drei Icons eingeblendet, die als Buttons fungieren: Ein Bild, mit dem eine Vorschau geöffnet werden kann, ein Stift, der die Bearbeitung öffnet und eine Mülltonne, die einen Dialog zum Löschen öffnet.
+* Für jedes Element der Liste wird über eine **ListItemSecondaryAction**-Komponente eine Reihe von zwei Icons eingeblendet, die als Buttons fungieren: Ein Bild, mit dem eine Vorschau geöffnet werden kann und eine Mülltonne, die einen Dialog zum Löschen öffnet.
 
 Bei der Vorschau ist ein leicht verändertes Vorgehen gegenüber den (später erläuterten) Komponenten der Erstellung eines neuen Diagramms, in denen man ebenso eine Vorschau generieren kann, notwendig. Das liegt daran, dass über das Element aus der Liste erst bestimmt wird, welches Diagramm an das Backend gesendet werden soll.
 * Es wird beim Klicken des Icons **openPreviewDialog** aufgerufen, in welches man den Name des Diagramms eingibt. Diese Handler-Methode setzt den State **selectedDiagram** auf das Objekt des Diagramms mit diesem Namen und öffnet mit **setPreviewOpen** den Dialog, in dem die Vorschau angezeigt wird.
@@ -682,17 +683,6 @@ Bei der Vorschau ist ein leicht verändertes Vorgehen gegenüber den (später er
 
 Das Löschen wird so umgesetzt, das beim Klicken des Icons mit **setRemoveDialogOpen** der Dialog zum Löschen geöffnet und **itemToRemove** auf den Namen des Diagramms gesetzt wird, das gelöscht werden soll.
 * Im Dialog soll der Nutzer das Löschen bestätigen - macht er das, so wird von **deleteDiagram** das Objekt zum Diagramm mit dem festgelegten Namen gelöscht. Dabei ist der State von **itemToRemove** bereits gesetzt, da das Öffnen des Dialogs ein Rendering bedingt und so der State erneuert wird. Dies umgeht Probleme wie die bei der Diagrammvorschau, wo useEffect genutzt werden muss.
-
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-Öffnen von Diagramm-Editierung
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 <div style="page-break-after: always;"></div>
 
@@ -713,8 +703,18 @@ Wenn mindestens ein Element für den aktuell-gewählten Typen (Array/historisier
 Die beiden Setter-Methoden werden dabei als props von **DiagramCreation** weitergegeben und setzen den State, der die Konfigurationsobjekte für alle Arrays bzw. historisierte Daten enthält. Auf diese Weise wird mit den Ergebnisdaten der Auswahl von Typ und Datenelementen die Datengrundlage für den nächsten Schritt (Erstellung der eigentlichen Diagramme) gelegt. Die continue-Methoden gehen je nach ausgewählten Typ zur passenden Komponente weiter, da Diagramme mit Arrays und Diagramme mit historisierten Daten in verschiedenen Komponenten erstellt werden.
 * Dabei erstellt **createArrayObjects** zu jedem ausgewählten Array in **selectedArrays** ein passendes Objekt vom Typ **ArrayDiagramProperties**. Dieser Datentyp wurde bereits im Abschnitt zu *DiagramCreation* erläutert.
     * Dabei wird das **listItem**-Attribut auf das **ListItemRepresentation**-Objekt dieses Arrays gesetzt.
-    * Weiterhin setzt man die Attribute **numericAttributes** und **stringAttributes**, wenn es sich um ein Array handelt, das Objekte enthält.
-        * Diese Attribute sollen Arrays mit allen numerischen Attributen bzw. String-Attributen der Objekte enthalten und werden durch die Methoden **getNumericAttributes** und **getStringAttributes** generiert. Beide Methoden iterieren dazu schlicht durch alle Attribute der enthaltenen Objekte und prüfen die Typinformation auf *Zahl* bzw. *Text*.
+    * Weiterhin setzt man **numericAttributes**, wenn es sich um ein Array handelt, das Objekte enthält.
+        * Diese Attribute sollen Arrays mit allen numerischen Attributen bzw. String-Attributen der Objekte enthalten und werden durch die Methoden **getNumericAttributes** und **getStringAttributes** generiert.
+        * Im Allgemeinen dient **getNumericAttributes** der Durchsuchung eines Objektes innerhalb eines Arrays auf numerische Attribute, die man auf einem Diagramm abbilden könnte:
+            * Eine wichtige Besonderheit ist dabei, dass für die numerischen Attribute in **getNumericAttributes** nicht der vollständige Name, sondern nur der Pfad ab dem Array, welches betrachtet wird, angezeigt werden soll. Entsprechend wird anhand des Parameters **baseArrayName** der vollständige Pfad des Arrays, in dem sich die Objekte finden gespeichert. Beim ersten Aufruf wird kein Wert übergeben und somit sein default-Wert eines leeren Strings angenommen - ist das jedoch der Fall, wird sein Wert einmalig anhand des ersten im Array enthaltenen Attributes entnommen, er entspricht dessen **parentKeyName**.
+                * Sollte die Suche ein inneres Objekt finden, so ist es nötig, dass weiterhin der gleiche **baseArrayName** genutzt wird und nicht der Name des inneren Objekts in diesen mit einbezogen würde. Daher wird in den rekursiven Aufruf, der in diesem Fall gemacht wird der **baseArrayName** übergeben.
+                * Wenn ein Element hinzugefügt wird, wird zunächst sein vollständiger Pfad (mit Parent-Pfad) bestimmt und anschließend genau der String von seinem Anfang entfernt, der in **baseArrayName**. Auf diese Weise speichern wir für Attribute immer nur den vollständigen Pfad *innerhalb* des Arrays.
+            * Darüber hinaus wird in der Methode allgemein für das übergebene Array jede **ListItemRepresentation** durchlaufen. Handelt es sich um einen Key mit primitiven Wert, so wird geprüft, ob dieser den Typ "Zahl" oder "Gleitkommazahl" hat - wenn ja, dann fügt man es zur Liste **numericAttributes** hinzu, die als Ergebnisliste zurückgegeben wird.
+                * Stellt man hingegen fest, dass ein Key einen Wert hat, der ein Objekt ist, so wird dieses untersucht und in diesem weitere numerischen Keys oder Unterobjekten gesucht.
+                    * Um die Ergebnisse eines solchen Unterobjektes einzuschließen wird dessen Rückgabewert (die Liste aller numerischen Attribute) mit der Ergebnisliste des Aufrufers konkateniert.
+        * Analog funktioniert **getNumericAttributes**, hat dabei aber eine geringere Komplexität, weil es hier nicht notwendig ist, die Namen/Key-Pfade zu bearbeiten.
+            * So wird schlicht über alle **ListItemRepresentation**-Einträge des übergebenen Arrays iteriert und dabei alle gefundenen primitiven Werte mit dem value-Typ "Text" der Ergebnisliste **stringAttributes** hinzugefügt.
+            * Die Verarbeitung gefundener Subobjekte verläuft nach dem gleichen Schema wie in **getNumericAttributes**.
         * Diese Methoden werden natürlich nur aufgerufen, wenn es sich um Arrays mit Objekten handelt - bei Arrays mit Zahlen bleiben **numericAttributes** und **stringAttributes** leere Arrays.
     * Alle restlichen Werte werden mit default-Werten bzw. leeren Auswahlen belegt, da der Nutzer diese im nächsten Schritt konfigurieren soll. Die Objekte werden in einem Array gesammelt und dieses zurückgegeben, sodass die continue-Methode den State der höheren Komponente auf dieses Array setzen kann.
 * **createHistorizedObjects** funktioniert im Grunde genau gleich, jedoch sind die Objekte vom ebenfalls bereits in *DiagramCreation* erläuterten Typ **HistorizedDiagramProperties**.
@@ -727,12 +727,12 @@ Die beiden Setter-Methoden werden dabei als props von **DiagramCreation** weiter
 Die erste Variante der Diagramm-Erstellung ist die von Diagrammen mit Arrays und wird in der Komponente **ArrayDiagramCreator** umgesetzt. Diese umfasst zunächst einmal die Auswahl grundlegender Diagramm-Einstellungen (Typ und Anzahl der Werte), welche in die Komponente **BasicDiagramSettings** ausgelagert werden, da man sie auch bei historisierten Daten benötigt.
 * Folglich stellt die Einbindung dieser Komponente den ersten Teil der Komponente dar.
 
-Für jedes der im vorherigen Schritt gewählten Arrays kann der Nutzer hier einstellen, in welcher Farbe es auf dem Diagramm dargestellt wird, welche Werte genutzt werden sollen (im Falle von Arrays, die Objekte enthalten) und wie die Beschriftungen auf dem Diagramm aussehen sollen.
+Für jedes der im vorherigen Schritt gewählten Arrays kann der Nutzer hier einstellen, in welcher Farbe es auf dem Diagramm dargestellt wird, welche Werte genutzt werden sollen (im Falle von Arrays, die Objekte enthalten). Zudem kann er für das Diagramm als gesamtes Beschriftungen festlegen.
 
 Um zwischen den verschiedenen Arrays wechseln zu können wird ein **Select**-Element von Material-UI verwendet, bei welchem über die Methode **renderArraySelectItem** alle Elemente in **arrayObjects** der Auswahl hinzugefügt wurden.
 * Die Auswahl des Nutzers wird in **selectedArrayOrdinal** gespeichert. Hier haben wir uns entschieden, nicht das Objekt des aktuellen Arrays direkt zu speichern, sondern den Index des Objektes in **arrayObjects**. Die Nutzung von Zahlwerten als Wert eines Select bereitet hier und an anderen Stellen deutlich weniger Probleme.
     * Überall im Code, wo nun das aktuell gewählte Array benötigt wird genügt ein Zugriff `props.arrayObjects[selectedArrayOrdinal]` um das Objekt zu erhalten.
-    * Da sowohl die Farbauswahl, die Auswahl der zu nutzenden Daten als auch die Beschriftungsauswahl immer auf dem Objekt an der Stelle **selectedArrayOrdinal** basieren sorgt ein Wechsel der Auswahl des aktuellen Arrays dafür, dass sich die restlichen Optionen dynamisch anpassen und die gewählten Werte des jeweiligen Arrays angeben.
+    * Da sowohl die Farbauswahl als auch die Auswahl der zu nutzenden Daten immer auf dem Objekt an der Stelle **selectedArrayOrdinal** basieren sorgt ein Wechsel der Auswahl des aktuellen Arrays dafür, dass sich die angezeigten Optionen dynamisch anpassen und die gewählten Werte des jeweiligen Arrays angeben.
 
 Die Farbauswahl wird über einen einfachen HTML-Tag **\<input\>** mit dem Attribut **type="color"** gelöst. Leider bietet Material-UI hier keine eigene Lösung zur Farbauswahl, weswegen wir das "Bordmittel" der Browser nutzen.
 * Das funktioniert grundsätzlich auch gut, sieht in Firefox jedoch leider eher altmodisch aus. Statt einer Framework-Nutzung verbleiben wir trotzdem mit dieser vereinfachten Variante.
@@ -740,21 +740,27 @@ Die Farbauswahl wird über einen einfachen HTML-Tag **\<input\>** mit dem Attrib
     * Als Workaround nutzen wir die Methode **delayedColorChange**, welche über einen mit **setTimeout** und **clearTimeOut** verwalteten Timer den Wert des State erst dann ändert, wenn der Nutzer für 200ms keine Eingabe mehr macht.
         * Damit ändert sich die Farbvorschau des Input selbst erst dann, das Pop-Up im Vordergrund ist aber unabhängig vom State und passt die Farbe weiterhin dynamisch an, sodass wir dies als angebrachte Lösung betrachten.
 
-Die Auswahl eines Zahlen-Attributes ist bei allen Arrays nötig, welche Objekte enthalten und wird in diesem Fall (erkannt durch `Array.isArray(props.arrayObjects[selectedArrayOrdinal].listItem.value`) von der Methode **renderAttributeListItem** generiert. Es handelt sich hier um eine Liste von **Radio**-Komponenten (Radio Buttons), die in einer **RadioGroup** zusammengefasst werden
-* Diese hat als Wert mit **props.arrayObjects[selectedArrayOrdinal].numericAttribute** den Attributwert des momentan ausgewählten Arrays.
+Die Auswahl eines Zahlen-Attributes ist bei allen Arrays nötig, welche Objekte enthalten und wird in diesem Fall (erkannt durch `Array.isArray(props.arrayObjects[selectedArrayOrdinal].listItem.value`) von der Methode **renderNumericAttributeItem** generiert. Es handelt sich hier um eine Liste von **Radio**-Komponenten (Radio Buttons), die in einer **RadioGroup** zusammengefasst werden
+* Diese hat als Wert mit **props.arrayObjects[selectedArrayOrdinal].numericAttribute**, den Attributwert des momentan ausgewählten Arrays.
 * Wenn der Nutzer einen Radio-Button auswählt, wird die Änderung durch die Methode **numericAttributeChangeHandler** umgesetzt, welche das Attribut im entsprechenden Objekt aktualisiert (bzw. das Objekt ersetzt).
+* Für den Fall, dass keine numerischen Attribute enthalten sind, da es ein Array von primitiven Werten ist wird in der Methode **renderSelections** eine entsprechende Nachricht generiert. In **renderNumericAttributeItem** muss nichts gemacht werden, da das Array der numerischen Attribute hier schlicht Länge 0 hat und nichts gerendert wird.
 
-Auf gleiche Weise funktioniert die Auswahl eines String-Attributs zur Beschriftung. Hierbei wird jedem Zahl-Attribut aus dem Objekt als Beschriftung der Wert eines String-Attributes aus dem gleichen Objekt hinzugefügt. Die Generierung funktioniert auf gleiche Weise mit **renderAttributeListItem**, einziger Unterschied ist, dass nicht **numericAttribute**, sondern **stringAttribute** des aktuellen Arrays der Wert der **RadioGroup** ist und von der Methode **stringAttributeChangeHandler** geändert wird.
+Vergleichbar funktioniert die Auswahl eines String-Attributs zur Beschriftung, mit dem Unterschied, dass diese nicht für jedes Array einzeln, sondern gemeinsam für alle gemacht wird. Dabei dient die Methode **getLabelSelection** dazu, diese Auswahl darzustellen, sofern der Wert von **customLabels** für das aktuelle Diagramm **false** ist, d.h. es werden keine eigenen Beschriftungen, sondern String-Attribute verwendet.
+* Im entsprechenden Teil der Methode erfolgt dazu ein Rendering der Liste aller verfügbaren String-Attribute, **availableStringAttributes** per **.map()**-Methode, über die dann **renderStringAttributeItem** aufgerufen wird. Es handelt sich um eine einfache Methode, welche einen Radio-Button generiert, wie er bereits bei den numerischen Attributen genutzt wurde.
+    * Die Radio-Buttons sind dabei in einer **RadioGroup** zusammengefasst, deren Wert ebenfalls über einen Index verwaltet wird, der im State **stringAttributeIndex** steht. Für Änderungen ist die Methode **stringAttributeChangeHandler** verwendet.
+        * Diese Methode überschreibt sowohl den gewählten Index als auch den State von **selectedStringAttribute**, welcher ein Objekt zum aktuellen gewählten Attribut speichert. Dieses Attribut enthält getrennt den Namen des Arrays und den Namen des Key-Pfades innerhalb des Arrays - es handelt sich um ein für die Generierung relevantes Detail, welches im entsprechenden Abschnitt bei **createPlots()** erläutert wird.
+* Die Generierung der Liste **availableStringAttributes**, die alle möglichen String-Beschriftungen macht wird anhand einer **useEffect**-Hook gemacht, die beim ersten Render der Komponente aufgerufen wird. Sie durchläuft alle **arrayObjects**, da in diesen als Attribut **stringAttributes** die jeweils verfügbaren String-Attribute der Arrays mit Objekten aufgezählt werden.
+    * An dieser Stelle findet dann eine Umwandlung von einem einfachen String in ein Objekt des Typ **SelectedStringAttribute** statt, welcher mit **array** und **key** die Namen des Arrays und den Pfad des Attributs innerhalb des Arrays getrennt speichert. Wie bereits erwähnt ist das ein für die Generierung der Backend-Formate relevantes Detail.
+
 
 Die Alternative zur Beschriftung mit String-Attributen sind eigene Beschriftungen. Der Nutzer kann zwischen diesen und den String-Attributen mit einem entsprechenden Button wechseln, der den Wert von **customLabels** des entsprechenden Objekts des aktuellen Arrays ändert.
-* Für den Fall, dass ein Array in seinen Objekten keine String-Attribute enthält wird bei der Generierung in der vorherigen Komponente **customLabels** auf true gesetzt und der Button zum Wechsel nicht angeboten.
-* In der Methode **getLabelSelection** wird unterschieden, ob der Nutzer eigene Labels verwenden möchte oder nicht. Bei eigenen Labels wird dann die Komponente **CustomLabels** geladen, welche die Eingabefelder generiert (wird auch bei Diagrammen mit historisierten Daten genutzt, daher ausgelagert).
-* Da **customLabels** für jedes Array individuell gespeichert wird kann für jedes Array auch individuell zwischen eigenen Beschriftungen oder String-Attributen unterschieden werden.
-* Zuletzt ist noch die Unterscheidung zu erwähnen, dass es Arrays gibt, die nur primitive Werte (Zahlen enthalten). Dann braucht man nur eigene Beschriftungen und keine Auswahl von Zahlattributen, sodass die Textfelder auf voller Breite dargestellt werden. Die Unterscheidung findet in **renderSelections** statt.
+* In der Methode **getLabelSelection** wird dazu anhand von **customLabels** unterschieden, ob der Nutzer eigene Labels verwenden möchte oder nicht. Bei eigenen Labels wird dann die Komponente **CustomLabels** geladen, welche die Eingabefelder generiert (wird auch bei Diagrammen mit historisierten Daten genutzt, daher ausgelagert).
 
-Hinsichtlich des Wechselns zum nächsten Schritt wird in **checkProceed** geprüft, ob für jedes Array die nötigen Konfigurationen getroffen wurden:
-* Bei Arrays mit Objekten wurde ein Zahl-Attribut gewählt. Weiterhin wurde entweder ein String-Attribut gewählt oder alle Beschriftungen ausgefüllt.
-* Bei einem Array mit primitiven Werten wurden alle Beschriftungen ausgefüllt.
+Hinsichtlich des Wechselns zum nächsten Schritt wird in **checkProceed** geprüft, ob alle nötigen Konfigurationen getroffen wurden:
+* Wenn eigene Beschriftungen mit **customLabels** aktiviert wurden darf kein Eintrag in **labelArray** ein leerer String sein.
+* Wenn ein String-Attribut zur Beschriftung gewählt wurde dürfen weder **key** noch **array** von **selectedStringAttribute** den default-Wert eines leeren Strings haben, d.h. es muss eine Auswahl getroffen worden sein.
+* Bei Arrays mit Objekten muss ein Zahl-Attribut gewählt werden.
+
 
 Zuletzt zu erwähnen ist der Button zum Generieren einer Vorschau. Er nutzt die bereits in **DiagramCreation** erläuterte und als props übergebene Methode **fetchPreviewImage**, um vom Backend eine Vorschau des aktuellen Diagramms generieren zu lassen. Das **Dialog**-Element zeigt dann das zurückgesendete Bild an, damit der Nutzer eine Vorschau erhält.
 
@@ -774,11 +780,7 @@ Die Hauptunterschiede liegen in der Auswahl der Daten und Beschriftungen. Bei hi
 * Für jeden der Werte auf dem Diagramm, deren Anzahl durch **amount** bestimmt wurde generiert **renderIntervallChoiceItem** eine passende Auswahl mit einer Zahleneingabe, wie sie bereits bei **amount** genutzt wurde - bestehend aus einem **TextField** mit **type="number"**.
     * Dieses Mal gibt es über **inputProps** nur die Beschränkung, dass der Wert nicht kleiner als 0 sein darf.
 
-Bei der Auswahl der Beschriftungen wird standardmäßig in der Methode **renderSelections** die Komponente **CustomLabels** geladen, welche die Eingaben für eigene Labels entsprechend dem ausgewählten **amount** generiert.
-* Es gibt jedoch auch einen Button, über den man zur Beschriftung mit einem Datum wechseln kann. Dieser Button wechselt den Wert von **dateLabels** beim Objekt des aktuellen historisierten Datums.
-    * Im Falle der Beschriftung mit einem Datum wird hier der in der Datenbank hinterlegte Zeitpunkt der Historisierung als formatiertes Datum geschrieben. Per **Select**-Komponente kann der Nutzer hier zwischen verschiedenen Anzeigeformaten wechseln. Gespeichert wird die Auswahl in **dateFormat**.
-* Da **dateLabels** für jedes Objekt in **historizedObjects** individuell gespeichert wird lässt sich für jedes historisierte Datum im Diagramm einzeln zwischen eigener Beschriftung und einem Datum wählen.
- * Anmerkung: Wie im Disclaimer am Anfang dieses Abschnitts erwähnt konnte der Backend-Support für dieses Feature nicht mehr realisiert werden, sodass der Code **auskommentiert** wurde.
+Bei der Auswahl der Beschriftungen wird standardmäßig in der Methode **renderSelections** die Komponente **CustomLabels** geladen, welche die Eingaben für eigene Labels entsprechend dem ausgewählten **amount** generiert. Da historisierte Daten nur primitiv sind und keine Objekte umfassen gibt es hier entsprechend auch keine String-Attribute zur Auswahl
 
 <div style="page-break-after: always;"></div>
 
@@ -811,14 +813,9 @@ Deren Kern stellt die Methode **renderLabelInput** dar, welche eine Eingabe für
 * Aufgerufen wird sie durch `Array.from(Array(props.amount).keys()).map((ordinal) => renderLabelInput(ordinal))`, wobei ein Array mit den Zahlen von 1 bis *amount* generiert wird und für jeden der Einträge eine Texteingabe durch den Aufruf von **renderLabelInput** erstellt wird.
     * Auf diese Weise entspricht die Anzahl der Eingaben immer genau der ausgewählten Anzahl an darzustellenden Daten.
 
-In der Methode selbst wird zunächst unterschieden, ob die Komponente über **ArrayDiagramCreator** oder **HistorizedDiagramCreator** genutzt wird - dies funktioniert auf die gleiche Art und Weise wie auch bei **BasicDiagramSettings**: **props.arrayObjects**/**props.selectedArrayOrdinal** und **historizedObjects**/**selectedHistorizedOrdinal** sind alle optional und werden nur mit Werten belegt, wenn die zugehörige Komponente **CustomLabels** nutzt.
-* Wenn also kein *undefined* für die Array-Properties vorliegt wird es für Diagramme mit Arrays genutzt - umgekehrt für historisierte Daten.
-* Die Unterscheidung in der Generierung liegt darin, dass sich für das **TextField** das Attribut **value** auf die jeweiligen gesetzten Properties bezieht. Man hätte dies zwar per ternären Operator Inline lösen können, im Sinne besserer Lesbarkeit wird aber if-else genutzt.
-* Besonders hervorzuheben ist, dass es bei den Textfeldern für Arrays noch eine Unterscheidung bei **className** gibt. Per ternären Operator wird `Array.isArray(props.arrayObjects[props.selectedArrayOrdinal].listItem.value)` geprüft, welches sicherstellt, dass das zugrunde liegende Array Objekte enthält.
-    * In diesem Fall wird eine Style-Klasse für die übliche halbe Bildbreite verwendet. Wenn das Array jedoch primitive Daten enthält wird die Texteingabe auf voller Breite dargestellt, sodass entsprechende Style-Anpassungen vorgenommen werden.
-
-
-Bei Änderungen an den Eingabefeldern wird **labelChangeHandler** genutzt, welcher nach gleichem Schema wie im vorherigen Abschnitt zwischen Array und historisierten Daten differenziert. Es wird dann jeweils der String mit der Eingabe überschrieben und das Objekt im Array neu gesetzt.
+In der Methode wird eine Reihe an **ListItem**s generiert, welche jeweils ein **TextField** für die Eingabe eines Labels enthalten. Diese beziehen sich jeweils auf das per **props** übergebene **labelArray**, das die Beschriftungen für das Diagramm enthält.
+* Anhand des Index **ordinal** eines Eintrags wird dann auf das jeweilige Datum im Array zugegriffen.
+* Bei Änderungen wird durch **labelChangeHandler** dafür gesorgt, dass das neue Label in den entsprechenden Eintrag von **labelArray** geschrieben wird.
 
 <div style="page-break-after: always;"></div>
 
@@ -828,7 +825,7 @@ Den Abschluss der gesamten Infoprovider-Erstellung stellt das Senden des fertig 
 Das allgemeine Ziel beim Entwurf des Datenformats war, dass bereits möglichst große Anteile der im Backend benötigten Struktur im Frontend passend generiert werden, gleichzeitig aber auch alle Informationen so gespeichert sind, dass sie zum Bearbeiten des Infoproviders leicht zugänglich sind. Wenn ein konkreter Infoprovider per ID angefragt wird (das ist bei der Bearbeitung der Fall) liefert das Backend genau das JSON-Objekt zurück, welches beim Erstellen durch das Frontend geliefert wurde - daher muss diese Datenstruktur so ausgelegt sein, dass die Informationen zur Bearbeitung zugänglich sind.
 * Ein Nachteil ist, dass manche Information redundant dargestellt wird - hinsichtlich des restlichen Codes zahlt sich diese "Investition" jedoch aus.
 
-Abgesendet wird das fertige Datenformat durch den Button "Abschließen" in **SettingsOverview** - dann wird die in **CreateInfoProvider** liegende Methode **postInfoProvider aufgerufen**.
+Abgesendet wird das fertige Datenformat durch den Button "Abschließen" in **SettingsOverview** - dann wird die in **CreateInfoProvider** liegende Methode **postInfoProvider** aufgerufen.
 
 ### Überblick über das Datenformat
 Das folgende Datenformat ist unsere allgemeine Definition des Datenformats für einen Infoprovider, über das wir mit dem Backend kommunizieren - im folgenden soll dann auf die einzelnen Abschnitte im Detail eingegangen werden.
@@ -854,6 +851,7 @@ Das folgende Datenformat ist unsere allgemeine Definition des Datenformats für 
                 {
                     formelName: <formelName>,
                     formelString: <formelString>
+                    usedFormulaAndApiData: <Array<string>>
                 },
                 ...
             ],
@@ -861,13 +859,9 @@ Das folgende Datenformat ist unsere allgemeine Definition des Datenformats für 
                 {
                     type: "calculate",
                     action: <action>,
-                    keys: [
-                        "_loop|" + <arrayName>,
-                        ...
-                    ],
-                    new_keys: [
-                        "_loop|" + <processingName>,
-                    ],
+                    keys: ["_req|" + <arrayName>],
+                    innerKey: [<innerKey>],
+                    new_keys: [<processingName>],
                     decimal: 2
                 },
                 ...
@@ -891,13 +885,14 @@ Das folgende Datenformat ist unsere allgemeine Definition des Datenformats für 
                 type: <type>,
                 time: <time>,
                 date: <date>,
-                time_interval: <timeInterval>,
-                weekdays: [<int>]
+                timeInterval: <timeInterval>,
+                weekdays: [Array<int>]
             }
             selected_data: [selectedData]
             historized_data: [String]
             arrayProcessingsList: [ArrayProcessingData]
             stringReplacementList: [StringReplacementData]
+            listItems: [Array<ListItemRepresentation>]
         },
         ...
     ],
@@ -913,7 +908,6 @@ Das folgende Datenformat ist unsere allgemeine Definition des Datenformats für 
                     {
                         customLabels: <boolean>,
                         primitive: <boolean>,
-                        dateLabels: <boolean>,
                         plot: {
                             type: <type>,
                             x: [<indices>],
@@ -957,14 +951,14 @@ Als nächstes folgen Arrays mit den Daten zu der jeweiligen Datenquelle. Hier is
 
 **formulas** umfasst alle vom Nutzer erstellten Formeln. Es handelt sich um ein Array von Objekten, die im Grunde den vom Frontend genutzten Typ **FormelObj** haben. Hier kann also direkt **customData** der Datenquelle übergeben werden.
 
-**calculates** ist bereits etwas komplizierter - unter diesem Namen werden alle Array-Verarbeitungen gespeichert. Dabei handelt es sich um ein Array, welches allgemein Objekte der dargestellten Struktur enthält. Wichtig ist dabei aber zu wissen, das **nicht** für jede Verarbeitung ein eigenes Objekt vorliegt, sondern insgesamt genau 4.
-* Das liegt daran, dass ein Objekt immer für einen Operations-Typ steht - bei uns **sum**, **mean**, **min** und **max**. Im Key **action** wird gespeichert, für welche Operation dieses Array gilt.
-* Entsprechend werden bei der Erstellung alle Verarbeitungen eines Typs gesammelt und in ein Objekt geschrieben. In **keys** findet sich eine Auflistung der Arrays, die verarbeitet werden sollen. Ihnen wird `_loop|` vorangestellt, da dies im Backend dafür sorgt, dass einmal alle Elemente des Arrays durchlaufen werden.
-    * Analog ist **new_keys** ein Array mit allen Namen, die die als Ergebnis der Operation entstandenen Keys haben sollen. Dabei ist es von Seiten des Backends optional, ein solches Array anzugeben - ist es leer, so werden die **keys** der API durch die verarbeitete Variante ersetzt.
+**calculates** ist bereits etwas komplizierter - unter diesem Namen werden alle Array-Verarbeitungen gespeichert. Dabei handelt es sich um ein Array, welches allgemein Objekte der dargestellten Struktur enthält. Dabei ist für jede Array-Verarbeitung ein eigenes Objekt enthalten.
+*  In **keys** findet sich jeweils der Name des Arrays, das verarbeitet werden sollen. Ihm wird `_req|` vorangestellt, da dies im Backend als spezifisches Datenformat benötigt wird.
+    * Analog ist **new_keys** ein Array mit dem Namen, das der als Ergebnis der Operation entstandene Key haben soll. Dabei ist es von Seiten des Backends optional, ein solches Array anzugeben - ist es leer, so wird der Name in **keys** der API durch die verarbeitete Variante ersetzt.
         * Wir haben uns aber entschieden, aus Gründen der Einfachheit Ergebnisse von Array-Operationen immer als neue Datenwerte zu speichern.
+    * **innerKey** wird nur benötigt, wenn es sich um ein Array handelt, welches Objekte enthält. In diesem Fall ist hier der Key-Pfad des Attributs innerhalb des Arrays aufgelistet. Bei primitiven Arrays wird der Wert nicht gesetzt.
 * Zuletzt gibt **decimals** an, wie viele Dezimalstellen bei der Berechnung genutzt werden sollen - wir haben hier pauschal 2 festgelegt. Eine allgemeine Möglichkeit zur Einstellung könnte aber im Frontend implementiert werden.
 
-**replacements** ist dann das Array von allen String-Verarbeitungen und hat ein ähnliches Format. Hier ist es jedoch so, dass für jede String-Verarbeitung ein eigenes Objekt existiert. Das Array **key** speichert den Namen des zu verarbeitenden Strings, **new_keys** den Namen des durch die Verarbeitung entstehenden Namens. Auch hier ist **new_keys** optional, sodass man die Werte der API ersetzen lassen könnte. Wir legen jedoch immer neue Daten an.
+**replacements** ist dann das Array von allen String-Verarbeitungen und hat ein ähnliches Format. Das Array **key** speichert den Namen des zu verarbeitenden Strings, **new_keys** den Namen des durch die Verarbeitung entstehenden Namens. Auch hier ist **new_keys** optional, sodass man die Werte der API ersetzen lassen könnte. Wir legen jedoch immer neue Daten an.
 * Obwohl beide Keys nur einen Namen umfassen müssen für das Backend-Datenformat Arrays genutzt werden.
 * **old_value** ist dann der zu ersetzende String, während **new_value** der einzufügende String ist.
 * Abschließend gibt **count** an, wie oft eine solche Ersetzung stattfinden soll. Da das Frontend (derzeit) keine Option hat, dies einzustellen verwenden wir **-1**, welches beliebig oft Ersetzungen ermöglicht.
@@ -973,7 +967,9 @@ Es folgt mit **schedule** das Objekt, welches die Informationen der Historisieru
 
 **historized_data** benötigt das Backend um zu wissen, welche Daten historisiert wurden.
 
-Es folgen drei Arrays, die für die Verarbeitung im Backend nicht benötigt werden - **selected_data**, , **arrayProcessingsList** und **stringReplacementList**. Die ausgewählten Daten dienen nur der Eingrenzung der Anzeigemenge im Frontend und die Array-Operationen bzw. String-Ersetzungen werden als eigene Datenstrukturen für das Backend aufbereitet. Wir geben diese dennoch in das Datenformat ein, da wir die Informationen aller drei beim Bearbeiten wiederherstellen müssen - die Wiederherstellung aus **calculates** würde beispielsweise einen eigenen Methodendurchlauf erfordern usw., weshalb wir die komfortable Möglichkeit nutzen, die Daten direkt in der vom Frontend benötigten Form im Backend zu lagern.
+Es folgen vier Arrays, die für die Verarbeitung im Backend nicht benötigt werden - **selected_data**, , **arrayProcessingsList**, **stringReplacementList** und **listItems**. Die ausgewählten Daten dienen nur der Eingrenzung der Anzeigemenge im Frontend und die Array-Operationen bzw. String-Ersetzungen werden als eigene Datenstrukturen für das Backend aufbereitet. Wir geben diese dennoch in das Datenformat ein, da wir die Informationen aller vier beim Bearbeiten wiederherstellen müssen - die Wiederherstellung aus **calculates** würde beispielsweise einen eigenen Methodendurchlauf erfordern usw., weshalb wir die komfortable Möglichkeit nutzen, die Daten direkt in der vom Frontend benötigten Form im Backend zu lagern.
+* Wir hätten hierbei die Speicherung von **listItems** gerne vermieden, da es sich um das geparste API-Objekt der Datenquelle handelt. Wenn man es jedoch nicht speichert müssen in der Bearbeitung die Datenquellen neu angefragt werden - wir machen das zwar bereits einmalig zur Überprüfung, ob alle Werte noch da sind, aber auch nur dann, wenn eine einzelne Datenquelle bearbeitet wird. Für Diagramme hingegen müsste man sofort alle Datenquellen anfragen.
+* Um die Anzahl der API-Requests, die wir senden in einem möglichst kleinen Rahmen zu halten speichern wir deshalb das Objekt im Backend zwischen und stellen es wieder her. Gerade bei APIs mit kostenpflichtigen bzw. begrenzten Abfragen dürfte dies für den Nutzer sehr wichtig sein.
 
 ### Methode zur Generierung
 **postInfoProvider** übernimmt die Generierung dieses Datenformats nicht selbst, sondern ruft die Methode **createDataSources** auf. Diese durchläuft das Array **dataSources** mit allen Datenquellen und generiert für jede Datenquelle ein Objekt des Typ **BackendDataSource**, der dem vorgestellten Format entspricht.
@@ -984,9 +980,9 @@ api_key_name: dataSource.method === "BearerToken" ? dataSourcesKeys.get(dataSour
 ```
 Gegenüber den Methoden des Frontends kommt noch die neue Methode **noAuth** hinzu, die wir setzen, wenn **noKey true** ist, d.h. keine Authentifizierung genutzt wird.
 
-Zuletzt werden **CreateCalculates** und **createReplacements** aufgerufen, um die entsprechenden Arrays zu generieren:
-* **createCalculates** geht dabei durch alle Array-Verarbeitungen durch und gruppiert diese in vier Arrays, eines für jeden Operationstyp. Basierend auf dieser Gruppierung generiert es dann die vier Objekte.
-* **createReplacements** funktioniert einfacher, da man hier einfach nur alle String-Ersetzungen durchgehen muss und jeweils ein passendes Objekt generiert.
+Zuletzt werden **createCalculates** und **createReplacements** aufgerufen, um die entsprechenden Arrays zu generieren:
+* **createCalculates** geht dabei durch alle Array-Verarbeitungen durch und erstellt wie oben beschrieben für jede dieser ein eigenes Objekt.
+* **createReplacements** geht alle String-Ersetzungen durch und generiert jeweils ein passendes Objekt.
 
 ## Diagramm-Datenformat
 Das Datenformat, in dem die Informationen über ein Diagramm an das Backend gesendet werden orientiert sich an dem Format, welches auch die Diagramm-Generierung des bisherigen Projektes im Backend erwartet. Basierend darauf wurde folgendes Format entworfen, in dem der Typ **Plots** zur Kapselung der Informationen über ein einzelnes Array/historisiertes Datum verwendet wird:
@@ -1004,32 +1000,31 @@ Das Datenformat, in dem die Informationen über ein Diagramm an das Backend gese
 export type Plots = {
     customLabels?: boolean;
     primitive?: boolean;
-    dateLabels?: boolean;
     plots: {
         type: string;
         x: Array<number>;
         y: string;
-        style: string;
         color: string;
         numericAttribute?: string;
         stringAttribute?: string;
-        dateFormat?: string;
         x_ticks: {
             ticks: Array<string>;
         };
     };
 }
 ```
-* Im Grunde entspricht das Format einem im Backend genutzten Objekt für mehrere Diagramme, die gemeinsam gedruckt werden sollen. Die Objekte beginnen mit einem **type: "diagram_custom"**, der angibt, dass es ein Diagramm ist. Es folgt dann ein Unterobjekt **diagram_config**, in dem **infoProviderName**, **type "custom"** und ein Name **name** gefolgt von einem Array **plots** zu finden sind. Zudem gibt es noch **sourceType**, welcher angibt, ob es ein Diagramm aus Arrays oder historisierten Daten ist. Anhand dieses Keys weiß das Backend, welche Keys es in **plots** zu erwarten hat.
+* Im Grunde entspricht das Format einem im Backend genutzten Objekt für mehrere Diagramme, die gemeinsam gedruckt werden sollen. Die Objekte beginnen mit einem **type: "diagram_custom"**, der angibt, dass es ein Diagramm ist. Es folgt dann ein Unterobjekt **diagram_config**, in dem **type "custom"** und ein Name **name** gefolgt von einem Array **plots** zu finden sind. Zudem gibt es noch den Key **sourceType**, welcher angibt, ob es ein Diagramm aus Arrays oder historisierten Daten ist. Anhand dieses Keys weiß das Backend, welche Keys es in **plots** zu erwarten hat.
 * Als erstes ist statt dem richtigen Plot-Array in Plots eine Reihe an Meta-Informationen enthalten: **customLabels** wird nur bei Arrays genutzt und auf true gesetzt, wenn eigene Beschriftungen genutzt wurden. **primitive** wird genauso nur bei Arrays genutzt und gibt an, ob das Array primitive Daten (true) oder Objekte (false) enthält.
-    * **dateLabels** wird nur bei historisierten Daten verwendet und gibt an, dass als Beschriftung das jeweilige Datum genutzt werden soll.
 * In jedem Plots-Array ist dann ein Diagrammtyp **type** angegeben (das Backend ermöglicht das Vermischen verschiedener Typen, hier ist er bei jedem gleich).
 * Das Array **x** ist ein Array von Zahlen und enthält bei Diagrammen mit Arrays die Indizes, die aus dem Array angezeigt werden sollen. Dies sind immmer die Indizes 0 bis *amount*-1. Bei historisierten Daten hingegen steht in diesem Array die Anzahl der Intervalle, die das angezeigte Datum in der Vergangenheit liegen soll.
 * Der String **y** enthält dann den Namen des Arrays bzw. historisierten Datums, von dem Daten angezeigt werden sollen.
+    * Es muss hier eine Transformation an dem eigentlichen Namen vorgenommen werden, indem **_req** vorangestellt und geschweifte Klammern um den Namen gesetzt werden. Es handelt sich um Datenformat-Anpassungen für das Backend.
 * **color** ist die vom Nutzer gewählte Farbe.
-* Die folgenden Attribute sind optional: **numericAttribute** und **stringAttribute** werden bei Arrays genutzt und enthalten die Namen der gewählten Attribute (bei String nur, wenn keine eigenen Beschriftungen gewählt werden).
-    * **dateFormat** wird nur bei historisierten Daten genutzt und gibt das Datumsformat an, das gebraucht wird, wenn die Beschriftungen Daten sein sollen.
+* Die folgenden Attribute sind optional: **numericAttribute** und **stringAttribute** werden bei Arrays genutzt und enthalten die Namen der gewählten Attribute.
+    * Hinsichtlich der String-Attribute tritt hier eine Besonderheit auf: Es kann immer nur ein Attribut gewählt werden, welches dann für das gesamte Diagramm als Beschriftung genutzt wird. Die Methode **createPlots** entnimmt dazu den Namen des entsprechenden Arrays, von dem dieses Datum stammt aus **diagram.stringAttribute**, welches den **SelectedStringAttribute**-Wert enthält, der in **ArrayDiagramCreator** festgelegt wurde. Da ein Attribut nur in dem Plot angesprochen werden darf, in dem es auch im dargestellten Array enthalten ist wird beim Durchlaufen der Arrays anhand dieses Namens der passende Plot gefunden und nur hier **stringAttribute** gesetzt.
+        * Weiterhin wird der getroffene Plot als letzter Plot generiert. Dies liegt daran, dass im Backend die Beschriftungen der Plots nacheinander überlagert werden - wir wollen daher, dass der oberste Layer die gewünschte Beschriftung ist und setzen das entsprechende Array daher als letzten Plot in der Liste.
 * Zuletzt enthält das Objekt **x_ticks** ein Array mit Strings **ticks**. Diese sind die vom Benutzer manuell gewählten Beschriftungen, sofern er solche nutzt.
+    * Auch hier trifft das Prinzip zu, dass das Backend die Beschriftungen aller Plots überlagern wird. Wir setzen das Array mit den Beschriftungen daher nur beim letzten Plot des Arrays.
     * Man könnte in **x_ticks** auch Style-Informationen ergänzen, diese nutzen wir vorher nicht.
 Die Unterscheidung zwischen Array und historisierten Daten kann anhand dessen gemacht werden, welche Keys enthalten sind und welche nicht.
 
