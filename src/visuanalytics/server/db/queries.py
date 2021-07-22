@@ -266,18 +266,13 @@ def insert_video_job(video, update=False, job_id=None):
 
     # Daten aller verwendeten Infoprovider sammeln und kombinieren
     scene_names = [x["sceneName"] for x in video["sceneList"]]
-    print("scene_names", scene_names)
     infoprovider_id_list = [list(con.execute("SELECT infoprovider_id FROM scene INNER JOIN scene_uses_infoprovider AS uses ON scene.scene_id = uses.scene_id WHERE scene_name=?", [scene_name])) for scene_name in scene_names]
-    print("infoprovider_id_list", infoprovider_id_list)
     infoprovider_ids = []
     for id in infoprovider_id_list:
         infoprovider_ids += id
     infoprovider_ids = [x["infoprovider_id"] for x in infoprovider_ids]
-    print("infoprovider_ids", infoprovider_ids)
     infoprovider_file_names = [get_infoprovider_file(id) for id in infoprovider_ids]
-    print("infoprovider_file_names", infoprovider_file_names)
     infoprovider_names = [get_infoprovider_name(id) for id in infoprovider_ids]
-    print("infoprovider_names", infoprovider_names)
     for infoprovider_name, file_name in zip(infoprovider_names, infoprovider_file_names):
         with open_resource(file_name, "r") as f:
             infoprovider = json.load(f)
@@ -1381,9 +1376,11 @@ def generate_request_dicts(api_info, method, api_key_name=None):
     """
     header = {}
     parameter = {}
-    if method != "noAuth":
+    if method != "noAuth" and method != "BearerToken":
         api_key_for_query = api_info["api_key_name"].split("||")[0]
         api_key = api_info["api_key_name"].split("||")[1]
+    elif method == "BearerToken":
+        api_key = api_info["api_key_name"]
     else:
         return header, parameter
 
