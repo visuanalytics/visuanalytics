@@ -205,12 +205,12 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             //find all images and set the new url by their id
             for (let index = 0; index < restoredItems.length; index++) {
                 //check if the current item is an image
-                if(restoredItems[index].hasOwnProperty("image")) {
+                if (restoredItems[index].hasOwnProperty("image")) {
                     let castedItem = restoredItems[index] as CustomImage;
                     //create a new image
                     castedItem.image = new window.Image();
                     //if it is a diagram, we need to find it in the diagramList instead of the imageList
-                    if(castedItem.diagram) {
+                    if (castedItem.diagram) {
                         //console.log(castedItem.diagramName)
                         //loop through the diagramList and find the diagram with the same name to get its url
                         for (let i = 0; i < diagramList.length; i++) {
@@ -281,13 +281,13 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             const restoredItems = sessionStorage.getItem("items-" + uniqueId) === null ? new Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>() : JSON.parse(sessionStorage.getItem("items-" + uniqueId)!);
             //find all images and set the new url by their id
             for (let index = 0; index < restoredItems.length; index++) {
-                if(restoredItems[index].hasOwnProperty("image")) {
+                if (restoredItems[index].hasOwnProperty("image")) {
                     let castedItem = restoredItems[index] as CustomImage;
                     //console.log("image item:");
                     //console.log(castedItem)
                     castedItem.image = new window.Image();
                     //if it is a diagram, we need to find it in the diagramList instead of the imageList
-                    if(castedItem.diagram) {
+                    if (castedItem.diagram) {
                         castedItem.image.src = diagramList[castedItem.index] !== undefined ? diagramList[castedItem.index].url : "";
                     } else {
                         castedItem.image.src = imageList[castedItem.index] !== undefined ? imageList[castedItem.index].image_blob_url : "";
@@ -383,20 +383,18 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     }
 
 
-
-
     /**
      * Method to create a duplicate of the current stage to create the base image for the rendered scene
      * @param itemArray the itemlist used to create the duplicate stage
      */
-    const dupeStage = (itemArray : Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>) => {
+    const dupeStage = (itemArray: Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>) => {
         //creation of a new stage with the same properties as the old stage
         let duplicateStage = new Konva.Stage({container: "backgroundStage", visible: true, width: 960, height: 540});
         //creation of a new Layer for that stage
         let duplicateLayer = new Konva.Layer();
         duplicateStage.destroyChildren();
         //depending on the current backgroundtype, set the lowest element on the layer
-        if (backGroundType === "COLOR"){
+        if (backGroundType === "COLOR") {
             duplicateLayer.add(new Konva.Rect({
                 fill: currentBGColor,
                 width: 960,
@@ -411,9 +409,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         }
         //check all elements in the array, depending on the type, create a new element and add it to the layer
         for (let i = 0; i < itemArray.length; i++) {
-            let duplicateItem : any;
-            if (!itemArray[i].id.startsWith("image") && !itemArray[i].id.startsWith("text")){
-                if (itemArray[i].id.startsWith("circle")){
+            let duplicateItem: any;
+            if (!itemArray[i].id.startsWith("image") && !itemArray[i].id.startsWith("text")) {
+                if (itemArray[i].id.startsWith("circle")) {
                     duplicateItem = new Konva.Circle({
                         radius: 50,
                         x: itemArray[i].x,
@@ -426,7 +424,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                         height: itemArray[i].height,
                         rotation: itemArray[i].rotation,
                     })
-                } else if (itemArray[i].id.startsWith("rect")){
+                } else if (itemArray[i].id.startsWith("rect")) {
                     duplicateItem = new Konva.Rect({
                         fill: itemArray[i].color,
                         id: itemArray[i].id,
@@ -438,7 +436,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                         y: itemArray[i].y,
                         rotation: itemArray[i].rotation,
                     })
-                } else if (itemArray[i].id.startsWith("line")){
+                } else if (itemArray[i].id.startsWith("line")) {
                     duplicateItem = new Konva.Line({
                         fill: itemArray[i].color,
                         id: itemArray[i].id,
@@ -449,11 +447,11 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                         rotation: itemArray[i].rotation,
                         x: itemArray[i].x,
                         y: itemArray[i].y,
-                        points: [0,0,100,0,100,100],
+                        points: [0, 0, 100, 0, 100, 100],
                         closed: true,
                         stroke: itemArray[i].color,
                     })
-                } else if (itemArray[i].id.startsWith("star")){
+                } else if (itemArray[i].id.startsWith("star")) {
                     duplicateItem = new Konva.Star({
                         numPoints: 5,
                         innerRadius: 50,
@@ -509,7 +507,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     }
 
 
-
     //variables used for storing values while preparing and doing the posting of a finished scene
     //stores the id the background was stored with by the backend
     const backgroundID = React.useRef(-1);
@@ -554,9 +551,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      */
     const createJSONExport = React.useCallback(() => {
         //empty array for all text and image elements (except background)
-        let onlyTextAndImages : Array<CustomText|CustomImage> = [];
+        let onlyTextAndImages: Array<CustomText | CustomImage> = [];
         //array for all datatext and dataimage elements, used for export
-        let dataTextAndImages : Array<DataText|DataImage> = [];
+        let dataTextAndImages: Array<DataText | DataImage> = [];
         // push all images and texts in the onlyTextAndImages array
         for (let index = 0; index < items.length; index++) {
             if (items[index].id.startsWith('text')) {
@@ -574,7 +571,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             scene_name: sceneName,
             used_images: imageIDArray.current.concat([backgroundID.current, scenePreviewID.current]),
             used_infoproviders: propsSceneFromBackend !== undefined ? propsSceneFromBackend.used_infoproviders : [infoProviderId],
-            images:  base,
+            images: base,
             backgroundImage: backgroundImageList[backgroundImageIndex].image_id,
             backgroundType: backGroundType,
             backgroundColor: currentBGColor,
@@ -642,7 +639,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * Method for displaying an error message for errors happening while posting the
      * export of the scene to the backend.
      */
-    const handleExportSceneError= React.useCallback((err: Error) => {
+    const handleExportSceneError = React.useCallback((err: Error) => {
         reportError("Fehler beim Senden des Exports der Szene: " + err);
         setClickedSaveButton(false);
     }, [reportError]);
@@ -704,7 +701,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * Method for displaying an error message for errors happening while posting the
      * preview of the scene to the backend - this will also stop the communication chain.
      */
-    const handlePostScenePreviewError= React.useCallback((err: Error) => {
+    const handlePostScenePreviewError = React.useCallback((err: Error) => {
         reportError("Fehler beim Senden des Szenen-Preview: " + err);
         setClickedSaveButton(false);
     }, [reportError]);
@@ -724,8 +721,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         //starts fetching the contents from the backend
         fetch(url, {
             method: "POST",
-            headers: {
-            },
+            headers: {},
             body: formData,
             signal: abort.signal
         }).then((res: Response) => {
@@ -751,9 +747,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      */
     const createPreviewImage = React.useCallback(async () => {
         console.log("creating the preview image");
-        if (stageRef.current !== null){
+        if (stageRef.current !== null) {
             const originalStage = saveHandler(stageRef.current);
-            if (originalStage !== "Empty Stage"){
+            if (originalStage !== "Empty Stage") {
                 const blobVar = await fetch(originalStage).then(res => res.blob());
                 let file = new File([blobVar], 'preview.png', {
                     type: "image/png"
@@ -807,8 +803,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         //starts fetching the contents from the backend
         fetch(url, {
             method: "POST",
-            headers: {
-            },
+            headers: {},
             body: formData,
             signal: abort.signal
         }).then((res: Response) => {
@@ -830,11 +825,11 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * Method to save a stage as png file.
      * @returns an stage as a png image
      */
-    const saveHandler = (currentStage : Konva.Stage) => {
+    const saveHandler = (currentStage: Konva.Stage) => {
         // create the picture of the stage
         let stageImage = "Empty Stage"
-        if (currentStage !== null && currentStage !== undefined){
-           stageImage = currentStage?.toDataURL();
+        if (currentStage !== null && currentStage !== undefined) {
+            stageImage = currentStage?.toDataURL();
         }
         return stageImage;
     }
@@ -937,7 +932,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     }
 
 
-
     /**
      * Handler method for successful backend calls for posting new images to the backend.
      * Takes the id of the created image delivered by the backend and starts fetching the image
@@ -1032,7 +1026,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * Gets called when an element drag is started.
      */
     const handleDragStart = () => {
-        if (mainRef.current !== null){
+        if (mainRef.current !== null) {
             mainRef.current.style.cursor = "grabbing";
         }
     };
@@ -1042,7 +1036,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * Gets called when a drag event comes to an end
      */
     const handleDragEnd = () => {
-        if (mainRef.current !== null){
+        if (mainRef.current !== null) {
             mainRef.current.style.cursor = "grab";
         }
 
@@ -1087,7 +1081,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             setSelectedItemName("");
             // check if the user is currently editing a text
             // complete the edit
-            if (currentlyEditing){
+            if (currentlyEditing) {
                 const localItems = items.slice();
                 const index = items.indexOf(selectedObject);
                 const objectCopy = {
@@ -1260,7 +1254,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             }
             case "Text": {
                 const arCopy = items.slice();
-                if (currentTextContent !== ""){
+                if (currentTextContent !== "") {
                     arCopy.push({
                         x: parseInt(localX.toFixed(0)),
                         y: parseInt(localY.toFixed(0)),
@@ -1297,9 +1291,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * @param diagram Boolean flag indicating if the image is a diagram
      * @param diagramName Name of the diagram, empty if it is an image
      */
-    const addImageElement = (image : HTMLImageElement, id: number, path: string, index: number, diagram: boolean, diagramName: string) => {
+    const addImageElement = (image: HTMLImageElement, id: number, path: string, index: number, diagram: boolean, diagramName: string) => {
         console.log(image)
-        let obj : CustomImage = {
+        let obj: CustomImage = {
             id: 'image-' + itemCounter.toString(),
             x: 0,
             y: 0,
@@ -1321,7 +1315,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         while (obj.width * obj.scaleX > 960) {
             obj.scaleX *= 0.5;
         }
-        while (obj.height * obj.scaleY > 540){
+        while (obj.height * obj.scaleY > 540) {
             obj.scaleY *= 0.5;
         }
         const arCopy = items.slice();
@@ -1427,7 +1421,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * Method to clear the canvas but keep removed elements
      */
     const clearCanvas = () => {
-        if (mainRef.current !== null){
+        if (mainRef.current !== null) {
             mainRef.current.style.cursor = "crosshair";
         }
         setCurrentXCoordinate(0);
@@ -1463,7 +1457,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * @returns the position of the pointer
      */
     const getRelativePointerPosition = () => {
-        if(stageRef.current !== null) {
+        if (stageRef.current !== null) {
             let pos = stageRef.current.getPointerPosition();
             return (pos);
         }
@@ -1474,7 +1468,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * Method to select the type of element, that will get added next
      */
     const selectType = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        if (mainRef.current !== null){
+        if (mainRef.current !== null) {
             mainRef.current.style.cursor = "crosshair";
         }
         setSelectedType(event.target.value);
@@ -1490,26 +1484,26 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         if (!itemSelected) {
             //delete the image from the list of used IDs
             if (items.length > 0) {
-                if(items[items.length-1].id.startsWith("image")) {
-                    const castedImage = items[items.length-1] as CustomImage;
+                if (items[items.length - 1].id.startsWith("image")) {
+                    const castedImage = items[items.length - 1] as CustomImage;
                     //if the image was only used with this item, remove it from the list of used arrays
                     //skip this section if the image is a diagram
-                    if(!castedImage.diagram) {
+                    if (!castedImage.diagram) {
                         let onlyUsage = true;
                         for (let innerIndex = 0; innerIndex < items.length; innerIndex++) {
                             //skip if this is the index of the removed item
-                            if(innerIndex === items.length-1) continue;
+                            if (innerIndex === items.length - 1) continue;
                             const item = items[innerIndex]
-                            if(item.id.startsWith("image")) {
+                            if (item.id.startsWith("image")) {
                                 const itemCasted = item as CustomImage;
-                                if(itemCasted.imageId === castedImage.imageId) {
+                                if (itemCasted.imageId === castedImage.imageId) {
                                     onlyUsage = false;
                                     break;
                                 }
                             }
                         }
                         //console.log(onlyUsage);
-                        if(onlyUsage) {
+                        if (onlyUsage) {
                             imageIDArray.current = imageIDArray.current.filter((imageID) => {
                                 return imageID !== castedImage.imageId;
                             })
@@ -1530,26 +1524,26 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             // get the index of the selected element
             const index = items.indexOf(selectedObject);
             //delete the image from the list of used IDs
-            if(items[index].id.startsWith("image")) {
+            if (items[index].id.startsWith("image")) {
                 const castedImage = items[index] as CustomImage;
                 //if the image was only used with this item, remove it from the list of used arrays
                 //skip this section if the image is a diagram
-                if(!castedImage.diagram) {
+                if (!castedImage.diagram) {
                     let onlyUsage = true;
                     for (let innerIndex = 0; innerIndex < items.length; innerIndex++) {
                         //skip if this is the index of the removed item
-                        if(innerIndex === index) continue;
+                        if (innerIndex === index) continue;
                         const item = items[innerIndex]
-                        if(item.id.startsWith("image")) {
+                        if (item.id.startsWith("image")) {
                             const itemCasted = item as CustomImage;
-                            if(itemCasted.imageId === castedImage.imageId) {
+                            if (itemCasted.imageId === castedImage.imageId) {
                                 onlyUsage = false;
                                 break;
                             }
                         }
                     }
                     console.log(onlyUsage);
-                    if(onlyUsage) {
+                    if (onlyUsage) {
                         imageIDArray.current = imageIDArray.current.filter((imageID) => {
                             return imageID !== castedImage.imageId;
                         })
@@ -1581,13 +1575,14 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 arCopy.push(poppedItem);
                 setItems(arCopy);
                 // if it is an image, add it to the list of used image ids again if it is not already included
-                if(poppedItem.id.startsWith("image")) {
+                if (poppedItem.id.startsWith("image")) {
                     const castedImage = poppedItem as CustomImage;
                     //also dont try to restore when the item is a diagram
-                    if(!imageIDArray.current.includes(castedImage.imageId) && !castedImage.diagram) imageIDArray.current.push(castedImage.imageId);
+                    if (!imageIDArray.current.includes(castedImage.imageId) && !castedImage.diagram) imageIDArray.current.push(castedImage.imageId);
                 }
             }
         }
+        setItemCounter(itemCounter + 1)
         setRecentlyRemovedItems(lastElem);
     }
 
@@ -1610,7 +1605,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 x: currentItemX.current,
                 y: currentItemY.current,
             });
-            setItemCounter(itemCounter+1);
+            setItemCounter(itemCounter + 1);
             setItems(localItems);
         }
     }
@@ -1618,7 +1613,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     /**
      * Method to handle the start of a transform event
      */
-    const handleTransformStart = (e : any) => {
+    const handleTransformStart = (e: any) => {
         console.log("Transform Started ", e);
     }
 
@@ -1627,7 +1622,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      */
     const handleTransformEnd = () => {
         //get the position, transformation and rotation of the transformed element
-        if(stageRef.current !== null) {
+        if (stageRef.current !== null) {
             const selectedNode = stageRef.current.findOne("." + selectedItemName);
             const absPos = selectedNode.getAbsolutePosition();
             const absTrans = selectedNode.getAbsoluteScale();
@@ -1807,7 +1802,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      */
     const mouseOver = () => {
         if (itemSelected) {
-            if (mainRef.current !== null){
+            if (mainRef.current !== null) {
                 mainRef.current.style.cursor = "grab";
             }
         }
@@ -1817,7 +1812,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * Method to change cursor back to default when the user doesn't hover an element anymore
      */
     const mouseLeave = () => {
-        if (mainRef.current !== null){
+        if (mainRef.current !== null) {
             mainRef.current.style.cursor = "crosshair";
         }
     }
@@ -1827,10 +1822,10 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * @returns true or false depending on the selected item
      */
     const disableColor = (): boolean => {
-        if (selectedItemName.startsWith('text')){
+        if (selectedItemName.startsWith('text')) {
             return true;
         }
-        return (!itemSelected) ;
+        return (!itemSelected);
     }
 
     /**
@@ -1852,7 +1847,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
 
     const handleItemSelect = (item: string, handlingHistorizedItem: boolean) => {
         // if no item is selected, creates a new text element and adds it to the canvas
-        if (!itemSelected){
+        if (!itemSelected) {
             const arCopy = items.slice();
             arCopy.push({
                 x: 20,
@@ -1872,10 +1867,10 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             setCurrentTextWidth(200);
             setTextEditContent(item);
             setItemCounter(itemCounter + 1);
-        // otherwise add the content to a selected text field
+            // otherwise add the content to a selected text field
         } else {
             console.log(selectedItemName);
-            if (selectedItemName.startsWith('text') && !currentlyEditing){
+            if (selectedItemName.startsWith('text') && !currentlyEditing) {
                 console.log('Text selected');
                 const localItems = items.slice();
                 const index = items.indexOf(selectedObject);
@@ -1887,7 +1882,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 setItems(localItems);
                 setSelectedObject(objectCopy);
             }
-            if (currentlyEditing){
+            if (currentlyEditing) {
                 setTextEditContent(textEditContent + ' {' + item + '}');
             }
         }
@@ -1901,7 +1896,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const renderListItem = (item: string, selectedData: boolean) => {
         return (
             <ListItem key={item}>
-                <Button onClick={() => handleItemSelect((selectedData ? "_req|" : "" ) + item, false)} >
+                <Button onClick={() => handleItemSelect((selectedData ? "_req|" : "") + item, false)}>
                     <span className={classes.overflowButtonText}>{item}</span>
                 </Button>
             </ListItem>
@@ -1952,18 +1947,18 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * @param diagram Boolean flag indicating if the image is a diagram
      * @param diagramName Name of the diagram, empty if it is an image
      */
-    const handleImageClick = (src : string, id: number, path: string, index: number, diagram: boolean, diagramName: string) => {
+    const handleImageClick = (src: string, id: number, path: string, index: number, diagram: boolean, diagramName: string) => {
         //create the image object for the image to be displayed
         console.log(src)
         let image = new window.Image();
         image.src = src;
         console.log(image)
         //push the id to the array of used images if it is not already used - also not pushing for diagrams
-        if(!imageIDArray.current.includes(id) && !diagram) imageIDArray.current.push(id);
+        if (!imageIDArray.current.includes(id) && !diagram) imageIDArray.current.push(id);
         addImageElement(image, id, path, index, diagram, diagramName);
     }
 
-    const handleBackgroundImageClick = (src : string, index : number) => {
+    const handleBackgroundImageClick = (src: string, index: number) => {
         let img = new window.Image();
         img.src = props.backgroundImageList[index].image_blob_url;
         setBackgroundImage(img);
@@ -2030,14 +2025,12 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     }
 
 
-
-
     /**
      * Method to handle the change of the input element for the image upload
      * @param event ChangeEvent of the HTMLInputElement
      */
-    const handleFileUploadChange = (event : React.ChangeEvent<HTMLInputElement>) => {
-        if (event.target.files !== null && event.target.files !== undefined){
+    const handleFileUploadChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files !== null && event.target.files !== undefined) {
             let formData = new FormData();
             let name = event.target.files[0].name.split('.');
             formData.append('image', event.target.files[0]);
@@ -2050,7 +2043,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * Method to handle the "Upload image" button
      */
     const handleFileUploadClick = () => {
-        if (uploadReference.current !== null){
+        if (uploadReference.current !== null) {
             uploadReference.current.click();
         }
     }
@@ -2060,7 +2053,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * Creates a new FormData element to be uploaded
      * @param event ChangeEvent
      */
-    const handleBackgroundUploadChange = (event : React.ChangeEvent<HTMLInputElement>) => {
+    const handleBackgroundUploadChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files !== null && event.target.files !== undefined) {
             let formData = new FormData();
             let name = event.target.files[0].name.split('.');
@@ -2075,7 +2068,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * Method to click the input element through a button
      */
     const handleBackgroundUploadClick = () => {
-        if (backgroundUploadReference.current !== null){
+        if (backgroundUploadReference.current !== null) {
             backgroundUploadReference.current.click();
         }
     }
@@ -2109,8 +2102,10 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                             </Button>
                         </Grid>
                         <Grid item className={classes.blockableButtonSecondary}>
-                            <Button size={"large"} color="secondary" variant={"contained"} className={classes.saveButton}
-                                    onClick={() => saveButtonHandler()} disabled={sceneName === "" || clickedSaveButton}>
+                            <Button size={"large"} color="secondary" variant={"contained"}
+                                    className={classes.saveButton}
+                                    onClick={() => saveButtonHandler()}
+                                    disabled={sceneName === "" || clickedSaveButton}>
                                 Speichern
                             </Button>
                         </Grid>
@@ -2367,7 +2362,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                                         if (item.width * item.scaleX > 960) {
                                                             item.scaleX *= 0.5;
                                                         }
-                                                        if (item.height * item.scaleY > 540){
+                                                        if (item.height * item.scaleY > 540) {
                                                             item.scaleY *= 0.5;
                                                         }
                                                         return pos;
@@ -2536,7 +2531,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                     /><br/><br/>
                                 </Grid>
                                 <Grid item xs={3}>
-                                    <Button className={classes.button} onClick={dupe} disabled={!itemSelected}> Klonen </Button><br/><br/>
+                                    <Button className={classes.button} onClick={dupe}
+                                            disabled={!itemSelected}> Klonen </Button><br/><br/>
                                     <TextField id="stepSizeOptions" onChange={(e) => handleStepSizeChange(e)}
                                                value={stepSize} className={classes.selection} select
                                                label={"Sprunggröße"} disabled={!itemSelected}>
@@ -2606,22 +2602,22 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                             </Box>
                         </Grid>
                         {props.arrayProcessingList.length > 0 &&
-                            <React.Fragment>
-                                <Grid item xs={12} className={classes.elementLargeMargin}>
-                                    <Typography variant={"h4"} align={"center"}>
-                                        Array-Verarbeitungen
-                                    </Typography>
-                                    <br/>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <Box borderColor="primary.main" border={4} borderRadius={5}
-                                         className={classes.choiceListFrame}>
-                                        <List disablePadding={true}>
-                                            {props.arrayProcessingList.map((item: string) => renderListItem(item, false))}
-                                        </List>
-                                    </Box>
-                                </Grid>
-                            </React.Fragment>
+                        <React.Fragment>
+                            <Grid item xs={12} className={classes.elementLargeMargin}>
+                                <Typography variant={"h4"} align={"center"}>
+                                    Array-Verarbeitungen
+                                </Typography>
+                                <br/>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Box borderColor="primary.main" border={4} borderRadius={5}
+                                     className={classes.choiceListFrame}>
+                                    <List disablePadding={true}>
+                                        {props.arrayProcessingList.map((item: string) => renderListItem(item, false))}
+                                    </List>
+                                </Box>
+                            </Grid>
+                        </React.Fragment>
                         }
                         {props.customDataList.length > 0 &&
                         <React.Fragment>
@@ -2642,62 +2638,62 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                         </React.Fragment>
                         }
                         {props.stringReplacementList.length > 0 &&
-                            <React.Fragment>
-                                <Grid item xs={12} className={classes.elementLargeMargin}>
-                                    <Typography variant={"h4"} align={"center"}>
-                                        String-Ersetzungen
-                                    </Typography>
-                                    <br/>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <Box borderColor="primary.main" border={4} borderRadius={5}
-                                         className={classes.choiceListFrame}>
-                                        <List disablePadding={true}>
-                                            {props.stringReplacementList.map((item: string) => renderListItem(item, false))}
-                                        </List>
-                                    </Box>
-                                </Grid>
-                            </React.Fragment>
+                        <React.Fragment>
+                            <Grid item xs={12} className={classes.elementLargeMargin}>
+                                <Typography variant={"h4"} align={"center"}>
+                                    String-Ersetzungen
+                                </Typography>
+                                <br/>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Box borderColor="primary.main" border={4} borderRadius={5}
+                                     className={classes.choiceListFrame}>
+                                    <List disablePadding={true}>
+                                        {props.stringReplacementList.map((item: string) => renderListItem(item, false))}
+                                    </List>
+                                </Box>
+                            </Grid>
+                        </React.Fragment>
                         }
                         {props.historizedDataList.length > 0 &&
-                            <React.Fragment>
-                                <Grid item xs={12} className={classes.elementLargeMargin}>
-                                    <Typography variant={"h4"} align={"center"}>
-                                        Historisierte Daten
-                                    </Typography>
-                                    <br/>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <Box borderColor="primary.main" border={4} borderRadius={5}
-                                         className={classes.choiceListFrame}>
-                                        <List disablePadding={true}>
-                                            {props.historizedDataList.map((item: HistorizedDataInfo) => renderHistorizedItem(item.name, item.interval))}
-                                        </List>
-                                    </Box>
-                                </Grid>
-                            </React.Fragment>
+                        <React.Fragment>
+                            <Grid item xs={12} className={classes.elementLargeMargin}>
+                                <Typography variant={"h4"} align={"center"}>
+                                    Historisierte Daten
+                                </Typography>
+                                <br/>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Box borderColor="primary.main" border={4} borderRadius={5}
+                                     className={classes.choiceListFrame}>
+                                    <List disablePadding={true}>
+                                        {props.historizedDataList.map((item: HistorizedDataInfo) => renderHistorizedItem(item.name, item.interval))}
+                                    </List>
+                                </Box>
+                            </Grid>
+                        </React.Fragment>
                         }
                         <br/>
-                       <ImageLists
-                           imageList={props.imageList}
-                           backgroundImageList={props.backgroundImageList}
-                           postImage={postImage}
-                           postBackgroundImage={postBackgroundImage}
-                           handleImageClick={handleImageClick}
-                           backGroundType={backGroundType}
-                           backGroundColorEnabled={backGroundColorEnabled}
-                           handleBackground={handleBackground}
-                           currentBGColor={currentBGColor}
-                           switchBGColor={switchBGColor}
-                           uploadReference={uploadReference}
-                           handleFileUploadClick={handleFileUploadClick}
-                           handleFileUploadChange={handleFileUploadChange}
-                           backgroundUploadReference={backgroundUploadReference}
-                           handleBackgroundUploadClick={handleBackgroundUploadClick}
-                           handleBackgroundUploadChange={handleBackgroundUploadChange}
-                           handleBackgroundImageClick={handleBackgroundImageClick}
-                       />
-                       <br/>
+                        <ImageLists
+                            imageList={props.imageList}
+                            backgroundImageList={props.backgroundImageList}
+                            postImage={postImage}
+                            postBackgroundImage={postBackgroundImage}
+                            handleImageClick={handleImageClick}
+                            backGroundType={backGroundType}
+                            backGroundColorEnabled={backGroundColorEnabled}
+                            handleBackground={handleBackground}
+                            currentBGColor={currentBGColor}
+                            switchBGColor={switchBGColor}
+                            uploadReference={uploadReference}
+                            handleFileUploadClick={handleFileUploadClick}
+                            handleFileUploadChange={handleFileUploadChange}
+                            backgroundUploadReference={backgroundUploadReference}
+                            handleBackgroundUploadClick={handleBackgroundUploadClick}
+                            handleBackgroundUploadChange={handleBackgroundUploadChange}
+                            handleBackgroundImageClick={handleBackgroundImageClick}
+                        />
+                        <br/>
                         {props.diagramList.length > 0 &&
                         <DiagramList
                             diagramList={props.diagramList}
@@ -2719,7 +2715,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 position: "absolute",
                 top: "-9999px",
             }}/>
-            <Dialog aria-labelledby="AddHistorizedDialog-Title" open={showHistorizedDialog} onClose={() => cancelHistorizedAdding()}>
+            <Dialog aria-labelledby="AddHistorizedDialog-Title" open={showHistorizedDialog}
+                    onClose={() => cancelHistorizedAdding()}>
                 <DialogTitle id="AddHistorizedDialog-Title">
                     Intervallauswahl für {selectedHistorizedElement}
                 </DialogTitle>
@@ -2727,7 +2724,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                     <Grid container>
                         <Grid item xs={12}>
                             <Typography variant="body1">
-                                Legen Sie bitte das Intervall fest, welches für das einzufügende Element verwendet werden soll. Die Zahl 0 meint dabei das aktuellste Intervall, die Zahl 1 das Vorletzte, usw.
+                                Legen Sie bitte das Intervall fest, welches für das einzufügende Element verwendet
+                                werden soll. Die Zahl 0 meint dabei das aktuellste Intervall, die Zahl 1 das Vorletzte,
+                                usw.
                             </Typography>
                         </Grid>
                         <Grid item xs={12} className={classes.elementLargeMargin}>
@@ -2740,8 +2739,11 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                 {selectedInterval}
                             </Typography>
                         </Grid>
-                        <Grid item xs={12}  className={classes.elementLargeMargin}>
-                            <TextField style={{width: "25em"}} error={intervalToUse === undefined || intervalToUse < 0} label="Wahl des Intervalls für das einzufügende Element" type="number" value={intervalToUse} onChange={event => setIntervalToUse(event.target.value === "" ? undefined : Number(event.target.value))}/>
+                        <Grid item xs={12} className={classes.elementLargeMargin}>
+                            <TextField style={{width: "25em"}} error={intervalToUse === undefined || intervalToUse < 0}
+                                       label="Wahl des Intervalls für das einzufügende Element" type="number"
+                                       value={intervalToUse}
+                                       onChange={event => setIntervalToUse(event.target.value === "" ? undefined : Number(event.target.value))}/>
                         </Grid>
                     </Grid>
                 </DialogContent>
@@ -2753,7 +2755,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                             </Button>
                         </Grid>
                         <Grid item className={classes.blockableButtonSecondary}>
-                            <Button variant="contained" color="secondary" disabled={intervalToUse === undefined || intervalToUse < 0} onClick={() => {
+                            <Button variant="contained" color="secondary"
+                                    disabled={intervalToUse === undefined || intervalToUse < 0} onClick={() => {
                                 handleItemSelect(selectedHistorizedElement, true);
                                 setShowHistorizedDialog(false);
                             }}>
@@ -2769,29 +2772,29 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                     open={backDialogOpen}>
                 <DialogTitle id="backDialog-title">
 
-                    { props.sceneFromBackend === undefined &&
-                        "Verwerfen der Szene"
+                    {props.sceneFromBackend === undefined &&
+                    "Verwerfen der Szene"
                     }
-                    { props.sceneFromBackend !== undefined &&
-                        "Abbrechen der Bearbeitung"
+                    {props.sceneFromBackend !== undefined &&
+                    "Abbrechen der Bearbeitung"
                     }
                 </DialogTitle>
                 <DialogContent dividers>
                     <Typography gutterBottom>
-                        { props.sceneFromBackend === undefined &&
-                            "Das Zurückgehen zum vorherigen Schritt erfordert, dass die erstellte Szene verworfen wird."
+                        {props.sceneFromBackend === undefined &&
+                        "Das Zurückgehen zum vorherigen Schritt erfordert, dass die erstellte Szene verworfen wird."
                         }
-                        { props.sceneFromBackend !== undefined &&
-                            "Wenn Sie die Bearbeitung abbrechen, gehen sämtliche an der Szene vorgenommenen Änderungen verloren."
+                        {props.sceneFromBackend !== undefined &&
+                        "Wenn Sie die Bearbeitung abbrechen, gehen sämtliche an der Szene vorgenommenen Änderungen verloren."
                         }
                     </Typography>
                     <Typography gutterBottom>
 
-                        { props.sceneFromBackend === undefined &&
-                            "Wirklich zurückgehen?"
+                        {props.sceneFromBackend === undefined &&
+                        "Wirklich zurückgehen?"
                         }
-                        { props.sceneFromBackend !== undefined &&
-                            "Bearbeitung wirklich abbrechen?"
+                        {props.sceneFromBackend !== undefined &&
+                        "Bearbeitung wirklich abbrechen?"
                         }
                     </Typography>
                 </DialogContent>
@@ -2802,11 +2805,11 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                     onClick={() => {
                                         setBackDialogOpen(false);
                                     }}>
-                                { props.sceneFromBackend === undefined &&
-                                    "abbrechen"
+                                {props.sceneFromBackend === undefined &&
+                                "abbrechen"
                                 }
-                                { props.sceneFromBackend !== undefined &&
-                                    "zurück zur Bearbeitung"
+                                {props.sceneFromBackend !== undefined &&
+                                "zurück zur Bearbeitung"
                                 }
                             </Button>
                         </Grid>
@@ -2823,11 +2826,11 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                         }
                                     }}
                                     className={classes.redDeleteButton}>
-                                { props.sceneFromBackend === undefined &&
-                                    "zurück"
+                                {props.sceneFromBackend === undefined &&
+                                "zurück"
                                 }
-                                { props.sceneFromBackend !== undefined &&
-                                    "Bearbeitung abbrechen"
+                                {props.sceneFromBackend !== undefined &&
+                                "Bearbeitung abbrechen"
                                 }
                             </Button>
                         </Grid>
