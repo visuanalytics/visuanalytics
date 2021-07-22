@@ -613,8 +613,8 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
                                     zurück
                                 </Button>
                             </Grid>
-                            <Grid item className={classes.blockableButtonPrimary}>
-                                <Button disabled={diagramName === ""} variant="contained" size="large" color="primary"
+                            <Grid item className={classes.blockableButtonSecondary}>
+                                <Button disabled={diagramName === "" || isNameDuplicate()} variant="contained" size="large" color="secondary"
                                     onClick={() => finishCreate()}>
                                     Fertigstellen
                                 </Button>
