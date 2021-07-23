@@ -221,7 +221,9 @@ export const DashboardTabs = () =>  {
         fetch(url, {
             method: "GET",
             headers: {
-                "Content-Type": "application/json\n"
+                "Content-Type": "application/json\n",
+                "Cache-Control": "no-cache",
+                "Pragma": "no-cache"
             },
             signal: abort.signal
         }).then((res: Response) => {
