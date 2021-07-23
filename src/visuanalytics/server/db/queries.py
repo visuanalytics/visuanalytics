@@ -1009,6 +1009,14 @@ def update_scene(scene_id, updated_data):
     scene_json.update({"itemCounter": updated_data["itemCounter"]})
     scene_json.update({"scene_items": scene_items})
 
+    image_files = con.execute("SELECT image_name FROM scene_uses_image AS uses INNER JOIN image ON uses.image_id = image.image_id WHERE uses.scene_id = ? AND image.folder = ?", [scene_id, "scene"])
+
+    for image_file in image_files:
+        if re.search(".*[_preview|_background]\.[png|jpe?g]", image_file["image_name"]):
+            path = get_image_path(image_file["image_name"].rsplit(".", 1)[0], "scene",
+                                  image_file["image_name"].rsplit(".", 1)[1])
+            os.remove(path)
+
     # Alte Einträge aus scene_uses_image entfernen
     con.execute("DELETE FROM scene_uses_image WHERE scene_id=?", [scene_id])
 
@@ -1044,8 +1052,11 @@ def update_scene(scene_id, updated_data):
 
     video_ids = [x["job_id"] for x in list(con.execute("SELECT * FROM job_uses_scene WHERE scene_id=?", [scene_id]))]
     video_jsons = [get_videojob(x) for x in video_ids]
-    for i, id in enumerate(video_ids):
-        insert_video_job(video_jsons[i], True, id)
+    for index, video_json in enumerate(video_jsons):
+        video_scene_names = [x["sceneName"] for x in video_json["sceneList"]]
+        video_json["images"] = {f"{i}_{x}": {"key": x} for i, x in enumerate(video_scene_names)}
+
+        insert_video_job(video_json, True, video_ids[index])
 
     con.commit()
     return None
