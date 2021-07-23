@@ -490,6 +490,58 @@ Die letzten beiden Felder werden dazu verwendet, die Höhe und Breite von Elemen
 
 ### API-Texte
 
+#### Hinzufügen von API-Texten auf dem Canvas
+
+```javascript
+const handleItemSelect = (item: string, handlingHistorizedItem: boolean) => {
+        // if no item is selected, creates a new text element and adds it to the canvas
+        if (!itemSelected){
+            const arCopy = items.slice();
+            arCopy.push({
+                x: 20,
+                y: 20,
+                id: 'text-' + itemCounter.toString(),
+                textContent: (handlingHistorizedItem && intervalToUse !== undefined) ? '{' + item + '{' + intervalToUse.toString() + '}}' 							: '{' + item + '}',
+                width: 200,
+                scaleX: 1,
+                scaleY: 1,
+                rotation: 0,
+                fontFamily: currentFontFamily,
+                fontSize: currentFontSize,
+                color: currentFontColor,
+                height: 20,
+            } as CustomText);
+            setItems(arCopy);
+            setCurrentTextWidth(200);
+            setTextEditContent(item);
+            setItemCounter(itemCounter + 1);
+```
+
+Falls der Benutzer aktuell kein Element ausgewählt hat, so wird ein neues Textelement erstellt. Dieses bekommt dann den korrekten Text zugewiesen, abhängig davon, ob der Benutzer historisierte Daten oder "normale" API-Daten ausgewählt hat.
+
+```javascript
+// otherwise add the content to a selected text field
+        } else {
+            if (selectedItemName.startsWith('text') && !currentlyEditing){
+                const localItems = items.slice();
+                const index = items.indexOf(selectedObject);
+                const objectCopy = {
+                    ...selectedObject,
+                    textContent: (selectedObject as CustomText).textContent + ((handlingHistorizedItem && intervalToUse !== undefined) ? 								'{' + item + '{' + intervalToUse.toString() + '}}' : '{' + item + '}')
+                };
+                localItems[index] = objectCopy;
+                setItems(localItems);
+                setSelectedObject(objectCopy);
+            }
+            if (currentlyEditing){
+                setTextEditContent(textEditContent + ' {' + item + '}');
+            }
+        }
+    }
+```
+
+Falls der Benutzer ein Element ausgewählt hat und es ein Textelement ist, so wird, wieder abhängig davon, ob historisierte oder "normale" API-Daten ausgewählt wurden, der Inhalt des API-Datums an den vorhandenen Text angehängt. Sollte der Benutzer den Text aktuell bearbeiten, so wird auch dort das API-Datum angehängt.
+
 ### ImageLists
 
 #### Abfrage von Bildern
@@ -499,6 +551,79 @@ Die letzten beiden Felder werden dazu verwendet, die Höhe und Breite von Elemen
 #### Posten von Bildern
 
 ### DiagramsList
+
+### Hinzufügen von Bildern auf dem Canvas
+
+```javascript
+const handleImageClick = (src: string, id: number, path: string, index: number, diagram: boolean, diagramName: string) => {
+        //create the image object for the image to be displayed
+        let image = new window.Image();
+        image.src = src;
+        //push the id to the array of used images if it is not already used - also not pushing for diagrams
+        if (!imageIDArray.current.includes(id) && !diagram) imageIDArray.current.push(id);
+        addImageElement(image, id, path, index, diagram, diagramName);
+    }
+
+    const handleBackgroundImageClick = (src: string, index: number) => {
+        let img = new window.Image();
+        img.src = props.backgroundImageList[index].image_blob_url;
+        setBackgroundImage(img);
+        setBackgroundImageIndex(index);
+        setBackGroundType("IMAGE");
+        setBackGroundColorEnabled(false);
+    }
+    
+    {backGroundType === "IMAGE" &&
+        <Image
+             name="background"
+             width={960}
+             height={540}
+             onClick={handleCanvasClick}
+             image={backgroundImage}
+             onMouseDown={handleStageMouseDown}
+         />
+    
+```
+
+Beim Hinzufügen von Bildern auf dem Canvas (Diagramme und Bilder) wird zunächst unterschieden, ob es ein normales Bild oder ein Hintergrundbild ist. Für normale Bilder (und Diagramme) wird die Methode *handleImageClick* aufgerufen. Zunächst wird hier ein neues Image-Element erstellt. Darin wird die Quelle geändert. Anschließend wird überprüft, ob es sich um ein Diagramm handelt oder nicht. Wenn es kein Diagramm ist, wird die ID in das Array gepusht, welches zum späteren erstellen des Szenen-JSONs benutzt wird. Anschließend wird die unten beschriebene Methode *addImageElement* in jedem Fall aufgerufen.
+
+Bei Hintergrundbildern wird die Methode *handleBackgroundImageClick* aufgerufen. Auch hier wird ein neues Image-Element erstellt und die Quelle gesetzt. Anschließend werden States für den Export gesetzt und das Hintergrundbild wird in einen State gesetzt, welcher auf der Zeichenfläche direkt einem Image-Element übergeben wird.
+
+```javascript
+
+   const addImageElement = (image: HTMLImageElement, id: number, path: string, index: number, diagram: boolean, diagramName: string) => {
+        let obj: CustomImage = {
+            id: 'image-' + itemCounter.toString(),
+            x: 0,
+            y: 0,
+            rotation: 0,
+            image: image,
+            imageId: id,
+            imagePath: path,
+            diagram: diagram,
+            diagramName: diagramName,
+            index: index,
+            width: image.width,
+            height: image.height,
+            scaleX: 1,
+            scaleY: 1,
+            color: "#000000"
+        }
+        // if its bigger than the width / height of the canvas, adjust the size of the image
+        while (obj.width * obj.scaleX > 960) {
+            obj.scaleX *= 0.5;
+        }
+        while (obj.height * obj.scaleY > 540) {
+            obj.scaleY *= 0.5;
+        }
+        const arCopy = items.slice();
+        arCopy.push(obj)
+        setItems(arCopy);
+        incrementCounterResetType();
+   }
+```
+
+Die Methode *addImageElement* erstellt ein neues Image-Element, welchem die vorher übergebenen Parameter übergeben werden. Anschließend wird geprüft, ob das Bild größer als die Zeichenfläche ist. Ist dies der Fall, wird das Bild solange verkleinert, bis es in die Zeichenfläche passt.
 
 ## Speichern der Szene
 
