@@ -1540,7 +1540,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             }
             setRecentlyRemovedItems(lastElem);
             // decrement the counter of elements
-            setItemCounter(itemCounter - 1);
+            setItemCounter(itemCounter + 1);
         } else {
             // get the index of the selected element
             const index = items.indexOf(selectedObject);
@@ -1578,9 +1578,10 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             }
             setRecentlyRemovedItems(lastElem);
             setItemSelected(false);
-            setItemCounter(itemCounter - 1);
             setDeleteText("Letztes Elem. entf.");
+            setItemCounter(itemCounter + 1);
         }
+
     }
 
 
@@ -1593,7 +1594,11 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             const poppedItem = lastElem.pop();
             if (poppedItem !== undefined) {
                 const arCopy = items.slice();
-                arCopy.push(poppedItem);
+                let obj = {
+                    ...poppedItem,
+                    id: poppedItem.id.split('-')[0] + '-' + itemCounter.toString(),
+                }
+                arCopy.push(obj);
                 setItems(arCopy);
                 // if it is an image, add it to the list of used image ids again if it is not already included
                 if (poppedItem.id.startsWith("image")) {
