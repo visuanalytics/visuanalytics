@@ -14,7 +14,6 @@ import {DataSource, Diagram} from "../../../CreateInfoProvider/types";
 interface EditCustomDataProps {
     continueHandler: (index: number) => void;
     backHandler: (index: number) => void;
-    editInfoProvider: () => void;
     infoProvDataSources: Array<DataSource>;
     setInfoProvDataSources: (dataSources: Array<DataSource>) => void;
     selectedDataSource: number;
@@ -382,12 +381,6 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
                             <Button variant={"contained"} size={"large"} color={"primary"}
                                     onClick={() => props.backHandler(1)}>
                                 zurück
-                            </Button>
-                        </Grid>
-                        <Grid item>
-                            <Button variant="contained" color={"secondary"}
-                                    onClick={() => props.editInfoProvider()}>
-                                Speichern
                             </Button>
                         </Grid>
                         <Grid item>

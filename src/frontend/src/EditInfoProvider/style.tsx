@@ -77,6 +77,12 @@ export const useStyles = makeStyles((theme: Theme) =>
                 opacity: "75%"
             }
         },
+        saveButton: {
+            '& .Mui-disabled': {
+                backgroundColor: theme.palette.secondary.main,
+                opacity: "75%"
+            }
+        },
         listFrameData: {
             width: "80%",
             height: 400,
