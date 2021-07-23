@@ -108,6 +108,9 @@ export const useStyles = makeStyles((theme: Theme) =>
         },
         spokenTextPreview: {
             height: "2.5em"
+        },
+        ttsIntervalInput: {
+            width: "70%"
         }
     }),
 );

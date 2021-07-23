@@ -7,7 +7,7 @@ import StepLabel from "@material-ui/core/StepLabel";
 import {InfoProviderSelection} from "./InfoProviderSelection";
 import {SceneEditor} from "./SceneEditor";
 import {ComponentContext} from "../ComponentProvider";
-import {DataSource, Diagram, FrontendInfoProvider, uniqueId} from "../CreateInfoProvider/types";
+import {ArrayProcessingData, DataSource, Diagram, FrontendInfoProvider, uniqueId} from "../CreateInfoProvider/types";
 import {DiagramInfo, HistorizedDataInfo, ImageBackendData, ImageFrontendData, InfoProviderData} from "./types";
 import {hintContents} from "../util/hintContents";
 import Typography from "@material-ui/core/Typography";
@@ -689,6 +689,10 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
         setCustomDataList(sessionStorage.getItem("customDataList-" + uniqueId )=== null ? new Array<string>() : JSON.parse(sessionStorage.getItem("customDataList-" + uniqueId)!))
         //selectedDataList
         setHistorizedDataList(sessionStorage.getItem("historizedDataList-" + uniqueId )=== null ? new Array<HistorizedDataInfo>() : JSON.parse(sessionStorage.getItem("historizedDataList-" + uniqueId)!))
+        //arrayProcessingsList
+        setArrayProcessingList(sessionStorage.getItem("arrayProcessingList-" + uniqueId )=== null ? new Array<string>() : JSON.parse(sessionStorage.getItem("arrayProcessingList-" + uniqueId)!))
+        //stringReplacementList
+        setStringReplacementList(sessionStorage.getItem("stringReplacementList-" + uniqueId )=== null ? new Array<string>() : JSON.parse(sessionStorage.getItem("stringReplacementList-" + uniqueId)!))
         //diagramList
         setDiagramList(sessionStorage.getItem("diagramList-" + uniqueId )=== null ? new Array<DiagramInfo>() : JSON.parse(sessionStorage.getItem("diagramList-" + uniqueId)!))
         //selectedId
@@ -751,6 +755,14 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
     React.useEffect(() => {
         sessionStorage.setItem("historizedDataList-" + uniqueId, JSON.stringify(historizedDataList));
     }, [historizedDataList])
+    //store arrayProcessingList in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("arrayProcessingList-" + uniqueId, JSON.stringify(arrayProcessingList));
+    }, [arrayProcessingList])
+    //store stringReplacementList in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("stringReplacementList-" + uniqueId, JSON.stringify(stringReplacementList));
+    }, [stringReplacementList])
     //store diagramList in sessionStorage
     React.useEffect(() => {
         sessionStorage.setItem("diagramList-" + uniqueId, JSON.stringify(diagramList));
@@ -790,6 +802,8 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
         sessionStorage.removeItem("selectedDataList-" + uniqueId);
         sessionStorage.removeItem("customDataList-" + uniqueId);
         sessionStorage.removeItem("historizedDataList-" + uniqueId);
+        sessionStorage.removeItem("arrayProcessingList-" + uniqueId);
+        sessionStorage.removeItem("stringReplacementList-" + uniqueId);
         sessionStorage.removeItem("diagramList-" + uniqueId);
         sessionStorage.removeItem("imageList-" + uniqueId);
         sessionStorage.removeItem("selectedId-" + uniqueId);

@@ -537,7 +537,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                         plot: {
                             type: type,
                             x: item.intervalSizes,
-                            y: "{_req|" + item.name + "}",
+                            y: "{_req|" + item.name.replace("|", "_") + "_HISTORY}",
                             color: item.color,
                             x_ticks: {
                                 //only set the ticks on the last Plot - this is necessary to render it last when layering the Plots in the diagrams
