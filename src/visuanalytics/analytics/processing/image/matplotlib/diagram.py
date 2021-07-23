@@ -7,6 +7,7 @@ from functools import reduce
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.util import resources
+from visuanalytics.analytics.util.step_errors import PiePlotError
 from datetime import datetime, timedelta
 from ast import literal_eval
 from visuanalytics.util.resources import get_test_diagram_resource_path
@@ -327,6 +328,8 @@ def pie_plot(values, fig=None, ax=None):
     :return: bearbeitetes figure- und ax-Objekt für einen Plot
     """
     y = values["y"]
+    if min(y) < 0:
+        raise PiePlotError()
     x_ticks = values.get("x_ticks", None)
     if x_ticks:
         labels = x_ticks.get("ticks", np.arange(len(y)))
