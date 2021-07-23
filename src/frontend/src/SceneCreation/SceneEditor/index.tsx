@@ -572,7 +572,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             used_images: imageIDArray.current.concat([backgroundID.current, scenePreviewID.current]),
             used_infoproviders: propsSceneFromBackend !== undefined ? propsSceneFromBackend.used_infoproviders : [infoProviderId],
             images: base,
-            backgroundImage: backgroundImageList[backgroundImageIndex].image_id,
+            backgroundImage: (props.backgroundImageList[backgroundImageIndex] !== undefined && !backGroundColorEnabled) ? backgroundImageList[backgroundImageIndex].image_id : -1,
             backgroundType: backGroundType,
             backgroundColor: currentBGColor,
             backgroundColorEnabled: backGroundColorEnabled,
