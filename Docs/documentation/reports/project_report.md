@@ -129,7 +129,7 @@ Momentan ist es nicht möglich die neueste Version von **Material-UI** für das 
 
 Die Komponenten des alten Frontends haben wir nicht entfernt, da wir der Meinung sind, dass es ein nützliches Feature sein könnte in der Weiterentwicklung dem Nutzer die Möglichkeit zu geben, zwischen beiden Versionen zu wechseln.
 
-## Projektfazit
+## Projektfazit / Abschluss
 
 ### Zielsetzung
 Unser Ziel war es, die Anwendung **VisuAnalytics**, welche im letzten Sommersemester an der THM entstanden ist, generell benutzerfreundlicher zu machen, indem neue Themen / Videos für die Anwendung nun nicht mehr vom Nutzer in einer JSON-Datei spezifiziert werden müssen. Mit unserer Erweiterung sollte es möglich werden, dass ein Nutzer die benötigten Einstellungen in einer **GUI** wählen und individualisieren kann. Dabei sollte sich die Anwendung nicht auf eine bestimmte API beschränken, aus welcher Informationen bezogen werden können, sondern generisch aufgebaut sein, sodass alle APIs, welche XML- oder JSON-Objekte als Antwort liefern, verwendet werden können.
@@ -174,9 +174,13 @@ Ein weiteres Ziel unserer Anwendung war es **abwärtskompatibel** zur "alten" Ve
 ### Test der Software
 Für den Test der Software hatten wir vergleichsweise wenig zeit. Jedoch haben wir uns so organisiert, dass das Backend mit intensiven Tests 10 Tage vor Abgabe beginnen konnte. Damit ist nicht gemeint, dass vorherige Teile der Anwendung nicht getestet wurden (dies passierte immer im Review-Prozess), sondern viel mehr der Test der Anwendung im Zusammenspiel mit allen entwickelten Komponenten. Wir sind trotz dieses kurzen Zeitraums allerdings der Meinung die Anwendung gut getestet haben zu können. Wir schließen kleinere Fehler dennoch nicht aus.
 
+### WordPress
+Auf Grund fehlender Zeit und der Zusicherung, dass am WordPress-Plugin, welches letztes Semester entstanden ist, nichts mehr verändert werden muss, haben wir das Plugin nicht getestet. 
+
 ### Bekannte Fehler / Bugs
 Trotz dem Anspruch an eine hohe Code-Qualität durch die ergriffenen Maßnahmen und Methoden, konnten wir bis zum Ende des Projekts die folgenden Fehler nicht korrigieren:
 * Update von Material-UI, da durch das Update Fehler auftreten werden. Auf dieses Problem wurde bereits im Abschnitt **Entwicklungsumgebung, Programmiersprachen und Frameworks** eingegangen.
+* Auf Säulen- und Balkendiagrammen kann es vorkommen, dass einzelne Balken / Säulen nicht zu sehen sind, da diese von anderen verdeckt werden. Dies passiert dabei nur bei Diagrammen, welche mehr als ein einzelnes Datum visualisieren sollen.
 
 ### Mögliche Fehler / Bugs
 Da die Anwendung stark weiterentwickelt wurde und es unter Umständen Fälle gibt, welche wir durch unsere Tests nicht abdecken konnten, kann es - wie bei jeder anderen Software auch - zu Fehlern kommen, welche uns noch nicht bekannt waren.
@@ -1488,3 +1492,11 @@ Das letzte Planungsmeeting wird nicht wie üblich am Montag stattfinden, da hier
 In den letzten Tagen sollen hauptsächlich die restlichen identifizierten Fehler behoben werden. Außerdem soll der Projektbericht fertiggestellt werden und vom Team gelesen werden.
 
 Auch wird diese Woche noch die Videobearbeitung implementiert, wobei hierfür nicht viel Arbeit notwendig sein sollte. Anschließend wird die Dokumentation an den Stellen ergänzt, an welchen es nötig ist.
+
+### Fortschrittsbesprechung (23.07.2021)
+
+#### Zusammenfassung
+Im letzten Meeting unseres Teams wurde besprochen, was in den letzten Tagen noch zu erledigen ist. Hierbei gibt es lediglich einige wenige fehlende Bug-Fixes, welche am heutigen Freitag und am Samstag bearbeitet werden müssen. Gravierende Fehler sind allerdings nicht mehr aufgefallen. Für die Formeln soll außerdem die Möglichkeit hinzukommen Zahlen mit einem Komma zu verwenden. Weiterhin wird aus den einzelnen Dokumentationsteilen die Dokumentation für die Abgabe vorbereitet. Planmäßig sollen dabei alle Arbeiten am Abend des 24.07. abgeschlossen sein.
+
+#### Reflektion des Teams
+Insgesamt blickt das Team auf eine gute Zeit zurück und findet, dass im Laufe des Semesters ein gutes Projekt entstanden ist. Es wäre mit mehr Zeit zwar vermutlich mehr möglich gewesen, allerdings ist niemand der Meinung, dass gravierende Fehler in der Software übergeblieben sind.
