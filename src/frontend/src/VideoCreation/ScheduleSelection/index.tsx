@@ -111,9 +111,9 @@ export const ScheduleSelection: React.FC<ScheduleSelectionProps> = (props) => {
      * Method, that switches the type of the schedule object to single.
      * It is called, when the user selects the corresponding radio button.
      */
-    const changeToSingle = () => {
+    /*const changeToSingle = () => {
         props.setSchedule({...props.schedule, type: "single", time: setScheduleTime(currentTimeSelection)});
-    }
+    }*/
 
     /**
      * Method that switches the state of the schedule object to interval.
