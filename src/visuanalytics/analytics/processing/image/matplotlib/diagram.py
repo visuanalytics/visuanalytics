@@ -417,13 +417,13 @@ def create_plot(values, step_data, array_source, get_xy=True, fig=None, ax=None)
         fig, ax = pie_plot(values=values_new, fig=fig, ax=ax)
 
     x_ticks = values_new.get("x_ticks", None)
-    if x_ticks and len(x_ticks['ticks']) > 1 and t != 'pie':
-        if t != 'barh':
+    if x_ticks and len(x_ticks["ticks"]) > 1 and t != "pie":
+        if t != "barh":
             ax.set_xticklabels([None] + x_ticks["ticks"], fontdict=x_ticks.get("fontdict", default_fontdict), color=x_ticks.get("color", default_color))
         else:
             ax.set_yticklabels([None] + x_ticks["ticks"], fontdict=x_ticks.get("fontdict", default_fontdict), color=x_ticks.get("color", default_color))
 
-    return fig, ax, values_new['y'], t == 'barh'
+    return fig, ax, values_new["y"], t == "barh" or t == "pie"
 
 
 def create_plot_custom(values, step_data, fig=None, ax=None):
