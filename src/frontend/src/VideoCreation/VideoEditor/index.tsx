@@ -136,9 +136,9 @@ export const VideoEditor: React.FC<VideoEditorProps> = (props) => {
                         </Box>
                     </Grid>
                 </Grid>
-                <Grid container item xs={12}>
+                <Grid container item xs={12} className={classes.elementLargeMargin}>
                     <Grid item>
-                        <Alert severity="info">Jede für das Video gewählte Szene muss einen TTS-Abschnitt enthalten. Dies ist aus technischen Gründen von Nöten.</Alert>
+                        <Alert severity="info">Jede für das Video gewählte Szene muss einen TTS-Abschnitt enthalten. Dies ist aus technischen Gründen notwendig.</Alert>
                     </Grid>
                 </Grid>
             </Grid>
