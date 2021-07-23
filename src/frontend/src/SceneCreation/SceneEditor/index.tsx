@@ -1859,7 +1859,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 x: 20,
                 y: 20,
                 id: 'text-' + itemCounter.toString(),
-                textContent: (handlingHistorizedItem && intervalToUse !== undefined) ? '{' + item + '{' + intervalToUse.toString() + '}}' : '{req|' + item + '}',
+                textContent: (handlingHistorizedItem && intervalToUse !== undefined) ? '{' + item + '{' + intervalToUse.toString() + '}}' : '{' + item + '}',
                 width: 200,
                 scaleX: 1,
                 scaleY: 1,
