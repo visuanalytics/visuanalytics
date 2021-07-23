@@ -156,14 +156,20 @@ export const SceneOverview: React.FC<SceneOverviewProps> = (props) => {
 
     const handleSuccessDelete = () => {
 
+        console.log(currentScene.scene_id + " SCENE_ID");
+        console.log(previewImgList.length + " LÄNGE")
+
         setScenes(
             scenes.filter((data) => {
                 return data.scene_id !== currentScene.scene_id
             })
         );
 
-        //-1 because scene_id starts with 1.
-        setPreviewImgList(previewImgList.splice((currentScene.scene_id - 1), 1));
+        setPreviewImgList(
+            previewImgList.filter((data) => {
+                return data.id !== currentScene.scene_id
+            })
+        );
 
         setDeleteDialogOpen(false);
         setDetailDialogOpen(false);
