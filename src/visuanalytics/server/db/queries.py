@@ -1052,8 +1052,11 @@ def update_scene(scene_id, updated_data):
 
     video_ids = [x["job_id"] for x in list(con.execute("SELECT * FROM job_uses_scene WHERE scene_id=?", [scene_id]))]
     video_jsons = [get_videojob(x) for x in video_ids]
-    for i, id in enumerate(video_ids):
-        insert_video_job(video_jsons[i], True, id)
+    for index, video_json in enumerate(video_jsons):
+        video_scene_names = [x["sceneName"] for x in video_json["sceneList"]]
+        video_json["images"] = {f"{i}_{x}": {"key": x} for i, x in enumerate(video_scene_names)}
+
+        insert_video_job(video_json, True, video_ids[index])
 
     con.commit()
     return None
