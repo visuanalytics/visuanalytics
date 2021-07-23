@@ -1377,6 +1377,21 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      */
     const handleTextDblClick = () => {
         // create a copy of the text element and replace the original one with adjusted variables
+        if (currentlyEditing) {
+            const localItems = items.slice();
+            const index = items.indexOf(selectedObject);
+            const objectCopy = {
+                ...selectedObject,
+                textContent: textEditContent,
+                x: textEditX,
+                y: textEditY,
+            };
+            localItems[index] = objectCopy;
+            setSelectedObject(objectCopy);
+            setItems(localItems);
+            setTextEditVisibility(false);
+            setCurrentlyEditing(false);
+        }
         const localItems = items.slice();
         const index = items.indexOf(selectedObject);
         let backup: any = items[index];
@@ -1587,8 +1602,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                     if (!imageIDArray.current.includes(castedImage.imageId) && !castedImage.diagram) imageIDArray.current.push(castedImage.imageId);
                 }
             }
+            setItemCounter(itemCounter + 1);
         }
-        setItemCounter(itemCounter + 1)
         setRecentlyRemovedItems(lastElem);
     }
 
