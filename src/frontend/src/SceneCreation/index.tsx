@@ -205,6 +205,7 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
         if(allBackgroundImageList.current.length === 0) {
             //set the state to the fetched list
             setBackgroundImageList(backgroundImageFetchResults.current);
+            backgroundImageFetchResults.current = [];
             //console.log(backgroundImageFetchResults.current);
             //start fetching all diagram previews
             fetchNextDiagram();
@@ -463,7 +464,7 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
         if(allImageList.current.length === 0) {
             //set the state to the fetched list
             setImageList(imageFetchResults.current);
-            console.log(imageFetchResults.current);
+            imageFetchResults.current = []
             //start the fetching of all background images
             fetchBackgroundImageList();
         } else {
@@ -582,6 +583,7 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
         if(diagramsToFetch.current.length === 0) {
             //set the state to the fetched list
             setDiagramList(diagramFetchResults.current);
+            diagramFetchResults.current = [];
             //enable the continue button again
             setStep0ContinueDisabled(false);
             //continue to the next step
