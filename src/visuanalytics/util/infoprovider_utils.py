@@ -30,7 +30,8 @@ def get_transformations(tree, k, key_name, counter):
     calc_template = {
         "type": "calculate",
         "action": "",
-        "decimal": 2
+        "decimal": 2,
+        "keys": []
     }
 
     new_key_template = "_new_key_"
