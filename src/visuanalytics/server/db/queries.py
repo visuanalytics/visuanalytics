@@ -865,7 +865,6 @@ def insert_scene(scene):
     used_images = scene["used_images"]
     used_infoproviders = scene["used_infoproviders"]
     images = scene["images"]
-    # diagrams_original = scene["diagrams_original"]
     scene_items = scene["scene_items"]
 
     scene_json = {
