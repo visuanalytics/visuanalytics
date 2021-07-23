@@ -632,6 +632,12 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         sessionStorage.removeItem("sceneEditorStep-" + uniqueId);
         sessionStorage.removeItem("infoProviderList-" + uniqueId);
         sessionStorage.removeItem("selectedId-" + uniqueId);
+        for (let element of props.imageList) {
+            URL.revokeObjectURL(element.image_blob_url);
+        }
+        for (let element of props.backgroundImageList){
+            URL.revokeObjectURL(element.image_blob_url);
+        }
         components?.setCurrent("dashboard")
     }, [components]);
 
@@ -2816,6 +2822,12 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                         <Grid item>
                             <Button variant="contained"
                                     onClick={() => {
+                                        for (let element of props.imageList) {
+                                            URL.revokeObjectURL(element.image_blob_url);
+                                        }
+                                        for (let element of props.backgroundImageList){
+                                            URL.revokeObjectURL(element.image_blob_url);
+                                        }
                                         setBackDialogOpen(false);
                                         clearSessionStorage();
                                         if (props.sceneFromBackend !== undefined) {
