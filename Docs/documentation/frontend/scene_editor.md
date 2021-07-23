@@ -517,6 +517,9 @@ const handleItemSelect = (item: string, handlingHistorizedItem: boolean) => {
             setItemCounter(itemCounter + 1);
 ```
 
+* **item** ist der Inhalt des gewählten Elements.
+* **handlingHistorizedItem** ist ein Boolean, der *true* ist, wenn es sich um ein historisiertes Element handelt.
+
 Falls der Benutzer aktuell kein Element ausgewählt hat, so wird ein neues Textelement erstellt. Dieses bekommt dann den korrekten Text zugewiesen, abhängig davon, ob der Benutzer historisierte Daten oder "normale" API-Daten ausgewählt hat.
 
 ```javascript
