@@ -9,7 +9,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Grid, {GridSize} from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
-import {transformJSON, extractKeysFromSelection} from "../helpermethods";
+import {extractKeysFromSelection} from "../helpermethods";
 import {Diagram, ListItemRepresentation, SelectedDataItem, uniqueId} from "../types";
 import {Dialog, DialogActions, DialogContent, DialogTitle, Divider} from "@material-ui/core";
 import {FormelObj} from "../DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";

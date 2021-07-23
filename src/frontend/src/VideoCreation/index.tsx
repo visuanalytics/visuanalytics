@@ -54,7 +54,12 @@ export const VideoCreation: React.FC<VideoCreationProps> = (props) => {
     // name of the videoJob
     const [videoJobName, setVideoJobName] = React.useState(props.video ? props.video.name : "");
     //schedule of the videojob
-    const [schedule, setSchedule] = React.useState<Schedule>(props.video ? props.video.schedule : {type: "", interval: "", time: "", weekdays: []})
+    const [schedule, setSchedule] = React.useState<Schedule>(props.video ? {
+        type: props.video.schedule.type,
+        weekdays: props.video.schedule.weekdays,
+        time: props.video.schedule.time,
+        interval: props.video.schedule.time_interval,
+    } : {type: "", interval: "", time: "", weekdays: []})
     // list of all available infoproviders
     const [infoProviderList, setInfoProviderList] = React.useState<Array<InfoProviderData>>([]);
     // list of infoproviders selected by the user

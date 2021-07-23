@@ -235,7 +235,6 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
         setShowHistorizedDialog(true);
     }
 
-    //TODO: possibly find better solution than abusing span
     /**
      * Renders clickable buttons for the historized data of an infoprovider, so they can be inserted into textfields
      * @param item The item name
@@ -251,7 +250,6 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
         );
     }
 
-    //TODO: possibly find better solution than abusing span
     /**
      * This method renders clickable buttons for inserting selected and custom data from an infoprovider into a textfield.
      * @param item The name of the item that should be rendered
@@ -273,7 +271,7 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
      */
     const renderDataSource = (dataSource: MinimalDataSource, infoProviderName: string) => {
         return (
-            <Grid item container xs={12}>
+            <Grid item container xs={12} key={dataSource.apiName}>
                 <Grid item xs={12}>
                     <Typography variant="body1" className={classes.categoryText}>
                         Gewählte Daten

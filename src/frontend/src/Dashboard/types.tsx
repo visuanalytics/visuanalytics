@@ -98,7 +98,13 @@ export type FullVideo = {
     images: any;
     name: string;
     sceneList: Array<SceneCardData>;
-    schedule: Schedule;
+    schedule: {
+        type: string;
+        time: string;
+        date: string;
+        time_interval: string;
+        weekdays: Array<number>
+    };
     selectedInfoprovider: Array<InfoProviderData>;
     sequence: any;
     tts_ids: Array<number>;
