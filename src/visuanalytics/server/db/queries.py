@@ -1042,7 +1042,7 @@ def update_scene(scene_id, updated_data):
     with open_resource(new_file_path, "w") as f:
         json.dump(scene_json, f)
 
-    video_ids = [x["job_id"] for x in list(con.execute("SELECT * FROM job_uses_scene WHERE WHERE scene_id=?", [scene_id]))]
+    video_ids = [x["job_id"] for x in list(con.execute("SELECT * FROM job_uses_scene WHERE scene_id=?", [scene_id]))]
     video_jsons = [get_videojob(x) for x in video_ids]
     for i, id in enumerate(video_ids):
         insert_video_job(video_jsons[i], True, id)
