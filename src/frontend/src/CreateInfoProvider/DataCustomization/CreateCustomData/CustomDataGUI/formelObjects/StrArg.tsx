@@ -23,16 +23,22 @@ export class StrArg {
     isLeftParen: boolean;
 
     /**
-     * Shows if the Object holds a Number.
+     * Shows if the object holds a Number.
      */
     isNumber: boolean;
 
-    constructor(strRep: string, isOp: boolean, isRightParen: boolean, isLeftParen: boolean, isNumber: boolean) {
+    /**
+     * Shows if the object holds a comma.
+     */
+    isComma: boolean;
+
+    constructor(strRep: string, isOp: boolean, isRightParen: boolean, isLeftParen: boolean, isNumber: boolean, isComma: boolean) {
         this.stringRep = strRep;
         this.isOp = isOp;
         this.isRightParen = isRightParen;
         this.isLeftParen = isLeftParen;
         this.isNumber = isNumber;
+        this.isComma = isComma;
     }
 
     /**
