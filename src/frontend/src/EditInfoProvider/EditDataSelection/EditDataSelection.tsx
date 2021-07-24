@@ -280,7 +280,7 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
                     backHandler={() => props.backHandler(1)}
                     selectedData={props.dataSource.selectedData}
                     setSelectedData={props.setSelectedData}
-                    listItems={newListItems} //TODO: exchange for "props.infoProvDataSources[props.selectedDataSource].listItems" when listItems are in backend data format
+                    listItems={props.infoProvDataSources[props.selectedDataSource].listItems}
                     //setListItems={() => console.log("THIS IS ONLY FOR DEBUGGING AND NOT ALLOWED IN EDIT MODE!")}
                     historizedData={props.dataSource.historizedData}
                     setHistorizedData={props.setHistorizedData}
