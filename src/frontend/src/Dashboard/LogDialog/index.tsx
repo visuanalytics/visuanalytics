@@ -26,6 +26,10 @@ interface LogDialogProps {
     reportError: (message: string) => void;
 }
 
+/**
+ * This component renders the log entries either for the infoproviders or video jobs
+ * @param props
+ */
 export const LogDialog: React.FC<LogDialogProps> = (props) => {
     const classes = useStyles();
 

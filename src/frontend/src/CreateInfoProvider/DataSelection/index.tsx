@@ -9,19 +9,18 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Grid, {GridSize} from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
-import {transformJSON, extractKeysFromSelection} from "../helpermethods";
-import {Diagram, ListItemRepresentation, SelectedDataItem} from "../types";
+import {extractKeysFromSelection} from "../helpermethods";
+import {Diagram, ListItemRepresentation, SelectedDataItem, uniqueId} from "../types";
 import {Dialog, DialogActions, DialogContent, DialogTitle, Divider} from "@material-ui/core";
 import {FormelObj} from "../DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 
 interface DataSelectionProps {
     continueHandler: () => void;
     backHandler: () => void;
-    //apiData: any;
     selectedData: Array<SelectedDataItem>;
     setSelectedData: (array: Array<SelectedDataItem>) => void;
     listItems: Array<ListItemRepresentation>;
-    setListItems: (array: Array<ListItemRepresentation>) => void; //TODO: only used for "janek test", remove in production
+    //setListItems: (array: Array<ListItemRepresentation>) => void; //only used for "janek test", remove in production
     historizedData: Array<string>;
     setHistorizedData: (array: Array<string>) => void;
     customData: Array<FormelObj>;
@@ -36,7 +35,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
     const classes = useStyles();
 
     //save the value selectedData on loading to compare if any deletions were made
-    const [oldSelectedData] = React.useState(props.selectedData);
+    const [oldSelectedData, setOldSelectedData] = React.useState(props.selectedData);
     //save the formulas that need to be removed
     const [formulasToRemove, setFormulasToRemove] = React.useState<Array<string>>([]);
     //save the diagrams that need to be removed
@@ -46,8 +45,25 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
     //true when the dialog for deleting formulas and diagrams is open
     const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
 
+    //store the copy of the old selectedData in the sessionStorage
+    React.useEffect(() => {
+        if (sessionStorage.getItem("firstDataSelectionEntering-" + uniqueId) !== null) {
+            setOldSelectedData(sessionStorage.getItem("oldSelectedData-" + uniqueId) === null ? [] : JSON.parse(sessionStorage.getItem("oldSelectedData-" + uniqueId)!))
+        } else {
+            //leave a marker in the sessionStorage to identify if this is the first entering
+            sessionStorage.setItem("firstDataSelectionEntering-" + uniqueId, "false");
+        }
+    }, [])
+    React.useEffect(() => {
+        sessionStorage.setItem("oldSelectedData-" + uniqueId, JSON.stringify(oldSelectedData))
+    }, [oldSelectedData])
+    const clearSessionStorage = () => {
+        sessionStorage.removeItem("oldSelectedData-" + uniqueId)
+        sessionStorage.removeItem("firstDataSelectionEntering-" + uniqueId)
+    }
+
     //sample JSON-data to test the different depth levels and parsing
-    const sample2 = {
+    /*const sample2 = {
         "season_helper": {
             "Envelope": {
                 "Body": {
@@ -176,7 +192,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
         },
         "Vorherige-Season": "Text",
         "Test-ZahlABCDEFGHIJKLMNOPQRSTUVWXYZ123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789": "Zahl"
-    };
+    };*/
 
 
     /**
@@ -188,9 +204,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
         const formulas: Array<string> = [];
         props.customData.forEach((formula) => {
             //if the name is included, it is used by the formula
-            //TODO: if another data that includes the name followed by a whitespace, there would be a match
-            //possible solutions: no whitespaces or array of data for each formula
-            if(formula.formelString.includes(data + " ") || formula.formelString.endsWith(data)) formulas.push(formula.formelName)
+            if(formula.usedFormulaAndApiData.includes(data)) formulas.push(formula.formelName)
         })
         return formulas;
     }
@@ -223,6 +237,8 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
         oldSelection.forEach((oldItem) => {
             if(!newSelection.includes(oldItem)) missingSelections.push(oldItem)
         })
+        console.log("missing selections: ");
+        console.log(missingSelections)
         if(missingSelections.length > 0) {
             //check if removal of formula is necessary
             let formulasToRemove: Array<string> = [];
@@ -285,20 +301,109 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
         props.setHistorizedData(newHistorizedData);
     }
 
+
+
+    //mutable list of formulas - used because multiple modifications in one render are necessary in two functions at the same time
+    const newHistorizedData = React.useRef<Array<string>>([]);
+    //mutable list of diagrams - used because multiple modifications in one render are necessary in two functions at the same time
+    const newDiagrams = React.useRef<Array<Diagram>>([]);
+    //mutable list of formulas - used because multiple modifications in one render are necessary in two functions at the same time
+    const newCustomData = React.useRef<Array<FormelObj>>([]);
+
+    /**
+     * Method that finds all diagrams that depend on a certain formula, returns an array with their names.
+     * @param formelName The name of the formula to search for.
+     */
+    const findDependentDiagrams = (formelName: string) => {
+        const diagramsToRemove: Array<string> = [];
+        //check for diagrams
+        props.diagrams.forEach((diagram) => {
+            if (diagram.sourceType === "Historized" && diagram.historizedObjects !== undefined) {
+                for (let index = 0; index < diagram.historizedObjects.length; index++) {
+                    const historized = diagram.historizedObjects[index];
+                    //the dataSource name needs to be added in front of the formula name since historizedObjects has dataSource name in it paths too
+                    if (props.apiName + "|" + formelName === historized.name) {
+                        diagramsToRemove.push(diagram.name);
+                        break;
+                    }
+                }
+            }
+        })
+        return diagramsToRemove;
+    }
+
+
     /**
      * Method that deletes all historizedData, formulas and diagrams from their
      * state in the wrapper component that need to be because of unchecking.
      * Uses formulasToRemove, diagramsToRemove and historizedToRemove to check which values these are.
      */
     const deleteDependentElements = () => {
+        //initialize the lists of data to be edited
+        newHistorizedData.current = props.historizedData.slice();
+        newDiagrams.current = props.diagrams.slice();
+        newCustomData.current = props.customData.slice();
         removeFromHistorized(historizedToRemove);
-        props.setCustomData(props.customData.filter((formula) => {
+        newHistorizedData.current = newHistorizedData.current.filter((item) => {
+            return !historizedToRemove.includes(item);
+        })
+        newCustomData.current = newCustomData.current.filter((formula) => {
             return !formulasToRemove.includes(formula.formelName);
-        }));
-        props.setDiagrams(props.diagrams.filter((diagram) => {
+        });
+        newDiagrams.current = props.diagrams.filter((diagram) => {
             return !diagramsToRemove.includes(diagram.name);
-        }))
+        })
+        //start the cascading deletion of formulas
+        if(formulasToRemove.length > 0) {
+            formulasToRemove.forEach((formula) => {
+                deleteFormulaDependents(formula)
+            })
+        }
+        //delete the data that resulted from the delete cascade
+        props.setHistorizedData(newHistorizedData.current);
+        props.setDiagrams(newDiagrams.current);
+        props.setCustomData(newCustomData.current);
+        //reset the list of formulas, historized data and diagrams to remove
+        setFormulasToRemove([]);
+        setDiagramsToRemove([])
     }
+
+
+    /**
+     * Method that searches all diagrams and formulas depending on a formula to delete them.
+     * For each formula found, it will recursively repeat this process.
+     * Also removes from historizedData.
+     * @param formelName The formula to be deleted.
+     */
+    const deleteFormulaDependents = (formelName: string) => {
+        //remove the formula from historized data if it is contained
+        newHistorizedData.current = newHistorizedData.current.filter((data) => {
+            return data !== formelName;
+        })
+        //search all diagrams and delete them
+        const diagramsToRemove = findDependentDiagrams(formelName);
+        if (diagramsToRemove.length > 0) {
+            newDiagrams.current = newDiagrams.current.filter((diagram) => {
+                return !diagramsToRemove.includes(diagram.name);
+            })
+        }
+        //find all formulas depending on the formula
+        const dependentFormulas: Array<string> = [];
+        newCustomData.current.forEach((formula) => {
+            if (formula.usedFormulaAndApiData.includes(formelName + " ") || formula.formelString.endsWith(formelName)) dependentFormulas.push(formula.formelName);
+        })
+        //remove all dependent formulas
+        if (dependentFormulas.length > 0) {
+            newCustomData.current = newCustomData.current.filter((formula) => {
+                return !dependentFormulas.includes(formula.formelName);
+            })
+        }
+        //for each dependent formula, recursively repeat this
+        dependentFormulas.forEach((dependentFormula) => {
+            deleteFormulaDependents(dependentFormula);
+        })
+    }
+
 
     //true when the dialog for going back and reverting changes is open
     const [backDialogOpen, setBackDialogOpen] = React.useState(false);
@@ -314,7 +419,10 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
         oldSelectedData.forEach((item) => {
             if(!props.selectedData.includes(item)) missingSelections.push(item.key);
         })
-        if(missingSelections.length===0) props.backHandler();
+        if(missingSelections.length===0) {
+            clearSessionStorage();
+            props.backHandler();
+        }
         else setBackDialogOpen(true);
     }
 
@@ -324,6 +432,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
      */
     const revertAndBack= () => {
         props.setSelectedData(oldSelectedData);
+        clearSessionStorage();
         props.backHandler();
     }
 
@@ -335,6 +444,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
      */
     const handleContinue = () => {
         const removalObj = calculateItemsToRemove();
+        console.log(removalObj);
         //if checkRemoval returns false, no removal dialog is necessary and proceeding is possible
         if(removalObj.formulasToRemove.length > 0 || removalObj.diagramsToRemove.length > 0) {
             setHistorizedToRemove(removalObj.historizedToRemove);
@@ -343,6 +453,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
             setDeleteDialogOpen(true);
         } else {
             removeFromHistorized(removalObj.historizedToRemove);
+            clearSessionStorage();
             props.continueHandler();
         }
     }
@@ -504,7 +615,9 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                 </Grid>
                 <Grid item container xs={12} justify="space-between" className={classes.elementLargeMargin}>
                     <Grid item>
-                        <Button variant="contained" size="large" color="primary" onClick={backHandler}>
+                        <Button variant="contained" size="large" color="primary" onClick={() => {
+                            backHandler();
+                        }}>
                             zurück
                         </Button>
                     </Grid>
@@ -512,7 +625,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                         <Button variant="contained" size="large" color="primary" disabled={props.selectedData.length===0} onClick={handleContinue}>
                             weiter
                         </Button>
-                        {<Button variant="contained" size="large" onClick={() => {props.setListItems(transformJSON(sample2))}}>Janek Test</Button>}
+                        {/*<Button variant="contained" size="large" onClick={() => {props.setListItems(transformJSON(sample2))}}>Janek Test</Button>*/}
                     </Grid>
                 </Grid>
             </Grid>
@@ -593,6 +706,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                             <Button variant="contained"
                                     onClick={() => {
                                         deleteDependentElements();
+                                        clearSessionStorage();
                                         props.continueHandler();
                                     }}
                                     className={classes.redDeleteButton}>

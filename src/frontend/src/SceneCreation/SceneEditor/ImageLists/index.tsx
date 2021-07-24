@@ -8,10 +8,10 @@ import {ImageFrontendData} from "../../types";
 
 interface ImageListsProps {
     imageList: Array<ImageFrontendData>
-    backgroundImageList: Array<string>
+    backgroundImageList: Array<ImageFrontendData>
     postImage: (data: FormData) => void;
     postBackgroundImage: (data: FormData) => void;
-    handleImageClick: (src : string, id: number, path: string, index: number) => void;
+    handleImageClick: (src : string, id: number, path: string, index: number, diagram: boolean, diagramName: string) => void;
     handleBackgroundImageClick: (src : string, index : number) => void;
     backGroundType: string;
     backGroundColorEnabled: boolean;
@@ -51,7 +51,7 @@ export const ImageLists: React.FC<ImageListsProps> = (props) => {
             return (
                 <Grid key={image} item container xs={6} justify="space-around" className={index === 0 ? classes.firstImage : index === 1 ? classes.secondImage : index % 2 === 0 ? classes.leftImage : classes.rightImage}>
                     <Grid item xs={10}>
-                        <img src={image} className={classes.imageInList} alt={"Image Nr." +  index} onClick={() => props.handleImageClick(image, id, path, index)}/>
+                        <img src={image} className={classes.imageInList} alt={"Image Nr." +  index} onClick={() => props.handleImageClick(image, id, path, index, false, "")}/>
                     </Grid>
                 </Grid>
             )
@@ -66,7 +66,6 @@ export const ImageLists: React.FC<ImageListsProps> = (props) => {
         }
     }
 
-    //TODO: do we need the path and id also for the background image? i dont think so!
 
     return (
         <React.Fragment>
@@ -78,13 +77,13 @@ export const ImageLists: React.FC<ImageListsProps> = (props) => {
                 </Grid>
                 <Grid item xs={2}>
                     {!showBackgroundImages &&
-                    <IconButton aria-label="Infoprovider-Daten ausklappen"
+                    <IconButton aria-label="Hintergrundbilder-Liste ausklappen"
                                 onClick={() => setShowBackgroundImages(!showBackgroundImages)}>
                         <ExpandMore/>
                     </IconButton>
                     }
                     {showBackgroundImages &&
-                    <IconButton aria-label="Infoprovider-Daten einklappen"
+                    <IconButton aria-label="Hintergrundbilder-Liste einklappen"
                                 onClick={() => setShowBackgroundImages(!showBackgroundImages)}>
                         <ExpandLess/>
                     </IconButton>
@@ -121,7 +120,7 @@ export const ImageLists: React.FC<ImageListsProps> = (props) => {
                         </Grid>
                     </Grid>
                     <Grid item container xs={12} className={classes.elementLargeMargin}>
-                        {props.backgroundImageList.map((image, index) => renderImageEntry(image, 0, "", index, "background"))}
+                        {props.backgroundImageList.map((image, index) => renderImageEntry(image.image_blob_url, 0, "", index, "background"))}
                     </Grid>
                 </Collapse>
             </Grid>
@@ -133,12 +132,12 @@ export const ImageLists: React.FC<ImageListsProps> = (props) => {
                 </Grid>
                 <Grid item xs={2}>
                     {!showImages &&
-                    <IconButton aria-label="Infoprovider-Daten ausklappen" onClick={() => setShowImages(!showImages)}>
+                    <IconButton aria-label="Bilder-Liste ausklappen" onClick={() => setShowImages(!showImages)}>
                         <ExpandMore/>
                     </IconButton>
                     }
                     {showImages &&
-                    <IconButton aria-label="Infoprovider-Daten einklappen" onClick={() => setShowImages(!showImages)}>
+                    <IconButton aria-label="Bilder-Liste einklappen" onClick={() => setShowImages(!showImages)}>
                         <ExpandLess/>
                     </IconButton>
                     }

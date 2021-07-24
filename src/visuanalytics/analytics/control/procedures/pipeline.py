@@ -2,6 +2,7 @@ import contextlib
 import json
 import logging
 import os
+import glob
 import shutil
 import time
 import traceback
@@ -206,6 +207,9 @@ class Pipeline(object):
             # delete directory
         logger.info("Cleaning up...")
         shutil.rmtree(resources.get_temp_resource_path("", self.id), ignore_errors=True)
+        files = glob.glob(resources.get_image_path("diagrams") + "/*")
+        for f in files:
+            os.remove(f)
         logger.info("Finished cleanup!")
 
     def __error_cleanup(self, e: Exception):

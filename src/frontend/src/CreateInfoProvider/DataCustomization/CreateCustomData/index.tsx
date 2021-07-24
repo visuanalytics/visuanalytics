@@ -18,6 +18,7 @@ import {
 import {Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import {checkFindOnlyNumbers, getListItemsNames} from "../../helpermethods";
+import {searchForComma} from "../../../EditInfoProvider/helpermethods";
 
 
 interface CreateCustomDataProps {
@@ -80,6 +81,11 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
     const [leftParenFlag, setLeftParenFlag] = React.useState<boolean>(false);
 
     /**
+     * commaFlag represents the status of commaButton. If it is, true the commaButton will be disabled.
+     */
+    const [commaFlag, setCommaFlag] = React.useState<boolean>(true);
+
+    /**
      * Counts how many left parentheses are included in the formula.
      * Is used to check if the number of right and left parens is even.
      */
@@ -89,6 +95,8 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
      * Is used to check if the number of right and left parens is even.
      */
     const [rightParenCount, setRightParenCount] = React.useState<number>(0);
+
+    const [isCommaUsed, setIsCommaUsed] = React.useState(false);
 
     // these variables are used for the delete dependency mechanism
     //name of the formula currently to remove
@@ -110,13 +118,16 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
      * @param operator => +, -, *, /, %
      */
     const handleOperatorButtons = (operator: string) => {
+        setIsCommaUsed(false);
+
         setOpFlag(true);
         setDataFlag(false)
         setNumberFlag(false);
         setRightParenFlag(true);
         setLeftParenFlag(false);
+        setCommaFlag(true);
 
-        dataAsObj.push(new StrArg(operator, true, false, false, false));
+        dataAsObj.push(new StrArg(operator, true, false, false, false, false));
         setInput(calculationToString(dataAsObj));
     }
 
@@ -126,13 +137,16 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
      * @param data => the content of selectedData from the data-selection-step
      */
     const handleDataButtons = (data: string) => {
+        setIsCommaUsed(false);
+
         setOpFlag(false);
         setDataFlag(true);
         setNumberFlag(true);
         setRightParenFlag(false);
         setLeftParenFlag(true);
+        setCommaFlag(true);
 
-        dataAsObj.push(new StrArg(data, false, false, false, false));
+        dataAsObj.push(new StrArg(data, false, false, false, false, false));
         setInput(calculationToString(dataAsObj));
 
         const arrTmp = usedFormulaAndApiData.current;
@@ -155,8 +169,9 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
         setNumberFlag(false);
         setRightParenFlag(false);
         setLeftParenFlag(true);
+        setCommaFlag(false);
 
-        dataAsObj.push(new StrArg(number, false, false, false, true));
+        dataAsObj.push(new StrArg(number, false, false, false, true, false));
         setInput(calculationToString(dataAsObj));
     }
 
@@ -167,14 +182,16 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
      */
     const handleLeftParen = (paren: string) => {
         setLeftParenCount(leftParenCount + 1);
+        setIsCommaUsed(false);
 
         setOpFlag(true);
         setDataFlag(false);
         setNumberFlag(false);
         setRightParenFlag(true);
         setLeftParenFlag(false);
+        setCommaFlag(true);
 
-        dataAsObj.push(new StrArg(paren, false, false, true, false));
+        dataAsObj.push(new StrArg(paren, false, false, true, false, false));
         setInput(calculationToString(dataAsObj));
     }
 
@@ -185,14 +202,30 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
      */
     const handleRightParen = (paren: string) => {
         setRightParenCount(rightParenCount + 1);
+        setIsCommaUsed(false);
 
         setOpFlag(false);
         setDataFlag(true);
         setNumberFlag(true);
         setRightParenFlag(false);
         setLeftParenFlag(true);
+        setCommaFlag(true);
 
-        dataAsObj.push(new StrArg(paren, false, true, false, false));
+        dataAsObj.push(new StrArg(paren, false, true, false, false, false));
+        setInput(calculationToString(dataAsObj));
+    }
+
+    const handleCommaButton = (comma: string) => {
+        setIsCommaUsed(true);
+
+        setOpFlag(true);
+        setDataFlag(true);
+        setNumberFlag(false);
+        setRightParenFlag(true);
+        setLeftParenFlag(true);
+        setCommaFlag(true);
+
+        dataAsObj.push(new StrArg(comma, false, false, false, false, true));
         setInput(calculationToString(dataAsObj));
     }
 
@@ -228,12 +261,14 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
                 setNumberFlag(false);
                 setRightParenFlag(false);
                 setLeftParenFlag(true);
+                setCommaFlag(false);
             } else {
                 setOpFlag(false);
                 setDataFlag(true)
                 setNumberFlag(true);
                 setRightParenFlag(false);
                 setLeftParenFlag(true);
+                setCommaFlag(true);
             }
 
         } else if (dataAsObj[dataAsObj.length - 1].isRightParen) {
@@ -244,6 +279,7 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
                 setNumberFlag(false);
                 setRightParenFlag(true);
                 setLeftParenFlag(false);
+                setCommaFlag(true);
             }
             setRightParenCount(rightParenCount - 1);
 
@@ -253,20 +289,38 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
 
         } else if (dataAsObj[dataAsObj.length - 1].isNumber) {
 
-            if (!dataAsObj[dataAsObj.length - 2].isNumber) {
+            if (dataAsObj[dataAsObj.length - 2].isComma) {
+                setOpFlag(true);
+                setDataFlag(true);
+                setNumberFlag(false);
+                setRightParenFlag(true);
+                setLeftParenFlag(true);
+                setCommaFlag(true);
+            } else if (!dataAsObj[dataAsObj.length - 2].isNumber) {
                 setOpFlag(true);
                 setDataFlag(false);
                 setNumberFlag(false);
                 setRightParenFlag(true);
-                setLeftParenFlag(false);
+                setLeftParenFlag(true);
+                setCommaFlag(true);
             }
 
+        } else if (dataAsObj[dataAsObj.length - 1].isComma) {
+            setIsCommaUsed(false);
+
+            setOpFlag(false);
+            setDataFlag(true);
+            setNumberFlag(false);
+            setRightParenFlag(false);
+            setLeftParenFlag(true);
+            setCommaFlag(false);
         } else {
             setOpFlag(true);
             setDataFlag(false);
             setNumberFlag(false);
             setRightParenFlag(true);
             setLeftParenFlag(false);
+            setCommaFlag(true);
 
             const arrTmp = usedFormulaAndApiData.current;
             for (let i: number = 0; i < arrTmp.length; i++) {
@@ -278,6 +332,9 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
         }
 
         dataAsObj.pop();
+
+        setIsCommaUsed(searchForComma(dataAsObj));
+
         setInput(calculationToString(dataAsObj));
     }
 
@@ -297,12 +354,14 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
 
         setRightParenCount(0);
         setLeftParenCount(0);
+        setIsCommaUsed(false);
 
         setOpFlag(true);
         setDataFlag(false);
         setNumberFlag(false);
         setRightParenFlag(false);
         setLeftParenFlag(false);
+        setCommaFlag(true);
     }
 
 
@@ -336,14 +395,13 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
      * @param formelName is the name of the formula that has to be deleted.
      */
     const deleteCustomDataCheck = (formelName: string) => {
-        //TODO: documentation
         //find all diagrams to remove
         let diagramsToRemove: Array<string> = findDependentDiagrams(formelName);
         const formulasToRemove: Array<string> = [];
         console.log(formelName);
         //check if any formula needs to be removed
         props.customData.forEach((formula) => {
-            if (formula.formelString.includes(formelName + " ") || formula.formelString.endsWith(formelName)) {
+            if (formula.usedFormulaAndApiData.includes(formelName + " ") || formula.formelString.endsWith(formelName)) {
                 formulasToRemove.push(formula.formelName);
             }
         })
@@ -430,7 +488,7 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
         //find all formulas depending on the formula
         const dependentFormulas: Array<string> = [];
         newCustomData.current.forEach((formula) => {
-            if (formula.formelString.includes(formelName + " ") || formula.formelString.endsWith(formelName)) dependentFormulas.push(formula.formelName);
+            if (formula.usedFormulaAndApiData.includes(formelName + " ") || formula.formelString.endsWith(formelName)) dependentFormulas.push(formula.formelName);
         })
         //remove all dependent formulas
         if (dependentFormulas.length > 0) {
@@ -461,7 +519,7 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
             return;
         }
         if (checkFindOnlyNumbers(formel)) {
-            props.reportError("Fehler: Der Name darf nicht nur aus Nummern bestehen.")
+            props.reportError("Fehler: Der Name darf keine Zahl sein.")
             return;
         }
         if (formel.includes('(') || formel.includes(')')) {
@@ -569,6 +627,7 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
                         handleNumberButton={(number: string) => handleNumberButtons(number)}
                         handleRightParen={(paren: string) => handleRightParen(paren)}
                         handleLeftParen={(paren: string) => handleLeftParen(paren)}
+                        handleCommaButton={(comma: string) => handleCommaButton(comma)}
                         handleDelete={() => handleDelete()}
                         fullDelete={() => fullDelete()}
                         deleteCustomDataCheck={(formelName: string) => deleteCustomDataCheck(formelName)}
@@ -578,8 +637,10 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
                         numberFlag={numberFlag}
                         rightParenFlag={rightParenFlag}
                         leftParenFlag={leftParenFlag}
+                        commaFlag={commaFlag}
                         leftParenCount={leftParenCount}
                         rightParenCount={rightParenCount}
+                        isCommaUsed={isCommaUsed}
                     />
                 </Grid>
                 <Grid item container xs={12} justify="space-between" className={classes.elementLargeMargin}>

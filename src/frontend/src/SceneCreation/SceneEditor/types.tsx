@@ -10,8 +10,6 @@ export type CustomCircle = {
     rotation: number;
     width: number;
     height: number;
-    baseWidth: number;
-    baseHeight: number;
     scaleX: number;
     scaleY: number;
 };
@@ -24,8 +22,6 @@ export type CustomRectangle = {
     id: string;
     color: string;
     rotation: number;
-    baseWidth: number;
-    baseHeight: number;
     scaleX: number;
     scaleY: number;
 };
@@ -35,12 +31,9 @@ export type CustomLine = {
     y: number;
     id: string;
     color: string;
-    strokeWidth: number;
     rotation: number;
     width: number;
     height: number;
-    baseWidth: number;
-    baseHeight: number;
     scaleX: number;
     scaleY: number;
 };
@@ -48,14 +41,11 @@ export type CustomLine = {
 export type CustomStar = {
     x: number;
     y: number;
-    numPoints: number;
     id: string;
     color: string;
     rotation: number;
     width: number;
     height: number;
-    baseWidth: number;
-    baseHeight: number;
     scaleX: number;
     scaleY: number;
 };
@@ -66,15 +56,11 @@ export type CustomText = {
     id: string;
     textContent: string;
     width: number;
+    height: number;
     rotation: number;
     fontFamily: string;
     fontSize: number;
     color: string;
-    height: number;
-    padding: number;
-    currentlyRendered: boolean;
-    baseWidth: number;
-    baseHeight: number;
     scaleX: number;
     scaleY: number;
 };
@@ -87,12 +73,12 @@ export type CustomImage = {
     image: HTMLImageElement;
     imageId: number;
     imagePath: string;
+    diagram: boolean;
+    diagramName: string; //TODO document
     index: number;
     width: number;
     height: number;
     color: string;
-    baseWidth: number;
-    baseHeight: number;
     scaleX: number;
     scaleY: number;
 };
@@ -121,24 +107,25 @@ export type BaseImg = {
 export type DataImage = {
     description: string,
     type: string,
-    pos_x: number, //X-Coordinate
-    pos_y: number, //Y-Coordinate
-    size_x: number, //Breite optional
-    size_y: number, //Höhe optional
+    pos_x: number,
+    pos_y: number,
+    size_x: number,
+    size_y: number,
     color: string,
-    path: string //Diagrammname "image_name" : "" eventuell
+    path: string
 }
 
 export type DataText = {
-    description: string, //optional
+    description: string,
     type: string,
     anchor_point: string,
-    pos_x: number, //item.x
-    pos_y: number, //item.y
-    color: string, //item.color
-    font_size: number, //item.fontSize
-    font: string // "fonts/{item.font}.ttf"
-    pattern: string // "Datum: {_req|api_key}"
+    pos_x: number,
+    pos_y: number,
+    color: string,
+    font_size: number,
+    font: string,
+    pattern: string,
+    width: number
 }
 
 /**

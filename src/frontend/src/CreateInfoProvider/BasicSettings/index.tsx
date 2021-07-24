@@ -14,7 +14,15 @@ import FormControl from "@material-ui/core/FormControl";
 import Button from "@material-ui/core/Button";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import {Diagram, ListItemRepresentation, Schedule, SelectedDataItem, testDataBackendAnswer, uniqueId} from "../types";
+import {
+    ArrayProcessingData,
+    Diagram,
+    ListItemRepresentation,
+    Schedule,
+    SelectedDataItem, StringReplacementData,
+    testDataBackendAnswer,
+    uniqueId
+} from "../types";
 import {transformJSON} from "../helpermethods";
 import {Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
 import {FormelObj} from "../DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
@@ -45,6 +53,8 @@ interface BasicSettingsProps {
     diagrams: Array<Diagram>
     setDiagrams: (diagrams: Array<Diagram>) => void;
     setListItems: (array: Array<ListItemRepresentation>) => void;
+    setArrayProcessingsList: (processings: Array<ArrayProcessingData>) => void;
+    setStringReplacementList: (replacements: Array<StringReplacementData>) => void;
     isInEditMode: boolean;
 }
 
@@ -60,25 +70,44 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
     //state variable that manages toggling between input and loading spinner
     const [displaySpinner, setDisplaySpinner] = React.useState(false);
     //the values when the component is initially mounted - used for change detection
-    const [oldApiName] = React.useState(props.apiName);
-    const [oldQuery] = React.useState(props.query);
-    //const [oldMethod] = React.useState(props.method);
-    //const [oldApiKeyInput1] = React.useState(props.apiKeyInput1);
-    //const [oldApiKeyInput2] = React.useState(props.apiKeyInput2);
-    //const [oldNoKey] = React.useState(props.noKey);
+    const [oldApiName, setOldApiName] = React.useState(props.apiName);
+    const [oldQuery, setOldQuery] = React.useState(props.query);
     //true when the dialog for confirming the deletion of diagrams
     const [removeDialogOpen, setRemoveDialogOpen] = React.useState(false);
     //const components = React.useContext(ComponentContext);
+
+    //store the copies of original values in the sessionStorage
+    React.useEffect(() => {
+        if (sessionStorage.getItem("firstBasicSettingsEntering-" + uniqueId) !== null) {
+            setOldApiName(sessionStorage.getItem("oldApiName-" + uniqueId) || "")
+            setOldQuery(sessionStorage.getItem("oldQuery-" + uniqueId) || "")
+        } else {
+            //leave a marker in the sessionStorage to identify if this is the first entering
+            sessionStorage.setItem("firstBasicSettingsEntering-" + uniqueId, "false");
+        }
+    }, [])
+    React.useEffect(() => {
+        sessionStorage.setItem("oldApiName-" + uniqueId, oldApiName)
+    }, [oldApiName])
+    React.useEffect(() => {
+        sessionStorage.setItem("oldQuery-" + uniqueId, oldQuery)
+    }, [oldQuery])
+    const clearSessionStorage = () => {
+        sessionStorage.removeItem("oldApiName-" + uniqueId)
+        sessionStorage.removeItem("oldQuery-" + uniqueId)
+        sessionStorage.removeItem("firstBasicSettingsEntering-" + uniqueId)
+    }
 
     /**
      * Handler method for clicking the "proceed" button.
      * Sends the API data for testing to the backend and displays a loading animation.
      * If the dataSource was renamed, all elements in diagrams are also renamed.
      * If the query changes, a dialog is opened, asking the user for confirmation to delete all data related to the dataSource.
-     * If this component is called from the editation of an infoprovider the given continue handler will be called. The function terminates afterwards
+     * If this component is called from the editing mode of an infoprovider the given continue handler will be called. The function terminates afterwards
      */
     const handleProceed = () => {
         if(props.isInEditMode) {
+            clearSessionStorage();
             props.continueHandler();
             return;
         }
@@ -136,6 +165,7 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
             setDisplaySpinner(true);
         }else {
             //just continue when there were no changes
+            clearSessionStorage();
             props.continueHandler();
         }
     }
@@ -147,13 +177,6 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
      */
     const deleteAllDependencies = () => {
         //reset all following settings when a new api request is made
-        // Clean up the session storage for all following steps
-        sessionStorage.removeItem("selectedData-" + uniqueId);
-        sessionStorage.removeItem("customData-" + uniqueId);
-        sessionStorage.removeItem("historizedData-" + uniqueId);
-        sessionStorage.removeItem("schedule-" + uniqueId);
-        sessionStorage.removeItem("historySelectionStep-" + uniqueId);
-        //sessionStorage.removeItem("listItems-" + uniqueId);
 
         // Reset the states of the following steps
         //props.setApiData({});
@@ -162,6 +185,8 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
         props.setHistorizedData(new Array<string>());
         props.setSchedule({type: "", interval: "", time: "", weekdays: []});
         props.setHistorySelectionStep(1);
+        props.setArrayProcessingsList([]);
+        props.setStringReplacementList([]);
         //props.setListItems(new Array<ListItemRepresentation>());
         //find all diagrams with this dataSource and delete them
         const diagramsToDelete: Array<string> = [];
@@ -210,6 +235,7 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
             deleteAllDependencies();
             props.setListItems(transformJSON(data.api_keys));
             //console.log(transformJSON(data.api_keys));
+            clearSessionStorage();
             props.continueHandler();
         }
     }
@@ -267,7 +293,7 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
     const handleMethodChange = (e: React.ChangeEvent<{ value: unknown }>) => {
         if (e.target !== null) {
             //check if the categories of the elements change, in this case empty the input
-            const methodIndexList = ["KeyInHeader", "KeyInHeader", "BearerToken", "BasicAuth", "DigestAuth"];
+            const methodIndexList = ["KeyInHeader", "KeyInHeader", "BearerToken", "BasicAuth"];
             const methodIndex = methodIndexList.indexOf(props.method);
             const targetIndex = methodIndexList.indexOf(e.target.value as string)
             if ((methodIndex <= 1 && targetIndex > 1) || (methodIndex === 2 && targetIndex !== 2) || (methodIndex > 2 && targetIndex <= 2)) {
@@ -278,9 +304,10 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
         }
     }
 
-    const handleTestContinue = () => {
+    /*const handleTestContinue = () => {
+        clearSessionStorage();
         props.continueHandler()
-    }
+    }*/
 
 
     /**
@@ -387,13 +414,12 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
                                             <MenuItem value="KeyInHeader">Key in Header</MenuItem>
                                             <MenuItem value="BearerToken">Bearer Token</MenuItem>
                                             <MenuItem value="BasicAuth">Basic Auth</MenuItem>
-                                            <MenuItem value="DigestAuth">Digest Auth</MenuItem>
                                         </Select>
                                     </FormControl>
                                 </Grid>
                                 <Grid item xs={props.method === "BearerToken" ? 8 : 4}>
                                     <APIInputField
-                                        defaultValue={(props.method === "BasicAuth" || props.method === "DigestAuth") ? "Nutzername" : props.method === "BearerToken" ? "Token" : "Name Key-Parameter"}
+                                        defaultValue={(props.method === "BasicAuth") ? "Nutzername" : props.method === "BearerToken" ? "Token" : "Name Key-Parameter"}
                                         value={props.apiKeyInput1}
                                         changeHandler={(s) => props.setApiKeyInput1(s)}
                                         noKey={props.noKey}
@@ -403,7 +429,7 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
                                 {props.method !== "BearerToken" &&
                                 <Grid item xs={4}>
                                     <APIInputField
-                                        defaultValue={(props.method === "BasicAuth" || props.method === "DigestAuth") ? "Passwort" : "API-Key"}
+                                        defaultValue={(props.method === "BasicAuth") ? "Passwort" : "API-Key"}
                                         value={props.apiKeyInput2}
                                         changeHandler={(s) => {
                                             props.setApiKeyInput2(s);
@@ -425,16 +451,19 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
                             <Grid item container xs={12} justify="space-between" className={classes.elementSmallMargin}>
                                 <Grid item>
                                     <Button variant="contained" size="large" color="primary"
-                                            onClick={props.backHandler}>
+                                            onClick={() => {
+                                                clearSessionStorage();
+                                                props.backHandler();
+                                            }}>
                                         zurück
                                     </Button>
                                 </Grid>
-                                {<Grid item>
+                                {/*<Grid item>
                                     <Button variant="contained" size="large" color="primary"
                                             onClick={handleTestContinue}>
                                         Weiter ohne Backend (Test)
                                     </Button>
-                                </Grid>}
+                                </Grid>*/}
                                 <Grid item className={classes.blockableButtonPrimary}>
                                     <Button
                                         disabled={!(props.apiName !== "" && props.query !== "" && (props.noKey || (props.apiKeyInput1 !== "" && props.apiKeyInput2 !== "" && props.method !== "") || (props.method === "BearerToken" && props.apiKeyInput1 !== "")) && !props.checkNameDuplicate(props.apiName))}

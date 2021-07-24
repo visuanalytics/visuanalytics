@@ -47,6 +47,9 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
 
     const classes = useStyles();
 
+    console.log(props.infoProvDataSources);
+    console.log(props.selectedDataSource);
+
     /**
      * Boolean that is used to open and close the cancel-dialog
      */
@@ -55,7 +58,7 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
     //true when the dialog for deleting a datasource is open
     const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
     //holds the name of all diagrams that need to be removed when deleting the current selection
-    const [diagramsToRemove, setDiagramsToRemove] = React.useState<Array<string>>([]);
+    const diagramsToRemove = React.useRef<Array<string>>([]);
 
     /**
      * Handler method for clicking the delete data source button.
@@ -64,14 +67,14 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
      * Opens the dialog asking the user for confirmation afterwards
      */
     const deleteDataSourceHandler = () => {
-        const diagramsToRemove: Array<string> = [];
+        const localDiagramsToRemove: Array<string> = [];
         const dataSourceName = props.infoProvDataSources[props.selectedDataSource].apiName;
         props.infoProvDiagrams.forEach((diagram) => {
             if(diagram.sourceType==="Array" && diagram.arrayObjects!==undefined) {
                 //diagram with arrays
                 for (let index = 0; index < diagram.arrayObjects.length; index ++) {
                     if(diagram.arrayObjects[index].listItem.parentKeyName.split("|")[0]===dataSourceName) {
-                        diagramsToRemove.push(diagram.name);
+                        localDiagramsToRemove.push(diagram.name);
                         break;
                     }
                 }
@@ -79,19 +82,19 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
                 //diagrams with historized
                 for (let index = 0; index < diagram.historizedObjects.length; index ++) {
                     if(diagram.historizedObjects[index].name.split("|")[0]===dataSourceName) {
-                        diagramsToRemove.push(diagram.name);
+                        localDiagramsToRemove.push(diagram.name);
                         break;
                     }
                 }
             }
         })
-        if(diagramsToRemove.length > 0) setDiagramsToRemove(diagramsToRemove);
+        if(localDiagramsToRemove.length > 0) diagramsToRemove.current = localDiagramsToRemove;
         setDeleteDialogOpen(true);
     }
 
     /**
      * Method that deletes the currently selected dataSource.
-     * Checks if the state diagramsToRemove contains any items and removes them too, if necessary.
+     * Checks if the ref diagramsToRemove contains any items and removes them too, if necessary.
      * Also sets the selected dataSource to the now last dataSource in the dataSources array.
      */
     const deleteSelectedDataSource = () => {
@@ -107,13 +110,13 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
         props.setInfoProvDataSourcesKeys(mapCopy);
         props.setSelectedDataSource(props.infoProvDataSources.length - 2);
         //if diagrams need to be removed, remove them
-        if(diagramsToRemove.length > 0) {
+        if(diagramsToRemove.current.length > 0) {
             props.setInfoProvDiagrams(props.infoProvDiagrams.filter((diagram) => {
-                return !diagramsToRemove.includes(diagram.name);
+                return !diagramsToRemove.current.includes(diagram.name);
             }))
         }
         //reset the states
-        setDiagramsToRemove([]);
+        diagramsToRemove.current = [];
         setDeleteDialogOpen(false);
     }
 
@@ -208,32 +211,43 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
                                 Zu historisierende Daten
                             </Typography>
                         </Grid>
-                        <Grid item xs={12}>
-                            <Box borderColor="primary.main" border={4} borderRadius={5}
-                                 className={classes.smallListFrame}>
-                                <List disablePadding={true}>
-                                    {props.infoProvDataSources[props.selectedDataSource].historizedData.map((item: string) => renderListItem(item))}
-                                </List>
-                            </Box>
-                        </Grid>
-                        {props.infoProvDataSources[props.selectedDataSource].schedule.type !== "" &&
-                        <Grid item xs={12}>
-                            <Typography variant="h6">
-                                Historisierungszeiten
-                            </Typography>
-                        </Grid>
-                        }
-                        <Grid item xs={12}>
-                            <Box borderColor="primary.main" border={4} borderRadius={5}
-                                 className={classes.smallListFrame}>
+                        { props.infoProvDataSources[props.selectedDataSource].historizedData.length > 0 &&
+                            <React.Fragment>
+                                <Grid item xs={12}>
+                                    <Box borderColor="primary.main" border={4} borderRadius={5}
+                                         className={classes.smallListFrame}>
+                                        <List disablePadding={true}>
+                                            {props.infoProvDataSources[props.selectedDataSource].historizedData.map((item: string) => renderListItem(item))}
+                                        </List>
+                                    </Box>
+                                </Grid>
                                 {props.infoProvDataSources[props.selectedDataSource].schedule.type !== "" &&
                                 <Grid item xs={12}>
-                                    <ScheduleTypeTable
-                                        schedule={props.infoProvDataSources[props.selectedDataSource].schedule}/>
+                                    <Typography variant="h6">
+                                        Historisierungszeiten
+                                    </Typography>
                                 </Grid>
                                 }
-                            </Box>
-                        </Grid>
+                                <Grid item xs={12}>
+                                    <Box borderColor="primary.main" border={4} borderRadius={5}
+                                         className={classes.smallListFrame}>
+                                        {props.infoProvDataSources[props.selectedDataSource].schedule.type !== "" &&
+                                        <Grid item xs={12}>
+                                            <ScheduleTypeTable
+                                                schedule={props.infoProvDataSources[props.selectedDataSource].schedule}/>
+                                        </Grid>
+                                        }
+                                    </Box>
+                                </Grid>
+                            </React.Fragment>
+                        }
+                        {  props.infoProvDataSources[props.selectedDataSource].historizedData.length === 0 &&
+                            <Grid item xs={12}>
+                                <Typography variant="body1">
+                                    Es wurden für diese Datenquelle keine Daten zur Historisierung ausgewählt.
+                                </Typography>
+                            </Grid>
+                        }
                     </Grid>
 
 
@@ -304,7 +318,7 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
             <Dialog onClose={() => {
                 setDeleteDialogOpen(false);
                 window.setTimeout(() => {
-                    setDiagramsToRemove([]);
+                    diagramsToRemove.current = [];
                 }, 200);
             }} aria-labelledby="deleteDialog-title"
                     open={deleteDialogOpen}>
@@ -315,9 +329,9 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
                     <Typography gutterBottom className={classes.wrappedText}>
                         Die Datenquelle "{props.infoProvDataSources[props.selectedDataSource].apiName}" wird unwiderruflich gelöscht.
                     </Typography>
-                    { diagramsToRemove.length > 0 &&
+                    { diagramsToRemove.current.length > 0 &&
                     <Typography gutterBottom className={classes.wrappedText}>
-                        Das Löschen der Datenquelle wird außerdem alle Diagramme löschen, die diese Datenquelle nutzen.<br/><br/><br/>Folgende Diagramme sind betroffen: <strong>{diagramsToRemove.join(", ")}</strong>
+                        Das Löschen der Datenquelle wird außerdem alle Diagramme löschen, die diese Datenquelle nutzen.<br/><br/><br/>Folgende Diagramme sind betroffen: <strong>{diagramsToRemove.current.join(", ")}</strong>
                     </Typography>
                     }
                 </DialogContent>
@@ -328,7 +342,7 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
                                     onClick={() => {
                                         setDeleteDialogOpen(false);
                                         window.setTimeout(() => {
-                                            setDiagramsToRemove([]);
+                                            diagramsToRemove.current = [];
                                         }, 200);
                                     }}>
                                 abbrechen

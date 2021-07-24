@@ -1,9 +1,14 @@
-/* InfoProviderOverview
-
-/**
- * This type is used to correctly handle each single infoprovider from the response from the backend.
- */
-import {Diagram} from "../CreateInfoProvider/types";
+import {
+    CustomCircle, CustomImage,
+    CustomLine,
+    CustomRectangle,
+    CustomStar, CustomText,
+    DataImage,
+    DataText
+} from "../SceneCreation/SceneEditor/types";
+import {SceneCardData} from "../VideoCreation/types";
+import {FrontendInfoProvider} from "../CreateInfoProvider/types";
+import {InfoProviderData} from "../SceneCreation/types";
 
 export type jsonRef = {
     infoprovider_id: number;
@@ -61,15 +66,47 @@ export type PreviewImage = {
     id: number;
 }
 
+/**
+ * Represents all information of one single scene fetched from the backend.
+ */
 export type FullScene = {
-    scene_name: string;
+    name: string;
     used_images: Array<number>;
     used_infoproviders: Array<number>;
-    images: Array<Diagram>;
+    images: ImagesBackend;
     backgroundImage: number;
     backgroundType: string;
     backgroundColor: string;
     backgroundColorEnabled: boolean;
     itemCounter: number;
-    scene_items: string;
+    scene_items: Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>;
+    infoProvider?: FrontendInfoProvider;
+}
+
+
+export type ImagesBackend = {
+    type: string;
+    path: string;
+    overlay: Array<DataImage | DataText>
+}
+
+/**
+ * Represents all information of one single video fetched from the backend.
+ */
+export type FullVideo = {
+    audio: any;
+    images: any;
+    name: string;
+    sceneList: Array<SceneCardData>;
+    schedule: {
+        type: string;
+        time: string;
+        date: string;
+        time_interval: string;
+        weekdays: Array<number>
+    };
+    selectedInfoprovider: Array<InfoProviderData>;
+    sequence: any;
+    tts_ids: Array<number>;
+    video_name: string;
 }

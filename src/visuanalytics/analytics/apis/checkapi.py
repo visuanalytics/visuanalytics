@@ -4,7 +4,6 @@ Modul welches eine Methode bereit stellt mit der eine API auf ihre Keys untersuc
 import json
 import xmltodict
 import requests
-
 from visuanalytics.analytics.apis import api
 
 list_limit = 10
@@ -26,8 +25,7 @@ def check_api(req_data):
 
     :param req_data: Enthält Informationen über das Request-Objekt
     :type req_data: dict
-    :return: Abstrahierte Version der Response oder Fehlermeldung und einen Boolean mit einer Aussage über
-    den Erfolg der Funktion
+    :return: Abstrahierte Version der Response oder Fehlermeldung und einen Boolean mit einer Aussage über den Erfolg der Funktion
     """
     req = requests.Request(req_data["method"], req_data["url"], headers=req_data["headers"],
                            json=req_data.get("json", None), data=req_data.get("other", None), params=req_data["params"])
@@ -77,7 +75,7 @@ def get_content(obj):
     """
     Abstrahiert das übergebene Objekt je nach Typ (dict, list, str, int etc.)
 
-    :param obj: zu abstrahierendes Objekt
+    :param obj: Objekt, welches abstrahiert werden soll
     :return: Beschreibung des Datentyps eines Objektes
     """
     if type(obj) == list:

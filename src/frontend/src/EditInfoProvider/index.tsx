@@ -4,14 +4,14 @@ import Container from "@material-ui/core/Container";
 import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
-import {Grid, Typography} from "@material-ui/core";
+import {Grid} from "@material-ui/core";
 import {EditSettingsOverview} from "./EditSettingsOverview/EditSettingsOverview";
 import {EditDataSelection} from "./EditDataSelection/EditDataSelection";
 import {ComponentContext} from "../ComponentProvider";
 import {StrArg} from "../CreateInfoProvider/DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/StrArg";
 import {FormelContext/*, InfoProviderObj*/} from "./types";
 import {
-    authDataDialogElement,
+    AuthDataDialogElement,
     BackendDataSource,
     FrontendInfoProvider,
     DataSource,
@@ -37,29 +37,6 @@ interface EditInfoProviderProps {
     infoProvId?: number;
     infoProvider?: FrontendInfoProvider;
 }
-
-//TODO: task list for the team
-/*
-DONE:
-task 0: overview component (Tristan)
-task 1: restore formulas (Tristan)
-task 2: editing for formulas (Tristan)
-task 3: new formulas (Tristan)
-task 4: integrate diagram components (Janek)
-task 6: keep the component context on reload (Janek)
-
-task 5: sessionStorage compatibility with AuthDataDialog (Janek)
-task 7: reload data from api in DataSelection and compare if all selectedData-items are contained in the new listItems (Janek)
-task 8: component for DataSelection (Janek)
-task 10: add additional data sources (Daniel)
-
-task 12: load data from backend (Janek)
-task 13: send data to backend (Janek)
-NOT DONE:
-task 9: historized data (Tristan)
-task 11: delete dependencies (???)
- */
-
 
 export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
 
@@ -104,6 +81,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
         opFlag: true,
         leftParenFlag: false,
         rightParenFlag: false,
+        commaFlag: true,
+        usedComma: false,
         usedFormulaAndApiData: []
     });
     //flag for opening the dialog that restores authentication data on reload
@@ -114,9 +93,12 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
     const [dataCustomizationStep, setDataCustomizationStep] = React.useState(0);
     //true when the button for submitting the infoprovider is blocked because a request is running
     const [submitInfoProviderDisabled, setSubmitInfoProviderDisabled] = React.useState(false);
+    //TODO: document this!!
+    //array that contains a boolean for each dataSource indicating if refetching of api-data for checkup has already been done on them
+    const [refetchDoneList, setRefetchDoneList] = React.useState<Array<boolean>>(new Array(sessionStorage.getItem("infoProvDataSources-" + uniqueId) === null ? props.infoProvider!.dataSources.length : JSON.parse(sessionStorage.getItem("infoProvDataSources-" + uniqueId)!).length).fill(false))
+    console.log(refetchDoneList)
 
 
-    //TODO: add current state variables if needed
     /**
      * Method to check if there is api auth data to be lost when the user refreshes the page.
      * Needs to be separated from authDialogNeeded since this uses state while authDialogNeeded uses sessionStorage
@@ -135,7 +117,6 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
         return false;
     }, [infoProvDataSources, infoProvDataSourcesKeys])
 
-    //TODO: is it necessary to fully copy here?
     /**
      * Defines event listener for reloading the page and removes it on unmounting.
      * The event listener will warn the user that api keys will be list an a reload.
@@ -155,7 +136,6 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
         }
     }, [checkKeyExistence])
 
-    //TODO: check if current states are really not needed - possibly necessary when creation of additional dataSources is added
     /**
      * Checks if displaying a dialog for reentering authentication data on loading the component is necessary.
      * This will be the case if the current dataSource has not selected noKey or if any of the previously existing dataSources has noKey.
@@ -181,9 +161,9 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
      * The sets need to be converted back from Arrays that were parsed with JSON.stringify.
      */
     React.useEffect(() => {
+        //TODO: document firstentering
         if (sessionStorage.getItem("firstEntering-" + uniqueId) !== null) {
             //infoProvId
-            //TODO: check if the 0 case can be problematic - it should not since this if-block is only rendered AFTER the first render and so the id is set in the sessionStorage
             setInfoProvId(Number(sessionStorage.getItem("infoProvId-" + uniqueId) || 0));
             //editStep - disabled since it makes debugging more annoying
             setEditStep(Number(sessionStorage.getItem("editStep-" + uniqueId) || 0));
@@ -211,6 +191,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
             setHistorySelectionStep(Number(sessionStorage.getItem("historySelectionStep-" + uniqueId) || 0));
             //dataCustomizationStep
             setDataCustomizationStep(Number(sessionStorage.getItem("dataCustomizationStep-" + uniqueId) || 0));
+            //refetchDoneList
+            setRefetchDoneList(sessionStorage.getItem("refetchDoneList-" + uniqueId) === null ? new Array<boolean>() : JSON.parse(sessionStorage.getItem("refetchDoneList-" + uniqueId)!));
 
             //create default values in the key map for all dataSources
             //necessary to not run into undefined values
@@ -274,6 +256,11 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
     React.useEffect(() => {
         sessionStorage.setItem("dataCustomizationStep-" + uniqueId, dataCustomizationStep.toString());
     }, [dataCustomizationStep])
+    const refetchDoneListChange = refetchDoneList.toString();
+    //store refetchDoneList in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("refetchDoneList-" + uniqueId, JSON.stringify(refetchDoneList));
+    }, [refetchDoneListChange, refetchDoneList])
 
     /**
      * Removes all items of this component from the sessionStorage.
@@ -295,6 +282,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
         sessionStorage.removeItem("arrayObjects-" + uniqueId);
         sessionStorage.removeItem("diagramName-" + uniqueId);
         sessionStorage.removeItem("diagramStep-" + uniqueId);
+        sessionStorage.removeItem("refetchDoneList-" + uniqueId);
+        sessionStorage.removeItem("noKey-" + uniqueId); //when removing the setter above, remove this too!!
     }
 
     const steps = [
@@ -332,10 +321,22 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
 
     /**
      * Checks if a given API name already exists in the data sources
-     * This is needed for changing basic settings
+     * This is needed for adding a new data source in edit mode
      * @param name The name of the data source which should be checked for duplicate
      */
-    const checkNameDuplicate = (name: string) => {
+    const checkNameDuplicateForNewDataSource = (name: string) => {
+        for (let i = 0; i < infoProvDataSources.length; i++) {
+            if (infoProvDataSources[i].apiName === name) return true;
+        }
+        return false;
+    }
+
+    /**
+     * Checks if a given API name already exists in the data sources
+     * This is needed for possibily editing the data source name when editing basic settings
+     * @param name The name of the data source which should be checked for duplicate
+     */
+    const checkDuplicateNameForEditDataSource = (name: string) => {
         for (let i = 0; i < infoProvDataSources.length; i++) {
             if (infoProvDataSources[i].apiName === name && i !== selectedDataSource) return true;
         }
@@ -515,6 +516,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                 }
             }
         })
+        console.log(diagramsToRemove)
         //delete all diagrams found
         if (diagramsToRemove.length > 0) {
             setInfoProvDiagrams(infoProvDiagrams.filter((diagram) => {
@@ -558,13 +560,11 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
     }
 
 
-    //TODO: find better option than just copy it
-    //TODO: update as soon as the possibility of having new dataSources exists
     /**
      * Method to construct an array of all dataSources names where the user needs to re-enter his authentication data.
      */
     const buildDataSourceSelection = () => {
-        const dataSourceSelection: Array<authDataDialogElement> = [];
+        const dataSourceSelection: Array<AuthDataDialogElement> = [];
         //check the current data source and add it as an option
         /*if(!noKey) {
             dataSourceSelection.push({
@@ -603,9 +603,9 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
      * @param jsonData The JSON-object delivered by the backend
      */
     const handleSuccessPostInfoProvider = React.useCallback((jsonData: any) => {
-        clearSessionStorage();
         setSubmitInfoProviderDisabled(false);
-        components?.setCurrent("dashboard")
+        components?.setCurrent("dashboard");
+        clearSessionStorage();
     }, [components]);
 
     /**
@@ -618,7 +618,6 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
     }, [reportError]);
 
 
-    //TODO: find out why this method is called too often
     const createDataSources = React.useCallback(() => {
         const backendDataSources: Array<BackendDataSource> = [];
         infoProvDataSources.forEach((dataSource) => {
@@ -638,8 +637,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                     transform: [],
                     storing: [],
                     formulas: dataSource.customData,
-                    calculates: createCalculates(dataSource.arrayProcessingsList),
-                    replacements: createReplacements(dataSource.stringReplacementList),
+                    calculates: createCalculates(dataSource.arrayProcessingsList, dataSource.apiName),
+                    replacements: createReplacements(dataSource.stringReplacementList, dataSource.apiName),
                     schedule: {
                         type: dataSource.schedule.type,
                         time: dataSource.schedule.time,
@@ -650,7 +649,9 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                     selected_data: dataSource.selectedData,
                     historized_data: dataSource.historizedData,
                     arrayProcessingsList: dataSource.arrayProcessingsList,
-                    stringReplacementList: dataSource.stringReplacementList
+                    stringReplacementList: dataSource.stringReplacementList,
+                    //TODO: ADD THIS TO DOCUMENTATION!!!
+                    listItems: dataSource.listItems
                 })
             }
         });
@@ -689,52 +690,93 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
         }
         if (diagram.sourceType === "Array") {
             if (diagram.arrayObjects !== undefined) {
-                diagram.arrayObjects.forEach((item) => {
-                    const plots = {
-                        customLabels: item.customLabels,
-                        primitive: !Array.isArray(item.listItem.value),
-                        plot: {
-                            type: type,
-                            x: Array.from(Array(diagram.amount).keys()),
-                            y: item.listItem.parentKeyName === "" ? item.listItem.keyName : item.listItem.parentKeyName + "|" + item.listItem.keyName,
-                            color: item.color,
-                            numericAttribute: item.numericAttribute,
-                            stringAttribute: item.stringAttribute,
-                            x_ticks: {
-                                ticks: item.labelArray
+                //when the diagram uses customLabels, we need to use the method that adds the ticks on the last cycle
+                if(diagram.customLabels) {
+                    //loop through all arrays used in the diagram
+                    for (let index = 0; index < diagram.arrayObjects.length; index++) {
+                        const item = diagram.arrayObjects[index];
+                        const plots = {
+                            customLabels: true,
+                            primitive: !Array.isArray(item.listItem.value),
+                            plot: {
+                                type: type,
+                                x: Array.from(Array(diagram.amount).keys()),
+                                y: "{_req|" + (item.listItem.parentKeyName === "" ? item.listItem.keyName : item.listItem.parentKeyName + "|" + item.listItem.keyName) + "}",
+                                color: item.color,
+                                numericAttribute: item.numericAttribute,
+                                stringAttribute: "",
+                                x_ticks: {
+                                    //only set the ticks on the last Plot - this is necessary to render it last when layering the Plots in the diagrams
+                                    ticks: index === diagram.arrayObjects.length-1 ? diagram.labelArray : []
+                                }
                             }
                         }
+                        plotArray.push(plots);
                     }
-                    plotArray.push(plots);
-                })
+                } else {
+                    //this diagram uses a stringAttribute to generate its labels - find the Plot that belongs to its array and add it last
+                    //this behaviour is necessary in order to render the diagrams in the correct order in backend Plot layering
+                    let plotWithStringAttribute = {} as Plots;
+                    //loop through all arrays used in the diagram
+                    for (let index = 0; index < diagram.arrayObjects.length; index++) {
+                        const item = diagram.arrayObjects[index];
+                        const isArrayWithAttribute = (item.listItem.parentKeyName === "" ? item.listItem.keyName : item.listItem.parentKeyName + "|" + item.listItem.keyName) === diagram.stringAttribute.array;
+                        const plots = {
+                            customLabels: false,
+                            primitive: !Array.isArray(item.listItem.value),
+                            plot: {
+                                type: type,
+                                x: Array.from(Array(diagram.amount).keys()),
+                                y: "{_req|" + (item.listItem.parentKeyName === "" ? item.listItem.keyName : item.listItem.parentKeyName + "|" + item.listItem.keyName) + "}",
+                                color: item.color,
+                                numericAttribute: item.numericAttribute,
+                                stringAttribute: isArrayWithAttribute ? diagram.stringAttribute.key : "",
+                                x_ticks: {
+                                    //only set the ticks on the last Plot - this is necessary to render it last when layering the Plots in the diagrams
+                                    ticks: []
+                                }
+                            }
+                        }
+                        //if the current array is the one that contains the string attribute, dont push it instantly to the plots array
+                        if (isArrayWithAttribute) plotWithStringAttribute = plots;
+                        else plotArray.push(plots);
+                    }
+                    //push the array with the stringAttribute as the last item so it will be last in backend layering
+                    plotArray.push(plotWithStringAttribute);
+                }
             }
         } else {
             //"Historized"
             if (diagram.historizedObjects !== undefined) {
-                diagram.historizedObjects.forEach((item) => {
+                for (let index = 0; index < diagram.historizedObjects.length; index++) {
+                    const item = diagram.historizedObjects[index];
                     const plots = {
-                        dateLabels: item.dateLabels,
+                        //dateLabels: item.dateLabels, //deactivated since there is currently no support for date labels by the backend
                         plot: {
                             type: type,
                             x: item.intervalSizes,
-                            y: item.name,
+                            y: "{_req|" + item.name + "}",
                             color: item.color,
-                            dateFormat: item.dateFormat,
+                            //dateFormat: item.dateFormat,
                             x_ticks: {
-                                ticks: item.labelArray
+                                //only set the ticks on the last Plot - this is necessary to render it last when layering the Plots in the diagrams
+                                ticks: index === diagram.historizedObjects.length-1 ? diagram.labelArray : []
                             }
                         }
                     }
                     plotArray.push(plots);
-                })
+                }
             }
         }
         return plotArray;
     }, [])
 
-
+    /**
+     * Method that generates the object 'diagram' the backend needs
+     * for the configuration of the infoprovider by using the values from
+     * the created diagram and transforming them to the backend format.
+     */
     const createBackendDiagrams = React.useCallback(() => {
-        //TODO: possibly find smarter solution without any type
         const diagramsObject: any = {};
         infoProvDiagrams.forEach((diagram) => {
             diagramsObject[diagram.name] = {
@@ -752,7 +794,6 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
     }, [createPlots, infoProvDiagrams, infoProvName]);
 
 
-    //TODO: test this method when it is used
     /**
      * Method that creates a list of all arrays that are used in diagrams.
      * Necessary for forming the object of the infoprovider sent to the backend.
@@ -825,6 +866,14 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
         };
     }, []);
 
+    /**
+     * Method for finishing creation of a new datasource.
+     * Adds it to the state and stores its api auth data in the map
+     * holding them.
+     * @param dataSource The datasource object created
+     * @param apiKeyInput1 The first part of the api auth data
+     * @param apiKeyInput2 The second part of the api auth data
+     */
     const finishNewDataSource = (dataSource: DataSource, apiKeyInput1: string, apiKeyInput2: string) => {
         setInfoProvDataSources(infoProvDataSources.concat(dataSource));
         const mapCopy = new Map(infoProvDataSourcesKeys)
@@ -833,6 +882,10 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
             apiKeyInput2: apiKeyInput2
         }));
         setNewDataSourceMode(false);
+        //add an entry for the new dataSource to the refetchDoneList - true as value since it was just fetched while creating
+        const arCopy = refetchDoneList;
+        arCopy.push(true);
+        setRefetchDoneList(arCopy);
     }
 
     const cancelDataSourceCreation = () => {
@@ -847,16 +900,10 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
         if (newDataSourceMode) {
             return (
                 <React.Fragment>
-                    <Grid container>
-                        <Grid item xs={12} md={6}>
-                            <Typography variant="body1">
-                                Infoproviderbearbeitung
-                            </Typography>
-                        </Grid>
-                    </Grid>
                     <CreateInfoProvider
                         finishDataSourceInEdit={finishNewDataSource}
                         cancelNewDataSourceInEdit={cancelDataSourceCreation}
+                        checkDuplicateNameInEdit={checkNameDuplicateForNewDataSource}
                     />
                 </React.Fragment>
             );
@@ -888,7 +935,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                     <EditBasicSettings
                         continueHandler={(index: number) => handleContinue(index)}
                         backHandler={(index: number) => handleBack(index)}
-                        checkNameDuplicate={checkNameDuplicate}
+                        checkNameDuplicate={checkDuplicateNameForEditDataSource}
                         query={infoProvDataSources[selectedDataSource].query}
                         setQuery={setQuery}
                         apiKeyInput1={infoProvDataSourcesKeys.get(infoProvDataSources[selectedDataSource].apiName) === undefined ? "" : infoProvDataSourcesKeys.get(infoProvDataSources[selectedDataSource].apiName)!.apiKeyInput1}
@@ -912,6 +959,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                         setListItems={(listItems: Array<ListItemRepresentation>) => {
                             return
                         }}
+                        setArrayProcessingsList={setArrayProcessingsList}
+                        setStringReplacementList={setStringReplacementList}
                     />
                 )
             case 2:
@@ -934,12 +983,13 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                         selectedDataSource={selectedDataSource}
                         dataCustomizationStep={dataCustomizationStep}
                         setDataCustomizationStep={(step: number) => setDataCustomizationStep(step)}
+                        refetchDoneList={refetchDoneList}
+                        setRefetchDoneList={(list: Array<boolean>) => setRefetchDoneList(list)}
                     />
                 );
             case 3:
                 return (
                     <EditDataCustomization
-
                         continueHandler={() => handleContinue(1)}
                         backHandler={() => handleBack(1)}
                         dataCustomizationStep={dataCustomizationStep}
@@ -1032,10 +1082,11 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                 authDataDialogOpen={authDataDialogOpen}
                 setAuthDataDialogOpen={(open: boolean) => setAuthDataDialogOpen(open)}
                 method={""}
-                apiKeyInput1={""}
-                setApiKeyInput1={(input: string) => console.log("NOT IMPLEMENTED: setApiKeyInput1")}
-                apiKeyInput2={""}
-                setApiKeyInput2={(input: string) => console.log("NOT IMPLEMENTED: setApiKeyInput1")}
+                apiKeyInput1={infoProvDataSourcesKeys.get(infoProvDataSources[selectedDataSource].apiName) === undefined ? "" : infoProvDataSourcesKeys.get(infoProvDataSources[selectedDataSource].apiName)!.apiKeyInput1}
+                //it is not necessary to pass anything here since the principle of having a current data source is not used in editing
+                setApiKeyInput1={setApiKeyInput1}
+                apiKeyInput2={infoProvDataSourcesKeys.get(infoProvDataSources[selectedDataSource].apiName) === undefined ? "" : infoProvDataSourcesKeys.get(infoProvDataSources[selectedDataSource].apiName)!.apiKeyInput2}
+                setApiKeyInput2={setApiKeyInput2}
                 dataSourcesKeys={infoProvDataSourcesKeys}
                 setDataSourcesKeys={(map: Map<string, DataSourceKey>) => setInfoProvDataSourcesKeys(map)}
                 selectionDataSources={buildDataSourceSelection()}

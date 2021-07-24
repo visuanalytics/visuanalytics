@@ -10,7 +10,6 @@ import {Dialog, DialogActions, DialogContent, DialogTitle, ListItemSecondaryActi
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import Typography from "@material-ui/core/Typography";
-import EditIcon from "@material-ui/icons/Edit";
 import ImageIcon from '@material-ui/icons/Image';
 
 interface DiagramOverviewProps {
@@ -220,14 +219,10 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
                 </Grid>
                 <Grid item xs={3}>
                     <ListItemSecondaryAction>
-                        <IconButton aria-label="preview" color="primary" onClick={() => openPreviewDialog(item.name)}>
+                        <IconButton aria-label="Diagrammvorschau" color="primary" onClick={() => openPreviewDialog(item.name)}>
                             <ImageIcon/>
                         </IconButton>
-                        <IconButton aria-label="edit" color="primary"
-                                    onClick={() => console.log("EDIT NOT IMPLEMENTED YET")}>
-                            <EditIcon/>
-                        </IconButton>
-                        <IconButton aria-label="delete" className={classes.redDeleteIcon}
+                        <IconButton aria-label="Diagramm löschen" className={classes.redDeleteIcon}
                                     onClick={() => openDeleteDialog(item.name)}>
                             <DeleteIcon/>
                         </IconButton>

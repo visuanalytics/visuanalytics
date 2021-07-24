@@ -7,8 +7,9 @@ import {DiagramInfo} from "../../types";
 
 
 interface DiagramListProps {
-    diagramList: Array<DiagramInfo>
-    handleDiagramClick: () => void;
+    diagramList: Array<DiagramInfo>;
+    handleDiagramClick: (src : string, id: number, path: string, index: number, diagram: boolean, diagramName: string) => void;
+    infoProviderName: string;
 }
 
 export const DiagramList: React.FC<DiagramListProps> = (props) => {
@@ -26,16 +27,16 @@ export const DiagramList: React.FC<DiagramListProps> = (props) => {
         return (
             <Grid key={diagram.name} item container xs={6} justify="space-around" className={index === 0 ? classes.firstImage : index === 1 ? classes.secondImage : index % 2 === 0 ? classes.leftImage : classes.rightImage}>
                 <Grid item xs={10}>
-                    <img src={diagram.url} className={classes.imageInList} alt={"Image Nr." +  index} onClick={() => /*props.handleDiagramClick()*/ console.log("DIAGRAM CLICK EVENT YET TO BE IMPLEMENTED!!!")}/>
+                    <img src={diagram.url} className={classes.imageInList} alt={"Image Nr." +  index} onClick={() => props.handleDiagramClick(diagram.url, 0, "diagrams\\" + props.infoProviderName + "_" + diagram.name + ".png", index, true, diagram.name)}/>
                 </Grid>
                 <Grid item xs={10}>
-                    <Typography variant="body1">
-                        diagram.name
+                    <Typography variant="body1" className={classes.wrappedText}>
+                        <strong>Name:</strong> {diagram.name}
                     </Typography>
                 </Grid>
                 <Grid item xs={10}>
-                    <Typography variant="body1">
-                        diagram.type
+                    <Typography variant="body1" className={classes.wrappedText}>
+                        <strong>Typ:</strong> {diagram.type}
                     </Typography>
                 </Grid>
             </Grid>
@@ -54,12 +55,12 @@ export const DiagramList: React.FC<DiagramListProps> = (props) => {
                 </Grid>
                 <Grid item xs={2}>
                     {!showDiagrams &&
-                    <IconButton aria-label="Infoprovider-Daten ausklappen" onClick={() => setShowDiagrams(!showDiagrams)}>
+                    <IconButton aria-label="Diagramm-Liste ausklappen" onClick={() => setShowDiagrams(!showDiagrams)}>
                         <ExpandMore/>
                     </IconButton>
                     }
                     {showDiagrams &&
-                    <IconButton aria-label="Infoprovider-Daten einklappen" onClick={() => setShowDiagrams(!showDiagrams)}>
+                    <IconButton aria-label="Diagramm-Liste einklappen" onClick={() => setShowDiagrams(!showDiagrams)}>
                         <ExpandLess/>
                     </IconButton>
                     }

@@ -10,6 +10,7 @@ import {centerNotifcationReducer, CenterNotification} from "../util/CenterNotifi
 import Typography from "@material-ui/core/Typography";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {StepFrame} from "../CreateInfoProvider/StepFrame";
+import {hintContents} from "../util/hintContents";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -17,7 +18,6 @@ interface TabPanelProps {
     value: any;
 }
 
-//TODO: possibly split the three definitions in separate files
 /**
  * Component to render the content in one tab. Value and index are used to switch correct between all tabs.
  */
@@ -112,10 +112,6 @@ export const DashboardTabs = () =>  {
 
     const handleErrorFetchAllVideos = (err: Error) => {
         reportError("Fehler: " + err);
-
-        //-----------------------------------------------------TEST-----------------------------------------------------
-        allVideos.current = [{videojob_name: "Video1", videojob_id: 0}, {videojob_name: "Video2", videojob_id: 1}, {videojob_name: "Video3", videojob_id: 2}];
-        setValue(2);
     }
 
     const handleSuccessFetchAllVideos = (jsonData: any) => {
@@ -210,11 +206,10 @@ export const DashboardTabs = () =>  {
      * @param id the id to find the right scene
      */
     const fetchPreviewImgById = (id: number) => {
-        //TODO: implement right route and cut "- 1"
         //"id - 1" is used here because the scene-id starts by 1 and the images-id ist starting by 0.
         //in the end the scene-id and the images-id will match
         //the right route has to be implemented in the backend
-        console.log(id + " in fetchPreviewImgById");
+        //console.log(id + " in fetchPreviewImgById");
         let url = "/visuanalytics/scene/" + (id) + "/preview"
         //if this variable is set, add it to the url
         if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
@@ -225,7 +220,9 @@ export const DashboardTabs = () =>  {
         fetch(url, {
             method: "GET",
             headers: {
-                "Content-Type": "application/json\n"
+                "Content-Type": "application/json\n",
+                "Cache-Control": "no-cache",
+                "Pragma": "no-cache"
             },
             signal: abort.signal
         }).then((res: Response) => {
@@ -303,7 +300,7 @@ export const DashboardTabs = () =>  {
             { displaySpinner &&
                 <StepFrame
                     heading={"Willkommen bei Visuanalytics!"}
-                    hintContent={null}
+                    hintContent={hintContents.sceneOverview}
                 >
                     <Grid item container xs={12} justify="space-around">
                         <Grid item xs={12}>

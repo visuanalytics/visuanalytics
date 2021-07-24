@@ -12,8 +12,16 @@ import {
 import Radio from "@material-ui/core/Radio";
 import DeleteIcon from "@material-ui/icons/Delete";
 import {getListItemsNames} from "../../helpermethods";
-import {ArrayProcessingData, Diagram, ListItemRepresentation, Operation, StringReplacementData} from "../../types";
+import {
+    ArrayProcessingData,
+    Diagram,
+    ListItemRepresentation,
+    Operation,
+    ProcessableArray,
+    StringReplacementData
+} from "../../types";
 import {FormelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
+import {hintContents} from "../../../util/hintContents";
 
 
 interface ArrayProcessingProps {
@@ -33,20 +41,6 @@ interface ArrayProcessingProps {
     apiName: string;
 }
 
-/**
-DONE:
- 1: Alle Arrays durchsuchen und die auflisten, die primitiv sind und Zahl oder Gleitkommazahl als Inhalt haben
- 2: Alle Aktionen auflisten, die möglich sind
- 3: Eingabe: Nutzer wählt erst ein Array, dann eine Aktion
- 4: Dazu muss ein Name gewählt werden - dann Button speichern
- 5: Namensprüfung auf Duplikate in listItems und customData
- 6: Liste bereits erstellter Daten mit Button zum Löschen
- 7: Beim Löschen einer angelegten Verarbeitung: Durchsuche alle Formeln, Diagramme und Historisierung nach Verwendung des Werts
- 8: Nutzer mit Dialog um Bestätigung des Löschens bitten
- 9: Alle kompatiblen Arrays beim Laden berechnen - numerische Arrays, vielleicht auch alle numerischen Attribute aus Objekten in Arrays
-TODO:
-10: Design-Verbesserungen
- */
 
 /**
  * Component for processing of arrays - offers the do operations like finding the maximum, sum, ...
@@ -62,17 +56,13 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
     //index of the operation currently selected by the user
     const [selectedOperationIndex, setSelectedOperationIndex] = React.useState(-1);
     //list of all arrays available
-    const [availableArrays, setAvailableArrays] = React.useState<Array<string>>(["array1", "array2", "array3"]);
+    const [availableArrays, setAvailableArrays] = React.useState<Array<ProcessableArray>>([]);
     //index of the item currently to be removed
     const [currentRemoveIndex, setCurrentRemoveIndex] = React.useState(-1);
     //true when the dialog for confirming removal of processings is open
     const [removeDialogOpen, setRemoveDialogOpen] = React.useState(false);
 
 
-
-
-
-    //TODO: consult backend to find out which operations are possible
     //list of all available operations pair of internal name (should be unique) and display name
     const operations: Array<Operation> = [
         {name: "sum", displayName: "Summe"},
@@ -87,18 +77,25 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
      * arrays with objects that contain a numeric attribute (each one will be shown on its own
      * @param listItems The listItems to be searched through. Necessary for recursive calls.
      * @param noArray True when the search is for an object inside an array and arrays should be ignored
+     * @param keyPath Path of the array when recursively searching through objects inside an array
+     * @param innerKeyPath Inner object path so far when recursively searching through objects inside an array
      */
-    const getProcessableArrays = React.useCallback((listItems: Array<ListItemRepresentation>, noArray: boolean) => {
-        let compatibleArraysList: Array<string> = [];
+    const getProcessableArrays = React.useCallback((listItems: Array<ListItemRepresentation>, noArray: boolean, keyPath: string = "", innerKeyPath: string = "") => {
+        let compatibleArraysList: Array<ProcessableArray> = [];
         listItems.forEach((listItem) => {
             //check if the search is for arrays or only primitive values because its a recursive search inside an object in array
             if(noArray) {
                 //only search for primitive numeric values and objects
                 if(!listItem.arrayRep && !Array.isArray(listItem.value) && (listItem.value === "Zahl" || listItem.value === "Gleitkommazahl"))
-                    compatibleArraysList.push((listItem.parentKeyName === "" ? listItem.keyName : listItem.parentKeyName + "|" + listItem.keyName).replace("|0", ""));
+                    compatibleArraysList.push({
+                        valueInObject: true,
+                        key: keyPath,
+                        innerKey: innerKeyPath === "" ? listItem.keyName : innerKeyPath + "|" + listItem.keyName //this check should normally not be necessary since call with noArray === true will only be with a innerKeyPath
+                    });
                 else if(!listItem.arrayRep && Array.isArray(listItem.value)) {
                     //the element is an object, its children need to be searched through - dont check arrays in this search
-                    compatibleArraysList = compatibleArraysList.concat(getProcessableArrays(listItem.value, true));
+                    //since this is only called when recursively searching through objects inside an array, update the innerKeyPath by appending the element itself
+                    compatibleArraysList = compatibleArraysList.concat(getProcessableArrays(listItem.value, true, keyPath, innerKeyPath + "|" + listItem.keyName));
                 }
             } else {
                 //check if it is a primitive array containing
@@ -106,15 +103,27 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
                     //check for primitive arrays
                     if(!Array.isArray(listItem.value)) {
                         if(listItem.value === "Zahl" || listItem.value === "Gleitkommazahl")
-                            compatibleArraysList.push((listItem.parentKeyName === "" ? listItem.keyName : listItem.parentKeyName + "|" + listItem.keyName).replace("|0", ""));
+                            compatibleArraysList.push({
+                                valueInObject: false,
+                                key: (listItem.parentKeyName === "" ? listItem.keyName : listItem.parentKeyName + "|" + listItem.keyName).replace("|0", ""),
+                                innerKey: ""
+                            });
                     } else {
                         //the array contains an object - search for all primitive numeric values in it  (subobjects are also supported)
+                        //store the path of the array itself to use it as key
+                        const keyPath = (listItem.parentKeyName === "" ? listItem.keyName : listItem.parentKeyName + "|" + listItem.keyName).replace("|0", "")
                         listItem.value.forEach((value: ListItemRepresentation) => {
                             if(value.value === "Zahl" || value.value === "Gleitkommazahl")
-                                compatibleArraysList.push((value.parentKeyName === "" ? value.keyName : value.parentKeyName + "|" + value.keyName).replace("|0", ""));
+                                //since this is a primitive contained in an object, we need to split the path in key and innerKey
+                                compatibleArraysList.push({
+                                    valueInObject: true,
+                                    key: keyPath,
+                                    innerKey: value.keyName //this value will always be stored directly within an object inside an array and not nested so we can use the keyName alone
+                                });
                             else if((!value.arrayRep) && Array.isArray(value.value)) {
+                                //the object contains another object - recursive search happens here - pass the keyName as innerKeyPath since the inner search starts at this level
                                 //search through variables but only care about primitives and subobjects, not arrays
-                                compatibleArraysList = compatibleArraysList.concat(getProcessableArrays(value.value, true));
+                                compatibleArraysList = compatibleArraysList.concat(getProcessableArrays(value.value, true, keyPath, value.keyName));
                             }
                         })
                     }
@@ -197,9 +206,9 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
      * @param name The name of the processing to search dependencies for
      */
     const checkDeleteDependencies = (name: string) => {
-        //check all formulas if the use this processing
+        //check all formulas wether they use this processing
         props.customData.forEach((formula) => {
-            if(formula.formelString.includes(name)) formulasToRemove.current.push(formula.formelName);
+            if(formula.usedFormulaAndApiData.includes(name)) formulasToRemove.current.push(formula.formelName);
         })
 
         //check all diagrams if they use this processing
@@ -238,31 +247,76 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
         removeProcessing(index);
     }
 
+
+    //mutable list of formulas - used because multiple modifications in one render are necessary in two functions at the same time
+    const newHistorizedData = React.useRef<Array<string>>([]);
+    //mutable list of diagrams - used because multiple modifications in one render are necessary in two functions at the same time
+    const newDiagrams = React.useRef<Array<Diagram>>([]);
+    //mutable list of formulas - used because multiple modifications in one render are necessary in two functions at the same time
+    const newCustomData = React.useRef<Array<FormelObj>>([]);
+
+    /**
+     * Method that finds all diagrams that depend on a certain formula, returns an array with their names.
+     * @param formelName The name of the formula to search for.
+     */
+    const findDependentDiagrams = (formelName: string) => {
+        const diagramsToRemove: Array<string> = [];
+        //check for diagrams
+        props.diagrams.forEach((diagram) => {
+            if (diagram.sourceType === "Historized" && diagram.historizedObjects !== undefined) {
+                for (let index = 0; index < diagram.historizedObjects.length; index++) {
+                    const historized = diagram.historizedObjects[index];
+                    //the dataSource name needs to be added in front of the formula name since historizedObjects has dataSource name in it paths too
+                    if (props.apiName + "|" + formelName === historized.name) {
+                        diagramsToRemove.push(diagram.name);
+                        break;
+                    }
+                }
+            }
+        })
+        return diagramsToRemove;
+    }
+
+
     /**
      * Method that removes a processing as well as all
      * historized data, formulas and diagrams depending on it.
      * @param index The index of the element to be deleted.
      */
     const removeProcessing = (index: number) => {
+        //initialize the lists of data to be edited
+        newHistorizedData.current = props.historizedData.slice();
+        newDiagrams.current = props.diagrams.slice();
+        newCustomData.current = props.customData.slice();
         //remove the element from historizedData
-        if(props.historizedData.includes(props.arrayProcessingsList[index].name)) {
-            props.setHistorizedData(props.historizedData.filter((data) => {
+        if(newHistorizedData.current.includes(props.arrayProcessingsList[index].name)) {
+            newHistorizedData.current = newHistorizedData.current.filter((data) => {
                 return data !== props.arrayProcessingsList[index].name;
-            }))
+            })
         }
-        //remove the formulas using the historizedData
+        //remove the formulas using the processing
         if(formulasToRemove.current.length !== 0) {
-            props.setCustomData(props.customData.filter((formel) => {
+            newCustomData.current = newCustomData.current.filter((formel) => {
                return !formulasToRemove.current.includes(formel.formelName);
-            }))
+            })
         }
-        //remove the diagrams using the historizedData
+        //remove the diagrams using the processing
         if(diagramsToRemove.current.length !== 0) {
-            props.setDiagrams(props.diagrams.filter((diagram) => {
+            newDiagrams.current = props.diagrams.filter((diagram) => {
                 return !diagramsToRemove.current.includes(diagram.name);
-            }))
+            })
         }
-        //reset the list of formulas and diagrams to remove
+        //start the cascading deletion of formulas
+        if(formulasToRemove.current.length > 0) {
+            formulasToRemove.current.forEach((formula) => {
+                deleteFormulaDependents(formula)
+            })
+        }
+        //delete the data that resulted from the delete cascade
+        props.setHistorizedData(newHistorizedData.current);
+        props.setDiagrams(newDiagrams.current);
+        props.setCustomData(newCustomData.current);
+        //reset the list of formulas and diagrams to be removed
         formulasToRemove.current = [];
         diagramsToRemove.current = [];
         //remove the processing from the list of processings
@@ -271,25 +325,64 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
         props.setArrayProcessingsList(arCopy);
     }
 
+
+    /**
+     * Method that searches all diagrams and formulas depending on a formula to delete them.
+     * For each formula found, it will recursively repeat this process.
+     * Also removes from historizedData.
+     * @param formelName The formula to be deleted.
+     */
+    const deleteFormulaDependents = (formelName: string) => {
+        //remove the formula from historized data if it is contained
+        newHistorizedData.current = newHistorizedData.current.filter((data) => {
+            return data !== formelName;
+        })
+        //search all diagrams and delete them
+        const diagramsToRemove = findDependentDiagrams(formelName);
+        if (diagramsToRemove.length > 0) {
+            newDiagrams.current = newDiagrams.current.filter((diagram) => {
+                return !diagramsToRemove.includes(diagram.name);
+            })
+        }
+        //find all formulas depending on the formula
+        const dependentFormulas: Array<string> = [];
+        newCustomData.current.forEach((formula) => {
+            if (formula.usedFormulaAndApiData.includes(formelName + " ") || formula.formelString.endsWith(formelName)) dependentFormulas.push(formula.formelName);
+        })
+        //remove all dependent formulas
+        if (dependentFormulas.length > 0) {
+            newCustomData.current = newCustomData.current.filter((formula) => {
+                return !dependentFormulas.includes(formula.formelName);
+            })
+        }
+        //for each dependent formula, recursively repeat this
+        dependentFormulas.forEach((dependentFormula) => {
+            deleteFormulaDependents(dependentFormula);
+        })
+    }
+
+
     /**
      * Method that renders an entry in the list of available arrays.
      * @param array The name of the array to be rendered.
      * @param index The index of the array in the list of all arrays.
      */
-    const renderArrayListItem = (array: string, index: number) => {
+    const renderArrayListItem = (array: ProcessableArray, index: number) => {
+        //construct the key by checking which type of processing this is (primitive array or complex array)
+        const displayKey = array.valueInObject ? array.key + "|" + array.innerKey : array.key;
         return (
-            <Grid item container xs={12} key={array}>
+            <Grid item container xs={12} key={displayKey}>
                 <Grid item xs={2}>
                     <Radio
                         checked={selectedArrayIndex === index}
                         onChange={() => setSelectedArrayIndex(index)}
                         value={index}
-                        inputProps={{ 'aria-label': array }}
+                        inputProps={{ 'aria-label': displayKey }}
                     />
                 </Grid>
                 <Grid item xs={10}>
                     <Typography variant="body1" className={classes.radioButtonListWrapText}>
-                        {array}
+                        {displayKey}
                     </Typography>
                 </Grid>
             </Grid>
@@ -355,7 +448,7 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
     return (
         <StepFrame
             heading="Array-Verarbeitung"
-            hintContent={null}
+            hintContent={hintContents.arrayProcessing}
         >
             <Grid container justify="space-between">
                 <Grid item xs={12}>

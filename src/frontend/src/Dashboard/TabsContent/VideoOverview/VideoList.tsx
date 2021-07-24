@@ -8,6 +8,8 @@ import {LogDialog} from "../../LogDialog";
 
 interface VideoListProps {
     videos: BackendVideoList;
+    handleDeleteVideo: (video: BackendVideo) => void;
+    handleEditVideo: (video: BackendVideo) => void;
     reportError: (message: string) => void;
 }
 
@@ -47,7 +49,7 @@ export const VideoList: React.FC<VideoListProps> = (props) => {
                             <Grid item xs={12}>
                                 <Button variant={"contained"} size={"small"} color={"primary"} className={classes.settings}
                                         startIcon={<SettingsRounded fontSize="small"/>}
-                                        onClick={() => console.log("Edit!")}
+                                        onClick={() => props.handleEditVideo(data)}
                                 >
                                     bearbeiten
                                 </Button>
@@ -55,7 +57,7 @@ export const VideoList: React.FC<VideoListProps> = (props) => {
                             <Grid item xs={12}>
                                 <Button variant={"contained"} size={"small"} className={classes.delete}
                                         startIcon={<DeleteIcon fontSize="small"/>}
-                                        onClick={() => console.log("delete!!!")}
+                                        onClick={() => props.handleDeleteVideo(data)}
                                 >
                                     löschen
                                 </Button>

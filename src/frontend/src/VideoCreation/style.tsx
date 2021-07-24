@@ -103,7 +103,14 @@ export const useStyles = makeStyles((theme: Theme) =>
             overflowWrap: "break-word",
         },
         sceneCard: {
-            width: "300px"
+            width: "300px",
+            height: "300px"
+        },
+        spokenTextPreview: {
+            height: "2.5em"
+        },
+        ttsIntervalInput: {
+            width: "70%"
         }
     }),
 );

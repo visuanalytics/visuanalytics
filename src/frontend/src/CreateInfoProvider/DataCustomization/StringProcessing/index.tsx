@@ -15,6 +15,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import {getListItemsNames} from "../../helpermethods";
 import {ArrayProcessingData, Diagram, ListItemRepresentation, StringReplacementData} from "../../types";
 import {FormelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
+import {hintContents} from "../../../util/hintContents";
 
 
 interface StringProcessingProps {
@@ -34,18 +35,6 @@ interface StringProcessingProps {
     apiName: string;
 }
 
-/**
- DONE:
- 1: grundlegende Datenstrukturen für alle Strings sowie Operationen auf diesen anlegen
- 2: Anzeige im Interface mit zwei Textfeldern für Ersetzung und einem Textfeld für den Namen
- 3: Methode zum Hinzufügen neu erstellter Operationen
- TODO:
-
- 4: Möglichkeit zum Löschen von Operationen
- 5:
- 6:
-
- */
 
 /**
  * Component for processing of strings - user can define replacing of certain sequences by others.
@@ -244,12 +233,15 @@ export const StringProcessing: React.FC<StringProcessingProps> = (props) => {
     return (
         <StepFrame
             heading="String-Ersetzungen"
-            hintContent={null}
+            hintContent={hintContents.stringProcessing}
         >
             <Grid container justify="space-between">
                 <Grid item xs={12}>
                     <Typography variant="body1">
-                        Eine String-Ersetzung kann erstellt werden, indem man einen String aus der Liste auswählt und festlegt, welche Zeichenketten auf welche Art und Weise ersetzt werden sollen:
+                        Eine String-Ersetzung kann erstellt werden, indem man einen String aus der Liste auswählt und festlegt, welche Zeichenketten auf welche Art und Weise ersetzt werden sollen.
+                    </Typography>
+                    <Typography variant="body1" className={classes.elementLargeMargin}>
+                        Die zu ersetzende Zeichenkette kann dabei auch ein regulärer Ausdruck sein, welcher der zugehörigen <a href="https://docs.python.org/3/library/re.html" target="_blank" rel="noreferrer">Python Syntax</a>  entspricht:
                     </Typography>
                 </Grid>
                 <Grid item container xs={12} md={8} justify="space-between" style={{height: "100%"}}>

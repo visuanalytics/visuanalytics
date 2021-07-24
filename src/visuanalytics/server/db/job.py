@@ -106,6 +106,7 @@ def get_datasource_run_info(datasource_id):
     """Gibt den Namen einer Datenquelle und den Namen der zugehörigen JSON-Datei zurück.
 
     :param datasource_id: id des Jobs
+    :type datasource_id: int
     """
     with db.open_con() as con:
         res = con.execute("SELECT datasource_name FROM datasource WHERE datasource_id=?",
@@ -150,10 +151,8 @@ def update_log_finish(id: int, state: int, duration: int):
 def get_interval(res):
     return INTERVAL.get(res["time_interval"])
 
+
 def insert_next_execution_time(id: int, next_execution: str, is_job: bool = False):
-    #print("insert_next_execution_time()")
-    #print("id:", id)
-    #print("next_execution:", next_execution)
     with db.open_con() as con:
         if is_job:
             schedule_id = con.execute("SELECT schedule_id FROM job WHERE job_id = ?", [id]).fetchone()["schedule_id"]

@@ -102,6 +102,7 @@ def assert_private_exists():
         "console_mode": False
     }
     path = os.path.normpath(os.path.join(os.path.dirname(__file__), CONFIG_PRIVATE_LOCATION))
-    os.makedirs(os.path.dirname(path), exist_ok=True)
-    with open(path, "w") as f:
-        json.dump(config_content, f)
+    if not os.path.isfile(path):
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        with open(path, "w") as f:
+            json.dump(config_content, f)

@@ -2,6 +2,7 @@
 Modul, welches die verschiedenen Typen beeinhaltet, um Text auf ein Bild zu setzen.
 """
 from PIL import ImageFont
+import textwrap
 
 from visuanalytics.analytics.util.step_errors import ImageError
 from visuanalytics.analytics.util.type_utils import register_type_func_no_data
@@ -22,7 +23,7 @@ def register_draw(func):
 
 
 @register_draw
-def center(draw, position, content, font_size, font_colour, font_path):
+def center(draw, position, content, font_size, font_colour, font_path, width=None):
     """
     Methode, um Text an einem fixem Punkt in ein Bild zu schreiben
 
@@ -42,13 +43,22 @@ def center(draw, position, content, font_size, font_colour, font_path):
     """
     ttype = ImageFont.truetype(resources.get_resource_path(font_path), font_size)
     w, h = ttype.getsize(content)
-    draw.text(((position[0] - (w / 2)), position[1]), content,
-              font=ImageFont.truetype(resources.get_resource_path(font_path), font_size),
-              fill=font_colour)
+    if width:
+        y_text = h
+        lines = textwrap.wrap(content, width=calc_num_character(ttype, content[0], width))
+        for line in lines:
+            draw.text(((position[0] - (w / 2)), y_text + position[1]), line,
+                          font=ImageFont.truetype(resources.get_resource_path(font_path), font_size),
+                          fill=font_colour)
+            y_text += h
+    else:
+        draw.text(((position[0] - (w / 2)), position[1]), content,
+                  font=ImageFont.truetype(resources.get_resource_path(font_path), font_size),
+                  fill=font_colour)
 
 
 @register_draw
-def left(draw, position, content, font_size, font_colour, font_path):
+def left(draw, position, content, font_size, font_colour, font_path, width=None):
     """
     Methode, um Text mittig auf ein Bild zu schreiben.
     Ort, an dem angefangen wird zu schreiben ,ist variabel und wird berechnet
@@ -67,6 +77,33 @@ def left(draw, position, content, font_size, font_colour, font_path):
     :param font_path: Pfad zur Schriftart, in welcher geschrieben werden soll
     :type font_path: str
     """
-    draw.text(position, content,
-              font=ImageFont.truetype(resources.get_resource_path(font_path), font_size),
-              fill=font_colour)
+    #draw.text(position, content,
+    #          font=ImageFont.truetype(resources.get_resource_path(font_path), font_size),
+    #          fill=font_colour)
+    ttype = ImageFont.truetype(resources.get_resource_path(font_path), font_size)
+    w, h = ttype.getsize(content)
+    if width:
+        y_text = h
+        lines = textwrap.wrap(content, width=calc_num_character(ttype, content[0], width))
+        for line in lines:
+            draw.text(((position[0] - (w / 2)), y_text + position[1]), line,
+                          font=ImageFont.truetype(resources.get_resource_path(font_path), font_size),
+                          fill=font_colour)
+            y_text += h
+    else:
+        draw.text(((position[0] - (w / 2)), position[1]), content,
+                  font=ImageFont.truetype(resources.get_resource_path(font_path), font_size),
+                  fill=font_colour)
+
+def calc_num_character(ttype, text, width):
+    """
+    Errechnet die maximale Anzahl an Character unter einer gegebenen Breite pro Zeile in Pixeln.
+
+    :param ttype: Font-Typ
+    :param text: Der Text, der u.U. umgebrochen werden muss
+    :param width: maximale Breite pro Zeile in Pixeln
+
+    :return: Anzahl an maximal erlaubten Character pro Zeile
+    """
+    w = ttype.getsize(text)[0]
+    return width // w
