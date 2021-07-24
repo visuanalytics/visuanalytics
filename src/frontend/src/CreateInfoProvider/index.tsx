@@ -16,7 +16,7 @@ import {
     ListItemRepresentation,
     Schedule,
     SelectedDataItem,
-    authDataDialogElement,
+    AuthDataDialogElement,
     uniqueId,
     Diagram,
     Plots,
@@ -153,7 +153,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
      * Method to construct an array of all dataSources names where the user needs to re-enter his authentication data.
      */
     const buildDataSourceSelection = () => {
-        const dataSourceSelection: Array<authDataDialogElement> = [];
+        const dataSourceSelection: Array<AuthDataDialogElement> = [];
         //check the current data source and add it as an option - not used when in SettingsOverview!
         if (createStep < 5 && !noKey && method !== "") {
             dataSourceSelection.push({
@@ -397,7 +397,6 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
     }, []);
 
 
-    //TODO: find out why this method is called too often
     /**
      * Method that creates the array of dataSources in the backend format for
      * the existing data sources.
@@ -558,7 +557,6 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
      * the created diagram and transforming them to the backend format.
      */
     const createBackendDiagrams = React.useCallback(() => {
-        //TODO: possibly find smarter solution without any type
         const diagramsObject: any = {};
         diagrams.forEach((diagram) => {
             diagramsObject[diagram.name] = {
@@ -576,7 +574,6 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
     }, [createPlots, diagrams, name]);
 
 
-    //TODO: test this method when it is used
     /**
      * Method that creates a list of all arrays that are used in diagrams.
      * Necessary for forming the object of the infoprovider sent to the backend.
@@ -707,7 +704,6 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
         }
     }
 
-    //TODO: also set the array processings and string replacements when switching current data source as soon as the functionality is available in this branch
     /**
      * Handler for back button that is passed to all sub-components as props.
      * Decrements the step or returns to the dashboard if the step was 0.

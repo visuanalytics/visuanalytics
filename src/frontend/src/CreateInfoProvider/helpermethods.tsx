@@ -19,7 +19,6 @@ export const extractKeysFromSelection = (selectedData: Array<SelectedDataItem>) 
     return keyArray;
 }
 
-//TODO: document addition of apiName and general new format
 /**
  * Method that transforms a list of array processings into a list of calculate
  * objects as they are needed by the backend
@@ -53,7 +52,6 @@ export const createCalculates = (processings: Array<ArrayProcessingData>, apiNam
     return calculates;
 }
 
-//TODO: document addition of apiName
 /**
  * Method that transforms a list of string replacements into a list of replacement
  * objects as they are needed by the backend
@@ -266,7 +264,6 @@ export const checkFindOnlyNumbers = (arg: string): boolean => {
     return onlyNumbers;
 }
 
-//TODO: ask extracting listItems for each datasource when they are included in the dataformat
 /**
  * Method that transforms an infoProvider from the backend data format to a frontend data format representation
  * @param data

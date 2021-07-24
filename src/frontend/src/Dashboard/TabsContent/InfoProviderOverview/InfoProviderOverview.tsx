@@ -59,7 +59,6 @@ export const InfoProviderOverview: React.FC = () => {
      */
     const [editDialogOpen, setEditDialogOpen] = React.useState(false);
 
-    //TODO: possibly place in higher level component
     /**
      * setup for error notification
      */

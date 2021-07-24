@@ -87,7 +87,6 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
      * @param formelName is the name of the formula that has to be deleted.
      */
     const deleteCustomDataCheck = (formelName: string) => {
-        //TODO: documentation
         //find all diagrams to remove
         let diagramsToRemove: Array<string> = findDependentDiagrams(formelName);
         const formulasToRemove: Array<string> = [];

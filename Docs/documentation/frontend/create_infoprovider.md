@@ -62,8 +62,11 @@ Die Verwaltung des Dialogs passiert in **CreateInfoProvider** über die State-Va
 * Gleichzeitig wird die Map **dataSourcesKeys** mit leeren Einträgen befüllt, damit später keine undefined-Zugriffe entstehen.
 
 Beim Einbinden der Komponente **AuthDataDialog** wird per props als **selectionDataSources** eine Liste mit Repräsentationen aller Datenquellen, bei denen eine Eingabe vom Nutzer nötig ist, übergeben. Der Datentyp für die Repräsentationen ist **authDataDialogElement**:
+
 ```javascript
-export type authDataDialogElement = {
+export
+type
+AuthDataDialogElement = {
     name: string;
     method: string;
 }

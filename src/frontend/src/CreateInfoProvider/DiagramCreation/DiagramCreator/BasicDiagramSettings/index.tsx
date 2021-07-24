@@ -110,7 +110,7 @@ export const BasicDiagramSettings: React.FC<BasicDiagramSettingsProps> = (props)
                     Bitte wählen sie aus den zu erstellenden Diagrammtyp:
                 </Typography>
             </Grid>
-            <Grid item xs={7} justify="space-between" className={classes.elementLargeMargin}>
+            <Grid item container xs={7} justify="space-between" className={classes.elementLargeMargin}>
                 <Grid item xs={12}>
                     <FormControl fullWidth variant="outlined">
                         <Select

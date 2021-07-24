@@ -51,6 +51,5 @@ export const getIntervalDisplay = (schedule: Schedule) => {
             }
         }
     }
-    //TODO: ??? what should happen here?
-    return "TO BE DONE"
+    return ""
 }

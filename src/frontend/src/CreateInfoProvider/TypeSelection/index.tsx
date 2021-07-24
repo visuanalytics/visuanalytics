@@ -91,7 +91,6 @@ export const TypeSelection: React.FC<TypeSelectionProps> = (props) => {
     }
 
 
-    //TODO: possibly confirm going back to the dashboard to not lose data
     //TODO: find a prettier solution for a file upload button, possibly use external component since material-ui doesnt offer one
     return (
         <StepFrame

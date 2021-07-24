@@ -259,8 +259,6 @@ export const EditSingleFormelGUI: React.FC<EditSingleFormelGUIProps> = (props) =
         )
     }
 
-    //TODO: add new look to this component as in creation
-    //TODO: make arrayprocessings available
     return (
         <React.Fragment>
             <Grid container>

@@ -104,7 +104,6 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
         const data = jsonData as testDataBackendAnswer;
         if (data.status !== 0) {
             reportError("Fehler: Backend meldet Fehler bei der API-Abfrage.")
-            //TODO: possibly show dialog here
         } else {
             //call the transform method
             const listItems: Array<ListItemRepresentation> = transformJSON(data.api_keys);

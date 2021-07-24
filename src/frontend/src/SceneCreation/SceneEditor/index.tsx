@@ -1462,8 +1462,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         setCurrentTextWidth(200);
         setCurrentTextContent("");
         setStepSize(5);
-        //TODO remove console clear in production
-        console.clear();
     }
 
     /**
@@ -2876,5 +2874,3 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
 
     );
 }
-
-//TODO: possibly extract the selection list into another component for better structure

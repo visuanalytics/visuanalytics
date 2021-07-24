@@ -18,7 +18,6 @@ interface TabPanelProps {
     value: any;
 }
 
-//TODO: possibly split the three definitions in separate files
 /**
  * Component to render the content in one tab. Value and index are used to switch correct between all tabs.
  */
@@ -207,7 +206,6 @@ export const DashboardTabs = () =>  {
      * @param id the id to find the right scene
      */
     const fetchPreviewImgById = (id: number) => {
-        //TODO: implement right route and cut "- 1"
         //"id - 1" is used here because the scene-id starts by 1 and the images-id ist starting by 0.
         //in the end the scene-id and the images-id will match
         //the right route has to be implemented in the backend

@@ -290,7 +290,6 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
         )
     }
 
-    //TODO: Three buttons at the button are not displayed correctly when reducing screen width.
     return (
         <StepFrame
             heading={"Übersicht"}

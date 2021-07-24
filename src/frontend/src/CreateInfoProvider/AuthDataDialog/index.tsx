@@ -7,7 +7,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from "@material-ui/core/FormControl";
 import Button from "@material-ui/core/Button";
-import {DataSourceKey, authDataDialogElement, uniqueId} from "../types";
+import {DataSourceKey, AuthDataDialogElement, uniqueId} from "../types";
 import {Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
 import {APIInputField} from "../BasicSettings/APIInputField/APIInputField";
 
@@ -21,7 +21,7 @@ interface AuthDataDialogProps {
     setApiKeyInput2: (input: string) => void;
     dataSourcesKeys: Map<string, DataSourceKey>;
     setDataSourcesKeys: (map: Map<string, DataSourceKey>) => void;
-    selectionDataSources: Array<authDataDialogElement>;
+    selectionDataSources: Array<AuthDataDialogElement>;
     apiName: string;
 }
 

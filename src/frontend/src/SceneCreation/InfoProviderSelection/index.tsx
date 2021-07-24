@@ -62,12 +62,10 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
         const stringReplacementList: Array<string> = [];
         infoProvider.dataSources.forEach((dataSource) => {
             //go through all selectedData
-            //TODO: possibly extract type information
             dataSource.selectedData.forEach((selectedData) => {
                 selectedDataList.push(dataSource.apiName + "|" + selectedData.key);
             })
             //go through all formulas
-            //TODO: possibly display the complete formula
             dataSource.customData.forEach((customData) => {
                 customDataList.push(dataSource.apiName + "|" + customData.formelName);
             })

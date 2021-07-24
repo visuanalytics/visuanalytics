@@ -11,7 +11,7 @@ import {ComponentContext} from "../ComponentProvider";
 import {StrArg} from "../CreateInfoProvider/DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/StrArg";
 import {FormelContext/*, InfoProviderObj*/} from "./types";
 import {
-    authDataDialogElement,
+    AuthDataDialogElement,
     BackendDataSource,
     FrontendInfoProvider,
     DataSource,
@@ -37,29 +37,6 @@ interface EditInfoProviderProps {
     infoProvId?: number;
     infoProvider?: FrontendInfoProvider;
 }
-
-//TODO: task list for the team
-/*
-DONE:
-task 0: overview component (Tristan)
-task 1: restore formulas (Tristan)
-task 2: editing for formulas (Tristan)
-task 3: new formulas (Tristan)
-task 4: integrate diagram components (Janek)
-task 6: keep the component context on reload (Janek)
-
-task 5: sessionStorage compatibility with AuthDataDialog (Janek)
-task 7: reload data from api in DataSelection and compare if all selectedData-items are contained in the new listItems (Janek)
-task 8: component for DataSelection (Janek)
-task 10: add additional data sources (Daniel)
-
-task 12: load data from backend (Janek)
-task 13: send data to backend (Janek)
-NOT DONE:
-task 9: historized data (Tristan)
-task 11: delete dependencies (???)
- */
-
 
 export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
 
@@ -120,7 +97,6 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
     console.log(refetchDoneList)
 
 
-    //TODO: add current state variables if needed
     /**
      * Method to check if there is api auth data to be lost when the user refreshes the page.
      * Needs to be separated from authDialogNeeded since this uses state while authDialogNeeded uses sessionStorage
@@ -139,7 +115,6 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
         return false;
     }, [infoProvDataSources, infoProvDataSourcesKeys])
 
-    //TODO: is it necessary to fully copy here?
     /**
      * Defines event listener for reloading the page and removes it on unmounting.
      * The event listener will warn the user that api keys will be list an a reload.
@@ -159,7 +134,6 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
         }
     }, [checkKeyExistence])
 
-    //TODO: check if current states are really not needed - possibly necessary when creation of additional dataSources is added
     /**
      * Checks if displaying a dialog for reentering authentication data on loading the component is necessary.
      * This will be the case if the current dataSource has not selected noKey or if any of the previously existing dataSources has noKey.
@@ -188,7 +162,6 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
         //TODO: document firstentering
         if (sessionStorage.getItem("firstEntering-" + uniqueId) !== null) {
             //infoProvId
-            //TODO: check if the 0 case can be problematic - it should not since this if-block is only rendered AFTER the first render and so the id is set in the sessionStorage
             setInfoProvId(Number(sessionStorage.getItem("infoProvId-" + uniqueId) || 0));
             //editStep - disabled since it makes debugging more annoying
             setEditStep(Number(sessionStorage.getItem("editStep-" + uniqueId) || 0));
@@ -255,7 +228,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
     }, [infoProvName])
     //store newDataSourceMode in sessionStorage
     React.useEffect(() => {
-        sessionStorage.setItem("noKey-" + uniqueId, newDataSourceMode ? "true" : "false"); //TODO: This seems wrong!!!
+        sessionStorage.setItem("noKey-" + uniqueId, newDataSourceMode ? "true" : "false");
     }, [newDataSourceMode])
     // Store infoProvDataSource in session storage
     React.useEffect(() => {
@@ -285,7 +258,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
     //store refetchDoneList in sessionStorage
     React.useEffect(() => {
         sessionStorage.setItem("refetchDoneList-" + uniqueId, JSON.stringify(refetchDoneList));
-    }, [refetchDoneListChange, refetchDoneList]) //TODO: find out why this behaviour needs toString to get triggered
+    }, [refetchDoneListChange, refetchDoneList])
 
     /**
      * Removes all items of this component from the sessionStorage.
@@ -585,13 +558,11 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
     }
 
 
-    //TODO: find better option than just copy it
-    //TODO: update as soon as the possibility of having new dataSources exists
     /**
      * Method to construct an array of all dataSources names where the user needs to re-enter his authentication data.
      */
     const buildDataSourceSelection = () => {
-        const dataSourceSelection: Array<authDataDialogElement> = [];
+        const dataSourceSelection: Array<AuthDataDialogElement> = [];
         //check the current data source and add it as an option
         /*if(!noKey) {
             dataSourceSelection.push({
@@ -645,7 +616,6 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
     }, [reportError]);
 
 
-    //TODO: find out why this method is called too often
     const createDataSources = React.useCallback(() => {
         const backendDataSources: Array<BackendDataSource> = [];
         infoProvDataSources.forEach((dataSource) => {
@@ -805,7 +775,6 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
      * the created diagram and transforming them to the backend format.
      */
     const createBackendDiagrams = React.useCallback(() => {
-        //TODO: possibly find smarter solution without any type
         const diagramsObject: any = {};
         infoProvDiagrams.forEach((diagram) => {
             diagramsObject[diagram.name] = {
@@ -823,7 +792,6 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
     }, [createPlots, infoProvDiagrams, infoProvName]);
 
 
-    //TODO: test this method when it is used
     /**
      * Method that creates a list of all arrays that are used in diagrams.
      * Necessary for forming the object of the infoprovider sent to the backend.
@@ -896,7 +864,14 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
         };
     }, []);
 
-    //TODO: documentation is missing!!!! @Daniel
+    /**
+     * Method for finishing creation of a new datasource.
+     * Adds it to the state and stores its api auth data in the map
+     * holding them.
+     * @param dataSource The datasource object created
+     * @param apiKeyInput1 The first part of the api auth data
+     * @param apiKeyInput2 The second part of the api auth data
+     */
     const finishNewDataSource = (dataSource: DataSource, apiKeyInput1: string, apiKeyInput2: string) => {
         setInfoProvDataSources(infoProvDataSources.concat(dataSource));
         const mapCopy = new Map(infoProvDataSourcesKeys)

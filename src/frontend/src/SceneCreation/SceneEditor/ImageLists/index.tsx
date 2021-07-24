@@ -66,7 +66,6 @@ export const ImageLists: React.FC<ImageListsProps> = (props) => {
         }
     }
 
-    //TODO: do we need the path and id also for the background image? i dont think so!
 
     return (
         <React.Fragment>

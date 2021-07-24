@@ -21,21 +21,7 @@ import {useCallFetch} from "../Hooks/useCallFetch";
 import {FullVideo} from "../Dashboard/types";
 import {hintContents} from "../util/hintContents";
 
-/**
- TODO:
- 10: Option auf Bearbeitung einbinden
 
- DONE:
- 1: Auslagerung Szenenerstellung in Unterkomponente für Gliederung in 3 Schritte
- 2: Fetching aller Infoprovider
- 3: Anzeigen Auswahl aller Infoprovider
- 4: Abfragen aller ausgewählten Infoprovider und Laden von Daten
- 5: Schedule-Auswahl schreiben (wie bei Historisierung mit neuer Option "einmalig")
- 6: Absenden der Daten an das Backend mit Datenformat
- 7: sessionStorage einbinden/ermöglichen
- 8: alle Szenen aus dem Backend fetchen
- 9: fehlende Docstrings hinzufügen
- */
 
 interface VideoCreationProps {
     video?: FullVideo;
@@ -374,7 +360,6 @@ export const VideoCreation: React.FC<VideoCreationProps> = (props) => {
      */
     const createImagesObject = () => {
         console.trace()
-        //TODO: possibly find smarter solution without any type
         const imagesObject: any = {};
         //index to label each scene - secures the ordering and allows use the same scene multiple times
         let index = 1;
@@ -392,7 +377,6 @@ export const VideoCreation: React.FC<VideoCreationProps> = (props) => {
      * Method that creates the object with all audios necessary for the backend.
      */
     const createAudiosObject = () => {
-        //TODO: possibly find smarter solution without any type
         const audioObject: any = {};
         let index = 1;
         sceneList.forEach((scene) => {
@@ -428,7 +412,6 @@ export const VideoCreation: React.FC<VideoCreationProps> = (props) => {
         return audioObject;
     }
 
-    //TODO: check the status of the answer
     /**
      * Handler method for success on posting the video to the backend.
      * @param jsonData The answer returned by the backend.
@@ -451,7 +434,6 @@ export const VideoCreation: React.FC<VideoCreationProps> = (props) => {
      * The standard hook "useCallFetch" is not used here because it caused calls of the functions
      * called inside of it on every render.
      */
-        //TODO: add video_id
     const sendVideoToBackend = () => {
         let url = ((propsVideo && propsVideoId) ? "visuanalytics/videojob/" + propsVideoId : "visuanalytics/videojob");
         //if this variable is set, add it to the url

@@ -23,8 +23,6 @@ export const SceneOverview: React.FC<SceneOverviewProps> = (props) => {
     const classes = useStyles();
     const components = React.useContext(ComponentContext);
 
-    //TODO: add sessionStorage support
-
     const [scenes, setScenes] = React.useState<Array<BackendScene>>(props.scenes);
 
     const [previewImgList, setPreviewImgList] = React.useState<Array<PreviewImage>>(props.previewImgList);
@@ -125,7 +123,6 @@ export const SceneOverview: React.FC<SceneOverviewProps> = (props) => {
             //for the case that in the future no infoproviders are allowed
             components?.setCurrent("sceneEditor", {sceneFromBackend: data, editId: currentScene.scene_id})
         }
-        //TODO: change component with the fetched Scene in props...
     };
 
     const handleErrorFetchSceneError = (err: Error) => {
@@ -148,7 +145,6 @@ export const SceneOverview: React.FC<SceneOverviewProps> = (props) => {
      * @param index Index of the entry in the list
      */
     const setCurrent = (data: BackendScene, index: number) => {
-        //TODO: implement method to find the right preview-image for the given SceneId
         //console.log(data.scene_id)
         setCurrentScene(data);
         setCurrentImg(previewImgList[index].URL);
