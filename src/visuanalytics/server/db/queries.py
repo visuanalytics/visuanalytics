@@ -252,6 +252,7 @@ def insert_video_job(video, update=False, job_id=None):
     tts_infoprovider_ids = video["tts_ids"]
     tts_names = []
     infoprovider_names = [infoprovider["infoprovider_name"] for infoprovider in video["selectedInfoprovider"]]
+    video["audio"] = remove_toplevel_key(video["audio"])
 
     # Namen aller Infoprovider die in TTS genutzt werden laden
     for tts_id in tts_infoprovider_ids:
@@ -871,7 +872,7 @@ def insert_scene(scene):
         "name": scene_name,
         "used_images": used_images,
         "used_infoproviders": used_infoproviders,
-        "images": images,
+        "images": remove_toplevel_key(images),
         "backgroundImage": scene["backgroundImage"],
         "backgroundType": scene["backgroundType"],
         "backgroundColor": scene["backgroundColor"],
@@ -1000,7 +1001,7 @@ def update_scene(scene_id, updated_data):
     scene_json.update({"name": scene_name})
     scene_json.update({"used_images": used_images})
     scene_json.update({"used_infoproviders": used_infoproviders})
-    scene_json.update({"images": images})
+    scene_json.update({"images": remove_toplevel_key(images)})
     scene_json.update({"backgroundImage": updated_data["backgroundImage"]})
     scene_json.update({"backgroundType": updated_data["backgroundType"]})
     scene_json.update({"backgroundColor": updated_data["backgroundColor"]})
@@ -1496,6 +1497,7 @@ def _extend_formula_keys(obj, datasource_name, formula_keys):
             try:
                 float(part)
             except Exception:
+                transformed_keys = [key if key not in part else part for key in transformed_keys]
                 if part != "" and part not in formula_keys and part not in transformed_keys:
                     transformed_keys.append(part)
                     part_temp = remove_toplevel_key(part)
