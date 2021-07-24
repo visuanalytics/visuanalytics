@@ -8,7 +8,7 @@ import {FormelList} from "./FormelList";
 import {FormelObj} from "../../../CreateInfoProvider/DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 import {StrArg} from "../../../CreateInfoProvider/DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/StrArg";
 import {FormelContext} from "../../types";
-import {checkFindOnlyNumbers, checkOperator} from "../../helpermethods";
+import {checkNumbers, checkOperator} from "../../helpermethods";
 import {DataSource, Diagram} from "../../../CreateInfoProvider/types";
 
 interface EditCustomDataProps {
@@ -213,6 +213,8 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
             opFlag: true,
             leftParenFlag: false,
             rightParenFlag: false,
+            commaFlag: true,
+            usedComma: false,
             usedFormulaAndApiData: []
         };
 
@@ -229,11 +231,13 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
         //-> for each word in here ->
         formelWithoutBlank.forEach((item) => {
 
+            finalFormel.usedComma = false;
+
             let notPushed: boolean = true;
 
             //while there are "(" in the item-string
             while (item.includes('(')) {
-                formelAsObj.push(new StrArg('(', false, false, true, false))
+                formelAsObj.push(new StrArg('(', false, false, true, false, false))
                 item = item.replace('(', '');
                 finalFormel.parenCount += 1;
             }
@@ -250,20 +254,27 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
             if (checkOperator(item)) {
                 //if this fails the an operator-character has to be ignored because it is part of the formel-name
                 if (item.length <= 1) {
-                    formelAsObj.push(new StrArg(item, true, false, false, false))
+                    formelAsObj.push(new StrArg(item, true, false, false, false, false))
                     notPushed = false;
                 }
             }
 
             //if the item string consists only of numbers
-            if (checkFindOnlyNumbers(item)) {
-                formelAsObj.push(new StrArg(item, false, false, false, true))
+            if (checkNumbers(item)) {
+                for (let i: number = 0; i < item.length; i++) {
+                    if (item.charAt(i) == '.') {
+                        formelAsObj.push(new StrArg(item.charAt(i), false, false, false, false, true));
+                        finalFormel.usedComma = true;
+                    } else {
+                        formelAsObj.push(new StrArg(item.charAt(i), false, false, false, true, false))
+                    }
+                }
                 notPushed = false;
             }
 
             //if there wasn't pushed an StrArg-object into formelAsObj until now
             if (notPushed) {
-                formelAsObj.push(new StrArg(item, false, false, false, false));
+                formelAsObj.push(new StrArg(item, false, false, false, false, false));
 
                 const arrTmp = finalFormel.usedFormulaAndApiData;
                 let alreadyContains: boolean = false;
@@ -277,7 +288,7 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
 
             //for each counted closing-parens push one StrArg with ")" into formelAsObj
             for (let i = 1; i <= countClosingParens; i++) {
-                formelAsObj.push(new StrArg(')', false, true, false, false));
+                formelAsObj.push(new StrArg(')', false, true, false, false, false));
             }
 
         });
@@ -288,6 +299,8 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
         //assign the correct flags
         setRightFlags(finalFormel);
 
+        console.log(finalFormel.commaFlag)
+        console.log(finalFormel.usedComma)
         //return finalFormel
         return finalFormel;
     }
@@ -304,12 +317,14 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
             formel.numberFlag = false;
             formel.rightParenFlag = false;
             formel.leftParenFlag = true;
+            formel.commaFlag = false;
         } else {
             formel.opFlag = false;
             formel.dataFlag = true;
             formel.numberFlag = true;
             formel.rightParenFlag = false;
             formel.leftParenFlag = true;
+            formel.commaFlag = true;
         }
 
     }
@@ -350,6 +365,8 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
             opFlag: true,
             leftParenFlag: false,
             rightParenFlag: false,
+            commaFlag: true,
+            usedComma: false,
             usedFormulaAndApiData: []
         });
         props.continueHandler(1)

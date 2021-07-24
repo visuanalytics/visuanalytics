@@ -176,19 +176,13 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * Only used for editing mode to restore the image by its backend id.
      */
     const findRightBackgroundImage = React.useCallback(() => {
-        //console.log("searching bg-image");
-        //console.log(backgroundImageList)
         if (propsSceneFromBackend !== undefined) {
             for (let i = 0; i < backgroundImageList.length; i++) {
-                //console.log(backgroundImageList[i].image_id +" : " + backgroundImageList[i].image_backend_path);
-                //console.log(propsSceneFromBackend.backgroundImage);
                 if (backgroundImageList[i].image_id === propsSceneFromBackend.backgroundImage) {
-                    //console.log("matched index: " + i)
                     setBackgroundImageIndex(i);
                     const img = new window.Image();
                     img.src = backgroundImageList[i].image_blob_url;
                     setBackgroundImage(img);
-                    //console.log(img);
                     break;
                 }
             }
@@ -211,15 +205,12 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                     castedItem.image = new window.Image();
                     //if it is a diagram, we need to find it in the diagramList instead of the imageList
                     if (castedItem.diagram) {
-                        //console.log(castedItem.diagramName)
                         //loop through the diagramList and find the diagram with the same name to get its url
                         for (let i = 0; i < diagramList.length; i++) {
                             if (diagramList[i].name === castedItem.diagramName) {
-                                console.log("match")
                                 const img = new window.Image();
                                 img.src = diagramList[i].url;
                                 castedItem.image = img;
-                                //console.log(img);
                                 break;
                             }
                         }
@@ -231,7 +222,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                 const img = new window.Image();
                                 img.src = imageList[i].image_blob_url;
                                 castedItem.image = img;
-                                //console.log(img);
                                 break;
                             }
                         }
@@ -283,8 +273,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             for (let index = 0; index < restoredItems.length; index++) {
                 if (restoredItems[index].hasOwnProperty("image")) {
                     let castedItem = restoredItems[index] as CustomImage;
-                    //console.log("image item:");
-                    //console.log(castedItem)
                     castedItem.image = new window.Image();
                     //if it is a diagram, we need to find it in the diagramList instead of the imageList
                     if (castedItem.diagram) {
@@ -293,7 +281,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                         castedItem.image.src = imageList[castedItem.index] !== undefined ? imageList[castedItem.index].image_blob_url : "";
                     }
                     restoredItems[index] = castedItem;
-                    console.log(restoredItems[index])
                 }
             }
             setItems(restoredItems);
@@ -312,7 +299,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         }
         //deleteText
         setDeleteText(sessionStorage.getItem("deleteText-" + uniqueId) || "Letztes Elem. entf.");
-        //console.log(sessionStorage.getItem("items-" + uniqueId) === null ? new Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>() : JSON.parse(sessionStorage.getItem("items-" + uniqueId)!));
         //recentlyRemovedItems
         setRecentlyRemovedItems(sessionStorage.getItem("recentlyRemovedItems-" + uniqueId) === null ? new Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>() : JSON.parse(sessionStorage.getItem("recentlyRemovedItems-" + uniqueId)!))
     }, [imageList, diagramList, backgroundImageList])
@@ -522,7 +508,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * it to the backend.
      */
     const createBackgroundImage = async () => {
-        //console.log("creating the background image");
         const copyOfItems = items.slice();
         const duplicateOfStage = dupeStage(copyOfItems);
         const stageImage = saveHandler(duplicateOfStage);
@@ -536,7 +521,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             let formData = new FormData();
             formData.append('image', file);
             formData.append('name', sceneName + '_background');
-            //console.log(formData.get("image"));
             postSceneBackground(formData);
         }
     }
@@ -598,7 +582,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                     }
                     dataTextAndImages.push(itemToPush);
                 }
-                console.log('text', element.id);
             } else if (element.id.startsWith('image')) {
                 if ('image' in element) {
                     const itemToPush: DataImage = {
@@ -627,7 +610,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * @param data The JSON returned by the backend.
      */
     const handleExportSceneSuccess = React.useCallback(() => {
-        console.log("successful export post");
         clearSessionStorage();
         sessionStorage.removeItem("sceneEditorStep-" + uniqueId);
         sessionStorage.removeItem("infoProviderList-" + uniqueId);
@@ -658,7 +640,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * The backend will use this data to create the desired Info-Provider.
      */
     const postSceneExport = React.useCallback(() => {
-        //console.log("fetcher called");
         //check if the edit mode is active by looking for the props object - post to different route if editing!
         let url = (propsSceneFromBackend !== undefined && editId !== undefined) ? "visuanalytics/scene/" + editId : "visuanalytics/scene";
         //if this variable is set, add it to the url
@@ -699,7 +680,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const handlePostScenePreviewSuccess = React.useCallback((jsonData: any) => {
         const data = jsonData as ResponseData;
         scenePreviewID.current = data.image_id;
-        console.log("successful preview post: " + scenePreviewID.current)
         postSceneExport();
     }, [postSceneExport]);
 
@@ -717,7 +697,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * Used to store it separately. The backend should answer with the ID it used to store the preview.
      */
     const postScenePreview = React.useCallback((formData: FormData) => {
-        //console.log("fetcher called");
         let url = "visuanalytics/image/scene"
         //if this variable is set, add it to the url
         if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
@@ -752,7 +731,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * it to the backend.
      */
     const createPreviewImage = React.useCallback(async () => {
-        console.log("creating the preview image");
         if (stageRef.current !== null) {
             const originalStage = saveHandler(stageRef.current);
             if (originalStage !== "Empty Stage") {
@@ -763,9 +741,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 let formData = new FormData();
                 formData.append('image', file);
                 formData.append('name', sceneName + '_preview');
-                console.log(formData.get("image"));
                 postScenePreview(formData);
-                //console.log(previewImageData.current);
             }
         }
     }, [postScenePreview, sceneName])
@@ -777,11 +753,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * @param data The JSON returned by the backend.
      */
     const handlePostSceneBGSuccess = React.useCallback((jsonData: any) => {
-        console.log(jsonData);
         const data = jsonData as ResponseData;
         backgroundID.current = data.image_id;
         backgroundPath.current = data.path;
-        console.log("successful background post: " + backgroundID.current);
         createPreviewImage();
     }, [createPreviewImage]);
 
@@ -799,7 +773,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * Used to store it separately. The backend should answer with the ID it used to store the image.
      */
     const postSceneBackground = React.useCallback((formData: FormData) => {
-        //console.log("fetcher called");
         let url = "visuanalytics/image/scene"
         //if this variable is set, add it to the url
         if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
@@ -852,14 +825,12 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * @param jsonData The JSON object returned by the backend, containing the ID of the new image.
      */
     const postBackgroundImageSuccessHandler = (jsonData: any) => {
-        console.log("background image post success handler");
         //get the object of the uploaded image from the FormData
         //const img = imageToUpload.get('image');
         const data = jsonData as ImageBackendData;
         //extract the backend id of the newly created image from the backend
         const imageId = data.image_id;
         const imageURL = data.path;
-        console.log(imageId);
         // check if the image is valid
         //start fetching the new image from the backend
         props.fetchBackgroundImageById(imageId, imageURL, handleBackgroundImageByIdSuccess, handleBackgroundImageByIdError);
@@ -880,9 +851,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * Method to POST a background image uploaded by the user to the backend.
      */
     const postBackgroundImage = (imageToUpload: FormData) => {
-        //console.log(imageToUpload.get("image"));
-
-        console.log("post background image called");
         let url = "visuanalytics/image/backgrounds";
         //if this variable is set, add it to the url
         if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
@@ -918,7 +886,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * @param path Path of the image the backend
      */
     const handleBackgroundImageByIdSuccess = (jsonData: any, id: number, path: string) => {
-        console.log("success while fetching");
         //create a URL for the blob image and update the list of images with it
         const arCopy = props.backgroundImageList.slice();
         arCopy.push({
@@ -945,14 +912,12 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * @param jsonData The JSON object returned by the backend, containing the ID of the new image.
      */
     const postImageSuccessHandler = (jsonData: any) => {
-        console.log("image post success handler");
         //get the object of the uploaded image from the FormData
         //const img = imageToUpload.get('image');
         const data = jsonData as ImageBackendData;
         //extract the backend id of the newly created image from the backend
         const imageId = data.image_id;
         const imageURL = data.path;
-        console.log(imageId);
         // check if the image is valid
         //start fetching the new image from the backend
         props.fetchImageById(imageId, imageURL, handleImageByIdSuccess, handleImageByIdError);
@@ -972,7 +937,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * Method to POST an Image uploaded by the user to the backend.
      */
     const postImage = (imageToUpload: FormData) => {
-        console.log("post image called");
         let url = "visuanalytics/image/pictures";
         //if this variable is set, add it to the url
         if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
@@ -1298,7 +1262,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * @param diagramName Name of the diagram, empty if it is an image
      */
     const addImageElement = (image: HTMLImageElement, id: number, path: string, index: number, diagram: boolean, diagramName: string) => {
-        console.log(image)
         let obj: CustomImage = {
             id: 'image-' + itemCounter.toString(),
             x: 0,
@@ -1316,7 +1279,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             scaleY: 1,
             color: "#000000"
         }
-        console.log(obj);
         // if its bigger than the width / height of the canvas, adjust the size of the image
         while (obj.width * obj.scaleX > 960) {
             obj.scaleX *= 0.5;
@@ -1521,7 +1483,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                 }
                             }
                         }
-                        //console.log(onlyUsage);
                         if (onlyUsage) {
                             imageIDArray.current = imageIDArray.current.filter((imageID) => {
                                 return imageID !== castedImage.imageId;
@@ -1561,7 +1522,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                             }
                         }
                     }
-                    console.log(onlyUsage);
                     if (onlyUsage) {
                         imageIDArray.current = imageIDArray.current.filter((imageID) => {
                             return imageID !== castedImage.imageId;
@@ -1632,13 +1592,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             setItemCounter(itemCounter + 1);
             setItems(localItems);
         }
-    }
-
-    /**
-     * Method to handle the start of a transform event
-     */
-    const handleTransformStart = (e: any) => {
-        console.log("Transform Started ", e);
     }
 
     /**
@@ -1893,9 +1846,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             setItemCounter(itemCounter + 1);
             // otherwise add the content to a selected text field
         } else {
-            console.log(selectedItemName);
             if (selectedItemName.startsWith('text') && !currentlyEditing) {
-                console.log('Text selected');
                 const localItems = items.slice();
                 const index = items.indexOf(selectedObject);
                 const objectCopy = {
@@ -1973,10 +1924,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      */
     const handleImageClick = (src: string, id: number, path: string, index: number, diagram: boolean, diagramName: string) => {
         //create the image object for the image to be displayed
-        console.log(src)
         let image = new window.Image();
         image.src = src;
-        console.log(image)
         //push the id to the array of used images if it is not already used - also not pushing for diagrams
         if (!imageIDArray.current.includes(id) && !diagram) imageIDArray.current.push(id);
         addImageElement(image, id, path, index, diagram, diagramName);
@@ -2002,9 +1951,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             setBackGroundColor(currentBGColor);
             setBackGroundType("IMAGE");
             setBackGroundColorEnabled(false);
-            console.log("backgroundcolor should be disabled");
         } else {
-            console.log("backgroundcolor is currently disabled");
             setCurrentBGColor(backGroundColor);
             setBackGroundType("COLOR");
             setBackGroundColorEnabled(true);
@@ -2085,7 +2032,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             let formData = new FormData();
             let name = event.target.files[0].name.split('.');
             formData.append('image', event.target.files[0]);
-            console.log(formData.get("image"));
             formData.append('name', name[0]);
             postBackgroundImage(formData);
         }
@@ -2182,7 +2128,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                                     radius={item.radius}
                                                     onDragStart={handleDragStart}
                                                     onDragEnd={handleDragEnd}
-                                                    onTransformStart={handleTransformStart}
                                                     onTransformEnd={handleTransformEnd}
                                                     rotation={item.rotation}
                                                     onMouseOver={mouseOver}
@@ -2217,7 +2162,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                                     height={item.height}
                                                     onDragStart={handleDragStart}
                                                     onDragEnd={handleDragEnd}
-                                                    onTransformStart={handleTransformStart}
                                                     onTransformEnd={handleTransformEnd}
                                                     rotation={item.rotation}
                                                     onMouseOver={mouseOver}
@@ -2255,7 +2199,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                                     fill={item.color}
                                                     onDragStart={handleDragStart}
                                                     onDragEnd={handleDragEnd}
-                                                    onTransformStart={handleTransformStart}
                                                     onTransformEnd={handleTransformEnd}
                                                     rotation={item.rotation}
                                                     onMouseOver={mouseOver}
@@ -2293,7 +2236,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                                     radius={item.radius}
                                                     onDragStart={handleDragStart}
                                                     onDragEnd={handleDragEnd}
-                                                    onTransformStart={handleTransformStart}
                                                     onTransformEnd={handleTransformEnd}
                                                     rotation={item.rotation}
                                                     onMouseOver={mouseOver}
@@ -2325,7 +2267,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                                     draggable
                                                     onDragStart={handleDragStart}
                                                     onDragEnd={handleDragEnd}
-                                                    onTransformStart={handleTransformStart}
                                                     onTransformEnd={handleTransformEnd}
                                                     onDblClick={() => handleTextDblClick()}
                                                     fontSize={item.fontSize}
@@ -2368,7 +2309,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                                     draggable
                                                     onDragStart={handleDragStart}
                                                     onDragEnd={handleDragEnd}
-                                                    onTransformStart={handleTransformStart}
                                                     onTransformEnd={handleTransformEnd}
                                                     rotation={item.rotation}
                                                     onMouseOver={mouseOver}

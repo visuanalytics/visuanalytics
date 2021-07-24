@@ -81,6 +81,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
         opFlag: true,
         leftParenFlag: false,
         rightParenFlag: false,
+        commaFlag: true,
+        usedComma: false,
         usedFormulaAndApiData: []
     });
     //flag for opening the dialog that restores authentication data on reload

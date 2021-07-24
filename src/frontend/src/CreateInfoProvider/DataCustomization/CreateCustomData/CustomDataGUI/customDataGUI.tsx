@@ -15,7 +15,7 @@ import {
 } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import {ArrayProcessingData, SelectedDataItem} from "../../../types";
-import {ExpandLess, ExpandMore} from "@material-ui/icons";
+import {Backspace, ExpandLess, ExpandMore} from "@material-ui/icons";
 
 interface CustomDataGUIProps {
     selectedData: Array<SelectedDataItem>;
@@ -29,6 +29,7 @@ interface CustomDataGUIProps {
     handleNumberButton: (number: string) => void;
     handleRightParen: (paren: string) => void;
     handleLeftParen: (paren: string) => void;
+    handleCommaButton: (comma: string) => void;
     handleDelete: () => void;
     fullDelete: () => void;
     deleteCustomDataCheck: (formelName: string) => void;
@@ -38,8 +39,10 @@ interface CustomDataGUIProps {
     numberFlag: boolean;
     rightParenFlag: boolean;
     leftParenFlag: boolean;
+    commaFlag: boolean;
     leftParenCount: number;
     rightParenCount: number;
+    isCommaUsed: boolean;
 }
 
 export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
@@ -236,27 +239,31 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
                 <Grid item xs={12}>
                     <br/>
                 </Grid>
-                <Grid item container xs={3} justify={"center"}>
+                <Grid item container xs={12} justify={"space-around"}>
                     <Grid item className={classes.blockableButtonPrimary}>
                         <Button variant={"contained"} size={"large"} color={"primary"} disabled={props.numberFlag}
                                 onClick={() => props.handleNumberButton('0')}>
                             0
                         </Button>
                     </Grid>
-                </Grid>
-                <Grid item container xs={9} justify={"space-around"}>
                     <Grid item>
                         <Button variant={"contained"} size={"large"} color={"primary"}
                                 className={classes.redDeleteButton}
                                 onClick={() => props.handleDelete()}>
-                            Zurück
+                            <Backspace/>
                         </Button>
                     </Grid>
                     <Grid item>
                         <Button variant={"contained"} size={"large"} color={"primary"}
                                 className={classes.redDeleteButton}
                                 onClick={() => props.fullDelete()}>
-                            Löschen
+                            <DeleteIcon/>
+                        </Button>
+                    </Grid>
+                    <Grid item className={classes.blockableButtonPrimary}>
+                        <Button variant={"contained"} size={"large"} color={"primary"} disabled={props.commaFlag || props.isCommaUsed}
+                                onClick={() => props.handleCommaButton('.')}>
+                            .
                         </Button>
                     </Grid>
                 </Grid>
