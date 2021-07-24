@@ -248,9 +248,13 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
         reportError("Fehler beim Abrufen eines Hintergrundbildes: " + err);
         //enable the continue button again
         setStep0ContinueDisabled(false);
-        refetchingImages.current = false;
-        // deactivate the spinner
-        setDisplaySpinner(false);
+        //check if this is refetching - display the dialog again then
+        if(refetchingImages.current) setFetchImageDialogOpen(true)
+        else {
+            refetchingImages.current = false;
+            // deactivate the spinner
+            setDisplaySpinner(false);
+        }
         setDisplayLoadMessage(false);
     }
 
@@ -288,26 +292,6 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
         }).finally(() => clearTimeout(timer));
     }
 
-    /*const fetchAllBackgroundImages = React.useCallback(() => {
-        while(allBackgroundImageList.current.length !== 0) {
-            while(requestRunning.current);
-            const nextId = allBackgroundImageList.current[0].image_id;
-            //delete the image with this id from the images that still need to be fetched
-            allBackgroundImageList.current  = allBackgroundImageList.current.filter((image) => {
-                return image.image_id !== nextId;
-            })
-            requestRunning.current = true;
-            //fetch the image with the id from the backend
-            fetchBackgroundImageById(nextId, handleBackgroundImageByIdSuccess, handleBackgroundImageByIdError);
-        }
-        //set the state to the fetched list
-        setBackgroundImageList(backgroundImageFetchResults.current);
-        console.log(backgroundImageFetchResults.current);
-        //start fetching all diagram previews
-        //fetchNextDiagram();
-        setDisplayLoadMessage(false);
-        handleContinue();
-    }, [fetchBackgroundImageById, handleBackgroundImageByIdError, handleContinue])*/
 
 
     /**
@@ -330,9 +314,13 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
         reportError("Fehler beim Laden der Liste aller Hintergrundbilder: " + err);
         //enable the continue button again
         setStep0ContinueDisabled(false);
-        refetchingImages.current = false;
-        // deactivate the spinner
-        setDisplaySpinner(false);
+        //check if this is refetching - display the dialog again then
+        if(refetchingImages.current) setFetchImageDialogOpen(true);
+        else {
+            refetchingImages.current = false;
+            // deactivate the spinner
+            setDisplaySpinner(false);
+        }
         setDisplayLoadMessage(false);
     }, [])
 
@@ -405,9 +393,13 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
         reportError("Fehler beim Abrufen eines Bildes: " + err);
         //enable the continue button again
         setStep0ContinueDisabled(false);
-        refetchingImages.current = false;
-        // deactivate the spinner
-        setDisplaySpinner(false);
+        //check if this is refetching - display the dialog again then
+        if(refetchingImages.current) setFetchImageDialogOpen(true)
+        else {
+            refetchingImages.current = false;
+            // deactivate the spinner
+            setDisplaySpinner(false);
+        }
         setDisplayLoadMessage(false);
     }, [])
 
@@ -473,29 +465,6 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
         }
     }
 
-    /*const fetchAllImages = React.useCallback(() => {
-        while(allBackgroundImageList.current.length !== 0) {
-            //busy waiting until the last request has finished
-            while(requestRunning.current);
-            //get the id of the next image to be fetched
-            const nextId = allImageList.current[0].image_id;
-            const nextURL = allImageList.current[0].path;
-            //delete the image with this id from the images that still need to be fetched
-            allImageList.current  = allImageList.current.filter((image) => {
-                return image.image_id !== nextId;
-            })
-            //set the blocking variable
-            requestRunning.current = true;
-            //fetch the image with the id from the backend
-            console.log("starting to fetch for: " + nextId)
-            fetchImageById(nextId, nextURL, handleImageByIdSuccess, handleImageByIdError);
-        }
-        //set the state to the fetched list
-        setImageList(imageFetchResults.current);
-        console.log(imageFetchResults.current);
-        //start the fetching of all background images
-        fetchBackgroundImageList();
-    }, [fetchBackgroundImageList, fetchImageById, handleImageByIdSuccess, handleImageByIdError])*/
 
     /**
      * Method that handles successful calls to the backend for fetching a list of all images.
@@ -516,9 +485,13 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
         reportError("Fehler beim Laden der Liste aller Bilder: " + err);
         //activate the continue button again
         setStep0ContinueDisabled(false);
-        refetchingImages.current = false;
-        // deactivate the spinner
-        setDisplaySpinner(false);
+        //check if this is refetching - display the dialog again then
+        if(refetchingImages.current) setFetchImageDialogOpen(true);
+        else {
+            refetchingImages.current = false;
+            // deactivate the spinner
+            setDisplaySpinner(false);
+        }
         setDisplayLoadMessage(false);
     }
 
@@ -622,9 +595,13 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
         reportError("Fehler beim Abrufen des Preview eines Diagramms: " + err);
         // activate the continue button again
         setStep0ContinueDisabled(false);
-        refetchingImages.current = false;
-        // deactivate the spinner
-        setDisplaySpinner(false);
+        //check if this is refetching - display the dialog again then
+        if(refetchingImages.current) setFetchImageDialogOpen(true)
+        else {
+            refetchingImages.current = false;
+            // deactivate the spinner
+            setDisplaySpinner(false);
+        }
         setDisplayLoadMessage(false);
     }
 
