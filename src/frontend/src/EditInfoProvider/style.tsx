@@ -28,6 +28,14 @@ export const useStyles = makeStyles((theme: Theme) =>
             marginTop: "5px",
             marginBottom: "0px"
         },
+        tinyListFrame: {
+            width: "100%",
+            height: 100,
+            overflow: 'auto',
+            overflowX: "hidden",
+            marginTop: "20px",
+            marginBottom: "10px"
+        },
         settings: {
             backgroundColor: theme.palette.secondary.main,
             color: "#000000",
@@ -45,7 +53,7 @@ export const useStyles = makeStyles((theme: Theme) =>
         },
         formelBorder: {
             width: "50%",
-            height: 100,
+            minHeight: 100,
             overflow: 'auto',
             overflowX: 'hidden',
             borderColor: theme.palette.primary.dark,
@@ -57,7 +65,7 @@ export const useStyles = makeStyles((theme: Theme) =>
         },
         formelNameBorder: {
             width: "100%",
-            height: 100,
+            minHeight: 100,
             overflow: 'auto',
             overflowX: "hidden",
             borderColor: theme.palette.primary.dark,
@@ -124,5 +132,10 @@ export const useStyles = makeStyles((theme: Theme) =>
             marginTop: "0.5rem",
             marginLeft: "1.5rem"
         },
+        formelListElement: {
+            overflowWrap: "break-word",
+            width: "100%",
+            textAlign: "center"
+        }
     }),
 );
