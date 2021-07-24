@@ -10,7 +10,8 @@ import List from "@material-ui/core/List";
 import {FormelObj} from "../../../../CreateInfoProvider/DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 import {ArrayProcessingData, SelectedDataItem} from "../../../../CreateInfoProvider/types";
 import {Collapse, IconButton} from "@material-ui/core";
-import {ExpandLess, ExpandMore} from "@material-ui/icons";
+import {Backspace, ExpandLess, ExpandMore} from "@material-ui/icons";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 interface EditSingleFormelGUIProps {
     selectedData: Array<SelectedDataItem>;
@@ -23,6 +24,7 @@ interface EditSingleFormelGUIProps {
     handleNumberButton: (number: string) => void;
     handleRightParen: (paren: string) => void;
     handleLeftParen: (paren: string) => void;
+    handleCommaButton: (comma: string) => void;
     handleDelete: () => void;
     fullDelete: () => void;
     handleSave: (formel: string) => void;
@@ -31,8 +33,10 @@ interface EditSingleFormelGUIProps {
     numberFlag: boolean;
     rightParenFlag: boolean;
     leftParenFlag: boolean;
+    commaFlag: boolean;
     leftParenCount: number;
     rightParenCount: number;
+    isCommaUsed: boolean;
     oldFormelName: string;
     arrayProcessingsList: Array<ArrayProcessingData>;
 }
@@ -231,27 +235,31 @@ export const EditSingleFormelGUI: React.FC<EditSingleFormelGUIProps> = (props) =
                 <Grid item xs={12}>
                     <br/>
                 </Grid>
-                <Grid item container xs={3} justify={"center"}>
+                <Grid item container xs={12} justify={"space-around"}>
                     <Grid item className={classes.blockableButtonSecondary}>
                         <Button variant={"contained"} size={"large"} color={"primary"} disabled={props.numberFlag}
                                 onClick={() => props.handleNumberButton('0')}>
                             0
                         </Button>
                     </Grid>
-                </Grid>
-                <Grid item container xs={9} justify={"space-around"}>
                     <Grid item>
                         <Button variant={"contained"} size={"large"} color={"primary"}
-                                className={classes.delete}
+                                className={classes.redDeleteButton}
                                 onClick={() => props.handleDelete()}>
-                            Zurück
+                            <Backspace/>
                         </Button>
                     </Grid>
                     <Grid item>
                         <Button variant={"contained"} size={"large"} color={"primary"}
-                                className={classes.delete}
+                                className={classes.redDeleteButton}
                                 onClick={() => props.fullDelete()}>
-                            Löschen
+                            <DeleteIcon/>
+                        </Button>
+                    </Grid>
+                    <Grid item className={classes.blockableButtonSecondary}>
+                        <Button variant={"contained"} size={"large"} color={"primary"} disabled={props.commaFlag || props.isCommaUsed}
+                                onClick={() => props.handleCommaButton('.')}>
+                            .
                         </Button>
                     </Grid>
                 </Grid>

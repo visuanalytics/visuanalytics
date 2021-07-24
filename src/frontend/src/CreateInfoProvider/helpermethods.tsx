@@ -7,6 +7,7 @@ import {
     ListItemRepresentation,
     SelectedDataItem, StringReplacementData
 } from "./types";
+import {StrArg} from "./DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/StrArg";
 
 /* CreateInfoProvider */
 
@@ -256,7 +257,8 @@ export const checkFindOnlyNumbers = (arg: string): boolean => {
             arg.charAt(i) !== '6' &&
             arg.charAt(i) !== '7' &&
             arg.charAt(i) !== '8' &&
-            arg.charAt(i) !== '9'
+            arg.charAt(i) !== '9' &&
+            arg.charAt(i) !== '.'
         ) {
             onlyNumbers = false;
         }
@@ -352,4 +354,22 @@ export const getWeekdayString = (weekdayNumber: number) => {
         case 6:
             return "So";
     }
+}
+
+/**
+ * Checks if there is an comma in the last number.
+ * @param formel
+ */
+export const searchForComma = (formel: Array<StrArg>): boolean => {
+
+    for (let i: number = formel.length - 1; i >= 0; i--) {
+        if (formel[i].isComma) {
+            return true;
+        }
+        if (!formel[i].isNumber) {
+            break;
+        }
+    }
+
+    return false;
 }

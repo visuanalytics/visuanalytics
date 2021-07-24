@@ -21,7 +21,7 @@ export const calculationToString = (calculation: Array<StrArg>) => {
  * Receives a string and checks if it consist only of numbers (0-9).
  * @param arg The String to be checked.
  */
-export const checkFindOnlyNumbers = (arg: string): boolean => {
+export const checkNumbers = (arg: string): boolean => {
 
     let onlyNumbers: boolean = true;
 
@@ -36,7 +36,8 @@ export const checkFindOnlyNumbers = (arg: string): boolean => {
             arg.charAt(i) !== '6' &&
             arg.charAt(i) !== '7' &&
             arg.charAt(i) !== '8' &&
-            arg.charAt(i) !== '9'
+            arg.charAt(i) !== '9' &&
+            arg.charAt(i) !== '.'
         ) {
             onlyNumbers = false;
         }
@@ -59,4 +60,22 @@ export const checkOperator = (arg: string) => {
         arg.charAt(0) === '/' ||
         arg.charAt(0) === '%'
     );
+}
+
+/**
+ * Checks if there is an comma in the last number.
+ * @param formel
+ */
+export const searchForComma = (formel: Array<StrArg>): boolean => {
+
+    for (let i: number = formel.length - 1; i >= 0; i--) {
+        if (formel[i].isComma) {
+            return true;
+        }
+        if (!formel[i].isNumber) {
+            break;
+        }
+    }
+
+    return false;
 }
