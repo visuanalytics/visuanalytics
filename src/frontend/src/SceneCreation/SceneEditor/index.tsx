@@ -1540,7 +1540,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             }
             setRecentlyRemovedItems(lastElem);
             // decrement the counter of elements
-            setItemCounter(itemCounter - 1);
+            setItemCounter(itemCounter + 1);
         } else {
             // get the index of the selected element
             const index = items.indexOf(selectedObject);
@@ -1578,9 +1578,10 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             }
             setRecentlyRemovedItems(lastElem);
             setItemSelected(false);
-            setItemCounter(itemCounter - 1);
             setDeleteText("Letztes Elem. entf.");
+            setItemCounter(itemCounter + 1);
         }
+
     }
 
 
@@ -1593,7 +1594,11 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             const poppedItem = lastElem.pop();
             if (poppedItem !== undefined) {
                 const arCopy = items.slice();
-                arCopy.push(poppedItem);
+                let obj = {
+                    ...poppedItem,
+                    id: poppedItem.id.split('-')[0] + '-' + itemCounter.toString(),
+                }
+                arCopy.push(obj);
                 setItems(arCopy);
                 // if it is an image, add it to the list of used image ids again if it is not already included
                 if (poppedItem.id.startsWith("image")) {
@@ -1661,8 +1666,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             }
             localItems[index] = {
                 ...selectedObject,
-                x: parseInt((absPos.x).toFixed(0)),
-                y: parseInt((absPos.y).toFixed(0)),
                 scaleX: scaleX,
                 scaleY: scaleY,
                 rotation: absRot,
@@ -1672,6 +1675,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             currentItemRotation.current = absRot;
             currentItemScaleX.current = scaleX;
             currentItemScaleY.current = scaleY;
+            setCurrentItemHeight(Math.round(localItems[index].height * scaleY));
+            setCurrentItemWidth(Math.round(localItems[index].width * scaleX));
             currentItemX.current = parseInt((absPos.x).toFixed(0));
             currentItemY.current = parseInt((absPos.y).toFixed(0));
             setCurrentXCoordinate(parseInt((absPos.x).toFixed(0)));
@@ -2015,10 +2020,13 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const handleItemWidthChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const localItems = items.slice();
         const index = items.indexOf(selectedObject);
+        let width = event.target.valueAsNumber;
         const objectCopy = {
             ...selectedObject,
-            width: event.target.valueAsNumber
+            width: width,
+            scaleX: 1,
         };
+
         localItems[index] = objectCopy;
         setItems(localItems);
         setSelectedObject(objectCopy);
@@ -2036,9 +2044,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         const objectCopy = {
             ...selectedObject,
             height: event.target.valueAsNumber,
+            scaleY: 1,
         };
         localItems[index] = objectCopy;
-        console.log(objectCopy)
         setItems(localItems);
         setSelectedObject(objectCopy);
         setCurrentItemHeight(event.target.valueAsNumber);
