@@ -103,7 +103,7 @@ export const VideoList: React.FC<VideoListProps> = (props) => {
             <LogDialog
                 objectId={selectedVideoJobID}
                 objectName={selectedVideojobName}
-                objectType={"infoprovider"}
+                objectType={"videojob"}
                 showLogDialog={showLogDialog}
                 setShowLogDialog={setShowLogDialog}
                 reportError={props.reportError}
