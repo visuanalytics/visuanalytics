@@ -1917,7 +1917,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const renderListItem = (item: string, selectedData: boolean) => {
         return (
             <ListItem key={item}>
-                <Button onClick={() => handleItemSelect((selectedData ? "_req|" : "") + item.substring(item.indexOf("|") + 1), false)}>
+                <Button onClick={() => handleItemSelect(selectedData ? "_req|" +  item : item.substring(item.indexOf("|") + 1), false)}>
                     <span className={classes.overflowButtonText}>{item}</span>
                 </Button>
             </ListItem>
