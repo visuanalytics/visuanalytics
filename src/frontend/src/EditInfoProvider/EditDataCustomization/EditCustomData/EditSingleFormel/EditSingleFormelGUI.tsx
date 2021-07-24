@@ -286,7 +286,7 @@ export const EditSingleFormelGUI: React.FC<EditSingleFormelGUIProps> = (props) =
                 </Grid>
                 <Grid container item xs={6} justify={"flex-start"}>
                     <Box borderColor="primary.main" border={4} borderRadius={5}
-                         className={classes.listFrame}>
+                         className={classes.tinyListFrame}>
                         {props.input}
                     </Box>
                     <Grid item xs={12}>

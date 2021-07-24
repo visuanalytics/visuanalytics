@@ -1,5 +1,5 @@
 import React from "react";
-import { CenterNotification, centerNotifcationReducer } from "../util/CenterNotification";
+import {CenterNotification, centerNotifcationReducer} from "../util/CenterNotification";
 import Container from "@material-ui/core/Container";
 import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
@@ -7,7 +7,7 @@ import StepLabel from "@material-ui/core/StepLabel";
 import {InfoProviderSelection} from "./InfoProviderSelection";
 import {SceneEditor} from "./SceneEditor";
 import {ComponentContext} from "../ComponentProvider";
-import {ArrayProcessingData, DataSource, Diagram, FrontendInfoProvider, uniqueId} from "../CreateInfoProvider/types";
+import {DataSource, Diagram, FrontendInfoProvider, uniqueId} from "../CreateInfoProvider/types";
 import {DiagramInfo, HistorizedDataInfo, ImageBackendData, ImageFrontendData, InfoProviderData} from "./types";
 import {hintContents} from "../util/hintContents";
 import Typography from "@material-ui/core/Typography";
@@ -16,6 +16,7 @@ import {StepFrame} from "../CreateInfoProvider/StepFrame";
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid} from "@material-ui/core";
 import {FullScene} from "../Dashboard/types";
 import {CustomImage} from "./SceneEditor/types";
+import {getIntervalDisplay} from "./helpermethods";
 
 interface SceneCreationProps {
     sceneFromBackend?: FullScene;
@@ -60,14 +61,13 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
     const [editId, setEditId] = React.useState(props.editId);
 
 
-
     /* mutable flag that is true when currently images are being fetched because of a reload
     * this is used to block the continueHandler call after successful fetches. This way,
     * no additional methods are required to fetch the images on reload.
     * This will also show a loading spinner while fetching.
     */
     const refetchingImages = React.useRef(false);
-    // true when a spinner has to be displayed because of refetching - seperate variable because it might be inconstent with when rerenders are triggered
+    // true when a spinner has to be displayed because of refetching - seperate variable because it might be inconsistent with when rerenders are triggered
     const [displaySpinner, setDisplaySpinner] = React.useState(false);
     //true when the dialog for refetching images is opened
     //is also opened when starting editing mode first to fetch the images before entering the SceneEditor component - this will make them available from the start on
@@ -89,7 +89,7 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
     });
 
     const reportError = (message: string) => {
-        dispatchMessage({ type: "reportError", message: message });
+        dispatchMessage({type: "reportError", message: message});
     };
 
     /**
@@ -105,11 +105,11 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
      * Decrements the step or returns to the dashboard if the step was 0.
      */
     const handleBack = () => {
-        if(sceneEditorStep===0) {
+        if (sceneEditorStep === 0) {
             clearSessionStorage();
             components?.setCurrent("dashboard");
         }
-        setSceneEditorStep(sceneEditorStep-1)
+        setSceneEditorStep(sceneEditorStep - 1)
     }
 
 
@@ -189,7 +189,7 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
      * Method block for fetching all background images from the backend
      */
 
-    //mutable value to store the list of all background images - not in state because it needs to be changed without renders
+        //mutable value to store the list of all background images - not in state because it needs to be changed without renders
     const allBackgroundImageList = React.useRef<Array<ImageBackendData>>([]);
     //mutable list of the paths of all background images received from the backend as blob - also not in state to change without renders
     const backgroundImageFetchResults = React.useRef<Array<ImageFrontendData>>([]);
@@ -202,7 +202,7 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
      */
     const fetchNextBackgroundImage = () => {
         //check if all images are fetched
-        if(allBackgroundImageList.current.length === 0) {
+        if (allBackgroundImageList.current.length === 0) {
             //set the state to the fetched list
             setBackgroundImageList(backgroundImageFetchResults.current);
             backgroundImageFetchResults.current = [];
@@ -214,14 +214,13 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
             const nextId = allBackgroundImageList.current[0].image_id;
             const nextURL = allBackgroundImageList.current[0].path;
             //delete the image with this id from the images that still need to be fetched
-            allBackgroundImageList.current  = allBackgroundImageList.current.filter((image) => {
+            allBackgroundImageList.current = allBackgroundImageList.current.filter((image) => {
                 return image.image_id !== nextId;
             })
             //fetch the image with the id from the backend
             fetchBackgroundImageById(nextId, nextURL, handleBackgroundImageByIdSuccess, handleBackgroundImageByIdError);
         }
     }
-
 
 
     /**
@@ -375,7 +374,7 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
      * Method block for fetching all images and background images from the backend.
      */
 
-    //mutable value to store the list of all images - not in state because it needs to be changed without renders
+        //mutable value to store the list of all images - not in state because it needs to be changed without renders
     const allImageList = React.useRef<Array<ImageBackendData>>([]);
     //mutable list of the paths of all images received from the backend as blob - also not in state to change without renders
     const imageFetchResults = React.useRef<Array<ImageFrontendData>>([]);
@@ -411,12 +410,6 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
         setDisplaySpinner(false);
         setDisplayLoadMessage(false);
     }, [])
-
-
-
-
-
-
 
 
     /**
@@ -461,7 +454,7 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
      */
     const fetchNextImage = () => {
         //check if all images are fetched
-        if(allImageList.current.length === 0) {
+        if (allImageList.current.length === 0) {
             //set the state to the fetched list
             setImageList(imageFetchResults.current);
             imageFetchResults.current = []
@@ -472,7 +465,7 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
             const nextId = allImageList.current[0].image_id;
             const nextURL = allImageList.current[0].path;
             //delete the image with this id from the images that still need to be fetched
-            allImageList.current  = allImageList.current.filter((image) => {
+            allImageList.current = allImageList.current.filter((image) => {
                 return image.image_id !== nextId;
             })
             //fetch the image with the id from the backend
@@ -520,15 +513,14 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
      * @param err The error returned from the backend.
      */
     const handleImageListError = (err: Error) => {
-            reportError("Fehler beim Laden der Liste aller Bilder: " + err);
-            //activate the continue button again
-            setStep0ContinueDisabled(false);
-            refetchingImages.current = false;
-            // deactivate the spinner
-            setDisplaySpinner(false);
-            setDisplayLoadMessage(false);
-        }
-
+        reportError("Fehler beim Laden der Liste aller Bilder: " + err);
+        //activate the continue button again
+        setStep0ContinueDisabled(false);
+        refetchingImages.current = false;
+        // deactivate the spinner
+        setDisplaySpinner(false);
+        setDisplayLoadMessage(false);
+    }
 
 
     /**
@@ -567,7 +559,7 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
      * Method block for fetching previews of diagrams
      */
 
-    //mutable value to store the list of all diagrams - not in state because it needs to be changed without renders
+        //mutable value to store the list of all diagrams - not in state because it needs to be changed without renders
     const diagramsToFetch = React.useRef<Array<DiagramInfo>>([]);
     //mutable list of of all diagram with previews received from the backend as blob - also not in state to change without renders
     const diagramFetchResults = React.useRef<Array<DiagramInfo>>([]);
@@ -580,18 +572,17 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
      */
     const fetchNextDiagram = () => {
         //check if all images are fetched
-        if(diagramsToFetch.current.length === 0) {
+        if (diagramsToFetch.current.length === 0) {
             //set the state to the fetched list
             setDiagramList(diagramFetchResults.current);
             diagramFetchResults.current = [];
             //enable the continue button again
             setStep0ContinueDisabled(false);
             //continue to the next step
-            if(!refetchingImages.current) {
+            if (!refetchingImages.current) {
                 handleContinue();
                 setDisplayLoadMessage(false);
-            }
-            else {
+            } else {
                 refetchingImages.current = false;
                 // deactivate the spinner
                 setDisplaySpinner(false);
@@ -600,7 +591,7 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
             //get the id of the next image to be fetched
             const currentDiagram = diagramsToFetch.current[0];
             //delete the image with this id from the images that still need to be fetched
-            diagramsToFetch.current  = diagramsToFetch.current.filter((diagram) => {
+            diagramsToFetch.current = diagramsToFetch.current.filter((diagram) => {
                 return diagram.name !== currentDiagram.name
             })
             //fetch the image with the id from the backend
@@ -678,25 +669,25 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
      */
     React.useEffect(() => {
         //step
-        setSceneEditorStep(Number(sessionStorage.getItem("sceneEditorStep-" + uniqueId)||0));
+        setSceneEditorStep(Number(sessionStorage.getItem("sceneEditorStep-" + uniqueId) || 0));
         //infoProviderList
         setInfoProviderList(sessionStorage.getItem("infoProviderList-" + uniqueId) === null ? new Array<InfoProviderData>() : JSON.parse(sessionStorage.getItem("infoProviderList-" + uniqueId)!));
         //infoProvider
-        setInfoProvider(sessionStorage.getItem("infoProvider-" + uniqueId )=== null ? new Array<DataSource>() : JSON.parse(sessionStorage.getItem("infoProvider-" + uniqueId)!));
+        setInfoProvider(sessionStorage.getItem("infoProvider-" + uniqueId) === null ? new Array<DataSource>() : JSON.parse(sessionStorage.getItem("infoProvider-" + uniqueId)!));
         //selectedDataList
-        setSelectedDataList(sessionStorage.getItem("selectedDataList-" + uniqueId )=== null ? new Array<string>() : JSON.parse(sessionStorage.getItem("selectedDataList-" + uniqueId)!))
+        setSelectedDataList(sessionStorage.getItem("selectedDataList-" + uniqueId) === null ? new Array<string>() : JSON.parse(sessionStorage.getItem("selectedDataList-" + uniqueId)!))
         //selectedDataList
-        setCustomDataList(sessionStorage.getItem("customDataList-" + uniqueId )=== null ? new Array<string>() : JSON.parse(sessionStorage.getItem("customDataList-" + uniqueId)!))
+        setCustomDataList(sessionStorage.getItem("customDataList-" + uniqueId) === null ? new Array<string>() : JSON.parse(sessionStorage.getItem("customDataList-" + uniqueId)!))
         //selectedDataList
-        setHistorizedDataList(sessionStorage.getItem("historizedDataList-" + uniqueId )=== null ? new Array<HistorizedDataInfo>() : JSON.parse(sessionStorage.getItem("historizedDataList-" + uniqueId)!))
+        setHistorizedDataList(sessionStorage.getItem("historizedDataList-" + uniqueId) === null ? new Array<HistorizedDataInfo>() : JSON.parse(sessionStorage.getItem("historizedDataList-" + uniqueId)!))
         //arrayProcessingsList
-        setArrayProcessingList(sessionStorage.getItem("arrayProcessingList-" + uniqueId )=== null ? new Array<string>() : JSON.parse(sessionStorage.getItem("arrayProcessingList-" + uniqueId)!))
+        setArrayProcessingList(sessionStorage.getItem("arrayProcessingList-" + uniqueId) === null ? new Array<string>() : JSON.parse(sessionStorage.getItem("arrayProcessingList-" + uniqueId)!))
         //stringReplacementList
-        setStringReplacementList(sessionStorage.getItem("stringReplacementList-" + uniqueId )=== null ? new Array<string>() : JSON.parse(sessionStorage.getItem("stringReplacementList-" + uniqueId)!))
+        setStringReplacementList(sessionStorage.getItem("stringReplacementList-" + uniqueId) === null ? new Array<string>() : JSON.parse(sessionStorage.getItem("stringReplacementList-" + uniqueId)!))
         //diagramList
-        setDiagramList(sessionStorage.getItem("diagramList-" + uniqueId )=== null ? new Array<DiagramInfo>() : JSON.parse(sessionStorage.getItem("diagramList-" + uniqueId)!))
+        setDiagramList(sessionStorage.getItem("diagramList-" + uniqueId) === null ? new Array<DiagramInfo>() : JSON.parse(sessionStorage.getItem("diagramList-" + uniqueId)!))
         //selectedId
-        setSelectedId(Number(sessionStorage.getItem("selectedId-" + uniqueId)||0));
+        setSelectedId(Number(sessionStorage.getItem("selectedId-" + uniqueId) || 0));
 
         //TODO: document this
         //dont set the data for editing when fetching first
@@ -715,9 +706,9 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
 
         // Reload all images, background images and diagram previews when reloading the component
         // only do this when currently in the editor itself
-        if (Number(sessionStorage.getItem("sceneEditorStep-" + uniqueId)||0) === 1) {
+        if (Number(sessionStorage.getItem("sceneEditorStep-" + uniqueId) || 0) === 1) {
             // set the list of diagrams to fetch by getting the data from sessionStorage:
-            diagramsToFetch.current = sessionStorage.getItem("diagramList-" + uniqueId )=== null ? new Array<DiagramInfo>() : JSON.parse(sessionStorage.getItem("diagramList-" + uniqueId)!);
+            diagramsToFetch.current = sessionStorage.getItem("diagramList-" + uniqueId) === null ? new Array<DiagramInfo>() : JSON.parse(sessionStorage.getItem("diagramList-" + uniqueId)!);
             // setting this variable will block the continueHandler at the end of the fetching
             refetchingImages.current = true;
             // activate the spinner
@@ -725,7 +716,7 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
             //open the dialog with the button to fetch the images
             //fetchImageList()
             setFetchImageDialogOpen(true);
-        } else if(Number(sessionStorage.getItem("sceneEditorStep-" + uniqueId)) === 0) {
+        } else if (Number(sessionStorage.getItem("sceneEditorStep-" + uniqueId)) === 0) {
             // when step 0 is loaded, reload the list of infoproviders from backend
             fetchAllInfoprovider();
         }
@@ -782,13 +773,13 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
     //store sceneFromBackend in sessionStorage
     React.useEffect(() => {
         //storing is only necessary if the value is defined
-        if(sceneFromBackend !== undefined)
+        if (sceneFromBackend !== undefined)
             sessionStorage.setItem("sceneFromBackend-" + uniqueId, JSON.stringify(sceneFromBackend));
     }, [sceneFromBackend])
     //store editId in sessionStorage
     React.useEffect(() => {
         //storing is only necessary if the value is defined
-        if(editId !==undefined)
+        if (editId !== undefined)
             sessionStorage.setItem("editId-" + uniqueId, editId.toString());
     }, [editId])
 
@@ -826,7 +817,7 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
         diagrams.forEach((diagram) => {
             //transforms the type into a readable form
             let typeString = "";
-            switch(diagram.variant) {
+            switch (diagram.variant) {
                 case "pieChart": {
                     typeString = "Tortendiagramm";
                     break;
@@ -861,19 +852,65 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
     const propsSceneFromBackend = props.sceneFromBackend;
 
     /**
-     * When loading in editing mode, find all images in the items array
-     * and reset their Image HTML element to empty source.
+     * Prepares the infoProvider and scene data when loading in backend:
+     * Creates the necessary lists of selectedData, formula, arrayProcessings, stringReplacements
+     * and historizedData,
+     * Finds all images in the items array and resets their Image HTML element to empty source.
      * This is necessary to prevent failures.
      * Also sets the diagramList to the list extracted from the backend data.
      */
     React.useEffect(() => {
-        //console.log("cleaning of image elements")
         //check if editing is active
-        if(sceneFromBackendMutable.current !== undefined) {
+        if (sceneFromBackendMutable.current !== undefined) {
+            console.log("preparing infoprovider for editing");
+            if(sceneFromBackendMutable.current.infoProvider !== undefined) {
+                // set the basic variable containing the complete object
+                setInfoProvider(sceneFromBackendMutable.current.infoProvider);
+                // extract the list of all selectedData, customData, historizedData, arrayProcessings and stringReplacements
+                const selectedDataList: Array<string> = [];
+                const customDataList: Array<string> = [];
+                const historizedDataList: Array<HistorizedDataInfo> = [];
+                const arrayProcessingList: Array<string> = [];
+                const stringReplacementList: Array<string> = [];
+                sceneFromBackendMutable.current.infoProvider.dataSources.forEach((dataSource) => {
+                    //go through all selectedData
+                    dataSource.selectedData.forEach((selectedData) => {
+                        selectedDataList.push(dataSource.apiName + "|" + selectedData.key);
+                    })
+                    //go through all formulas
+                    dataSource.customData.forEach((customData) => {
+                        customDataList.push(dataSource.apiName + "|" + customData.formelName);
+                    })
+                    // Go through all arrayProcessings
+                    dataSource.arrayProcessingsList.forEach((arrayProcessing) => {
+                        arrayProcessingList.push(dataSource.apiName + "|" + arrayProcessing.name);
+                    })
+                    // Go through all stringReplacements
+                    dataSource.stringReplacementList.forEach((stringReplacement) => {
+                        stringReplacementList.push(dataSource.apiName + "|" + stringReplacement.name);
+                    })
+                    //extract the schedule-interval string
+                    const intervalString = getIntervalDisplay(dataSource.schedule);
+                    //go through all historized data
+                    dataSource.historizedData.forEach((historizedData) => {
+                        historizedDataList.push({
+                            name: dataSource.apiName + "|" + historizedData,
+                            interval: intervalString
+                        });
+                    })
+                })
+                //set the states with the new lists
+                setSelectedDataList(selectedDataList);
+                setCustomDataList(customDataList);
+                setHistorizedDataList(historizedDataList);
+                setArrayProcessingList(arrayProcessingList);
+                setStringReplacementList(stringReplacementList);
+            }
+            //console.log("cleaning of image elements")
             const sceneItemsCopy = sceneFromBackendMutable.current.scene_items.slice();
             for (let index = 0; index < sceneItemsCopy.length; index++) {
                 //check if the current item is an image
-                if(sceneItemsCopy[index].hasOwnProperty("image")) {
+                if (sceneItemsCopy[index].hasOwnProperty("image")) {
                     let castedItem = sceneItemsCopy[index] as CustomImage;
                     //create a new image
                     castedItem.image = new window.Image();
@@ -886,7 +923,7 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
                 ...sceneFromBackendMutable.current,
                 scene_items: sceneItemsCopy
             })
-            if(sceneFromBackendMutable.current.infoProvider !== undefined) {
+            if (sceneFromBackendMutable.current.infoProvider !== undefined) {
                 diagramsToFetch.current = getDiagramFetchList(sceneFromBackendMutable.current.infoProvider.diagrams)
             }
             //console.log(diagramsToFetch.current);
@@ -900,7 +937,7 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
         const leaveAlert = (e: BeforeUnloadEvent) => {
             //uses sessionStorage to avoid dependency to step since it would not safely trigger this handler
             //dirty workaround but should be okay
-            if(Number(sessionStorage.getItem("sceneEditorStep-" + uniqueId) || 0) === 1) {
+            if (Number(sessionStorage.getItem("sceneEditorStep-" + uniqueId) || 0) === 1) {
                 e.preventDefault();
                 e.returnValue = "";
             }
@@ -919,11 +956,11 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
     const selectContent = (step: number) => {
         switch (step) {
             case 0:
-                return props.sceneFromBackend !==undefined ? (
+                return props.sceneFromBackend !== undefined ? (
                     <React.Fragment></React.Fragment>
                 ) : (
                     <InfoProviderSelection
-                        continueHandler={() => setSceneEditorStep(step+1)}
+                        continueHandler={() => setSceneEditorStep(step + 1)}
                         backHandler={() => handleBack()}
                         infoProviderList={infoProviderList}
                         reportError={reportError}
@@ -946,7 +983,7 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
                 )
             case 1:
                 // if the application is currently refetching images, display a spinner
-                if(displaySpinner) {
+                if (displaySpinner) {
                     return (
                         <StepFrame
                             heading={"Szenen-Editor"}
@@ -954,12 +991,12 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
                             large={"xl"}
                         >
                             {!fetchImageDialogOpen &&
-                                <React.Fragment>
-                                    <Typography>
-                                        Bilder, Hintergrundbilder und Diagramme werden erneut geladen...
-                                    </Typography>
-                                    <CircularProgress/>
-                                </React.Fragment>
+                            <React.Fragment>
+                                <Typography>
+                                    Bilder, Hintergrundbilder und Diagramme werden erneut geladen...
+                                </Typography>
+                                <CircularProgress/>
+                            </React.Fragment>
                             }
                         </StepFrame>
                     )
@@ -969,7 +1006,7 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
                             continueHandler={() => handleContinue()}
                             backHandler={() => handleBack()}
                             infoProvider={infoProvider}
-                            infoProviderId={selectedId}
+                            infoProviderId={editId !== undefined ? editId : selectedId}
                             selectedDataList={selectedDataList}
                             customDataList={customDataList}
                             historizedDataList={historizedDataList}
@@ -1004,49 +1041,50 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
                     ))}
                 </Stepper>
             </Container>
-            { !fetchImageDialogOpen &&
-                selectContent(sceneEditorStep)
+            {!fetchImageDialogOpen &&
+            selectContent(sceneEditorStep)
             }
             <CenterNotification
-                handleClose={() => dispatchMessage({ type: "close" })}
+                handleClose={() => dispatchMessage({type: "close"})}
                 open={message.open}
                 message={message.message}
                 severity={message.severity}
             />
-            { fetchImageDialogOpen &&
-                <StepFrame
-                    heading={"Szenen-Editor"}
-                    hintContent={hintContents.typeSelection}
-                    large={"xl"}
-                >
-                    <Dialog
-                        aria-labelledby="backDialog-title"
-                            open={fetchImageDialogOpen}>
-                        <DialogTitle id="backDialog-title">
-                            Bilder erneut laden
-                        </DialogTitle>
-                        <DialogContent dividers>
-                            <Typography gutterBottom>
-                                Durch das Neuladen der Seite müssen alle Bilder, Hintergrundbilder und Diagramme erneut geladen werden.
-                            </Typography>
-                        </DialogContent>
-                        <DialogActions>
-                            <Grid container justify="space-around">
-                                <Grid item>
-                                    <Button variant="contained"
-                                            color="secondary"
-                                            onClick={() => {
-                                                setFetchImageDialogOpen(false);
-                                                fetchImageList();
-                                            }}
-                                    >
-                                        Laden starten
-                                    </Button>
-                                </Grid>
+            {fetchImageDialogOpen &&
+            <StepFrame
+                heading={"Szenen-Editor"}
+                hintContent={hintContents.typeSelection}
+                large={"xl"}
+            >
+                <Dialog
+                    aria-labelledby="backDialog-title"
+                    open={fetchImageDialogOpen}>
+                    <DialogTitle id="backDialog-title">
+                        Bilder erneut laden
+                    </DialogTitle>
+                    <DialogContent dividers>
+                        <Typography gutterBottom>
+                            Durch das Neuladen der Seite müssen alle Bilder, Hintergrundbilder und Diagramme erneut
+                            geladen werden.
+                        </Typography>
+                    </DialogContent>
+                    <DialogActions>
+                        <Grid container justify="space-around">
+                            <Grid item>
+                                <Button variant="contained"
+                                        color="secondary"
+                                        onClick={() => {
+                                            setFetchImageDialogOpen(false);
+                                            fetchImageList();
+                                        }}
+                                >
+                                    Laden starten
+                                </Button>
                             </Grid>
-                        </DialogActions>
-                    </Dialog>
-                </StepFrame>
+                        </Grid>
+                    </DialogActions>
+                </Dialog>
+            </StepFrame>
             }
         </React.Fragment>
     );

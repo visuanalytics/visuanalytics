@@ -11,10 +11,11 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import {useCallFetch} from "../../Hooks/useCallFetch";
-import {FrontendInfoProvider, InfoProviderFromBackend, Schedule} from "../../CreateInfoProvider/types";
-import {getWeekdayString, transformBackendInfoProvider} from "../../CreateInfoProvider/helpermethods";
+import {FrontendInfoProvider, InfoProviderFromBackend} from "../../CreateInfoProvider/types";
+import {transformBackendInfoProvider} from "../../CreateInfoProvider/helpermethods";
 import {DiagramInfo, HistorizedDataInfo, InfoProviderData} from "../types";
 import {Alert} from "@material-ui/lab";
+import {getIntervalDisplay} from "../helpermethods";
 
 
 interface InfoProviderSelectionProps {
@@ -50,6 +51,7 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
      * @param infoProvider The object of the Backend, transformed to the frontend representation.
      */
     const processBackendAnswer = (infoProvider: FrontendInfoProvider) => {
+        console.log(infoProvider)
         // set the basic variable containing the complete object
         props.setInfoProvider(infoProvider);
         // extract the list of all selectedData, customData, historizedData, arrayProcessings and stringReplacements
@@ -133,60 +135,6 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
 
 
     /**
-     * Calculates a string that displays the interval scheme of a given schedule
-     */
-    const getIntervalDisplay = (schedule: Schedule) => {
-        //check for weekly
-        if (schedule.type === "weekly") {
-            if (schedule.weekdays !== undefined && schedule.weekdays.length !== 0) {
-                //check if every day is selected
-                if(schedule.weekdays.length === 7) {
-                    return "24h";
-                }
-                const weekdayNumbers = schedule.weekdays.slice();
-                weekdayNumbers.sort();
-                let weekdayStrings = [getWeekdayString(weekdayNumbers[0])];
-                for(let i = 1; i < weekdayNumbers.length; i++) {
-                    weekdayStrings.push(getWeekdayString(weekdayNumbers[i]));
-                }
-                return "Wochentage ("  + weekdayStrings.join(", ") + ")";
-            }
-        }
-        //check for daily
-        else if (schedule.type === "daily") {
-            return "24h"
-        }
-        //check for interval
-        else if (schedule.type === "interval") {
-            switch (schedule.interval) {
-                case "minute": {
-                    return "1m";
-                }
-                case "quarter": {
-                    return "15m";
-                }
-                case "half": {
-                    return "30m";
-                }
-                case "threequarter": {
-                    return "45m";
-                }
-                case "hour": {
-                    return "1h";
-                }
-                case "quartday": {
-                    return "6h";
-                }
-                case "halfday": {
-                    return "12h"
-                }
-            }
-        }
-        //TODO: ??? what should happen here?
-        return "TO BE DONE"
-    }
-
-    /**
      * Handler for a successful request to the backend for receiving the API data.
      * Transforms received data to the frontend data format, passes it to the parent component and proceeds to the next step.
      * param @jsonData The JSON-object delivered by the backend
@@ -206,7 +154,7 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
      * @param err Error delivered by the backend
      */
     const handleFetchInfoProviderError = (err: Error) => {
-        props.reportError("Fehler: Senden der Daten an das Backend fehlgeschlagen! (" + err.message + ")");;
+        props.reportError("Fehler: Senden der Daten an das Backend fehlgeschlagen! (" + err.message + ")");
     }
 
     const fetchInfoProviderById = useCallFetch("visuanalytics/infoprovider/" + props.selectedId, {
