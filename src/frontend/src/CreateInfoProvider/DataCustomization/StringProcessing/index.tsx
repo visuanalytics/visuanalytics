@@ -240,9 +240,9 @@ export const StringProcessing: React.FC<StringProcessingProps> = (props) => {
                     <Typography variant="body1">
                         Eine String-Ersetzung kann erstellt werden, indem man einen String aus der Liste auswählt und festlegt, welche Zeichenketten auf welche Art und Weise ersetzt werden sollen.
                     </Typography>
-                    <Typography variant="body1" className={classes.elementLargeMargin}>
+                    {/*<Typography variant="body1" className={classes.elementLargeMargin}>
                         Die zu ersetzende Zeichenkette kann dabei auch ein regulärer Ausdruck sein, welcher der zugehörigen <a href="https://docs.python.org/3/library/re.html" target="_blank" rel="noreferrer">Python Syntax</a>  entspricht:
-                    </Typography>
+                    </Typography>*/}
                 </Grid>
                 <Grid item container xs={12} md={8} justify="space-between" style={{height: "100%"}}>
                     <Grid item xs={12}>

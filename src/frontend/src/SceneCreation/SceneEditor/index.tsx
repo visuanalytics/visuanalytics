@@ -1851,7 +1851,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 const index = items.indexOf(selectedObject);
                 const objectCopy = {
                     ...selectedObject,
-                    textContent: (selectedObject as CustomText).textContent + ((handlingHistorizedItem && intervalToUse !== undefined) ? '{' + item + '{' + intervalToUse.toString() + '}}' : '{' + item + '}')
+                    textContent: (selectedObject as CustomText).textContent + ((handlingHistorizedItem && intervalToUse !== undefined) ? '{_req|' + item.replace("|", "_") + '_HISTORY|' + intervalToUse.toString() + '}' : '{' + item + '}')
                 };
                 localItems[index] = objectCopy;
                 setItems(localItems);
