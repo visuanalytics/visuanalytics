@@ -7,6 +7,7 @@ from functools import reduce
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.util import resources
+from visuanalytics.analytics.util.step_errors import PiePlotError
 from datetime import datetime, timedelta
 from ast import literal_eval
 from visuanalytics.util.resources import get_test_diagram_resource_path
@@ -327,6 +328,8 @@ def pie_plot(values, fig=None, ax=None):
     :return: bearbeitetes figure- und ax-Objekt für einen Plot
     """
     y = values["y"]
+    if min(y) < 0:
+        raise PiePlotError()
     x_ticks = values.get("x_ticks", None)
     if x_ticks:
         labels = x_ticks.get("ticks", np.arange(len(y)))
@@ -414,13 +417,13 @@ def create_plot(values, step_data, array_source, get_xy=True, fig=None, ax=None)
         fig, ax = pie_plot(values=values_new, fig=fig, ax=ax)
 
     x_ticks = values_new.get("x_ticks", None)
-    if x_ticks and len(x_ticks['ticks']) > 1 and t != 'pie':
-        if t != 'barh':
+    if x_ticks and len(x_ticks["ticks"]) > 1 and t != "pie":
+        if t != "barh":
             ax.set_xticklabels([None] + x_ticks["ticks"], fontdict=x_ticks.get("fontdict", default_fontdict), color=x_ticks.get("color", default_color))
         else:
             ax.set_yticklabels([None] + x_ticks["ticks"], fontdict=x_ticks.get("fontdict", default_fontdict), color=x_ticks.get("color", default_color))
 
-    return fig, ax, values_new['y'], t == 'barh'
+    return fig, ax, values_new["y"], t == "barh" or t == "pie"
 
 
 def create_plot_custom(values, step_data, fig=None, ax=None):

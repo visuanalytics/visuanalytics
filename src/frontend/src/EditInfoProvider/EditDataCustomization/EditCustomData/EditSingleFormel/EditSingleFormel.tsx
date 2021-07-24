@@ -22,7 +22,6 @@ import {getListItemsNames} from "../../../../CreateInfoProvider/helpermethods";
 
 interface EditSingleFormelProps {
     backHandler: () => void;
-    editInfoProvider: () => void;
     infoProvDataSources: Array<DataSource>;
     setInfoProvDataSources: (dataSources: Array<DataSource>) => void;
     selectedDataSource: number;
@@ -470,7 +469,7 @@ export const EditSingleFormel: React.FC<EditSingleFormelProps> = (props) => {
                             abbrechen
                         </Button>
                     </Grid>
-                    <Grid item className={classes.blockableButtonSecondary}>
+                    <Grid item className={classes.saveButton}>
                         <Button variant={"contained"} size={"large"} color={"secondary"}
                                 disabled={!(rightParenCount >= leftParenCount) || opFlag}
                                 onClick={() => handleSave(name)}>

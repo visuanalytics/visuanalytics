@@ -43,7 +43,7 @@ export const SceneList: React.FC<SceneListProps> = (props) => {
                     }}>
                         <img width="240" height="135" alt="Vorschaubild Diagramm" src={props.previewImgList[imgId.current].URL}/>
                         <CardContent>
-                            <Typography gutterBottom variant={"h6"}>
+                            <Typography gutterBottom variant={"h6"} className={classes.wrappedText}>
                                 {data.scene_name}
                             </Typography>
                         </CardContent>

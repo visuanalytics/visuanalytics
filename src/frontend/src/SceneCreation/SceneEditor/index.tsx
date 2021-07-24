@@ -572,7 +572,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             used_images: imageIDArray.current.concat([backgroundID.current, scenePreviewID.current]),
             used_infoproviders: propsSceneFromBackend !== undefined ? propsSceneFromBackend.used_infoproviders : [infoProviderId],
             images: base,
-            backgroundImage: (props.backgroundImageList[backgroundImageIndex] !== undefined && !backGroundColorEnabled) ? backgroundImageList[backgroundImageIndex].image_id : -1,
+            backgroundImage: (backgroundImageList[backgroundImageIndex] !== undefined && !backGroundColorEnabled) ? backgroundImageList[backgroundImageIndex].image_id : -1,
             backgroundType: backGroundType,
             backgroundColor: currentBGColor,
             backgroundColorEnabled: backGroundColorEnabled,
@@ -632,14 +632,14 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         sessionStorage.removeItem("sceneEditorStep-" + uniqueId);
         sessionStorage.removeItem("infoProviderList-" + uniqueId);
         sessionStorage.removeItem("selectedId-" + uniqueId);
-        for (let element of props.imageList) {
+        for (let element of imageList) {
             URL.revokeObjectURL(element.image_blob_url);
         }
-        for (let element of props.backgroundImageList){
+        for (let element of backgroundImageList){
             URL.revokeObjectURL(element.image_blob_url);
         }
         components?.setCurrent("dashboard")
-    }, [components]);
+    }, [imageList, backgroundImageList, components]);
 
     /**
      * Method for displaying an error message for errors happening while posting the
@@ -1879,7 +1879,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 x: 20,
                 y: 20,
                 id: 'text-' + itemCounter.toString(),
-                textContent: (handlingHistorizedItem && intervalToUse !== undefined) ? '{' + item + '{' + intervalToUse.toString() + '}}' : '{' + item + '}',
+                textContent: (handlingHistorizedItem && intervalToUse !== undefined) ? '{_req|' + item.replace("|", "_") + '_HISTORY|' + intervalToUse.toString() + '}' : '{' + item + '}',
                 width: 200,
                 scaleX: 1,
                 scaleY: 1,
@@ -1922,7 +1922,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const renderListItem = (item: string, selectedData: boolean) => {
         return (
             <ListItem key={item}>
-                <Button onClick={() => handleItemSelect((selectedData ? "_req|" : "") + item, false)}>
+                <Button onClick={() => handleItemSelect(selectedData ? "_req|" +  item : item.substring(item.indexOf("|") + 1), false)}>
                     <span className={classes.overflowButtonText}>{item}</span>
                 </Button>
             </ListItem>

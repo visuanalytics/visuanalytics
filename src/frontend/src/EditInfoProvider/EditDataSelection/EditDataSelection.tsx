@@ -59,6 +59,7 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
      */
     const dataContained = React.useCallback((listItems: Array<ListItemRepresentation>) => {
         const listItemsNames = getListItemsNames(listItems);
+        console.log(listItemsNames);
         //every key of selectedData also has to be in the listItems
         for (let index = 0; index < props.dataSource.selectedData.length; index++) {
             if(!listItemsNames.includes(props.dataSource.selectedData[index].key)) return false;
@@ -73,7 +74,11 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
                     if(arrayObject.listItem.parentKeyName.split("|")[0]===props.dataSource.apiName) {
                         //construct the keyName without the dataSource and the pipe at the beginning and check if it is contained in the lisItems
                         //also appends "|0" since it will be contained in the list of names fetched from the dataSource
-                        if(!listItemsNames.includes(arrayObject.listItem.parentKeyName.substring(props.dataSource.apiName.length + 1) + arrayObject.listItem.keyName + "|0")) return false;
+                        if(!listItemsNames.includes((arrayObject.listItem.parentKeyName.substring(props.dataSource.apiName.length + 1).length !== 0 ? arrayObject.listItem.parentKeyName.substring(props.dataSource.apiName.length + 1) + "|" : "") + arrayObject.listItem.keyName + "|0")) {
+                            //console.log((arrayObject.listItem.parentKeyName.substring(props.dataSource.apiName.length + 1).length !== 0 ? arrayObject.listItem.parentKeyName.substring(props.dataSource.apiName.length + 1) + "|" : "") + arrayObject.listItem.keyName + "|0")
+                            //console.log(listItemsNames)
+                            return false;
+                        }
                     }
                 }
             }
@@ -275,7 +280,7 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
                     backHandler={() => props.backHandler(1)}
                     selectedData={props.dataSource.selectedData}
                     setSelectedData={props.setSelectedData}
-                    listItems={newListItems} //TODO: exchange for "props.infoProvDataSources[props.selectedDataSource].listItems" when listItems are in backend data format
+                    listItems={props.infoProvDataSources[props.selectedDataSource].listItems}
                     //setListItems={() => console.log("THIS IS ONLY FOR DEBUGGING AND NOT ALLOWED IN EDIT MODE!")}
                     historizedData={props.dataSource.historizedData}
                     setHistorizedData={props.setHistorizedData}

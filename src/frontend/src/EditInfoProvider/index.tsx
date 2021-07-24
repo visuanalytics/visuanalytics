@@ -541,6 +541,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                 }
             }
         })
+        console.log(diagramsToRemove)
         //delete all diagrams found
         if (diagramsToRemove.length > 0) {
             setInfoProvDiagrams(infoProvDiagrams.filter((diagram) => {

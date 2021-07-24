@@ -10,6 +10,7 @@ import {centerNotifcationReducer, CenterNotification} from "../util/CenterNotifi
 import Typography from "@material-ui/core/Typography";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {StepFrame} from "../CreateInfoProvider/StepFrame";
+import {hintContents} from "../util/hintContents";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -301,7 +302,7 @@ export const DashboardTabs = () =>  {
             { displaySpinner &&
                 <StepFrame
                     heading={"Willkommen bei Visuanalytics!"}
-                    hintContent={null}
+                    hintContent={hintContents.sceneOverview}
                 >
                     <Grid item container xs={12} justify="space-around">
                         <Grid item xs={12}>
