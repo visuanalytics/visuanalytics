@@ -66,7 +66,7 @@ Wenn ein neues Feature entwickelt werden sollte oder auch ein Fehler korrigiert 
 3. Ein Template für das Issue wählen, z.B. **Implementierung**.
 4. Informationen zum Issue eingeben. Dazu gehört z.B. eine Beschreibung für das Issue oder die zuständige Person. In diesem Schritt ist es wichtig, mit Klick auf **Projects** das zugehörige Projekt auszuwählen. Das Projekt hat den Namen **Multimediales Data Analytics**.
 5. Nach der erfolgreichen Erstellung des Issues wählt man **Projects** im Repository und wählt das Projekt **Multimediales Data Analytics**. Hier sieht man nun eine Übersicht des Projekts mit dem eben erstellten Issue unter der Spalte **To do**.
-6. Verschiebt man ein Issue auf die Spallte **In progress** so wird nach kurzer Zeit ein Branch dafür erstellt.
+6. Verschiebt man ein Issue auf die Spalte **In progress** so wird nach kurzer Zeit ein Branch dafür erstellt.
 
 Hat ein Entwickler die Arbeit an einem Feature / Bugfix abgeschlossen, so konnte das entsprechende Feature auf die Spalte **Review** verschoben werden. Hierbei wurde das Repository so eingerichtet, dass automatisch ein **Pull request** für den **Master branch** gestellt wurde. Gleichzeitig erfolgten nach diesem Schritt die automatisierten Tests und unser Review-Prozess.
 
@@ -549,7 +549,7 @@ Das Backend sendet bei dieser Anfrage das konkrete JSON-Objekt des Infoproviders
 Dieser API-Endpunkt löscht den Infoprovider mit der übergebenen ID.
 
 ###### **/testformula**
-Dieser API-Endpunkt wird benötigt, damit der Nutzer bei der Erstellung von Formeln über eine Schaltfläche prüfen kann, ob seine eingegebene Formel syntaktisch korrekt ist. Mit Klick auf die genannte Schaltfläche, wird die Formel dabei an den Endpunkt **/testformula** übersendet. Zur überprüfung der syntatkischen Korrektheit wird im Backend die Python-Bibliothek *ast* verwendet, welche aus einem Formelstring einen abstrakten Syntaxbaum generieren kann.
+Dieser API-Endpunkt wird benötigt, damit der Nutzer bei der Erstellung von Formeln über eine Schaltfläche prüfen kann, ob seine eingegebene Formel syntaktisch korrekt ist. Mit Klick auf die genannte Schaltfläche, wird die Formel dabei an den Endpunkt **/testformula** übersendet. Zur überprüfung der syntaktischen Korrektheit wird im Backend die Python-Bibliothek *ast* verwendet, welche aus einem Formelstring einen abstrakten Syntaxbaum generieren kann.
 
 ###### **/scene (POST)**
 Hierfür muss der Anfrager das JSON-Objekt mitsenden, welches eine Szene enthält. Dieses Objekt entspricht dabei dem Step *images* aus der bisherigen Themenkonfigurationsdatei. Dieses wird anschließend vom Backend in der Datenbank aufgenommen und eine zugehörige JSON-Datei wird erstellt, welche auf dem Server abgelegt werden kann. Sollte eine Szene mit gleichem Namen bereits existieren, so ist ein Fehler an das Frontend zu übersenden.
