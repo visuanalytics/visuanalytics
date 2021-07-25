@@ -158,6 +158,9 @@ export type formelContext = {
     opFlag: boolean;
     leftParenFlag: boolean;
     rightParenFlag: boolean;
+    commaFlag: boolean;
+    usedComma: boolean;
+    usedFormulaAndApiData: Array<string>;
 }
 ```
 Ein gefülltes Objekt dieses Typen kann **EditSingleFormel** übergeben werden. Dort können sie durch den **initialState** zugewiesen werden. In **EditCustomData** ist die ausschlaggebende Methode **makeFormelContext** implementiert. Sie übernimmt einen Formel-Namen und ein Formel-String (der Inhalt von einem **formelObj**) und gibt ein passendes **formelContext**-Objekt zurück.
@@ -176,7 +179,7 @@ Durch Klammer entstehen allerdings noch Strings, die nicht korrekt als **StrArg*
     * ```5))``` -> ```5```
     
 * Zuerst wird auf ein Operator geprüft. Dafür ist eine Hilfsmethode implementiert worden. **checkOperator()** bekommt einen String übergeben und gibt true zurück, falls das erste Element des Strings +, -, *, / oder % ist. Dabei muss nur das erste Element geprüft werden, da ein Operator nur ein Zeichen hat. Es wird trotzdem geprüft, ob der **Formel-Abschnitt** nur ein Zeichen lang ist. Andernfalls würde das erste Zeichen zu einem Daten-Wert-Namen gehören. Wenn beide Überprüfungen true ergeben, wird ein **StrArg** mit dem **Formel-Abschnitt**, der ein Operator ist, in **formelAsObj** hinzugefügt.
-* Als Nächstes wird darauf geprüft, ob der **Formel-Abschnitt** nur Nummern (0-9) enthält. Dazu gibt es eine weitere Hilfsmethode namens **checkFindOnlyNumbers**. Diese bekommt einen String übergeben und gibt true zurück, falls dieser aus nur Nummern besteht. Ist das der Fall, wird ein **StrArg** mit dem **Formel-Abschnitt**, der eine Nummer ist, in **formelObj** hinzugefügt.
+* Als Nächstes wird darauf geprüft, ob der **Formel-Abschnitt** eine Nummer ist (0-9 oder . ). Dazu gibt es eine weitere Hilfsmethode namens **checkNumbers**. Diese bekommt einen String übergeben und gibt true zurück, falls dieser aus nur Nummern mit oder ohne einen Komma(.) besteht. Ist das der Fall, wird für jeden für jeden Character in dem aktuellen String ein entsprechendes **StrArg** in **formelAsObj** hinzugefügt. Das bedeutet, dass jede Nummer und falls ein Komma enthalten ist auch das Komma als eigenes **StrArg** angehängt wird.
 * Jetzt sind alle Möglichkeiten ausgeschlossen, außer ein Daten-Wert (wie ```Array2|Data0```). Wenn also bisher noch nichts in **formelAsObj** hinzugefügt wurde (ausgeschlossen von Klammern) kann mit Sicherheit davon ausgegangen werden, dass der **Formel-Abschnitt** ein Daten-Wert ist. Dafür wird **notPushed** überprüft. Wenn dieser noch true ist, wird ein **StrArg** mit dem **Formel-Abschnitt** in **formelAsObj** hinzugefügt.
 * Als Letztes muss **countClosingParens** mal oft ein **StrArg** mit ")" in **formelAsObj** hinzugefügt werden.
 
