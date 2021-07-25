@@ -1,9 +1,42 @@
+<!-- vscode-markdown-toc -->
+* 1. [**SceneCreation**](#SceneCreation)
+	* 1.1. [**Auswahl der verschiedenen Schritte**](#AuswahlderverschiedenenSchritte)
+	* 1.2. [**Bilder, Hintergrundbilder und Diagramme**](#BilderHintergrundbilderundDiagramme)
+		* 1.2.1. [**Wiederherstellung der Bilder beim Neuladen**](#WiederherstellungderBilderbeimNeuladen)
+* 2. [**InfoProviderSelection**](#InfoProviderSelection)
+	* 2.1. [**Darstellung der verfügbaren Infoprovider**](#DarstellungderverfgbarenInfoprovider)
+	* 2.2. [**Verarbeitung der Infoprovider-Daten**](#VerarbeitungderInfoprovider-Daten)
+* 3. [**Szenen-Erstellung (SceneEditor)**](#Szenen-ErstellungSceneEditor)
+	* 3.1. [**Canvas**](#Canvas)
+		* 3.1.1. [**Datentypen**](#Datentypen)
+		* 3.1.2. [**States für die Verwaltung**](#StatesfrdieVerwaltung)
+		* 3.1.3. [**Transformer**](#Transformer)
+		* 3.1.4. [**Transformation von Elementen**](#TransformationvonElementen)
+	* 3.2. [**"Bedienfeld"**](#Bedienfeld)
+	* 3.3. [**Datenauswahl**](#Datenauswahl)
+		* 3.3.1. [**API-Texte**](#API-Texte)
+		* 3.3.2. [**ImageLists**](#ImageLists)
+		* 3.3.3. [**DiagramsList**](#DiagramsList)
+		* 3.3.4. [**Hinzufügen von Bildern auf dem Canvas**](#HinzufgenvonBildernaufdemCanvas)
+	* 3.4. [**Speichern der Szene**](#SpeichernderSzene)
+* 4. [**Editierung von Szenen**](#EditierungvonSzenen)
+	* 4.1. [**Besonderheit in der sessionStorage-Verwendung**](#BesonderheitindersessionStorage-Verwendung)
+	* 4.2. [**Vorbereitung der Backend-Daten**](#VorbereitungderBackend-Daten)
+	* 4.3. [**Identifikation der korrekten Bilder**](#IdentifikationderkorrektenBilder)
+	* 4.4. [**Absenden des bearbeiteten Infoproviders**](#AbsendendesbearbeitetenInfoproviders)
+
+<!-- vscode-markdown-toc-config
+	numbering=true
+	autoSave=true
+	/vscode-markdown-toc-config -->
+<!-- /vscode-markdown-toc -->
+
 # **Szeneneditor**
 Die Komponenten dieses Abschnitts sind wie folgt strukturiert:
 ![SceneEditor.png](images/scenecreation/SzenenEditor.png)
 <div style="page-break-after: always;"></div>
 
-## **SceneCreation**
+##  1. <a name='SceneCreation'></a>**SceneCreation**
 Die Wrapper-Komponente des Szeneneditors ist **SceneCreation** und beinhaltet zum einen die States, die für die allgemeinen Einstellungen zu einer Szene notwendig sind, zum anderen aber auch die notwendige Logik zum Abrufen aller Bilder, Hintergrundbilder und Diagramme. Auch ist die Logik zum Initialisieren der Editierung bestehender Szenen enthalten, diese wird aber später in einem eigenen Abschnitt beschrieben.
 
 Der State der Komponente speichert zum einen **sceneEditorStep**, welcher wie aus anderen Wrapper-Komponenten bekannt den derzeitigen Fortschritt in der Szenenerstellung wiedergibt und zur Auswahl der Komponenten dient. Darüber hinaus enthält der State größtenteils Informationen zum Infoprovider, der für die Szeneneditierung ausgewählt wurde und geladen wurde:
@@ -21,12 +54,12 @@ export type DiagramInfo = {
 * **imageList** und **backgroundImageList** sind eine Liste aller vom Backend verfügbaren Bilder, die als Hintergründe oder gewöhnliche Bilder in Szenen genutzt werden können.
 * Die restlichen States dienen als einfache Flags oder für die Editierung (auf welche im entsprechenden Abschnitt eingegangen wird).
 
-### **Auswahl der verschiedenen Schritte**
+###  1.1. <a name='AuswahlderverschiedenenSchritte'></a>**Auswahl der verschiedenen Schritte**
 Wie bereits erwähnt dient die State-Variable **sceneEditorStep** der Auswahl des aktuellen Schritts im Szenen-Editor - ein wenige zusätzliche Komplexität kommt jedoch für das Nachladen von Bildern hinzu. Im allgemeinen wird durch die Methode **selectContent** zwischen den beiden Schritten **InfoProviderSelection** zur Auswahl des zu nutzenden Infoproviders (Schritt 0) und **SceneEditor** differenziert, welcher zur eigentlichen Szenenerstellung gehört (Schritt 1).
 
 Jedoch ist es bei einem Neuladen der Seite aus später erläuterten technischen Gründen nötig, alle Bilder vom Backend erneut zu laden. Da diese per **props** an **SceneEditor** übergeben werden müssen gibt es eine dritte Ansicht, die gezeigt wird, wenn **displaySpinner** den Wert **true** hat - es ist ein eigenes **StepFrame**, welches ausschließlich einen Ladekreis für das Anzeigen der Bilder darstellt. Abgesehen davon wird immer dann, wenn **fetchImageDialogOpen** den Wert **true** hat ein entsprechender Dialog angezeigt, in dem der Nutzer das erneute Laden der Bilder bestätigen muss - auch das hat technische Gründe.
 
-### **Bilder, Hintergrundbilder und Diagramme**
+###  1.2. <a name='BilderHintergrundbilderundDiagramme'></a>**Bilder, Hintergrundbilder und Diagramme**
 Grundsätzlich gibt es drei verschiedene Arten von Bilder, die vom Backend geholt werden müssen: Bilder, Hintergrundbilder und Diagramm-Previews. Ziel ist dabei im allgemeinen, die Bilder vom Backend abzurufen, als Blob zu verwenden und unter einer URL des Frontends verfügbar zu machen, sodass man mit etwaigen **src**-Attributen in HTML-Elementen auf sie zugreifen kann.
 
 Das Abrufen der Bilder wird zunächst durch das Bestätigen der Auswahl eines Infoproviders in **InfoProviderSelection** ausgelöst, zu welchem Zweck dieser eine Funktion **fetchImages** per **props** übergeben wird. Tatsächlich übergeben wird aber die Funktion **fetchImageList**, welche den Anfang der Fetch-Kette für alle Bilder darstellt. Diese hat ein einfaches Prinzip:
@@ -55,9 +88,9 @@ Sobald nun alle Bilder auf diese Weise abgefragt wurden, endet **fetchNextImage*
 * An diesem Punkt soll auf eine detailliertere Beschreibung verzichtet werden, weil der Mechanismus genau der gleiche ist: Alle Bilder abfragen, solange einzelne Bilder abfragen, bis keine mehr übrig bleiben.
 
 Im Anschluss wird **fetchNextDiagram** aufgerufen, welches im Grunde gleich verfährt, nur für die Diagramm-Previews. Ein feiner Unterschied ist jedoch, dass man hier nicht mit dem Abrufen aller Diagramme beginnen muss - dies wurde bereits durch **InfoProviderSelection** bei der Aufbereitung der Antwort zur Abfrage des gewählten Infoproviders bereit, sodass die **useRef**-Variable **diagramsToFetch** bereits alle Diagramme umfasst. Die Antwort-Verarbeitung in **diagramPreviewSuccessHandler** unterscheidet sich hinsichtlich des erstellten Objektes - dieses ist vom Typ **DiagramInfo**, der bereits vorgestellt wurde. Name und Typ sind bereits durch die Liste aller Diagramme gegeben, sodass hier lediglich die BLOB-URL gespeichert wird.
-* Ist hier das letzte Diagramm abgefragt wird danach unterschieden, ob die Bilder initial oder erneu geladen wurden - beim erneuten Laden muss der Spinner/Ladekreis mit **setDisplaySpinner(false)** ausgeschaltet werden, beim initialen Laden muss **handleContinue** zum Weitergehen zum nächsten Schritt auferufen werden.
+* Ist hier das letzte Diagramm abgefragt wird danach unterschieden, ob die Bilder initial oder erneut geladen wurden - beim erneuten Laden muss der Spinner/Ladekreis mit **setDisplaySpinner(false)** ausgeschaltet werden, beim initialen Laden muss **handleContinue** zum Weitergehen zum nächsten Schritt aufgerufen werden.
 
-#### **Wiederherstellung der Bilder beim Neuladen**
+####  1.2.1. <a name='WiederherstellungderBilderbeimNeuladen'></a>**Wiederherstellung der Bilder beim Neuladen**
 Wie in allen Abschnitten der Anwendung sollte es im Szenen-Editor möglich sein, beim Neuladen der Seite den Zustand der Ansicht wiederherzustellen, damit keine wichtigen Einstellungen verloren gehen. Dies war hinsichtlich der Bilder eine besondere Herausforderung, da sie durch die BLOB-URL-Erstellung in einem Speicher liegen, den wir direkt verwalten können. Allgemein ist dokumentiert, dass die Gültigkeitsdauer an **document** gebunden sein - die Praxis zeigt, dass die Bilder mit einem Neuladen der Seite nicht mehr verfügbar sind. Es ist daher notwendig, dass beim Neuladen auch alle Bilder erneut vom Backend geladen werden.
 * Hinsichtlich des benötigten Traffics ist dies suboptimal und nicht wirklich zufriedenstellen, eine bessere Lösung konnten wir aber nicht finden. Immerhin wirkt die Nutzung des Browser-Cache hier normalerweise entgegen.
 
@@ -74,8 +107,8 @@ Dieser Button befindet sich in einem Dialog, der bereits bei der Erläuterung de
             setFetchImageDialogOpen(true);
         }
 ```
-* Es wird geprüft, ob der derzeitge Schritt 1 ist - wenn ja, dann befinden wir uns im Szeneneditor. Dieser Fall kann nur durch ein Neuladen im Szeneneditor erreicht werden, da nur bei einem Neuladen die **useEffect**-Hook ausgelöst wird und der Step 1 nur im Szeneneditor gesetzt sein kann.
-* Ist dieser Fall eingetroffen, so wird anhand des sessionStorage die Liste der abzfragenden Diagramme initialisiert. Mit **refetchingImages** wird ein Flag gesetzt, anhand dessen an anderen Stelle geprüft wird, ob gerade Bilder neu geladen werden.
+* Es wird geprüft, ob der derzeitige Schritt 1 ist - wenn ja, dann befinden wir uns im Szeneneditor. Dieser Fall kann nur durch ein Neuladen im Szeneneditor erreicht werden, da nur bei einem Neuladen die **useEffect**-Hook ausgelöst wird und der Step 1 nur im Szeneneditor gesetzt sein kann.
+* Ist dieser Fall eingetroffen, so wird anhand des sessionStorage die Liste der abzufragenden Diagramme initialisiert. Mit **refetchingImages** wird ein Flag gesetzt, anhand dessen an anderen Stelle geprüft wird, ob gerade Bilder neu geladen werden.
 * Abschließend wird sowohl der Spinner angezeigt als auch der Dialog geöffnet.
 * In diesem Dialog wählt der Nutzer nun per Button das Neuladen und löst so **fetchImageList** aus - der bekannte Mechanismus aus dem vorherigen Abschnitt startet und endet dank der Erkennung des erneuten Ladens anhand von **true** in **refetchingImages.current**, dass nun nur noch der Spinner deaktiviert werden muss.
 * Sollte irgendeine der Abfragen fehlschlagen, so wird durch die Error-Handler sichergestellt, dass der Dialog im Fall der erneuten Abfrage nochmals geöffnet wird.
@@ -87,26 +120,26 @@ Dieser Button befindet sich in einem Dialog, der bereits bei der Erläuterung de
 <div style="page-break-after: always;"></div>
 
 
-## **InfoProviderSelection**
+##  2. <a name='InfoProviderSelection'></a>**InfoProviderSelection**
 Den ersten Schritt der Erstellung einer neuen Szene repräsentiert **InfoProviderSelection**, in welchem der Nutzer aus der Liste aller verfügbaren Infoprovider einen Infoprovider auswählt, dessen Daten und Diagramme in der neuen Szene zur Verfügung stehen sollen.
 * Dabei haben wir die vorläufige Design-Entscheidung getroffen, nur einen Infoprovider gleichzeitig und auch keine Szenen ohne solchen zu erlauben. Im Grunde gibt es hinsichtlich der Backend-Generierung keine Hürden zur Implementierung dieser Funktionalität - wir haben diese Entscheidung getroffen, um die Komplexität in einem absehbaren Rahmen zu halten, da weitere Probleme im Szeneneditor den Erfolg des Projekts durch zeitliche Verzögerung kritisch hätten gefährden können.
 
-### **Darstellung der verfügbaren Infoprovider**
+###  2.1. <a name='DarstellungderverfgbarenInfoprovider'></a>**Darstellung der verfügbaren Infoprovider**
 Die Liste aller verfügbaren Infoprovider wird der Komponente per **props** als **infoProviderList** übergeben, ihr Fetching erfolgt in der Komponente **sceneCreation** durch die Methode **fetchAllInfoProvider**, welche über einen **useEffect** aufgerufen wird, wenn der Schritt 0 neu geladen wird.
 
-Die Darstellung dieser Liste entspricht dem, was aus zahlreichen anderen Komponenten der Anwendung bekannt ist: Mit **props.infoProviderList.map** wird für jeden Infoprovider einmal **renderListItem** aufgerufen, welches einen enstprechenden Eintrag in der **RadioGroup** erstellt. Ihr Wert wird über **props.selectedId** verwaltet, welches die Backend-ID des gewählten Infoproviders darstellt.
+Die Darstellung dieser Liste entspricht dem, was aus zahlreichen anderen Komponenten der Anwendung bekannt ist: Mit **props.infoProviderList.map** wird für jeden Infoprovider einmal **renderListItem** aufgerufen, welches einen entsprechenden Eintrag in der **RadioGroup** erstellt. Ihr Wert wird über **props.selectedId** verwaltet, welches die Backend-ID des gewählten Infoproviders darstellt.
 
 Mit einem Klick auf "weiter" werden **fetchInfoProviderById** zum Abfragen des gewählten Infoproviders und **props.fetchImages()** für den oben beschriebenen Mechanismus zur Abfrage aller Bilder abgerufen. Zweitere Methode setzt einen State **props.displayLoadMessage** auf **true**, durch den in dieser Komponente ein Info-Feld angezeigt wird, dass dem Nutzer signalisiert, dass gerade Daten geladen werden - bei großen Bildmengen im Backend kann dies tatsächlich länger dauern und könnte ohne Hinweis für den Eindruck sorgen, etwas funktioniere etwas nicht.
 
-### **Verarbeitung der Infoprovider-Daten**
-Hervozuheben ist noch die Bearbeitung der Antwort der Fetch-Methode **fetchInfoProviderById**, die über die Backend-Route `visuanalytics/infoprovider/<id>` die Daten eines Infoproviders abruft. Das erhaltene Objekt ist im Backend-Format und wird wie an anderen Stellen auch mit **transformBackendInfoProvider** in die Frontend-Datenstruktur umgewandelt, anschließend jedoch wird eine Methode **processBackendAnswer** aufgerufen:
+###  2.2. <a name='VerarbeitungderInfoprovider-Daten'></a>**Verarbeitung der Infoprovider-Daten**
+Hervorzuheben ist noch die Bearbeitung der Antwort der Fetch-Methode **fetchInfoProviderById**, die über die Backend-Route `visuanalytics/infoprovider/<id>` die Daten eines Infoproviders abruft. Das erhaltene Objekt ist im Backend-Format und wird wie an anderen Stellen auch mit **transformBackendInfoProvider** in die Frontend-Datenstruktur umgewandelt, anschließend jedoch wird eine Methode **processBackendAnswer** aufgerufen:
 * Diese Methode dient dazu, die Daten für die Nutzung im Szeneneditor aufzubereiten, da hier die verschiedenen Daten der unterschiedlichen Datenquellen in jeweils eine Datenstruktur gebündelt werde müssen.
 * Dazu werden die Arrays **selectedDataList**, **customDataList**, **historizedDataList**, **arrayProcessingList** und **stringReplacementList** erstellt und anschließend durch alle Datenquellen gelaufen. Bei jeder Datenquelle werden alle entsprechenden Werte genommen, ihr für den Szeneneditor nötiger Name konstruiert und das Ergebnis dem Array hinzugefügt.
 * Anschließend werden noch alle Diagramme durchlaufen und jeweils Name und Typ extrahiert. Dabei wird die per **props** übergebene **useRef**-Variable **diagramsToFetch**, die die Datengrundlage für die anschließend stattfindende Abfrage liefert.
 <div style="page-break-after: always;"></div>
 
-## **Szenen-Erstellung (SceneEditor)**
-### **Canvas**
+##  3. <a name='Szenen-ErstellungSceneEditor'></a>**Szenen-Erstellung (SceneEditor)**
+###  3.1. <a name='Canvas'></a>**Canvas**
 
 Als Canvasframework haben wir uns für KonvaJS entschieden. KonvaJS ist eine 2D-Canvas Bibliothek, ursprünglich in und für JavaScript verfasst, mit einem Port für React und Vue.
 In unserem Szeneneditor haben wir die folgenden Features implementiert:
@@ -129,7 +162,7 @@ Die Stage bildet dabei die unterste Ebene. Sie dient als DOM-Wrapper für alle L
 
 Darauf folgt eine sogenannte "Group". In dieser Gruppe sind alle Elemente enthalten, welche der Benutzer selbst auf dem Canvas hinzufügt. Sie werden über ein Array aus eigenen Datentypen über die forEach-Methode hinzugefügt.
 
-#### **Datentypen**
+####  3.1.1. <a name='Datentypen'></a>**Datentypen**
 
 Alle Datentypen für Elemente enthalten die folgenden Eigenschaften:
 ```javascript
@@ -391,7 +424,7 @@ Je nach dem, ob der Hintergrundtyp "COLOR" oder "IMAGE" ist, wird der entspreche
 
 Bei beiden werden die onClick und onMouseDown-Methoden der Stage übergeben.
 
-#### **States für die Verwaltung**
+####  3.1.2. <a name='StatesfrdieVerwaltung'></a>**States für die Verwaltung**
 
 Für den Szeneneditor benötigen wir eine Reihe von State-Variablen, die wir im Folgenden erklären.
 
@@ -480,7 +513,7 @@ Die letzten States werden für Daten aus dem backend und einen Dialog verwendet.
 * **clickedSaveButton** blockiert den "Speichern"-Button, solange gerade ein Export der Szene an das Backend läuft, damit keine mehrfachen Exports gestartet werden können und Folgeprobleme vermieden werden.
 
 
-#### **Transformer**
+####  3.1.3. <a name='Transformer'></a>**Transformer**
 
 Der Transformer ist eine eigene Komponente, welche das Transformieren von Elementen ermöglicht.
 
@@ -539,7 +572,7 @@ return (
 
 In der *return*-Methode wird ein Transformer zurückgegeben, welcher eine Reference auf eine Node enthält.
 
-#### **Transformation von Elementen**
+####  3.1.4. <a name='TransformationvonElementen'></a>**Transformation von Elementen**
 
 Die Transformation von Elementen geschieht mit Hilfe des Transformers. Dabei wird, wie bereits beschrieben, der Transformer zunächst an ein Element angehängt. Anschließend kann der Benutzer die Größe des Elementes verändern.
 ```javascript
@@ -564,7 +597,7 @@ localItems[index] = {
 
 Im ausgewählten Element wird scaleX und scaleY neu gesetzt. Dabei wird zunächst eine Konva-Methode aufgerufen, mit der man die absolute Transformation von Elementen abfragen kann. Anschließend wird, falls der Benutzer ein Element zu groß gezogen hat, die Größe korrigiert. Danach werden scaleX und scaleY auf den neuen Wert gesetzt, so wie die Rotation eines Elements.
 
-### **"Bedienfeld"**
+###  3.2. <a name='Bedienfeld'></a>**"Bedienfeld"**
 
 ![bedienfeld_szeneneditor.png](images/scenecreation/bedienfeld_szeneneditor.png)
 
@@ -599,10 +632,10 @@ Für die Textanpassung stehen die nächsten drei Felder zur Verfügung. Im erste
 Die letzten beiden Felder werden dazu verwendet, die Höhe und Breite von Elementen anzupassen.
 
 
-### **Datenauswahl**
+###  3.3. <a name='Datenauswahl'></a>**Datenauswahl**
 Ein weiteres relevantes Feature des Szeneneditors ist das Hinzufügen von Daten des gewählten Infoproviders auf die Szene, sodass diese bei der Videogenerierung dynamisch mit den API-Daten ersetzt werden. Dazu wird auf der rechten Seite der Oberfläche eine Reihe an Listen generiert, in denen die Daten geordnet aufbereitet sind.
 
-#### **API-Texte**
+####  3.3.1. <a name='API-Texte'></a>**API-Texte**
 Als "Texte" einer API gibt es fünf verschiedene Optionen: API-Daten aus **selectedData**, Array-Verarbeitungen aus **arrayProcessings**, Formeln aus **customData**, String-Ersetzungen aus **stringReplacements** sowie den historisierten Daten aus **historizedData**.
 * In den Abschnitten zu **SceneCreation** und **InfoProviderSelection** wurde bereits beschrieben, wie die Listen dieser Daten als States generiert werden, sie werden entsprechend per **props** an den **SceneEditor** weitergegeben: **selectedDataList**, **arrayProcessingList**, **customDataList**, **stringReplacementList** und **historizedDataList**.
 
@@ -668,7 +701,7 @@ Falls der Benutzer aktuell kein Element ausgewählt hat, so wird ein neues Texte
 
 Falls der Benutzer ein Element ausgewählt hat und es ein Textelement ist, so wird, wieder abhängig davon, ob historisierte oder "normale" API-Daten ausgewählt wurden, der Inhalt des API-Datums an den vorhandenen Text angehängt. Sollte der Benutzer den Text aktuell bearbeiten, so wird auch dort das API-Datum angehängt.
 
-#### **ImageLists**
+####  3.3.2. <a name='ImageLists'></a>**ImageLists**
 Die Liste verfügbarer Hintergrundbilder und Bilder wurde in eine eigene Komponente ausgelagert, um in der sehr komplexen **SceneEditor**-Komponente zumindest ein wenig Modularität herzustellen. In der Komponente werden grundsätzlich die per **props** übergebenen Bilderlisten **imageList** und **backgroundImageList** in zwei getrennten Listen dargestellt. Beide Listen haben dabei jeweils einen eigenen State **showBackgroundImages** bzw. **showImages**, über den ein **Collapse** gesteuert wird - damit ist es nicht nötig, beide Listen dauerhaft anzuzeigen.
 * Das ist wichtig, da je nach Anzahl der Bilder im Backend hier eine längere Liste entstehen kann.
 
@@ -687,13 +720,13 @@ Neben dem Auswählen bereits vorhandener Bilder gibt es die Möglichkeit, auch w
     * Diese Handler-Methoden entnehmen dem übergebenen Event mit **event.target.files** die hochgeladene Datei und verpacken diese in eine **FormData**. Ein Aufruf der Methode **postImage**/**postBackgroundImage** sendet dann die FormData an die jeweilige Backend-Route `visuanalytics/image/pictures` bzw. `visuanalytics/image/backgrounds`.
     * Das Backend antwortet auf dieses Posten mit der ID des Bildes im Backend- die Sucess-Handler fragen dann das Bild dieser ID an, generieren eine URL für das erhaltene Blob und hängen das neue Bild an **imageList** bzw. **backgroundImageList** an. Auf diese Weise können die hochgeladenen Bilder direkt verwendet werden.
 
-#### **DiagramsList**
+####  3.3.3. <a name='DiagramsList'></a>**DiagramsList**
 Analog zu **ImageLists** stellt **DiagramLists** die Diagramme dar, die zur Verfügung stehen. Die Liste wird per **props.diagramList** übergeben und durch **renderDiagramEntry** dargestellt. Jeder Eintrag umfasst ein Bild, einen Namen und einen Typ.
 
 Die Generierung des Bildes ist im Grunde gleich wie bei **ImageLists**, auch die Handler-Methode **handleDiagramClick** ist gleich, da für sie einfach **handleImageClick** übergeben wird. Daher soll auf genauere Ausführungen mit dem Verweis auf den vorangehenden Abschnitt verzichtet werden.
 
 
-#### **Hinzufügen von Bildern auf dem Canvas**
+####  3.3.4. <a name='HinzufgenvonBildernaufdemCanvas'></a>**Hinzufügen von Bildern auf dem Canvas**
 In den Abschnitten zu Bildern und Diagrammen wurde bereits beschrieben, dass per Aufruf von **handleImageClick** das Hinzufügen eines Bilds auf den Canvas umgesetzt wird - die Methode soll im folgenden kurz vorgestellt werden:
 
 ```javascript
@@ -767,7 +800,7 @@ Bei Hintergrundbildern wird die Methode *handleBackgroundImageClick* aufgerufen.
 
 Die Methode *addImageElement* erstellt ein neues Image-Element, welchem die vorher übergebenen Parameter übergeben werden. Anschließend wird geprüft, ob das Bild größer als die Zeichenfläche ist. Ist dies der Fall, wird das Bild solange verkleinert, bis es in die Zeichenfläche passt.
 
-### **Speichern der Szene**
+###  3.4. <a name='SpeichernderSzene'></a>**Speichern der Szene**
 
 
 ```javascript
@@ -788,7 +821,7 @@ Wenn das Absenden des Hintergrundbildes erfolgreich war, so wird ein Vorschaubil
 Wenn diese beiden Bilder erstellt und erfolgreich hochgeladen wurden, so wird eine Variable vom Typ  JsonExport, beschrieben in [Backenddatentypen](#backend-typen), erstellt. Ein erfolgreicher Upload schließt dann den Szeneneditor. Der Nutzer sieht also wieder das Dashboard.
 <div style="page-break-after: always;"></div>
 
-## **Editierung von Szenen**
+##  4. <a name='EditierungvonSzenen'></a>**Editierung von Szenen**
 Für die Editierung von Szenen wird keine eigenständige Komponente genutzt, sondern stattdessen die der Erstellung wiederverwendet, dabei aber über **props** vorgefertigte Werte geladen. Dabei wird wie in der Dokumentation zum Dashboard beschrieben die Szene vom Backend geladen und auch der von ihre genutzte Infoprovider - zusammengefasst werden sie in einem Objekt des Typ **FullScene**:
 ```javascript
 export type FullScene = {
@@ -813,7 +846,7 @@ export type FullScene = {
 
 Von besonderer Bedeutung ist, dass wir den Initialwert von **fetchImageDialogOpen** auf **true** setzen, wenn wir in der Editierung sind - statt also unmittelbar den Szenen-Editor zu laden zeigen wir dem Nutzer erst die Anzeige, über die das Laden der Bilder gestartet werden muss. Aus oben beschriebenen Gründen ist dafür das Klicken eines Button notwendig, weshalb auch hier diese Variante gewählt wird.
 
-### **Besonderheit in der sessionStorage-Verwendung**
+###  4.1. <a name='BesonderheitindersessionStorage-Verwendung'></a>**Besonderheit in der sessionStorage-Verwendung**
 Wir speichern **fetchImageDialogOpen**, **editId** und **sceneFromBackend** jeweils im sessionStorage und stellen diese beim Neuladen wieder her. Das Problem ist hier: Der von uns gesetzte Initialwert wird direkt überschrieben, da der sessionStorage beim ersten Render noch kein Item hält. Daher wird dessen default-Wert genutzt. Zur Lösung prüfen wir in der sessionStorage-Wiederherstellung, ob ein Eintrag **firstSceneCreationEntering** vorhanden ist - dies ist beim ersten Laden nicht der Fall, sodas wir **null** erhalten. Wir erkennen diesen Fall und setzen beim ersten Laden einen Wert für diesen Namen, es ist im Grunde ein Marker, dass wir nicht mehr das erste Mal laden.
 ```javascript
 if (sessionStorage.getItem("firstSceneCreationEntering-" + uniqueId) !== null) {
@@ -832,7 +865,7 @@ if (sessionStorage.getItem("firstSceneCreationEntering-" + uniqueId) !== null) {
 * Wie hier zu sehen ist Binden wir das Setzen der relevanten Werte, die nicht beim ersten Render überschrieben werden dürfen an die Bedingung, dass wir nicht das erste Mal laden. Beim ersten Laden werden damit unsere Initialwerte gesetzt und anschließend im sessionStorage abgelegt - bei jedem weiteren Laden werden sie aus diesem wiederhergestellt.
 * Alternativ hätte man den default-Wert in der sessionStorage-Wiederherstellung anhand der **props**-Werte setzen können, wir fanden diese Lösung jedoch unübersichtlicher.
 
-### **Vorbereitung der Backend-Daten**
+###  4.2. <a name='VorbereitungderBackend-Daten'></a>**Vorbereitung der Backend-Daten**
 Bevor man die in der Editierung genutzten Daten verwenden kann ist es noch notwendig, die Daten des Infoproviders auszuwerten und damit die relevanten Arrays im State zu befüllen, welche zur Generierung der Listen verfügbarer Daten im Szenen-Editor genutzt werden. Dazu gibt es in **SceneCreation** eine **useEffect**-Hook, welche beim ersten Laden ausgeführt wird und prüft, ob `sceneFromBackendMutable.current !== undefined` erfüllt ist. Wenn ja, dann handelt es sich um das erste Laden einer Editierung. Es werden dann zunächst die im Grunde gleichen Schritte wie **processBackendAnswer** aus **InfoProviderSelection** durchgeführt - man entnimmt den Infoprovider aus den Daten des Backend, durchläuft alle seine Datenquellen und sammelt bei jeder dieser Datenquellen die verschiedenen Typen an Daten zusammen in jeweils einer Liste.
 
 Weiterhin werden durch den Aufruf von **getDiagramFetchList** die exakt gleichen Daten über die verfügbaren Diagramme wie in **processBackendAnswer** gesammelt und in **diagramsToFetch.current** gespeichert, sodass sie beim anschließenden Laden der Previews bereitstehen.
@@ -842,7 +875,7 @@ Ansonsten ist noch interessant, dass einmal alle Items der Szene in **sceneItems
 Die Übergabe der Daten findet statt, indem die entsprechend gesetzten States in **sceneEditor** übergeben werden, hier gibt es bis auf **sceneFromBackend** und **editId** keine Unterschiede.
 * In der **SceneEditor**-Komponente wird dann anhand vom **props.sceneFromBackend !== undefined** geprüft, ob es der Editierungs-Modus ist und wenn ja der Initialwert aus **props** geladen. Um hier die Überschreibung durch den sessionStorage zu vermeiden nutzen wir hier das exakt gleiche Konzept wie oben, bei dem wir das erste Laden anhand eines Markers im sessionStorage identifizieren.
 
-### **Identifikation der korrekten Bilder**
+###  4.3. <a name='IdentifikationderkorrektenBilder'></a>**Identifikation der korrekten Bilder**
 Wie bereits im vorherigen Abschnitt erwähnt wird es nötig, zu jedem auf dem Canvas verwendeten Bild das korrekte Bild wiederzufinden und dessen BLOB-URL als **src** zu setzen. Dazu gibt es in **SceneEditor** eine **useEffect**-Hook, die beim ersten Laden ausgeführt wird und prüft, ob sich der Editierung im Editierungsmodus befindet und es das erstmalige Laden des Szeneneditors ist (hier verwenden wir die gleiche Technik eines Markers im sessionStorage):
 ```javascript
  React.useEffect(() => {
@@ -861,7 +894,7 @@ Damit werden die Methoden **findRightBackgroundImage** und **findRightImages** z
 
 Nach diesem Vorgang ist der Szenen-Editor vollständig zur Editierung vorbereitet und kann ab diesem Punkt wie in der Erstellung genutzt werden.
 
-### **Absenden des bearbeiteten Infoproviders**
+###  4.4. <a name='AbsendendesbearbeitetenInfoproviders'></a>**Absenden des bearbeiteten Infoproviders**
 Zuletzt anzumerken ist noch das unterschiedliche Absenden der Ergebnisse: Das Hintergrund-Bild und das Preview-Bild werden auf gleiche Weise abgesendet, das Backend sorgt hier für ein Löschen der alten Bilder. Der einzige Unterschied ist **postSceneExport**, welches für die beiden Fälle der Erstellung und Editierung unterschiedliche URLs generiert:
 ```javascript
  //check if the edit mode is active by looking for the props object - post to different route if editing!

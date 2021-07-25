@@ -1,12 +1,76 @@
+<!-- vscode-markdown-toc -->
+* 1. [**CreateInfoProvider**](#CreateInfoProvider)
+	* 1.1. [**Verwaltung des aktuellen Schritts**](#VerwaltungdesaktuellenSchritts)
+	* 1.2. [**Verwaltung des States**](#VerwaltungdesStates)
+	* 1.3. [**Wiederherstellung des Fortschritts beim Neuladen**](#WiederherstellungdesFortschrittsbeimNeuladen)
+	* 1.4. [**Styles**](#Styles)
+* 2. [**AuthDataDialog**](#AuthDataDialog)
+	* 2.1. [**Verwaltung und Vorbereitung in CreateInfoProvider**](#VerwaltungundVorbereitunginCreateInfoProvider)
+	* 2.2. [**Darstellung in AuthDataDialog**](#DarstellunginAuthDataDialog)
+* 3. [**StepFrame**](#StepFrame)
+* 4. [**TypeSelection**](#TypeSelection)
+* 5. [**BasicSettings**](#BasicSettings)
+	* 5.1. [**Prüfung auf Notwendigkeit erneuter API-Abfragen**](#PrfungaufNotwendigkeiterneuterAPI-Abfragen)
+	* 5.2. [**Anpassungen bei nachträglichen Namensänderungen**](#AnpassungenbeinachtrglichenNamensnderungen)
+* 6. [**DataSelection**](#DataSelection)
+	* 6.1. [**transformJSON**](#transformJSON)
+	* 6.2. [**Generieren der Darstellung**](#GenerierenderDarstellung)
+	* 6.3. [**Umsetzung von Lösch-Abhängigkeiten**](#UmsetzungvonLsch-Abhngigkeiten)
+* 7. [**DataCustomization**](#DataCustomization)
+* 8. [**ArrayProcessing**](#ArrayProcessing)
+	* 8.1. [**Generieren der Liste verfügbarer Arrays**](#GenerierenderListeverfgbarerArrays)
+	* 8.2. [**Hinzufügen neuer Verarbeitungen**](#HinzufgenneuerVerarbeitungen)
+* 9. [**CreateCustomData**](#CreateCustomData)
+	* 9.1. [**Überprüfung der Syntax**](#berprfungderSyntax)
+	* 9.2. [**Interne Darstellung**](#InterneDarstellung)
+	* 9.3. [**"Zurück" und "Löschen"**](#ZurckundLschen)
+	* 9.4. [**Das Löschen einer Formel**](#DasLscheneinerFormel)
+	* 9.5. [**Abschließende Überprüfungen**](#Abschlieendeberprfungen)
+* 10. [**StringProcessing**](#StringProcessing)
+	* 10.1. [**Bestimmung geeigneter Strings**](#BestimmunggeeigneterStrings)
+	* 10.2. [**Erstellen neuer Verarbeitungen**](#ErstellenneuerVerarbeitungen)
+* 11. [**HistorySelection**](#HistorySelection)
+	* 11.1. [**HistoryDataSelection**](#HistoryDataSelection)
+	* 11.2. [**HistoryScheduleSelection**](#HistoryScheduleSelection)
+		* 11.2.1. [**WeekdaySelector**](#WeekdaySelector)
+* 12. [**SettingsOverview**](#SettingsOverview)
+	* 12.1. [**ScheduleTypeTable**](#ScheduleTypeTable)
+	* 12.2. [**Löschen von Datenquellen**](#LschenvonDatenquellen)
+* 13. [**DiagramCreation**](#DiagramCreation)
+	* 13.1. [**Disclaimer**](#Disclaimer)
+	* 13.2. [**State-Inhalte**](#State-Inhalte)
+	* 13.3. [**Datentypen zum Speichern von Konfigurationen**](#DatentypenzumSpeichernvonKonfigurationen)
+	* 13.4. [**Bestimmung von mit Diagrammen kompatibler Daten**](#BestimmungvonmitDiagrammenkompatiblerDaten)
+	* 13.5. [**Erstellen von Diagramm-Previews**](#ErstellenvonDiagramm-Previews)
+	* 13.6. [**Anzeige der einzelnen Schritte**](#AnzeigedereinzelnenSchritte)
+	* 13.7. [**weitere Hilfsmethoden**](#weitereHilfsmethoden)
+* 14. [**DiagramOverview**](#DiagramOverview)
+* 15. [**DiagramTypeSelect**](#DiagramTypeSelect)
+* 16. [**ArrayDiagramCreator**](#ArrayDiagramCreator)
+* 17. [**HistorizedDiagramCreator**](#HistorizedDiagramCreator)
+* 18. [**BasicDiagramSettings**](#BasicDiagramSettings)
+* 19. [**CustomLabels**](#CustomLabels)
+* 20. [**Senden eines Infoproviders an das Backend**](#SendeneinesInfoprovidersandasBackend)
+	* 20.1. [**Überblick über das Datenformat**](#berblickberdasDatenformat)
+* 21. [**Datenquellen-Format**](#Datenquellen-Format)
+	* 21.1. [**Methode zur Generierung**](#MethodezurGenerierung)
+* 22. [**Diagramm-Datenformat**](#Diagramm-Datenformat)
+
+<!-- vscode-markdown-toc-config
+	numbering=true
+	autoSave=true
+	/vscode-markdown-toc-config -->
+<!-- /vscode-markdown-toc -->
+
 # **Infoprovider-Erstellung**
 Die Komponentenstruktur der Anwendung ist in diesem Abschnitt wie folgt aufgebaut:
 ![Übersicht_Info_Provider_Erstellung.png](images/infoprovider/Übersicht_Info_Provider_Erstellung.png)
 <div style="page-break-after: always;"></div>
 
-## **CreateInfoProvider**
+##  1. <a name='CreateInfoProvider'></a>**CreateInfoProvider**
 Die Komponente `CreateInfoProvider` stellt die umschließende Wrapper-Komponente für die gesamte Info-Provider-Erstellung dar, von der aus die restlichen Komponenten für die einzelnen Schritte der Erstellung geladen werden.
 
-### **Verwaltung des aktuellen Schritts**
+###  1.1. <a name='VerwaltungdesaktuellenSchritts'></a>**Verwaltung des aktuellen Schritts**
 Dazu enthält der State der Komponente die Variable `createStep`, welche als Zahlwert von 0-5 repräsentiert, in welchem der 6 Schritte sich der Nutzer gerade befindet.
 
 Diese Variable wird in der Methode `selectContent(step: number)` in einem switch-case-Statement verarbeitet, in welchem für jeden der möglichen Schritt 0-5 ein case existiert, welcher die passende Komponente zurückgibt. Die Methode wird letztendlich innerhalb des `return`-Statements aufgerufen, welches das eigentliche Rendering bestimmt.
@@ -17,13 +81,13 @@ Diese Variable wird in der Methode `selectContent(step: number)` in einem switch
 Zur Visualisierung des Schritts wird die von MaterialUI zur Verfügung gestellte `Stepper`-Komponente genutzt, welche das Array `steps` als Datengrundlage mit Beschriftungen sowie `createStep` für den aktuellen Schritt erhält.
 <br></br>
 
-### **Verwaltung des States**
+###  1.2. <a name='VerwaltungdesStates'></a>**Verwaltung des States**
 Alle vom Nutzer eingegebenen Daten müssen am Ende des Vorgangs in einem JSON-Objekt zusammengefasst werden, um dieses an das Backend (Endpunkt: */infoprovider*) zu senden. Da das Senden in dieser Wrapper-Komponente erfolgen sollte haben wir uns entschieden, alle Datenwerte der Eingabe auch im State dieser Komponente zu verwalten.
 
 In `selectContent` werden dann jeweils als *props* alle für die Komponente notwendigen Datenwerte und Setter-Methoden übergeben, diese ändert dann den State basierend auf den Nutzer-Eingaben.
 <br></br>
 
-### **Wiederherstellung des Fortschritts beim Neuladen**
+###  1.3. <a name='WiederherstellungdesFortschrittsbeimNeuladen'></a>**Wiederherstellung des Fortschritts beim Neuladen**
 Ein für uns sehr wichtiger Aspekt der UX war, dass bei einem Neuladen der Seite die bisherigen Eingaben nicht verloren gehen, da der Vorgang im Vergleich zu einem "typischen" Formular deutlich mehr Eingaben umfasst. Bei einem Verlust des Fortschritts durch Neuladen würde man auch den vom Backend gelieferten Datensatz der API-Abfrage verlieren. Daher haben wir uns für eine Implementierung entschieden, bei der die Daten im Browser gespeichert und beim Neuladen wiederhergestellt werden.
 * Javascript/Typescript bietet dafür zwei Lösungen: `localStorage` und `sessionStorage`. Während der localStorage bis zum Schließen des Browsers erhalten bleibt gilt der sessionStorage nur, bis der Tab geschlossen ist.
 * Damit ein Schließen des Tabs einem Neustart ermöglicht haben wir `sessionStorage` gewählt.
@@ -38,15 +102,15 @@ Ein für uns sehr wichtiger Aspekt der UX war, dass bei einem Neuladen der Seite
 * Beim Beenden des Vorgangs wird über `handleSuccess`, welches bei einer erfolgreichen Info-Provider-Erstellung ausgelöst wird, der Speicher geleert.
 <br>
 
-### **Styles**
-In der Datei **styles.tsx** ist auf Ebene von `CreateInfoProvider` eine Datei angelegt, die die CSS-Klassen für alle Komponenten dieses Schrittes enthält. Dies ist insbesondere sinnvoll, da sich viele Komponenten die gleichen Style-Eigenschaften teilen. Alle Komponentne greifen für ihre Styles auf diese Datei zu.
+###  1.4. <a name='Styles'></a>**Styles**
+In der Datei **styles.tsx** ist auf Ebene von `CreateInfoProvider` eine Datei angelegt, die die CSS-Klassen für alle Komponenten dieses Schrittes enthält. Dies ist insbesondere sinnvoll, da sich viele Komponenten die gleichen Style-Eigenschaften teilen. Alle Komponenten greifen für ihre Styles auf diese Datei zu.
 
 <div style="page-break-after: always;"></div>
 
-## **AuthDataDialog**
+##  2. <a name='AuthDataDialog'></a>**AuthDataDialog**
 Im vorherigen Abschnitt wurde bereits darauf eingegangen, dass wir beim Neuladen der Seite die eingegebenen Daten wiederherstellen, die API-Authentifizierungsdaten jedoch nicht im sessionStorage gespeichert werden können. Daher gibt es die Komponente **AuthDataDialog**, welche ein Dialog-Element ist, in dem der Nutzer nach dem Neuladen der Seite seine Daten erneut eingeben muss.
 
-### **Verwaltung und Vorbereitung in CreateInfoProvider**
+###  2.1. <a name='VerwaltungundVorbereitunginCreateInfoProvider'></a>**Verwaltung und Vorbereitung in CreateInfoProvider**
 Grundsätzlich gilt, dass die API-Authentifizierungsdaten (State-Variablen **apiKeyInput1** und **apiKeyInput2**) nicht in **dataSources** abgelegt werden, da dieses im sessionStorage gespeichert wird. Stattdessen befinden sie sich in einer Map **dataSourcesKeys**, die den Namen der Datenquelle einem Objekt vom Typ **DataSourceKey** zuordnet, welches die Authentifizierungsdaten hält.
 ```javascript
 export type DataSourceKey = {
@@ -73,10 +137,10 @@ AuthDataDialogElement = {
 ```
 * Der Typ ist hinsichtlich der Informationen auf ein notwendiges Minimum begrenzt - den Namen der Datenquelle und die Authentifizierungsmethode, da diese im Dialog ebenfalls angezeigt werden soll.
 
-Das Erstellen dieser Liste erledigt die Methode **buildDataSourceSelection**, welche für die aktuelle Datenquelle und alle vorherigen Datenquellen in **dataSources** anhand von **noKey** (und bei der aktuellen Datenquelle **method**) prüft, ob eine Eingabe notwendig ist. Wenn das für eine Datenquelle nowendig ist wird sie der Liste hinzugefügt.
+Das Erstellen dieser Liste erledigt die Methode **buildDataSourceSelection**, welche für die aktuelle Datenquelle und alle vorherigen Datenquellen in **dataSources** anhand von **noKey** (und bei der aktuellen Datenquelle **method**) prüft, ob eine Eingabe notwendig ist. Wenn das für eine Datenquelle notwendig ist wird sie der Liste hinzugefügt.
 * Bemerkenswert ist, dass für die aktuelle Datenquelle nicht der Name gespeichert wird, sondern stattdessen die Kombination des Strings **"current--** und der uniqueId, die wir auch beim sessionStorage verwenden. Grund dafür ist, dass der Nutzer bei der aktuellen Datenquelle nicht zwingend einen Namen eingegeben haben muss - er könnte erst die Authentifizierungsdaten eingeben und dann neu laden.
 
-### **Darstellung in AuthDataDialog**
+###  2.2. <a name='DarstellunginAuthDataDialog'></a>**Darstellung in AuthDataDialog**
 In der Komponente **AuthDataDialog** selbst erfolgt dann die Darstellung der berechneten Liste mit Eingabeelementen: Zunächst einmal wird mit einem **Select**-Element eine Auswahl generiert, in der alle Datenquellen aus **selectionDataSources** dargestellt werden.
 * Das Select-Element speichert dabei als ausgewählten Wert nicht das **authDataDialog**-Objekt oder den Namen der Datenquelle, sondern den Index **selectedIndex** innerhalb des Arrays der Datenquellen - dies erleichtert die Arbeit insgesamt.
 
@@ -98,7 +162,7 @@ Bevor der Nutzer den Dialog mit einem Button "Bestätigen" die Eingabe abschlie�
 <div style="page-break-after: always;"></div>
 
 
-## **StepFrame**
+##  3. <a name='StepFrame'></a>**StepFrame**
 Die Komponente **StepFrame** ist ohne wirkliche Funktionalität, da sie der grafischen Darstellung des Frontends dient. Alle Schritte bei der Info-Provider-Erstellung sollten sich in einer eingerahmten Oberfläche befinden, statt sich über die gesamte Bildbreite zu erstrecken. Die Komponente stellt diesen Rahmen.
 
 Grundsätzlich handelt es sich um eine Adaption der Komponente **PageTemplate**, die im alten Frontend einen vergleichbaren Zweck erfüllte. Dazu wird eine **Paper**-Komponente von Material-UI verwendet und per Grid-Struktur eine Anordnung aus Überschrift, Hinweis-Button mit Text und restlichem Inhalt gemacht.
@@ -110,7 +174,7 @@ Da **PageTemplate** jedoch für unsere Anpassung angepasst werden musste haben w
 
 <div style="page-break-after: always;"></div>
 
-## **TypeSelection**
+##  4. <a name='TypeSelection'></a>**TypeSelection**
 Die Komponente **TypeSelection** stellt den ersten Schritt der Erstellung eines Infoproviders bzw. einer Datenquelle für einen solchen dar. Der Nutzer soll hier zunächst auswählen, ob er eine Datenquelle importieren möchte oder eine neue Datenquelle erstellen will - hier muss er sich dann zwischen API oder einem Webseiten-Scraper entscheiden. Die Komponente gibt die Auswahl an die Wrapper-Komponente weiter, sodass diese auswählen kann, welche Schritte als nächstes folgen müssen.
 
 Anzumerken ist, dass zunächst nur API-Datenquellen unterstützt werden sollen - sowohl das Webseiten-Scraping als auch der Import von Daten befinden sich nicht in der Kategorie **must have** des Lastenhefts. Dennoch haben wir die Struktur direkt implementiert, um die Anwendung einfach weiterentwickeln zu können. Zum derzeitigen Zeitpunkt sind die angesprochenen zusätzlichen Features ausgegraut und der State für eine neue Datenquelle wird mit `true` initialisiert. Auf diese Weise kann ohne weiteres auswählen von Optionen der "weiter"-Button betätigt werden. Wir haben uns dagegen entschieden die Komponente vollständig zu entfernen, da so auch einige Logik in den Continue- und Back-Handlern angepasst werden müsste. So müsste zum Beispiel angepasst werden, in welchem Schritt geprüft wird, ob bestimmte Methoden definiert sind, um weitere Logik ausführen zu können.
@@ -123,7 +187,7 @@ Einzig hervorzuheben ist die Methode **handleFileSelect**, die beim Nutzen des U
 
 <div style="page-break-after: always;"></div>
 
-## **BasicSettings**
+##  5. <a name='BasicSettings'></a>**BasicSettings**
 Die Komponente **BasicSettings** repräsentiert den Schritt der Erstellung eines Infoproviders, in welchem der Nutzer die grundlegenden Daten zu seiner geplanten API-Abfrage eingibt. Dazu sind der API-Name, die Query sowie Authentifizierungs-Informationen notwendig. Die entsprechenden Daten werden im State der Wrapper-Komponente **CreateInfoProvider** gehalten und als *props* an BasicSettings übergeben (name, query, apiKeyInput1, apiKeyInput2, method, noKey).
 
 Bei der Namenseingabe wird durch die per props übergebene Methode **checkNameDuplicate** geprüft, ob der Name bereits existiert und ggf. ein Fehler angezeigt.
@@ -155,7 +219,7 @@ Die Methode **sendTestData** wird durch die eigene Hook **useCallFetch** erstell
 
 Während des Wartens auf Antwort des Backends wird eine Lade-Animation angezeigt, gesteuert durch das Setzen der boolean-Variable **displaySpinner**. **selectContent** wählt hierfür basierend auf der Variable zwischen der Animation oder der "gewöhnlichen" Eingabeoberfläche.
 
-### **Prüfung auf Notwendigkeit erneuter API-Abfragen**
+###  5.1. <a name='PrfungaufNotwendigkeiterneuterAPI-Abfragen'></a>**Prüfung auf Notwendigkeit erneuter API-Abfragen**
 Die Bindung des Sendens der Eingaben an das Backend zum Zweck einer API-Abfrage an das Klicken des "Weiter"-Buttons bringt jedoch ein Problem mit sich: Wenn der Nutzer zu einem späteren Zeitpunkt noch einmal zu **BasicSettings** zurückkehrt (um etwas nachzuschauen oder z.B. den Namen zu ändern) und dann wieder weitergeht wird eine weitere API-Request ausgelöst.
 * Das ist alleine deshalb schlecht, weil zusätzlicher Traffic verursacht wird. Schlimmer ist sogar noch, dass die API-Abfragen des Nutzers beschränkt sein könnten und so in die Höhe getrieben werden.
 * Außerdem kann man nicht garantieren, dass die API beim nächsten Mal eine Antwort der gleichen Struktur sendet - alle folgenden Eingaben (ausgewählte Daten, Formeln, Historisierungen, ...) müssen invalidiert werden.
@@ -164,9 +228,9 @@ Zur Vermeidung dieses Verhaltens wird in **handleProceed** geprüft, ob der Nutz
 * Dann wird die API-Abfrage erneut gestellt und die States aller folgenden Schritte werden invalidiert und aus dem sessionStorage entfernt. So werden nur tatsächlich notwendige zusätzliche Abfragen gemacht.
 * Jedoch findet die Entfernung der Daten erst nach einer erfolgreichen Abfrage statt. Gibt der Nutzer eine URL ein, die nicht funktioniert, so kann er die alte URl wieder eingeben und seine Daten in den folgenden Schritten bleiben erhalten!
 
-### **Anpassungen bei nachträglichen Namensänderungen**
+###  5.2. <a name='AnpassungenbeinachtrglichenNamensnderungen'></a>**Anpassungen bei nachträglichen Namensänderungen**
 * Es ist möglich, dass der Nutzer zu einem späteren Zeitpunkt für eine beliebige Datenquelle zur **BasicSettings**-Komponente zurückkehrt. Der Fall, das API-Daten geändert werden wird im vorher beschriebenen Abschnitt abgefangen. Jedoch bringt auch die Namensänderung Probleme mit sich:
-    * Die Datenquelle selbst ist nicht wirklich betroffen, da der Name einfach nur im enstprechenden State bzw. Objekt aufgeführt wird. Problematisch wird es jedoch für Diagramme, bei welchen für alle verwendeten Arrays oder historisierten Daten der Name ihrer Datenquelle vorangestellt wird, damit die Eindeutigkeit der Namen gewahrt bleibt (ein Name ist allgemein nur innerhalb einer Datenquelle eindeutig).
+    * Die Datenquelle selbst ist nicht wirklich betroffen, da der Name einfach nur im entsprechenden State bzw. Objekt aufgeführt wird. Problematisch wird es jedoch für Diagramme, bei welchen für alle verwendeten Arrays oder historisierten Daten der Name ihrer Datenquelle vorangestellt wird, damit die Eindeutigkeit der Namen gewahrt bleibt (ein Name ist allgemein nur innerhalb einer Datenquelle eindeutig).
 * Dieser vorangestellte Name ist ein einfacher String und ändert sich somit nicht automatisch, wenn man den Namen der Datenquelle ändert. Um dieses Problem abzufangen speichert man beim Betreten der BasicSettings den bisherigen apiName als **oldApiName** ab. In der Methode **handleProceed** prüft man dann, ob der neue Wert ungleich dem alten ist (dann wurde er geändert) und der alte Wert kein leerer String ist - die zweite Prüfung fängt den Fall ab, dass der Nutzer erstmalig in BasicSettings ist und spart so Rechenleistung.
     * Wenn die Bedingung erfüllt ist werden alle Diagramme und alle Arrays bzw. historisierte Daten innerhalb der Diagramme darauf untersucht, ob ihre Datenquelle (bei Arrays am Anfang von **listItem.parentKeyName**, bei historisierten Daten am Anfang von **name**) gleich dem alten Namen ist.
     * In diesem Fall liegt ein Wert der aktuellen Datenquelle vor, sodass man den alten Namen an dieser Stelle mit dem neuen Namen ersetzt.
@@ -174,12 +238,12 @@ Zur Vermeidung dieses Verhaltens wird in **handleProceed** geprüft, ob der Nutz
 
 <div style="page-break-after: always;"></div>
 
-## **DataSelection**
+##  6. <a name='DataSelection'></a>**DataSelection**
 * Ausführung zu Entscheidungen bei Optionen in der Listenauswahl
 
 Die Komponente **DataSelection** listet alle Daten auf, die durch die im vorherigen Schritt generierte API-Abfrage geliefert wurden.
 
-### **transformJSON**
+###  6.1. <a name='transformJSON'></a>**transformJSON**
 Kern dieser Komponenten ist die Methode **transformJSON**, welche dazu dient, das JSON-Objekt zu durchlaufen und in ein Array **listItems** mit einem eigenen Objekt-Typ **listItemRepresentation** umzuwandeln, der alle Informationen für die Oberflächengenerierung umfasst. So werden Namen, Datentypen, absolute Namenspfade (mit Parent-Information) und Schachtelungstiefe benötigt.
 ```javascript
 interface ListItemRepresentation {
@@ -207,7 +271,7 @@ Nach längerer Recherche erschien uns die einzige Möglichkeit außer den von un
 * Für den Fall, dass der Wert primitiv ist wird die Datentyp-Information gelesen und in **value** gespeichert.
 * Die Schleife endet, wenn das gesamte Objekt eingelesen wurde. Das generierte Array wird dann zurückgegeben.
 
-### **Generieren der Darstellung**
+###  6.2. <a name='GenerierenderDarstellung'></a>**Generieren der Darstellung**
 Zum Generieren der grafischen Repräsentation wird die Methode **renderListItem** verwendet, welche mit **listItems.map** nach und nach für alle darzustellenden Listenelemente aufgerufen wird. Anhand der Informationen des Objektes unterscheidet sie, ob es sich um ein Array, ein Objekt oder einen primitiven Wert handelt und generiert die Oberfläche entsprechend.
     * Dabei wurde eine Reihe an Detailentscheidungen getroffen, die kurz aufgelistet werden sollen:
         * Arrays, die gleichartige Objekte enthalten können so genutzt werden, dass man die Attribute des Objekts am Index 0 des Arrays wählen kann.
@@ -219,7 +283,7 @@ Zum Generieren der grafischen Repräsentation wird die Methode **renderListItem*
 * Jedes Element hat einen eindeutigen Key, welcher dem "absoluten" Pfad des Wertes entspricht, d.h. *parent1*|*parent2*|...|*element* - dieser dient sowohl der Identifikation in React als auch dem Speichern der ausgewählten Daten.
 * Wenn eine Checkbox gesetzt wird folgt der Aufruf von **checkboxHandler**, welcher prüft, ob in selectedData bereits ein Objekt mit diesem Key enthalten ist - je nachdem ruft es die Methode **addToSelection** zum Hinzufügen oder **removeFromSelection** zum Entfernen auf. Das an diesen Handler übergebene Objekt ist vom Typ **SelectedDataItem** und hat die Attribute *key* und *type* (sowie optional *arrayValueType** für Arrays, die primitive Werte enthalten). Auf diese Weise wird an spätere Schritte die Typinformation übergeben.
 
-### **Umsetzung von Lösch-Abhängigkeiten**
+###  6.3. <a name='UmsetzungvonLsch-Abhngigkeiten'></a>**Umsetzung von Lösch-Abhängigkeiten**
 Der Nutzer hat die Möglichkeit, im Nachhinein jederzeit von späteren Schritten zu **DataSelection** zurückzukehren und durch Anklicken von Checkboxen weitere Daten zu wählen oder Daten abzuwählen. Das Abwählen von Daten kann hier für Probleme sorgen, wenn diese in Formeln, Historisierung oder Diagrammen verwendet werden. Konsequenterweise muss man alle Elemente in diesen drei Kategorien, die das abgewählte Datum nutzen, löschen.
 
 Da es vermutlich zu viel Rechenaufwand beanspruchen würde die Prüfung bei jedem Anklicken einer Checkbox durchzuführen haben wir eine ähnliche Variante genutzt wie auch bei **BasicSettings**: Das Anklicken des "Weiter-Buttons" löst eine Prüfung aus, ob Daten entfernt wurden - wenn ja werden die Abhängigkeiten ermittelt.
@@ -245,7 +309,7 @@ Beim Klicken auf "zurück" wird zudem geprüft, ob der Nutzer Daten abgewählt h
 
 <div style="page-break-after: always;"></div>
 
-## **DataCustomization**
+##  7. <a name='DataCustomization'></a>**DataCustomization**
 Im nächsten Schritt der Erstellung eines Infoproviders werden Datenverarbeitungen mit den von der Datenquelle gelieferten Daten vorgenommen. Es gibt insgesamt drei Verarbeitungsmöglichkeiten:
 * Array-Verarbeitung (Mittelwerte, Maxima, ...)
 * Erstellen eigener Formeln
@@ -257,13 +321,13 @@ Anzumerken ist, dass die Komponente anders als die meisten Wrapper-Komponenten w
 
 <div style="page-break-after: always;"></div>
 
-## **ArrayProcessing**
+##  8. <a name='ArrayProcessing'></a>**ArrayProcessing**
 Der erste Verarbeitungsschritt ist die Verarbeitung von numerischen Arrays zu neuen Datenwerten, dargestellt durch die Komponente **ArrayProcessing**. Das Prinzip sieht dabei so aus, dass der Nutzer ein Array mit einer Operation verknüpft, diese benennt und sie damit als neuen Datenwert abspeichert. Da das Ergebnis aller Operationen eine einzelne Zahl ist können die so entstehenden Werte z.B. auch in Formeln oder als historisierte Daten in Diagrammen genutzt werden.
 
 Dabei werden derzeit vier Operationen unterstützt (neue Operationen müssten als Erweiterung durch das Backend bereitgestellt werden) - Summe, Minimum, Maximum, Mittelwert. Das Array **operations** hält alle diese gültigen Operationen und hat als **name** einen internen Namen, während **displayName** der Anzeigename für die Oberfläche ist. In der Ansicht des Nutzers wird eine Liste aus **RadioButton**s angezeigt, durch die der Nutzer genau eine Operation wählen kann. Die Generierung der Liste übernimmt **renderOperationListItem**. Anzumerken ist, dass kein Label für den RadioButton, sondern eine **Typography** genutzt wird - das war für das Styling notwendig und hat darüber hinaus keine besondere Bedeutung.
 * Mit **selectedOperationIndex** speichern wir die aktuelle Auswahl - dieser ist der Index der gewählten Operation im Array **operations** und standardmäßig -1.
 
-### **Generieren der Liste verfügbarer Arrays**
+###  8.1. <a name='GenerierenderListeverfgbarerArrays'></a>**Generieren der Liste verfügbarer Arrays**
 Parallel zur angesprochenen Liste der Operationen wird eine Liste mit allen verfügbaren Arrays angezeigt, die mit einer Operation kombiniert werden können. Grundsätzlich sind numerische Arrays geeignet - das bedeutet im Detail:
 * Arrays, die primitive Werte des Typ "Zahl" oder "Gleitkommazahl" enthalten.
 * Arrays, die Objekte enthalten, die ein "Zahl"/"Gleitkommazahl"-Attribut haben. Jedes derartige Attribut wird einzeln als verfügbares Array angezeigt, bei der Operation wird dann über das Array iteriert und jedem Objekt der Wert des jeweiligen Attributs entnommen.
@@ -276,7 +340,7 @@ Die Bestimmung dieser Liste verfügbarer Arrays wird durch die Methode **getProc
 
 Der Aufruf dieser Methode erfolgt beim Mounten/Anzeigen der Komponente durch eine **useEffect**-Hook. Die **listItems** werden dabei als **props** von der umschließenden Komponente übergeben.
 
-### **Hinzufügen neuer Verarbeitungen**
+###  8.2. <a name='HinzufgenneuerVerarbeitungen'></a>**Hinzufügen neuer Verarbeitungen**
 Sobald ein Name, ein Array und eine Operation gewählt wurden kann mit dem Speichern-Button die gewählte Verarbeitung gespeichert werden. Dazu wird die Methode **addProcessing** aufgerufen, welche zunächst durch einen Aufruf von **checkNameDuplicate** prüft, ob der gewählte Name bereits vergeben ist.
 * Die Prüfung entspricht dem, was in anderen Komponenten wie **CreateCustomData** dokumentiert ist und wird an dieser Stelle daher nicht ausführlicher behandelt. Elementar ist, dass die neue Verarbeitung keinen Namen haben darf, den eine andere Array-Verarbeitung, eine String-Verarbeitung ein API-Datum oder eine Formel benutzt.
 
@@ -308,7 +372,7 @@ Das Prinzip ist hierbei gleich wie bei allen anderen Umsetzungen von Löschabhä
 
 <div style="page-break-after: always;"></div>
 
-## **CreateCustomData**
+##  9. <a name='CreateCustomData'></a>**CreateCustomData**
 
 Die Komponente **CreateCustomData** ist für die Formelerstellung zuständig. Es soll ermöglicht werden, dass ein Nutzer seine ausgewählten Daten benutzen kann, um neue Werte für den Info-Provider zu erstellen. Dazu wird in der Komponente eine weitreichende GUI, ähnlich zu einem Taschenrechner bereitgestellt. So können Datenwerte und oder Zahlen miteinander verrechnet werden. Die so entstandenen neuen Werte lassen sich unter einem eigenen Namen in den React-State **name** abspeichern. Diese zusätzlichen Variablen können auch sofort weiterverarbeitet werden.
 
@@ -326,7 +390,7 @@ Die Liste einfügbarer Daten wird dabei in der Komponente **CustomDataGUI** gene
 
 Wie bei einem Taschenrechner mit der zusätzlichen Option, die ausgewählten Daten einzugeben, kann der Nutzer nun frei Eingaben tätigen und sich so seine Formel zusammenstellen.
 
-### **Überprüfung der Syntax**
+###  9.1. <a name='berprfungderSyntax'></a>**Überprüfung der Syntax**
 Durch die oben genannte Freiheit könnte man mit Leichtigkeit Berechnungen eingeben, die syntaktisch keinen Sinn ergeben. Also muss sichergestellt werden, dass ein Nutzer richtige Eingaben tätigt. Das geschieht in zwei Schritten.
 
 **Eingrenzung der Eingaben:**
@@ -359,7 +423,7 @@ Uns ist bewusst, dass gewisse Vereinfachungen in Rechnungen, die normalerweise s
 Zusätzlich wird eine Formel mit dem Betätigen der "Speichern"-Schaltfläche an das Backend übermittelt, um dort sicherheitshalber ein zweites Mal auf syntaktische Korrektheit überprüft zu werden. Gesendet wird ein JSON mit den Formel-String als Inhalt. Im Backend wird die Biblothek **ast2json** verwendet. Diese nimmt den String entgegen und versuch daraus einen abstrakten Syntax-Baum zu erstellen. Vom Backend empfangen wir dann ebenfalls ein JSON mit dem Inhalt true oder false. True bedeutet, der Syntax-Baum konnte erstellt werden. Das ist gleichbedeutend damit, dass die Formel syntaktisch **Sinn** **ergibt**. Das schließt natürlich Eingabefehler vom Nutzer, wie das Nichtbeachten von "Punkt vor Strich"-Rechnung, nicht aus. False bedeutet, dass es einen Fehler in der Syntax gibt und der Nutzer wird gebeten seine Formel zu berichtigen. Zuständig dafür ist die **useCallFetch**-Methode **sendTestData()**.
 Es sei hier noch darauf hingewiesen, dass das Backend die übermittelte Formel keinesfalls schon abspeichert. Das komplette Absenden und Abspeichern einer Formel mit Input-String und Name wird im letzten Schritt der Infoprovider-Erstellung **SettingsOverview** behandelt.
 
-### **Interne Darstellung**
+###  9.2. <a name='InterneDarstellung'></a>**Interne Darstellung**
 Intern wird eine Formel als ein Objekt dargestellt, welches **FormelObj** heißt. Dieses Objekt beinhaltet lediglich zwei Strings, einen für den Namen der Formel und einen für die Formel bzw. die Rechnung selbst. Die übergeordnete Komponente **CreateInfoProvider** besitzt ein Array aus diesen **FormelObj**-Objekten: **customData**. So können die erstellten Formeln abgespeichert werden und bis zum Absenden an das Backend gespeichert werden.
 
 Die Formel selbst besteht aus einer Aneinanderreihung von Objekten namens **StrArg**. Diese Aneinanderreihung wird als ein Array umgesetzt, welches **DataAsObj** heißt. Jedes mal, wenn ein entsprechender Handler von einer der oben beschriebenen Schaltflächen aufgerufen wird, wird ein neues **StrArg**-Objekt mit dem entsprechenden Zeichen erstellt und in **DataAsObj** eingefügt.
@@ -373,7 +437,7 @@ setInput(calculationToString(dataAsObj));
 Durch die Flags kann identifiziert werden, ob es sich um *Rechenoperationen, Ziffern, Klammer auf, Klammer zu* oder *Daten* handelt. Das Einsetzten von Objekten ermöglicht ebenfalls, dass Eingaben wie eine Zahl oder ein Datum, welches selbst aus einen Name bzw. String besteht, als gleich behandelt werden.
 Das und die Flags sind ausschlaggebend dafür, dass die letzte Eingabe mit "zurück" zurückgenommen werden kann.
 
-### **"Zurück" und "Löschen"**
+###  9.3. <a name='ZurckundLschen'></a>**"Zurück" und "Löschen"**
 
 Für das optimierte Bedienen der GUI soll es dem Nutzer ermöglicht werden, seine Eingabe komplett zu löschen oder seine letzte Aktion zurückzurufen. Dazu gibt es zwei Schaltflächen in der Oberfläche: die "zurück"- und "löschen"-Taste.
 
@@ -407,7 +471,7 @@ if (dataAsObj.length <= 1) {
 }
 ```
 
-### **Das Löschen einer Formel**
+###  9.4. <a name='DasLscheneinerFormel'></a>**Das Löschen einer Formel**
 Der Nutzer hat die Möglichkeit, eine Formel zu löschen. In der erstellten Liste der Datenwerte wird für Formeln auch eine Schaltfläche zum Löschen generiert. Betätigt man diese, wird die Formel aus **customData** entfernt und steht somit nicht mehr zur Verfügung. Die Komponente Wird neu generiert und die gelöschte Formel erscheint nicht mehr in der Auswahlliste.
 
 Bei dieser Löschung gibt es jedoch einige komplexe Abhängigkeiten, die berücksichtigt werden müssen: Formeln können in anderen Formeln verwendet werden, in Diagrammen verwendet werden und auch historisiert werden. Löscht man eine Formel, so muss man auch alle von ihr abhängigen Elemente löschen.
@@ -421,7 +485,7 @@ Diese entfernt zunächst einmal alle abhängigen Formeln aus **customData**, ent
 
 **Anmerkung:** Dieser Mechanismus wird auch an allen anderen Stellen, an denen Formeln als Abhängigkeiten gelöscht werden (**DataSelection**, **ArrayProcessings**) werden eingesetzt.
 
-### **Abschließende Überprüfungen**
+###  9.5. <a name='Abschlieendeberprfungen'></a>**Abschließende Überprüfungen**
 
 Am Ende sei noch auf einige kleine Überprüfungen eingegangen.
 * Beim Erstellen einer Formel wird überprüft, ob der ausgewählte Name bereits vergeben wurde. Dazu wird **CustomData** nach den aktuellen Input-String durchsucht und der Nutzer wird benachrichtigt, wenn er einen bereits vergebenen Namen für die neue Formel wählt.
@@ -434,12 +498,12 @@ Am Ende sei noch auf einige kleine Überprüfungen eingegangen.
 
 <div style="page-break-after: always;"></div>
 
-## **StringProcessing**
+##  10. <a name='StringProcessing'></a>**StringProcessing**
 Der letzte Schritt der Datenverarbeitungen ist die Ersetzung von Zeichen in Strings, welche in der Komponente **StringProcessing** ermöglicht wird. Die Idee ist dabei grundlegend sehr einfach: Der Nutzer wählt einen String, eine Zeichenkette, die in diesem ersetzt werden soll, eine Zeichenkette zum Einsetzen und einen Namen - aus dieser Kombination entsteht dann ein neues Datum. Auch dieses kann historisiert werden. Da die Ergebnisse aber Strings und keine Zahlwerte sind ist es entsprechend nicht möglich, wie bei **ArrayProcessing** die Ergebnisse in Formeln oder Diagrammen zu nutzen, sodass dieser Schritt auch erst nach der Formel-Erstellung kommt.
 
 Die Komponente hat strukturell sehr starke Ähnlichkeiten zu **ArrayProcessing**: Es gibt ein Textfeld für den Namen, den der State **name** speichert und eine Liste an allen verfügbaren Strings. Diese Liste an Strings ist erneut eine Liste von **RadioButton**s, da man immer nur einen String pro Operation wählen kann.
 
-### **Bestimmung geeigneter Strings**
+###  10.1. <a name='BestimmunggeeigneterStrings'></a>**Bestimmung geeigneter Strings**
 Die Liste verfügbarer Strings, **availableStrings** wird beim Mounten/Anzeigen der Komponente durch eine **useEffect**-Hook initialisiert, indem die Methode **getAvailableStrings** aufgerufen wird. Diese nimmt (wie **getAvailableArrays**) listItems entgegen und liefert ein Array aller geeigneter Strings, die sich in dieser Liste befinden. Auch hier gibt es wieder verschiedene Möglichkeiten, zwischen denen
 differenziert werden muss:
 * Wenn es sich um ein Array handelt, welches Strings enthält, so ist der Index ein gültiger String.
@@ -449,7 +513,7 @@ differenziert werden muss:
 
 Basierend auf der so entstandenen Liste **availableStrings** wird mit **renderStringListItem** für jeden String ein Eintrag in einer Liste von **RadioButton**s erzeugt. Der vom Nutzer ausgewählte String wird in der State-Variable **selectedStringIndex** gespeichert - diese hält den Index der aktuellen Auswahl in **availableStrings**. Der Default-Wert ist -1, sodass standardmäßig keine Auswahl vorliegt.
 
-### **Erstellen neuer Verarbeitungen**
+###  10.2. <a name='ErstellenneuerVerarbeitungen'></a>**Erstellen neuer Verarbeitungen**
 Die Eingabe der zu ersetzenden Zeichenfolge und der einzusetzenden Zeichenfolge geschieht über zwei **TextField**-Komponenten, deren Werte mit **replaceString** und **withString** im State gespeichert werden. Der Nutzer kann den Button "Speichern" nur dann nutzen, wenn ein Name, ein String und ein zu ersetzender String ausgewählt wurden. Wir haben uns entschieden, dass der String zum Einsetzen auch ein leerer String sein darf - damit wird es möglich, den **replaceString** einfach zu entfernen. Wie aus **ArrayProcessing** bekannt muss hier geprüft werden, ob der Name bereits durch eine Array-Verarbeitung, eine andere String-Ersetzung, ein API-Datum oder eine Formel genutzt wird - die Prüfung erledigt **checkNameDuplicate**.
 
 Die erstellten Ersetzungen werden durch den Datentyp **StringReplacementData** dargestellt und in **stringReplacementList** gespeichert, welche sich im State von **CreateInfoProvider** befindet und per **props** übergeben wird.
@@ -466,7 +530,7 @@ Löschabhängigkeiten gibt es abgesehen von der Historisierung nicht, da Strings
 
 <div style="page-break-after: always;"></div>
 
-## **HistorySelection**
+##  11. <a name='HistorySelection'></a>**HistorySelection**
 In dieser Komponente wird dem Nutzer die Möglichkeit zur Verfügung gestellt, Daten auszuwählen, welche er historisieren möchte.
 
 Dabei besitzt diese Komponente auch einen eigenen Step, da sich die Komponente in zwei Bereiche / Unterkomponenten aufteilt:
@@ -514,14 +578,14 @@ Die Methode `addToDataSources` überprüft dabei auch, ob die einzufügende Date
 
 Insgesamt wird dieser Mechanismus benötigt, damit ein Infoprovider aus mehr als einer einzelnen Datenquelle (API) bestehen kann.
 
-### **HistoryDataSelection**
+###  11.1. <a name='HistoryDataSelection'></a>**HistoryDataSelection**
 Mittels der `checkProceedMethod`-Methode wird geprüft, ob Daten für die Historisierung ausgewählt wurden. Wenn keine Daten ausgewählt wurden, so kann die Zeitauswahl der Historisierung übersprungen werden. Mit den Methoden `addToHistorySelection` und `removeFromHistorySelection` werden zu historisierende Daten in den entsprechenden State der Oberkomponente aufgenommen oder von diesem entfernt. Die beiden Methoden werden durch `checkboxHandler` aufgerufen. Diese Methode führt dabei die entsprechend benötigte Methode aus. Dabei wird zunächst geprüft, ob das übergebene Objekt bereits in `historizedData` enthalten ist oder nicht. Anhand dieser Auswertung kann dann die benötigte Methode bestimmt werden.
 
 Die Methode `renderListItem` wird dabei durch das Rendern der Komponente aufgerufen. Dabei wird die `historizedData.map` verwendet, um für jedes Element aus dem Array ein passendes Listenelement zu generieren.
 
 Das Zurückgehen mit "zurück" hat wie auch in **DataSelection** das Problem, dass man so Diagramme invalidieren könnte, die dann gelöscht werden müssen. Wie auch im vorherigen Fall haben wir uns entschieden, die Löschabhängigkeiten nur beim Weitergehen umzusetzen und beim Zurückgehen die Änderungen zu verwerfen. Wir lassen hierzu wieder einen entsprechenden Dialog anzeigen, den der Nutzer bestätigen muss.
 
-### **HistoryScheduleSelection**
+###  11.2. <a name='HistoryScheduleSelection'></a>**HistoryScheduleSelection**
 Der State `currentTimeSelection` wird benötigt, um die aktuelle Uhrzeit, welche vom Nutzer durch einen Picker eingestellt wird, zu speichern. 
 
 Mit der Methode `setScheduleTime` kann `currentTimeSelection` dann durch einen String ersetzt werden, welcher das korrekte Format einer Uhrzeit besitzt, also "hh:mm".
@@ -544,43 +608,43 @@ Die Objekte, die ein Nutzer dabei sieht, ändern sich dabei je nach Auswahl. Daf
 </Collapse>
 ```
 
-#### **WeekdaySelector**
+####  11.2.1. <a name='WeekdaySelector'></a>**WeekdaySelector**
 Im `WeekdaySelector` wird die Auswahl von Wochentagen für die Historisierung ermöglicht. Dabei gibt es ein Enum `Weekday`, welches die Werte für die einzelnen Wochentage enthält. Mit der Methode `getDayIndex` kann aus solch einem Wochentag der Index gewonnen werden, d.h. der Wochentag als Zahl dargestellt werden. Die 0 beschreibt dabei den Montag, die 1 den Dienstag, usw.
 
 Das Rendering der Komponente greift auf die Methode `renderWeekday` zu. Diese erzeugt dabei für jeden Wochentag einen Button und färbt diesen ein. Die Einfärbung ist dabei abhängig davon, ob der Wochentag in die Historisierung aufgenommen wurde oder nicht.
 
 <div style="page-break-after: always;"></div>
 
-## **SettingsOverview**
+##  12. <a name='SettingsOverview'></a>**SettingsOverview**
 Mit der Methode `renderListItem` kann ein einzelnes Listenelement gerendert werden. Dabei ist ein Listenelement ein Element aus den ausgewählten API-Daten (`selectedData`), aus den eigens angelegten Daten (`customData`) oder ein Element aus den zu historisierenden Daten. Die Komponente wird mit Hilfe dieser Methode so dargestellt, dass nebeneinander die Daten (ausgewählte API-Daten und eigene Daten) und die zu historisierenden Daten angezeigt werden. Sollte der Bildschirm allerdings zu klein sein, so werden die Listen untereinander gerendert. Unter den zu historisierenden Daten wird noch eine Tabelle gerendert, welche Informationen zu den gewählten Schedule-Zeitpunkten beinhaltet.
 
 Weiterhin gibt es ein Dropdown, in welchem man die anzuzeigende Datenquelle wählen kann. Die oben beschriebenen Informationen werden basierend auf der gewählten Datenquelle gerendert. Bei Klick auf "zurück" werden die States von `CreateInfoprovider` dabei auf die Werte der aktuell ausgewählten Datenquelle gesetzt. Gleichzeitig wird die Datenquelle aus der Liste von Quellen entfernt und auch die Keys werden wieder entfernt, sodass keine doppelten (redundanten) Informationen entstehen können.
 
 Hierbei kann auch eine Datenquelle gelöscht werden. Dies gilt allerdings nicht für die zuletzt hinzugefügte, 
 
-### **ScheduleTypeTable**
+###  12.1. <a name='ScheduleTypeTable'></a>**ScheduleTypeTable**
 Diese Komponente dient der Darstellung der Informationen zu den vom Nutzer gewählten Schedule-Zeitpunkten als Tabelle. Mit der Methode `createTableRow` kann eine Tabellenzeile mit entsprechenden Werten generiert werden. Dabei wird immer ein Name (bzw. ein Attribut) und ein Value für dieses Attribut erwartet. Zurückgegeben wird dann ein Objekt aus beiden Werten. In der Methode `generateTableRows` kann diese Methode dann verwendet werden, um die einzelnen Tabellenzeilen in ein Array zu verpacken, welches alle Tabellenzeilen beinhaltet. Dabei werden die einzelnen Typen der Historisierungszeiten hier unterschieden und es werden für jeden Typ nur die notwendigen Informationen generiert.
 
 Mit den Methoden `getIntervalString`, `getTypeString` und `getWeekdaySelectionString` können dann die einzelnen Werte für den Nutzer lesbar umgewandelt werden, da das Schedule-Objekt nur eine interne Repräsentation der Daten beinhaltet. Die Methode `getWeekdayString` ist eine Hilfsmethode, welche für eine Zahl den entsprechenden Wochentag zurückgibt. Dabei steht die 0 für Montag und die 6 für Sonntag, alle anderen Werte liegen also dazwischen.
 
 Das Rendering der Komponente generiert dann anhand des Arrays, welches durch `generateTableRows` zurückgegeben wird, die Tabelle mit ihren entsprechenden Zeilen.
 
-### **Löschen von Datenquellen**	
+###  12.2. <a name='LschenvonDatenquellen'></a>**Löschen von Datenquellen**	
 Sofern mehr als eine Datenquelle existiert ist es möglich, Datenquellen per Button zu löschen. Dabei wird die Methode **deleteDataSourceHandler** aufgerufen, welche für die aktuell ausgewählte Datenquelle (welche gelöscht werden soll) alle Diagramme durchläuft und prüft, ob eines dieser Arrays oder historisierte Daten der Datenquelle nutzt. Alle Diagramme, auf die dies zutrifft werden in **localDiagramsToRemove** mit ihrem Namen gespeichert.	
 Die Ergebnisse werden mit **diagramsToRemove.current = localDiagramsToRemove** in eine **useRef**-Variable übertragen und dann ein mit **deleteDialogOpen** gesteuerter Dialog geöffnet, in dem der Nutzer das Löschen bestätigen muss. Sofern **diagramsToRemove.current** Namen enthält zeigt dieser Dialog dann alle Diagramme an, die gelöscht werden müssten. Der Nutzer muss hier die Löschung der Datenquelle bestätigen.	
 * **deleteSelectedDataSource** übernimmt dann sowohl das Entfernen der Datenquelle aus **dataSources**, das Entfernen der Authentifizierungsdaten aus **dataSourcesKeys**, das Setzen der ausgewählten Datenquelle auf eine andere als auch das Löschen der Diagramme, die von der Datenquelle abhängen.
 
 <div style="page-break-after: always;"></div>
 
-## **DiagramCreation**
+##  13. <a name='DiagramCreation'></a>**DiagramCreation**
 Die Komponente **DiagramCreation** stellt die umschließende Wrapper-Komponente für die Diagrammerstellung dar, welche der letzte Schritt in der Erstellung eines Infoprovider ist.
 
-### **Disclaimer**
+###  13.1. <a name='Disclaimer'></a>**Disclaimer**
 Ursprünglich war vorgesehen, dass als Labels für historisierte Daten in Diagrammen das Datum der Historisierung des jeweils angezeigten Wertes genutzt werden könnte und im Frontend auch ein entsprechender Support dafür realisiert. Weiterhin sollte es möglich sein, dass man für jedes Array oder historisierte Datum in einem Diagramm eine eigene Beschriftung in Form von Labels erstellen könnte.
 Hinsichtlich des ersten Features stellte sich im späteren Projektverlauf heraus, dass die Generierung eines Datums zu einer Historisierung weniger simpel zu implementieren ist als anfänglich gedacht, sodass der Backend-Support nicht mehr erstellt werden konnte. Hinsichtlich der Beschriftungen sind wir beim Testen auf die Limitation gestoßen, dass die eingesetzte Backend-Bibliothek nur ein Array mit Beschriftungen zulässt, sodass auch dieses Features gestrichen werden musste.
 Die diesbezüglichen funktionierenden Frontend-Implementierungen können entsprechend in älteren Versionen des Projekts im Repository eingesehen werden.
 
-### **State-Inhalte**
+###  13.2. <a name='State-Inhalte'></a>**State-Inhalte**
 Als Wrapper-Komponente werden im State der Komponente alle Informationen gehalten, die für das Ergebnis der Diagrammerstellung relevant sind:
 * **diagramStep** gibt den Schritt an, in dem sich der Nutzer gerade befindet.
 * **diagramSource** unterscheidet, ob das Diagramm auf Arrays oder historisierten Daten basiert.
@@ -592,7 +656,7 @@ Als Wrapper-Komponente werden im State der Komponente alle Informationen gehalte
 Anzumerken ist, dass wie auch in **CreateInfoProvider** die Informationen, bei welchen es notwendig ist, auch im sessionStorage gespeichert werden. Sie können aus diesem beim Neuladen der Seite wieder entnommen werden.
 * So können keine Daten verloren gehen, außer der Tab wird geschlossen.
 
-### **Datentypen zum Speichern von Konfigurationen**
+###  13.3. <a name='DatentypenzumSpeichernvonKonfigurationen'></a>**Datentypen zum Speichern von Konfigurationen**
 In dieser Wrapper-Komponente werden zusätzlich drei Datentypen definiert, die in der weiteren Diagrammerstellung benötigt werden. Die ersten beiden davon sind **ArrayDiagramProperties** und **HistorizedDiagramProperties**. Sie stellen die Repräsentation der Konfiguration eines einzelnen Arrays oder historisierten Datums in einem Diagramm dar. Dazu muss man verstehen, dass ein Diagramm aus beliebig vielen Arrays oder aus beliebig vielen historisierten Daten besteht - arrayObjects und historizedObjects im State sind daher Arrays dieser Typen.
 ```javascript
 export type ArrayDiagramProperties = {
@@ -645,7 +709,7 @@ export type Diagram = {
     * Das Attribut hat daher nur Relevanz, wenn **sourceType** den Wert **Array** hat, wird aber der Einfachheit halber immer auf einen default-Wert gesetzt.
 
 
-### **Bestimmung von mit Diagrammen kompatibler Daten**
+###  13.4. <a name='BestimmungvonmitDiagrammenkompatiblerDaten'></a>**Bestimmung von mit Diagrammen kompatibler Daten**
 Logischerweise kann man nicht alle Arten von Daten (Arrays, Strings, Zahlen, ...) eines Infoproviders sinnvoll in einem Diagramm verwenden, weshalb wir gewisse Regeln aufgestellt haben:
 * Es können jegliche historisierte Daten in Diagrammen abgebildet werden, sofern diese numerisch sind. Darunter fallen auch historisierte Formeln und String-Verarbeitungen. Weiterhin kann der erste Index von Arrays genutzt werden, die nur Zahlen enthalten.
     * Das Diagramm enthält dann Werte verschiedener historischer Zeitpunkte. Man konfiguriert dabei immer mit der Anzahl an Abständen vom aktuellen Datum in Intervallen.
@@ -669,7 +733,7 @@ Wie bereits bei den Erläuterungen zu States beschrieben speichern die State-Var
 * Anzumerken ist weiterhin, dass **getCompatibleHistorized** und **getCompatibleArrays** den Namen der Arrays bzw. historisierten Daten immer den Namen ihrer jeweiligen Datenquelle im Format **Datenquelle|** voranstellen. Das ist sehr wichtig, da die Namen nur innerhalb der Datenquellen eindeutig sind und so innerhalb von Diagrammen immer bekannt ist, auf welche Datenquelle man zugreifen muss, um den jeweiligen Wert erhalten zu können.
 
 
-### **Erstellen von Diagramm-Previews**
+###  13.5. <a name='ErstellenvonDiagramm-Previews'></a>**Erstellen von Diagramm-Previews**
 In beiden Diagramm-Erstellungen gibt es die Möglichkeit, per Button ein Preview des aktuell erstellten Diagramms generieren zu lassen. Dazu wird ein JSON-Objekt mit allen Informationen aufgebaut und an das Backend gesendet - dieses generiert dann das Diagramm (mit Beispieldaten) und sendet einen Pfad zu einem Bild zurück, an dem die Datei für die Vorschau liegt.
 
 Üblicherweise haben wir für solche Kommunikation die Custom-Hook **useCallFetch** benutzt, welche noch aus dem Vorgängerprojekt existiert und Anfragen an das Backend stellt. Allerdings konnten wir in der Nutzung zusammen mit *useEffect* (dazu mehr bei DiagramOverview) und dem Aufruf von Methoden innerhalb der Erstellung des JSON-Objekts im Body Probleme feststellen.
@@ -685,7 +749,7 @@ Diese Probleme ließen sich für uns am besten mit einer eigenen Methode zum Fet
     * Durch eine *useEffect*-Hook, in der eine Methode zurückgegeben wird, definiert man eine Cleanup-Methode, die beim Unmounten der Komponente isMounted auf *false* setzt, sodass die Antworten der Request nicht mehr beantwortet werden.
 
 
-### **Anzeige der einzelnen Schritte**
+###  13.6. <a name='AnzeigedereinzelnenSchritte'></a>**Anzeige der einzelnen Schritte**
 Der Mechanismus, welcher verwendet wird, um sequenziell durch die einzelnen Schritte der Diagrammerstellung zu gehen, ist der gleiche wie auch bei **CreateInfoProvider**: Es gibt im State eine Variable **diagramStep**, die als Zahlwert den aktuellen Schritt hält, an dem sich der Nutzer befindet.
 
 In der Methode **selectContent** wird dann ein Zahlenwert entgegengenommen und per switch-case der gerenderte Inhalt für den aktuellen Schritt zurückgegeben.
@@ -693,7 +757,7 @@ In der Methode **selectContent** wird dann ein Zahlenwert entgegengenommen und p
 * Alle diese Schritte werden als Komponenten geladen, mit Ausnahme von Schritt 4. Grund für diese Entscheidung war, dass er bis auf eine Texteingabe und zwei Buttons nichts weiteres umfasst und eine Auskopplung in eine eigene Komponente deshalb nicht wirklich notwendig ist.
 * Bemerkenswert ist weiterhin, dass an die Komponente **DiagramTypeSelect** in Schritt 1 zwei Continue-Methoden übergeben werden. Die Komponente soll anhand der vom Nutzer getroffenen Auswahl entscheiden, ob man zur Erstellung von Diagrammen mit Arrays oder mit historisierten Daten weitergehen muss. Entsprechend wird sie **continueArray()** oder **continueHistorized()** aufrufen.
 
-### **weitere Hilfsmethoden**
+###  13.7. <a name='weitereHilfsmethoden'></a>**weitere Hilfsmethoden**
 Die Komponente bietet einige weitere Hilfsmethoden, welche zum Großteil an die in **selectContent** eingebundenen Komponenten weitergegeben werden:
 * **isNameDuplicate** soll prüfen, ob der derzeit gewählte Name (gespeichert in der State-Variable **diagramName**) bereits von einem anderen Diagramm verwendet wird, um Duplikate zu vermeiden. Dazu wird das per Properties übergebene Array **props.diagrams** durchlaufen und dort mit den Namen bereits existierender Diagramme verglichen.
 * **changeObjectInArrayObjects** dient dazu, ein einzelnes Objekt in der State-Variable **arrayObjects** auszutauschen und wird in der Diagrammerstellung für Arrays genutzt, wenn eine Einstellung geändert wird.
@@ -711,7 +775,7 @@ Die Komponente bietet einige weitere Hilfsmethoden, welche zum Großteil an die 
 <div style="page-break-after: always;"></div>
 
 
-## **DiagramOverview**
+##  14. <a name='DiagramOverview'></a>**DiagramOverview**
 Die erste für den Nutzer sichtbare Komponente zur Diagrammerstellung stellt **DiagramOverview** dar, in welcher eine Übersicht aller bisher erstellten Diagramme angezeigt wird. Außerdem gibt es die Möglichkeiten zur Generierung einer Vorschau und dem Löschen des Diagramms. Weiterhin gelangt man von hier mit einem Button zur Erstellung eines neuen Diagramms oder zurück zur Gesamtübersicht.
 
 Die Darstellung alle Diagramme findet wie schon in vielen anderen Komponenten per **List**-Komponente statt, in welcher für jedes Diagramm im Array **diagrams** (enthält alle Diagramme und wird per props übergeben) die Methode **renderDiagramListItem** aufgerufen wird.
@@ -732,7 +796,7 @@ Das Löschen wird so umgesetzt, das beim Klicken des Icons mit **setRemoveDialog
 
 <div style="page-break-after: always;"></div>
 
-## **DiagramTypeSelect**
+##  15. <a name='DiagramTypeSelect'></a>**DiagramTypeSelect**
 Der erste Schritt beim Erstellen eines neuen Diagramms ist die Auswahl, ob das Diagramm auf historisierten Daten oder auf Arrays basieren soll (beides kann nicht vermischt werden). Diese Auswahl wird in der Komponente **DiagramTypeSelect** getroffen. Darüber hinaus wird in ihr aber auch gewählt, welche Arrays oder welche historisierten Daten verwendet werden sollen.
 
 Die Auswahl zwischen Arrays und historisierten Daten findet über zwei **RadioButtons** statt, die in einer *RadioGroup*-Komponente (von Material-UI) zusammengefasst sind. Der aktuell gewählte Wert wird in **selectedType** als einfacher String im State gespeichert.
@@ -769,7 +833,7 @@ Die beiden Setter-Methoden werden dabei als props von **DiagramCreation** weiter
 
 <div style="page-break-after: always;"></div>
 
-## **ArrayDiagramCreator**
+##  16. <a name='ArrayDiagramCreator'></a>**ArrayDiagramCreator**
 Die erste Variante der Diagramm-Erstellung ist die von Diagrammen mit Arrays und wird in der Komponente **ArrayDiagramCreator** umgesetzt. Diese umfasst zunächst einmal die Auswahl grundlegender Diagramm-Einstellungen (Typ und Anzahl der Werte), welche in die Komponente **BasicDiagramSettings** ausgelagert werden, da man sie auch bei historisierten Daten benötigt.
 * Folglich stellt die Einbindung dieser Komponente den ersten Teil der Komponente dar.
 
@@ -812,7 +876,7 @@ Zuletzt zu erwähnen ist der Button zum Generieren einer Vorschau. Er nutzt die 
 
 <div style="page-break-after: always;"></div>
 
-## **HistorizedDiagramCreator**
+##  17. <a name='HistorizedDiagramCreator'></a>**HistorizedDiagramCreator**
 Die Komponente **HistorizedDiagramCreator** dient der Erstellung von Diagrammen, die auf historisierten Daten basieren. Sie ist grundsätzlich sehr ähnlich zu der Erstellung von Diagrammen mit Arrays, weshalb hier nur wichtige Unterschiede erklärt werden sollen. Der Hauptgrund dafür, dass zwei statt einer Komponente genutzt wurden ist, dass statt auf **arrayObjects** auf **historizedObjects** zugegriffen wird und an einigen Stellen die Auswahl etwas unterschiedlich ist - daher wurde wegen Übersichtlichkeit und Wartbarkeit eine Trennung in zwei Komponenten vorgenommen.
 
 Exakt gleich zu **ArrayDiagramCreator** sind die über **BasicDiagramSettings** geladenen Grundeinstellungen, die Farbauswahl für jedes historisierten Datum und die Möglichkeit eines Vorschau-Buttons. Ebenso ist die Proceed-Logik gleich, wurde hier aber natürlich auf die Anforderungen hinsichtlich historisierter Daten angepasst.
@@ -831,7 +895,7 @@ Bei der Auswahl der Beschriftungen wird standardmäßig in der Methode **renderS
 <div style="page-break-after: always;"></div>
 
 
-## **BasicDiagramSettings**
+##  18. <a name='BasicDiagramSettings'></a>**BasicDiagramSettings**
 Da sowohl die Komponenten **ArrayDiagramCreator** als auch **HistorizedDiagramCreator** einen gleichen Kopf bestehend aus Diagrammtyp-Auswahl und Auswahl der Anzahl der Werte benötigen, wurde dieser in eine eigene Komponente **BasicDiagramSettings** ausgelagert, die dann in den beiden anderen Komponenten eingebunden wird.
 * Auf diese Weise ist der Code weniger redundant und auch besser wartbar.
 
@@ -853,7 +917,7 @@ Weiterhin gibt es eine Warnung, die neben der Eingabe angezeigt werden kann: Der
 
 <div style="page-break-after: always;"></div>
 
-## **CustomLabels**
+##  19. <a name='CustomLabels'></a>**CustomLabels**
 Wie auch der Kopf mit den grundsätzlichen Diagramm-Einstellungen werden die Textfelder für eigene Labels sowohl in **ArrayDiagramCreator** als auch **HistorizedDiagramCreator** benötigt und deshalb entsprechend in eine eigene Komponente **CustomLabels** ausgelagert.
 
 Deren Kern stellt die Methode **renderLabelInput** dar, welche eine Eingabe für eine einzelne Beschriftung rendert.
@@ -866,7 +930,7 @@ In der Methode wird eine Reihe an **ListItem**s generiert, welche jeweils ein **
 
 <div style="page-break-after: always;"></div>
 
-## **Senden eines Infoproviders an das Backend**
+##  20. <a name='SendeneinesInfoprovidersandasBackend'></a>**Senden eines Infoproviders an das Backend**
 Den Abschluss der gesamten Infoprovider-Erstellung stellt das Senden des fertig erstellten Infoproviders an das Backend dar. Dazu müssen die im Prozess gesammelten Informationen derartig transformiert werden, dass sie das von uns gewünschte Datenformat haben, das in diesem Abschnitt erläutert werden soll.
 
 Das allgemeine Ziel beim Entwurf des Datenformats war, dass bereits möglichst große Anteile der im Backend benötigten Struktur im Frontend passend generiert werden, gleichzeitig aber auch alle Informationen so gespeichert sind, dass sie zum Bearbeiten des Infoproviders leicht zugänglich sind. Wenn ein konkreter Infoprovider per ID angefragt wird (das ist bei der Bearbeitung der Fall) liefert das Backend genau das JSON-Objekt zurück, welches beim Erstellen durch das Frontend geliefert wurde - daher muss diese Datenstruktur so ausgelegt sein, dass die Informationen zur Bearbeitung zugänglich sind.
@@ -874,7 +938,7 @@ Das allgemeine Ziel beim Entwurf des Datenformats war, dass bereits möglichst g
 
 Abgesendet wird das fertige Datenformat durch den Button "Abschließen" in **SettingsOverview** - dann wird die in **CreateInfoProvider** liegende Methode **postInfoProvider** aufgerufen.
 
-### **Überblick über das Datenformat**
+###  20.1. <a name='berblickberdasDatenformat'></a>**Überblick über das Datenformat**
 Das folgende Datenformat ist unsere allgemeine Definition des Datenformats für einen Infoprovider, über das wir mit dem Backend kommunizieren - im folgenden soll dann auf die einzelnen Abschnitte im Detail eingegangen werden.
 ```javascript
 {
@@ -986,7 +1050,7 @@ Wie man sehen kann, umfasst das Format auf höchster Ebene fünf Informationen:
     * Dieses wird gespeichert, weil die Darstellung in **diagrams** deutlich komplexer und ungeeignet ist, um bei der Bearbeitung verwendet zu werden. Daher speichert man das originale Objekt, welches man bei der Bearbeitung wiederverwenden kann.
 * **arrays_used_in_diagrams**, eine Auflistung aller in Diagrammen genutzten Arrays - des Backend benötigt diese.
 
-## **Datenquellen-Format**
+##  21. <a name='Datenquellen-Format'></a>**Datenquellen-Format**
 Jede Datenquelle besitzt einen Namen, der in **datasource_name** gespeichert wird. Weiterhin hat die Datenquelle ein Objekt **api**, welches die grundlegenden Informationen zur angefragten Datenquelle umfasst:
 * Das Unterobjekt **api_info** listet die Informationen zur Anfrage: **type** ist immer gleich gesetzt und wird für das Backend benötigt, **api_key_name** enthält die Authentifizierungsdaten. Dabei unterscheidet sich das Format je nach der Methode:
     * Bei **BearerToken** ist nur ein String dargestellt, der das Token ist. Bei **BasicAuth** sind Nutzername und Passwort getrennt durch zwei Pipe-Symbole dargestellt. Bei **KeyInHeader** und **KeyInQuery** sind Attributsname und Wert des Keys durch die Pipe-Symbole getrennt dargestellt.
@@ -1018,7 +1082,7 @@ Es folgen vier Arrays, die für die Verarbeitung im Backend nicht benötigt werd
 * Wir hätten hierbei die Speicherung von **listItems** gerne vermieden, da es sich um das geparste API-Objekt der Datenquelle handelt. Wenn man es jedoch nicht speichert müssen in der Bearbeitung die Datenquellen neu angefragt werden - wir machen das zwar bereits einmalig zur Überprüfung, ob alle Werte noch da sind, aber auch nur dann, wenn eine einzelne Datenquelle bearbeitet wird. Für Diagramme hingegen müsste man sofort alle Datenquellen anfragen.
 * Um die Anzahl der API-Requests, die wir senden in einem möglichst kleinen Rahmen zu halten speichern wir deshalb das Objekt im Backend zwischen und stellen es wieder her. Gerade bei APIs mit kostenpflichtigen bzw. begrenzten Abfragen dürfte dies für den Nutzer sehr wichtig sein.
 
-### **Methode zur Generierung**
+###  21.1. <a name='MethodezurGenerierung'></a>**Methode zur Generierung**
 **postInfoProvider** übernimmt die Generierung dieses Datenformats nicht selbst, sondern ruft die Methode **createDataSources** auf. Diese durchläuft das Array **dataSources** mit allen Datenquellen und generiert für jede Datenquelle ein Objekt des Typ **BackendDataSource**, der dem vorgestellten Format entspricht.
 
 Dabei werden größtenteils die Werte aus den **DataSource**-Objekten in die entsprechenden Keys kopiert. Hervorzuheben ist die Generierung der Authentifizierungsdaten, bei welchen anhand von **method** unterschieden wird, ob nur ein String (BearerToken) oder zwei per Pipe-Symbol konkatenierte Strings geschrieben werden müssen (alle anderen Methoden).
@@ -1031,7 +1095,7 @@ Zuletzt werden **createCalculates** und **createReplacements** aufgerufen, um di
 * **createCalculates** geht dabei durch alle Array-Verarbeitungen durch und erstellt wie oben beschrieben für jede dieser ein eigenes Objekt.
 * **createReplacements** geht alle String-Ersetzungen durch und generiert jeweils ein passendes Objekt.
 
-## **Diagramm-Datenformat**
+##  22. <a name='Diagramm-Datenformat'></a>**Diagramm-Datenformat**
 Das Datenformat, in dem die Informationen über ein Diagramm an das Backend gesendet werden orientiert sich an dem Format, welches auch die Diagramm-Generierung des bisherigen Projektes im Backend erwartet. Basierend darauf wurde folgendes Format entworfen, in dem der Typ **Plots** zur Kapselung der Informationen über ein einzelnes Array/historisiertes Datum verwendet wird:
 ```javascript
 {
