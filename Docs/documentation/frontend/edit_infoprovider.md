@@ -36,6 +36,8 @@ const [infoProvDataSource, setInfoProvDataSource] = React.useState<Array<DataSou
 const [infoProvDiagrams, setInfoProvDiagrams] = React.useState<Array<Diagram>>(infoProvider.diagrams);
 ```
 Damit hat die Komponente alle Daten zur Verfügung und die grundlegende Anforderung ist erfüllt.
+* Wichtig ist hierbei jedoch, dass der sessionStorage in diesem Fall die aus **props** entnommenen Initialwerte direkt wieder überschreiben würde. Deshalb wenden wir eine Technik an, bei der vor dem Laden von Werten aus dem sessionStorage geprüft, ob dieser einen Eintrag für **firstEntering** enthält - ist das nicht der Fall, liegt das erste Rendering vor und es wird nichts geladen. Stattdessen setzt man einen Wert für den Eintrag und hinterlässt so einen Marker im sessionStorage an dem man feststellen kann, dass es nicht mehr das erste Laden ist.
+    * Somit wird das Überschreiben der Werte durch den sessionStorage verhindert und gleichzeitig dafür gesorgt, dass bei jedem späteren Ladevorgang die Daten wieder aus dem sessionStorage geholt werden.
 
 Die Bearbeitung eines Infoproviders kann als Kopie von der Erstellung des Infoprovider gesehen werden. Der einzige Unterschied ist, dass die Daten, in den Feldern der GUI schon ausgefüllt sind. Kleine Abänderungen kommen trotzdem hinzu. Die Bearbeitung wird wieder als eine Aneinanderreihung von Unter-Komponenten realisiert (genau so, wie in **CreateInfoProvider**). Es gibt wieder die Variable **step**, die den aktuellen Schritt repräsentiert und eine **handleContinue()**- und **handleBack()**-Methode, die für das Wechseln der Schritte zuständig sind. Der Unterschied hier liegt darin, dass **handleContinue()** und **handleBack()** nicht den aktuellen Schritt automatisch dekrementieren oder inkrementieren, sondern sie einen Zahlenwert übergeben bekommen. **step** wird dann um genau diesen Zahlenwert erhöht oder reduziert. Dadurch hat man die Möglichkeit durch das Übergeben von zum Beispiel einer 2, einen Schritt zu überspringen. Das wird in **EditCustomData** wichtig.
 
@@ -108,6 +110,9 @@ Im Falle eines Fehlers bei **dataContained** (d.h. ein Element ist nicht enthalt
 * "Einstellungen/Diagramme löschen" entfernt sämtliche Einstellungen für die Datenquelle und beginnt damit quasi mit ihrer Erstellung von vorne, dieses Mal aber mit den aktuellen Daten. Diagramme, die Daten der Datenquelle nutzen müssen dabei gelöscht werden.
 
 Solange der Dialog oder DataSelection noch nicht angezeigt werden zeigt die Komponente einen **Spinner** als Ladeanimation.
+
+Um das Problem zu umgehen, dass durch **fetchTestData** bei jedem Vor- und Zurückgehen eine API-Request ausgelöst wird und somit möglicherweise begrenzte Abfrage-Anzahlen unnötig belastet werden verwaltet **EditInfoProvider** in seinem State ein Array **refetchDoneList**. Dieses enthält für jeden Infoprovider einen Boolean-Wert, der dann **true** ist, wenn die Überprüfung erfolgreich stattgefunden. Ist der Wert für die aktuelle Datenquelle **true**, so erfolgt keine erneute Abfrage.
+* In der Verwaltung der Liste werden auch das Löschen von Datenquellen oder das Hinzufügen neuer Datenquellen berücksichtigt (diese sind automatisch auf **true** gesetzt).
 
 ## EditDataCustomization
 Wie auch in der Erstellung eines Infoproviders kann man bei der Editierung auf drei verschiedene Abschnitte zugreifen - Array-Operationen, Formel-Erstellung und String-Ersetzungen. Da alle drei wieder in einem Schritt zusammengefasst werden sollen gibt es die Komponente **EditDataCustomization**, welche per **props** den aktuellen Schritt **dataCustomizationStep** übergeben bekommt. Anhand dieses Schritts wählt sie in **getContents** aus, welche Komponente für einen der drei Schritte angezeigt werden soll.

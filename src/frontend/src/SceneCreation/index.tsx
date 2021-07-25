@@ -33,7 +33,6 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
 
     //the current step of the creation process, numbered by 0 to 1
     //setting one in editing is not necessary since the dialog will be displayed directly
-    //TODO: document this behaviour!!!
     const [sceneEditorStep, setSceneEditorStep] = React.useState(props.sceneFromBackend !== undefined ? 1 : 0);
     //the list of all infoproviders fetched from the backend
     const [infoProviderList, setInfoProviderList] = React.useState<Array<InfoProviderData>>([]);
@@ -71,7 +70,6 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
     const [displaySpinner, setDisplaySpinner] = React.useState(false);
     //true when the dialog for refetching images is opened
     //is also opened when starting editing mode first to fetch the images before entering the SceneEditor component - this will make them available from the start on
-    //TODO: Document this!!
     const [fetchImageDialogOpen, setFetchImageDialogOpen] = React.useState(props.sceneFromBackend !== undefined);
 
     // contains the names of the steps to be displayed in the stepper
@@ -666,7 +664,6 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
         //selectedId
         setSelectedId(Number(sessionStorage.getItem("selectedId-" + uniqueId) || 0));
 
-        //TODO: document this
         //dont set the data for editing when fetching first
         if (sessionStorage.getItem("firstSceneCreationEntering-" + uniqueId) !== null) {
             //fetchImageDialogOpen

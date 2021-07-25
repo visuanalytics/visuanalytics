@@ -589,7 +589,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                         type: "image",
                         pos_x: element.x, //X-Coordinate
                         pos_y: element.y, //Y-Coordinate
-                        //TODO: document this - rounding because backend doesnt allow floats
                         size_x: Math.round(element.width * element.scaleX), //Breite optional
                         size_y: Math.round(element.height * element.scaleY), //Höhe optional
                         color: "RGBA",
@@ -1912,7 +1911,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         )
     }
 
-    //TODO document the new diagramName property
     /**
      * Method to handle the click on an image loaded form the backend
      * @param src the image URL (blob) of the selected image

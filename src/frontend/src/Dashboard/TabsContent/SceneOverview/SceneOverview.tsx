@@ -48,10 +48,7 @@ export const SceneOverview: React.FC<SceneOverviewProps> = (props) => {
         dispatchMessage({ type: "reportError", message: message });
     };
 
-
-
-    //TODO: document this
-
+    
     //this static value will be true as long as the component is still mounted
     //used to check if handling of a fetch request should still take place or if the component is not used anymore
     const isMounted = useRef(true);

@@ -47,8 +47,6 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
     // The state, which holds the value for a pause that should be added. Please note that this state is not used for modifying existing pauses
     const [newPause, setNewPause] = React.useState<number | undefined>(0);
 
-    //TODO: document new formats
-
     // This state holds all information for the audio of the scene. Audio can be text or pause at the moment. If non spoken text is provided, an audio element with no text is generated for the state
     const [audioElements, setAudioElements] = React.useState<Array<AudioElement>>(props.spokenText.length === 0 ? [{
         type: "text",

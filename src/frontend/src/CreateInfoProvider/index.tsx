@@ -65,7 +65,6 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
     ];
 
     //the current step of the creation process, numbered by 0 to 6
-    //TODO: document renaming
     const [createStep, setCreateStep] = React.useState(0);
     //name of the info-provider
     const [name, setName] = React.useState("");
@@ -724,39 +723,37 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
      * Adds a new data source to the state of the Infoprovider.
      * If a data source already exists, it will be swapped out when this method is called.
      */
-        //TODO: add this to the documentation
     const addToDataSources = () => {
+        //store keys in dataSourcesKeys
+        const mapCopy = new Map(dataSourcesKeys);
+        setDataSourcesKeys(mapCopy.set(apiName, {
+            apiKeyInput1: apiKeyInput1,
+            apiKeyInput2: apiKeyInput2
+        }))
 
-            //store keys in dataSourcesKeys
-            const mapCopy = new Map(dataSourcesKeys);
-            setDataSourcesKeys(mapCopy.set(apiName, {
-                apiKeyInput1: apiKeyInput1,
-                apiKeyInput2: apiKeyInput2
-            }))
-
-            const dataSource: DataSource = {
-                apiName: apiName,
-                query: query,
-                noKey: noKey,
-                method: method,
-                selectedData: selectedData,
-                customData: customData,
-                historizedData: historizedData,
-                schedule: schedule,
-                listItems: listItems,
-                arrayProcessingsList: arrayProcessingsList,
-                stringReplacementList: stringReplacementList
-            };
-            for (let i = 0; i < dataSources.length; i++) {
-                if (dataSources[i].apiName === apiName) {
-                    let newDataSources = dataSources.slice();
-                    newDataSources[i] = dataSource;
-                    setDataSources(newDataSources);
-                    return;
-                }
+        const dataSource: DataSource = {
+            apiName: apiName,
+            query: query,
+            noKey: noKey,
+            method: method,
+            selectedData: selectedData,
+            customData: customData,
+            historizedData: historizedData,
+            schedule: schedule,
+            listItems: listItems,
+            arrayProcessingsList: arrayProcessingsList,
+            stringReplacementList: stringReplacementList
+        };
+        for (let i = 0; i < dataSources.length; i++) {
+            if (dataSources[i].apiName === apiName) {
+                let newDataSources = dataSources.slice();
+                newDataSources[i] = dataSource;
+                setDataSources(newDataSources);
+                return;
             }
-            setDataSources(dataSources.concat(dataSource));
         }
+        setDataSources(dataSources.concat(dataSource));
+    }
 
 
     /**

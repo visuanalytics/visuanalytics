@@ -408,7 +408,6 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
     //true when the dialog for going back and reverting changes is open
     const [backDialogOpen, setBackDialogOpen] = React.useState(false);
 
-    //TODO: document this and why it is needed
     /**
      * Handler method for clicking the back button.
      * Checks if any selections were removed - if so, it warns the user that all changes will be reverted.
