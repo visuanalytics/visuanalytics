@@ -1,7 +1,6 @@
-import React, {useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {CenterNotification, centerNotifcationReducer} from "../util/CenterNotification";
 import {BasicSettings} from "./BasicSettings";
-import {useCallFetch} from "../Hooks/useCallFetch";
 import {TypeSelection} from "./TypeSelection";
 import {HistorySelection} from "./HistorySelection";
 import {DataSelection} from "./DataSelection";
@@ -17,7 +16,7 @@ import {
     ListItemRepresentation,
     Schedule,
     SelectedDataItem,
-    authDataDialogElement,
+    AuthDataDialogElement,
     uniqueId,
     Diagram,
     Plots,
@@ -32,36 +31,10 @@ import {DiagramCreation} from "./DiagramCreation";
 import {DataCustomization} from "./DataCustomization";
 
 
-/* TODO: list of bugfixes to be made by Janek
-DONE:
-task 1: load the object sent from the backend in step 3, test it
-task 1.5: fix circular dependencies by sourcing out all type definitions
-task 2: formulas are not allowed to have a name that appears in selectedData (or better listItems?)
-task 3: deleting a formula also has to delete it from historizedData if it is used there
-task 4: when sending a new API-Request in step 2, all following settings need to be cleaned
-task 4.5: also make a check for changes before sending a new request
-task 5: add a dialog when deleting a formula
-task 6: keep the componentContext in sessionStorage, fix unmount problem
-task 7: if possible, display a warning before reloading
-task 8: reloading needs to ask the user to put in all api key inputs again
-task 10: unchecking in selectedData also needs to delete all formulas using the item and delete it from historizedData
-task 12: search for other TODOs that remain in the code
-task 14: remove the name input from step 1
-task 15: going back to dashboard should empty the sessionStorage
-
-TO DO:
-task 11: when deleting data, formula or unchecking historized, delete warning which diagrams will be removed and remove them
-
-SHOULD BE DONE:
-task 9: check all usages of useCallFetch for buggy behaviour
-task 13: repair format problems with backend communication in step 3
-task 16: find problem with data writing on unmounted component in dashboard -> possibly solved by wrong isMounted usage
- */
-
-
 interface CreateInfoproviderProps {
     finishDataSourceInEdit?: (dataSource: DataSource, apiKeyInput1: string, apiKeyInput2: string) => void;
     cancelNewDataSourceInEdit?: () => void;
+    checkDuplicateNameInEdit?: (name: string) => boolean;
 }
 
 /*
@@ -136,6 +109,8 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
     const [arrayProcessingsList, setArrayProcessingsList] = React.useState<Array<ArrayProcessingData>>([]);
     //list of all string replacement processings defined
     const [stringReplacementList, setStringReplacementList] = React.useState<Array<StringReplacementData>>([]);
+    //true when the button for submitting in settingsOverview is blocked because a posting is running - stored here because methods here need to change it
+    const [submitInfoProviderDisabled, setSubmitInfoProviderDisabled] = React.useState(false);
 
 
     /**
@@ -178,9 +153,9 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
      * Method to construct an array of all dataSources names where the user needs to re-enter his authentication data.
      */
     const buildDataSourceSelection = () => {
-        const dataSourceSelection: Array<authDataDialogElement> = [];
-        //check the current data source and add it as an option
-        if (!noKey && method !== "") {
+        const dataSourceSelection: Array<AuthDataDialogElement> = [];
+        //check the current data source and add it as an option - not used when in SettingsOverview!
+        if (createStep < 5 && !noKey && method !== "") {
             dataSourceSelection.push({
                 name: "current--" + uniqueId,
                 method: method
@@ -229,6 +204,8 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
     React.useEffect(() => {
         //createStep - disabled since it makes debugging more annoying
         setCreateStep(Number(sessionStorage.getItem("createStep-" + uniqueId) || 0));
+        //name
+        setName(sessionStorage.getItem("name-" + uniqueId) || "");
         //apiName
         setApiName(sessionStorage.getItem("apiName-" + uniqueId) || "");
         //query
@@ -269,19 +246,20 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
         //stringReplacementList
         setStringReplacementList(sessionStorage.getItem("stringReplacementList-" + uniqueId) === null ? new Array<StringReplacementData>() : JSON.parse(sessionStorage.getItem("stringReplacementList-" + uniqueId)!));
 
+
+        //create default values in the key map for all dataSources
+        //necessary to not run into undefined values
+        const map = new Map();
+        const data: Array<DataSource> = sessionStorage.getItem("dataSources-" + uniqueId) === null ? new Array<DataSource>() : JSON.parse(sessionStorage.getItem("dataSources-" + uniqueId)!)
+        data.forEach((dataSource) => {
+            map.set(dataSource.apiName, {
+                apiKeyInput1: "",
+                apiKeyInput2: ""
+            })
+        });
+        setDataSourcesKeys(map);
         //open the dialog for reentering authentication data
         if (authDialogNeeded()) {
-            //create default values in the key map for all dataSources
-            //necessary to not run into undefined values
-            const map = new Map();
-            const data: Array<DataSource> = sessionStorage.getItem("dataSources-" + uniqueId) === null ? new Array<DataSource>() : JSON.parse(sessionStorage.getItem("dataSources-" + uniqueId)!)
-            data.forEach((dataSource) => {
-                map.set(dataSource.apiName, {
-                    apiKeyInput1: "",
-                    apiKeyInput2: ""
-                })
-            });
-            setDataSourcesKeys(map);
             setAuthDataDialogOpen(true);
         }
     }, [])
@@ -290,6 +268,10 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
     React.useEffect(() => {
         sessionStorage.setItem("createStep-" + uniqueId, createStep.toString());
     }, [createStep])
+    //store name in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("name-" + uniqueId, name);
+    }, [name])
     //store apiName in sessionStorage
     React.useEffect(() => {
         sessionStorage.setItem("apiName-" + uniqueId, apiName);
@@ -363,6 +345,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
      */
     const clearSessionStorage = () => {
         sessionStorage.removeItem("createStep-" + uniqueId);
+        sessionStorage.removeItem("name-" + uniqueId);
         sessionStorage.removeItem("apiName-" + uniqueId);
         sessionStorage.removeItem("query-" + uniqueId);
         sessionStorage.removeItem("noKey-" + uniqueId);
@@ -398,26 +381,27 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
      * Handler for the return of a successful call to the backend (posting info-provider)
      * @param jsonData The JSON-object delivered by the backend
      */
-    const handleSuccess = (jsonData: any) => {
+    const handleSuccessPostInfoProvider = React.useCallback((jsonData: any) => {
         clearSessionStorage();
+        setSubmitInfoProviderDisabled(false);
         components?.setCurrent("dashboard")
-    }
+    }, [components]);
 
     /**
      * Handler for unsuccessful call to the backend (posting info-provider)
      * @param err The error returned by the backend
      */
-    const handleError = (err: Error) => {
+    const handleErrorPostInfoProvider = React.useCallback((err: Error) => {
+        setSubmitInfoProviderDisabled(false);
         reportError("Fehler: Senden des Info-Providers an das Backend fehlgeschlagen! (" + err.message + ")");
-    }
+    }, []);
 
 
-    //TODO: find out why this method is called too often
     /**
      * Method that creates the array of dataSources in the backend format for
      * the existing data sources.
      */
-    const createDataSources = () => {
+    const createDataSources = React.useCallback(() => {
         const backendDataSources: Array<BackendDataSource> = [];
         dataSources.forEach((dataSource) => {
             //this check should be prevented, but there is some bug behaviour where this method is called too often and errors happen
@@ -436,8 +420,8 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                     transform: [],
                     storing: [],
                     formulas: dataSource.customData,
-                    calculates: createCalculates(dataSource.arrayProcessingsList),
-                    replacements: createReplacements(dataSource.stringReplacementList),
+                    calculates: createCalculates(dataSource.arrayProcessingsList, dataSource.apiName),
+                    replacements: createReplacements(dataSource.stringReplacementList, dataSource.apiName),
                     schedule: {
                         type: dataSource.schedule.type,
                         time: dataSource.schedule.time,
@@ -448,41 +432,19 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                     selected_data: dataSource.selectedData,
                     historized_data: dataSource.historizedData,
                     arrayProcessingsList: dataSource.arrayProcessingsList,
-                    stringReplacementList: dataSource.stringReplacementList
+                    stringReplacementList: dataSource.stringReplacementList,
+                    listItems: dataSource.listItems
                 })
             }
         });
         return backendDataSources;
-    }
-
-    /**
-     * Method that creates an array of diagrams in the backend format
-     * for the existing diagrams.
-     */
-    const createBackendDiagrams = () => {
-        //TODO: possibly find smarter solution without any type
-        const diagramsObject: any = {};
-        diagrams.forEach((diagram) => {
-            diagramsObject[diagram.name] = {
-                type: "diagram_custom",
-                diagram_config: {
-                    type: "custom",
-                    name: diagram.name,
-                    infoprovider: name,
-                    sourceType: diagram.sourceType,
-                    plots: createPlots(diagram)
-                }
-            }
-        })
-        return diagramsObject;
-    }
+    }, [dataSources, dataSourcesKeys]);
 
     /**
      * Creates the plots array for a selected diagram to be sent to the backend.
      * @param diagram the diagram to be transformed
      */
     const createPlots = React.useCallback((diagram: Diagram) => {
-        console.log(diagram.arrayObjects);
         const plotArray: Array<Plots> = [];
         let type: string;
         //transform the type to the string the backend needs
@@ -510,55 +472,113 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
         }
         if (diagram.sourceType === "Array") {
             if (diagram.arrayObjects !== undefined) {
-                diagram.arrayObjects.forEach((item) => {
-                    const plots = {
-                        customLabels: item.customLabels,
-                        primitive: !Array.isArray(item.listItem.value),
-                        plot: {
-                            type: type,
-                            x: Array.from(Array(diagram.amount).keys()),
-                            y: item.listItem.parentKeyName === "" ? item.listItem.keyName : item.listItem.parentKeyName + "|" + item.listItem.keyName,
-                            color: item.color,
-                            numericAttribute: item.numericAttribute,
-                            stringAttribute: item.stringAttribute,
-                            x_ticks: {
-                                ticks: item.labelArray
+                //when the diagram uses customLabels, we need to use the method that adds the ticks on the last cycle
+                if(diagram.customLabels) {
+                    //loop through all arrays used in the diagram
+                    for (let index = 0; index < diagram.arrayObjects.length; index++) {
+                        const item = diagram.arrayObjects[index];
+                        const plots = {
+                            customLabels: true,
+                            primitive: !Array.isArray(item.listItem.value),
+                            plot: {
+                                type: type,
+                                x: Array.from(Array(diagram.amount).keys()),
+                                y: "{_req|" + (item.listItem.parentKeyName === "" ? item.listItem.keyName : item.listItem.parentKeyName + "|" + item.listItem.keyName) + "}",
+                                color: item.color,
+                                numericAttribute: item.numericAttribute,
+                                stringAttribute: "",
+                                x_ticks: {
+                                    //only set the ticks on the last Plot - this is necessary to render it last when layering the Plots in the diagrams
+                                    ticks: index === diagram.arrayObjects.length-1 ? diagram.labelArray : []
+                                }
                             }
                         }
+                        plotArray.push(plots);
                     }
-                    plotArray.push(plots);
-                })
+                } else {
+                    //this diagram uses a stringAttribute to generate its labels - find the Plot that belongs to its array and add it last
+                    //this behaviour is necessary in order to render the diagrams in the correct order in backend Plot layering
+                    let plotWithStringAttribute = {} as Plots;
+                    //loop through all arrays used in the diagram
+                    for (let index = 0; index < diagram.arrayObjects.length; index++) {
+                        const item = diagram.arrayObjects[index];
+                        const isArrayWithAttribute = (item.listItem.parentKeyName === "" ? item.listItem.keyName : item.listItem.parentKeyName + "|" + item.listItem.keyName) === diagram.stringAttribute.array;
+                        const plots = {
+                            customLabels: false,
+                            primitive: !Array.isArray(item.listItem.value),
+                            plot: {
+                                type: type,
+                                x: Array.from(Array(diagram.amount).keys()),
+                                y: "{_req|" + (item.listItem.parentKeyName === "" ? item.listItem.keyName : item.listItem.parentKeyName + "|" + item.listItem.keyName) + "}",
+                                color: item.color,
+                                numericAttribute: item.numericAttribute,
+                                stringAttribute: isArrayWithAttribute ? diagram.stringAttribute.key : "",
+                                x_ticks: {
+                                    //only set the ticks on the last Plot - this is necessary to render it last when layering the Plots in the diagrams
+                                    ticks: []
+                                }
+                            }
+                        }
+                        //if the current array is the one that contains the string attribute, dont push it instantly to the plots array
+                        if (isArrayWithAttribute) plotWithStringAttribute = plots;
+                        else plotArray.push(plots);
+                    }
+                    //push the array with the stringAttribute as the last item so it will be last in backend layering
+                    plotArray.push(plotWithStringAttribute);
+                }
             }
         } else {
             //"Historized"
             if (diagram.historizedObjects !== undefined) {
-                diagram.historizedObjects.forEach((item) => {
+                for (let index = 0; index < diagram.historizedObjects.length; index++) {
+                    const item = diagram.historizedObjects[index];
                     const plots = {
-                        dateLabels: item.dateLabels,
                         plot: {
                             type: type,
                             x: item.intervalSizes,
-                            y: item.name,
+                            y: "{_req|" + item.name.replace("|", "_") + "_HISTORY}",
                             color: item.color,
-                            dateFormat: item.dateFormat,
                             x_ticks: {
-                                ticks: item.labelArray
+                                //only set the ticks on the last Plot - this is necessary to render it last when layering the Plots in the diagrams
+                                ticks: index === diagram.historizedObjects.length-1 ? diagram.labelArray : []
                             }
                         }
                     }
                     plotArray.push(plots);
-                })
+                }
             }
         }
         return plotArray;
     }, [])
 
-    //TODO: test this method when it is used
+    /**
+     * Method that generates the object 'diagram' the backend needs
+     * for the configuration of the infoprovider by using the values from
+     * the created diagram and transforming them to the backend format.
+     */
+    const createBackendDiagrams = React.useCallback(() => {
+        const diagramsObject: any = {};
+        diagrams.forEach((diagram) => {
+            diagramsObject[diagram.name] = {
+                type: "diagram_custom",
+                diagram_config: {
+                    type: "custom",
+                    name: diagram.name,
+                    infoprovider: name,
+                    sourceType: diagram.sourceType,
+                    plots: createPlots(diagram)
+                }
+            }
+        })
+        return diagramsObject;
+    }, [createPlots, diagrams, name]);
+
+
     /**
      * Method that creates a list of all arrays that are used in diagrams.
      * Necessary for forming the object of the infoprovider sent to the backend.
      */
-    const getArraysUsedByDiagrams = () => {
+    const getArraysUsedByDiagrams = React.useCallback(() => {
         const arraysInDiagrams: Array<string> = [];
         diagrams.forEach((diagram) => {
             if (diagram.sourceType !== "Array") return;
@@ -570,14 +590,27 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
             }
         })
         return arraysInDiagrams;
-    }
+    }, [diagrams]);
+
+
+    //this static value will be true as long as the component is still mounted
+    //used to check if handling of a fetch request should still take place or if the component is not used anymore
+    const isMounted = useRef(true);
 
     /**
-     * Method to post all settings for the Info-Provider made by the user to the backend.
-     * The backend will use this data to create the desired Info-Provider.
+     * Method to send a diagram to the backend for testing.
+     * The standard hook "useCallFetch" is not used here since it seemingly caused method calls on each render.
      */
-    const postInfoProvider = useCallFetch("visuanalytics/infoprovider",
-        {
+    const postInfoProvider = React.useCallback(() => {
+        //("fetcher called");
+        let url = "visuanalytics/infoprovider"
+        //if this variable is set, add it to the url
+        if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
+        //setup a timer to stop the request after 5 seconds
+        const abort = new AbortController();
+        const timer = setTimeout(() => abort.abort(), 5000);
+        //starts fetching the contents from the backend
+        fetch(url, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -588,9 +621,30 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                 diagrams: createBackendDiagrams(),
                 diagrams_original: diagrams,
                 arrays_used_in_diagrams: getArraysUsedByDiagrams()
-            })
-        }, handleSuccess, handleError
-    );
+            }),
+            signal: abort.signal
+        }).then((res: Response) => {
+            //handles the response and gets the data object from it
+            if (!res.ok) throw new Error(`Network response was not ok, status: ${res.status}`);
+            return res.status === 204 ? {} : res.blob();
+        }).then((data) => {
+            //success case - the data is passed to the handler
+            //only called when the component is still mounted
+            if (isMounted.current) handleSuccessPostInfoProvider(data)
+        }).catch((err) => {
+            //error case - the error code ist passed to the error handler
+            //only called when the component is still mounted
+            if (isMounted.current) handleErrorPostInfoProvider(err)
+        }).finally(() => clearTimeout(timer));
+    }, [createBackendDiagrams, createDataSources, diagrams, getArraysUsedByDiagrams, handleErrorPostInfoProvider, handleSuccessPostInfoProvider, name])
+
+    //defines a cleanup method that sets isMounted to false when unmounting
+    //will signal the fetchMethod to not work with the results anymore
+    useEffect(() => {
+        return () => {
+            isMounted.current = false;
+        };
+    }, []);
 
 
     /**
@@ -614,6 +668,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
             if (name.length <= 0) {
                 reportError("Bitte geben Sie dem Infoprovider einen Namen!");
             } else {
+                setSubmitInfoProviderDisabled(true);
                 postInfoProvider();
             }
         } else if (createStep === 4 && props.finishDataSourceInEdit !== undefined) {
@@ -649,7 +704,6 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
         }
     }
 
-    //TODO: also set the array processings and string replacements when switching current data source as soon as the functionality is available in this branch
     /**
      * Handler for back button that is passed to all sub-components as props.
      * Decrements the step or returns to the dashboard if the step was 0.
@@ -725,7 +779,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                         continueHandler={handleContinue}
                         backHandler={handleBack}
                         //setApiData={setApiData}
-                        checkNameDuplicate={checkNameDuplicate}
+                        checkNameDuplicate={props.checkDuplicateNameInEdit === undefined ? checkNameDuplicate : props.checkDuplicateNameInEdit}
                         query={query}
                         setQuery={(query: string) => setQuery(query)}
                         apiKeyInput1={apiKeyInput1}
@@ -747,6 +801,8 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                         diagrams={diagrams}
                         setDiagrams={(diagrams: Array<Diagram>) => setDiagrams(diagrams)}
                         setListItems={(array: Array<ListItemRepresentation>) => setListItems(array)}
+                        setArrayProcessingsList={(processings: Array<ArrayProcessingData>) => setArrayProcessingsList(processings)}
+                        setStringReplacementList={(replacements: Array<StringReplacementData>) => setStringReplacementList(replacements)}
                         isInEditMode={false}
                     />
                 );
@@ -755,11 +811,10 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                     <DataSelection
                         continueHandler={handleContinue}
                         backHandler={handleBack}
-                        //apiData={apiData}
                         selectedData={selectedData}
                         setSelectedData={(set: Array<SelectedDataItem>) => setSelectedData(set)}
                         listItems={listItems}
-                        setListItems={(array: Array<ListItemRepresentation>) => setListItems(array)}
+                        //setListItems={(array: Array<ListItemRepresentation>) => setListItems(array)}
                         historizedData={historizedData}
                         setHistorizedData={(array: Array<string>) => setHistorizedData(array)}
                         customData={customData}
@@ -845,6 +900,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                         setDataSourcesKeys={(map: Map<string, DataSourceKey>) => setDataSourcesKeys(map)}
                         setArrayProcessingsList={(processings: Array<ArrayProcessingData>) => setArrayProcessingsList(processings)}
                         setStringReplacementList={(replacements: Array<StringReplacementData>) => setStringReplacementList(replacements)}
+                        submitInfoProviderDisabled={submitInfoProviderDisabled}
                     />
                 )
             case 6:

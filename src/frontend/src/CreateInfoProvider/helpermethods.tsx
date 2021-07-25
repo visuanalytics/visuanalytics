@@ -7,6 +7,7 @@ import {
     ListItemRepresentation,
     SelectedDataItem, StringReplacementData
 } from "./types";
+import {StrArg} from "./DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/StrArg";
 
 /* CreateInfoProvider */
 
@@ -19,85 +20,36 @@ export const extractKeysFromSelection = (selectedData: Array<SelectedDataItem>) 
     return keyArray;
 }
 
-
 /**
  * Method that transforms a list of array processings into a list of calculate
  * objects as they are needed by the backend
  * @param processings The list of array processings to be transformed
+ * @param apiName Name of the api the calculate is created for
  */
-export const createCalculates = (processings: Array<ArrayProcessingData>) => {
+export const createCalculates = (processings: Array<ArrayProcessingData>, apiName: string) => {
     const calculates: Array<BackendCalculate> = [];
-    const sumNames: Array<string> = [];
-    const sumReplaceNames: Array<string> = [];
-    const meanNames: Array<string> = [];
-    const meanReplaceNames: Array<string> = [];
-    const minNames: Array<string> = [];
-    const minReplaceNames: Array<string> = [];
-    const maxNames: Array<string> = [];
-    const maxReplaceNames: Array<string> = [];
+    //loop through all created calculates
     processings.forEach((processing) => {
-        switch(processing.operation.name) {
-            case "sum": {
-                sumNames.push("_loop|" + processing.array);
-                sumReplaceNames.push("_loop|" + processing.name);
-                break;
-            }
-            case "mean": {
-                meanNames.push("_loop|" + processing.array);
-                meanReplaceNames.push("_loop|" + processing.name);
-                break;
-            }
-            case "min": {
-                minNames.push("_loop|" + processing.array);
-                minReplaceNames.push("_loop|" + processing.name);
-                break;
-            }
-            case "max": {
-                maxNames.push("_loop|" + processing.array);
-                maxReplaceNames.push("_loop|" + processing.name);
-            }
+        //check if the calulcate is a value in a complex array (array with object inside)
+        if(processing.array.valueInObject) {
+            calculates.push({
+                type: "calculate",
+                action: processing.operation.name,
+                keys: ["_req|" + apiName + "|" + processing.array.key],
+                innerKey: [processing.array.innerKey],
+                new_keys: [processing.name],
+                decimal: 2
+            });
+        } else {
+            calculates.push({
+                type: "calculate",
+                action: processing.operation.name,
+                keys: ["_req|" + apiName + "|" + processing.array.key],
+                new_keys: [processing.name],
+                decimal: 2
+            });
         }
     })
-    //add the object for the sum calculations
-    if(sumNames.length > 0) {
-        calculates.push({
-            type: "calculate",
-            action: "sum",
-            keys: sumNames,
-            new_keys: sumReplaceNames,
-            decimal: 2
-        });
-    }
-    //add the object for the mean calculations
-    if(meanNames.length > 0) {
-        calculates.push({
-            type: "calculate",
-            action: "mean",
-            keys: meanNames,
-            new_keys: meanReplaceNames,
-            decimal: 2
-        });
-    }
-    //add the object for the min calculations
-    if(minNames.length > 0) {
-        calculates.push({
-            type: "calculate",
-            action: "min",
-            keys: minNames,
-            new_keys: minReplaceNames,
-            decimal: 2
-        });
-    }
-    //add the object for the max calculations
-    if(maxNames.length > 0) {
-        calculates.push({
-            type: "calculate",
-            action: "max",
-            keys: maxNames,
-            new_keys: maxReplaceNames,
-            decimal: 2
-        });
-    }
     return calculates;
 }
 
@@ -105,13 +57,14 @@ export const createCalculates = (processings: Array<ArrayProcessingData>) => {
  * Method that transforms a list of string replacements into a list of replacement
  * objects as they are needed by the backend
  * @param replacements The list of string replacements to be transformed
+ * @param apiName Name of the datasource the replacement is created for
  */
-export const createReplacements = (replacements: Array<StringReplacementData>) => {
+export const createReplacements = (replacements: Array<StringReplacementData>, apiName: string) => {
     const replacementObjects: Array<BackendReplacement> = [];
     replacements.forEach((replacement) => {
         replacementObjects.push({
             type: "replace",
-            keys: [replacement.string],
+            keys: ["_req|" + apiName + "|" + replacement.string],
             new_keys: [replacement.name],
             old_value: replacement.replace,
             new_value: replacement.with,
@@ -302,7 +255,8 @@ export const checkFindOnlyNumbers = (arg: string): boolean => {
             arg.charAt(i) !== '6' &&
             arg.charAt(i) !== '7' &&
             arg.charAt(i) !== '8' &&
-            arg.charAt(i) !== '9'
+            arg.charAt(i) !== '9' &&
+            arg.charAt(i) !== '.'
         ) {
             onlyNumbers = false;
         }
@@ -312,7 +266,6 @@ export const checkFindOnlyNumbers = (arg: string): boolean => {
     return onlyNumbers;
 }
 
-//TODO: add the string replacement and array processings here
 /**
  * Method that transforms an infoProvider from the backend data format to a frontend data format representation
  * @param data
@@ -340,9 +293,9 @@ export const transformBackendInfoProvider = (data: InfoProviderFromBackend) => {
                 time: backendDataSource.schedule.time,
                 interval: backendDataSource.schedule.timeInterval,
             },
-            listItems: new Array<ListItemRepresentation>(),
             arrayProcessingsList: backendDataSource.arrayProcessingsList,
-            stringReplacementList: backendDataSource.stringReplacementList
+            stringReplacementList: backendDataSource.stringReplacementList,
+            listItems:backendDataSource.listItems
         });
         //set the api keys in the map
         let apiKeyInput1: string;
@@ -398,4 +351,22 @@ export const getWeekdayString = (weekdayNumber: number) => {
         case 6:
             return "So";
     }
+}
+
+/**
+ * Checks if there is an comma in the last number.
+ * @param formel
+ */
+export const searchForComma = (formel: Array<StrArg>): boolean => {
+
+    for (let i: number = formel.length - 1; i >= 0; i--) {
+        if (formel[i].isComma) {
+            return true;
+        }
+        if (!formel[i].isNumber) {
+            break;
+        }
+    }
+
+    return false;
 }

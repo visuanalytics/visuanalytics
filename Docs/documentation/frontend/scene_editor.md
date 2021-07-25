@@ -109,7 +109,7 @@ Hervozuheben ist noch die Bearbeitung der Antwort der Fetch-Methode **fetchInfoP
 ### **Canvas**
 
 Als Canvasframework haben wir uns für KonvaJS entschieden. KonvaJS ist eine 2D-Canvas Bibliothek, ursprünglich in und für JavaScript verfasst, mit einem Port für React und Vue.
-In unserer Implementierung haben wir die folgenden Funktionen implementiert:
+In unserem Szeneneditor haben wir die folgenden Features implementiert:
 
 * Hinzufügen von Elementen (Kreise, Rechtecke, Sterne und Dreiecke)
 * Hinzufügen und Bearbeiten von Texten
@@ -119,12 +119,15 @@ In unserer Implementierung haben wir die folgenden Funktionen implementiert:
 * Drag and Drop von Elementen
 * Duplizieren, Löschen und Rückgängig machen
 
-KonvaJS basiert auf HTML5 Canvas. Dabei gibt es verschiedene Ebenen. 
+KonvaJS basiert auf **HTML5 Canvas**. Dabei gibt es verschiedene Ebenen. 
+
 Die generelle Struktur vom Editor ist wie folgt aufgebaut:
 * Ebene 1: "Stage"
 * Ebene 2: "Layer" mit Elementen
 
-Die Stage bildet dabei die unterste Ebene. Sie dient als DOM-Wrapper für alle Layer und höheren Ebenen. Auf der Stage liegt ein Layer, welcher die eigentlichen Elemente enthält. Ein Beispiel dafür wäre ein Kreis, welchen man hinzufügt. Auf dem Layer kann außerdem ein Hintergrundbild oder eine Hintergrundfarbe gewählt werden. Dazu wird je nach Wahl ein Element erstellt, welches ein Bild oder ein vollflächiges Rechteck ist. Diese beiden Elemente haben jeweils **keine** "draggable" Eigenschaft, d.h. man kann sie nicht anwählen oder verschieben. Darauf folgt eine sogenannte "Group". In dieser Gruppe sind alle Elemente, welche der Benutzer selbst auf dem Canvas hinzufügt. Sie werden über ein Array aus eigenen Datentypen über die forEach-Methode hinzugefügt.
+Die Stage bildet dabei die unterste Ebene. Sie dient als DOM-Wrapper für alle Layer und höheren Ebenen. Auf der Stage liegt ein Layer, welcher die eigentlichen Elemente enthält. Ein Beispiel dafür wäre ein Kreis, welchen man hinzufügt. Auf dem Layer kann außerdem ein Hintergrundbild oder eine Hintergrundfarbe gewählt werden. Dazu wird je nach Wahl ein Element erstellt, welches ein Bild oder ein vollflächiges Rechteck beinhaltet. Diese beiden Elemente haben jeweils **keine** "draggable" Eigenschaft, d.h. man kann sie nicht anwählen oder verschieben.
+
+Darauf folgt eine sogenannte "Group". In dieser Gruppe sind alle Elemente enthalten, welche der Benutzer selbst auf dem Canvas hinzufügt. Sie werden über ein Array aus eigenen Datentypen über die forEach-Methode hinzugefügt.
 
 #### **Datentypen**
 
@@ -151,6 +154,7 @@ scaleY: number;
   Wenn das Element verkleinert wird, so wird der Wert kleiner als eins, ansonsten größer als eins.
 
 ##### **Texte**
+
 ```javascript
 textContent: string;
 fontFamily: string;
@@ -161,6 +165,7 @@ Für alle Elemente, welche man auf dem Layer hinzufügen kann, haben wir einen e
 
 * In **textContent** wird der eigentliche Text gespeichert, welcher auf dem Canvas dargestellt wird.
 * **fontFamily** und **fontSize** geben jeweils die Schriftart und Schriftgröße des Elements an.
+
 
 ##### **Bilder**
 
@@ -173,14 +178,13 @@ diagramName: string;
 index: number;
 ```
 
-Bei Bildern gibt es zu den Variablen, welche in jedem Typ vorhanden sind, die obigen Variablen:
+Die in dem gezeigten Datentyp vorhandenen Variablen sind zusätzlich zu den Variablen vorhanden, welche ohnehin für jedes Element vorhanden sind.
 
 * Dabei stellt **image** ein HTMLImageElement dar, welches ein neues window.Image()-Element mit der src von dem angefragten bzw. hochgeladenen Bild enthält. Konva erstellt über dieses Element das tatsächliche Bild auf dem Canvas.
-* Die **imageId** ist die ID des Bildes im Backend und wird vom Backend gefetched, sie wird für die finale Erstellung des JSON-Objekted benötigt.
+* Die **imageId** ist die ID des Bildes im Backend und wird vom Backend gefetched, sie wird für die finale Erstellung des JSON-Objekts benötigt.
 * **imagePath** enthält den Pfad des Bildes im Backend, dieser wird ebenfalls gefetched.
 * **diagram** ist ein boolean, welches Beschreibt, ob ein Bild ein Diagramm ist oder nicht, da bei der Verarbeitung am Ende klar sein muss, wie das Bild im Backend gehandhabt werden muss.
-* **diagramName** ist der Name des Diagramms, welcher später benötigt wird, um dem Backend den Pfad des benötigten Diagramms in der Export-Generierung angeben zu können.
-* **index** ist der Index des Bildes in der Liste aller Bilder vom Frontend.
+* **index** gibt den Index des Bildes im Frontend an.
 
 ##### **Shapes**
 
@@ -216,6 +220,8 @@ case "Star": {
 Zunächst wird eine Kopie des Arrays mit allen Elementen erstellt. Hierbei geht es darum, Updateprobleme auf dem Canvas zu vermeiden. Anschließend wird in dieser Kopie ein neues Element hinzugefügt, welches die Koordinaten vom Klick auf den Canvas enthält. Die ID wird dabei eindeutig auf "star-" und der aktuellen Menge an Elementen gesetzt. Als Standardfarbe haben wir uns für Schwarz entschieden. Höhe und Breite werden dabei passend zur Form gesetzt.
 
 ##### **Backend-Typen**
+DataText und DataImage enthalten das Datenformat, mit welchem das Backend später Texte oder Bild auf der fertigen Szene hinzufügt.
+Die benötigten Typen wurden vom Backend vorgegeben. Die folgenden Typen sind teilweise nur, wie oben zu sehen, in DataText enthalten, teilweise aber auch in beiden Typen.
 
 ```javascript
 export type DataText = {
@@ -232,8 +238,6 @@ export type DataText = {
 }
 
 ```
-DataText und DataImage enthalten das Datenformat, mit welchem das Backend später Texte oder Bild auf der fertigen Szene hinzufügt.
-Die benötigten Typen wurden vom Backend vorgegeben. Die folgenden Typen sind teilweise nur, wie oben zu sehen, in DataText enthalten, teilweise aber auch in beiden Typen.
 
 * **description** ist ein optionaler Parameter. Er beschreibt den Text.
 * **type** beschreibt die Art des Elementes. **type** ist entweder "text" oder "image".
@@ -295,7 +299,7 @@ Die Variablen kann man dabei grob in Backenddaten und Frontenddaten unterscheide
 Backenddaten:
 
 * **scene_name** ist ein String und beschreibt den Szenennamen.
-* **used_images** ist ein Array aus ID's der im Backend verwendeten Bilder.
+* **used_images** ist ein Array aus IDs der im Backend verwendeten Bilder.
 * **used_infoproviders** ist ein Array aus Zahlen, welches die benutzten Infoprovider enthält. Allerdings wird im Frontend nur ein Infoprovider pro Szene unterstützt.
 * **images** enthält das BaseImg, welches vorher beschrieben wurde.
 
@@ -350,9 +354,9 @@ Das Array wird mit Hilfe der folgenden Funktion im Hauptarray dargestellt:
         />)
     }
 ```
-Im obigen Beispiel sieht man die generelle Darstellung eines Kreises auf dem Canvas. Es werden die Elemente mit Hilfe der *map*-Methode des Arrays auf dem Canvas hinzugefügt. Je nachdem, mit welchem Wort die ID des Elements beginnt, wird ein neues Konva-Element des zugehörigen Typs erstellt. Diesem Element werden bestimmte Eigenschaften zugewiesen, welche das Verhalten auf dem Canvas bestimmen. Jedes Element benötigt eine *key*-Eigenschaft und einen Namen, worüber es eindeutig identifiziert werden kann. Dies liegt an der internen Struktur von Konva. Wichtige Eigenschaften sind außerdem **draggable** und **fill**. Wenn **draggable** definiert ist, so wird das native Drag & Drop von KonvaJS aktiviert. **fill** entspricht der *color*-Variable der Elemente, hier wird die Farbe festgelegt. Des Weiteren werden einige Methoden übergeben. Hierbei ist die dragBoundFunc interessant. Darin wird definiert, was passieren soll, wenn der Benutzer das Element über eine bestimmte Koordinate zieht.
 
 ##### **Hintergrund**
+Im obigen Beispiel sieht man die generelle Darstellung eines Kreises auf dem Canvas. Es werden die Elemente mit Hilfe der *map*-Methode des Arrays auf dem Canvas hinzugefügt. Je nachdem, mit welchem Wort die ID des Elements beginnt, wird ein neues Konva-Element des zugehörigen Typs erstellt. Diesem Element werden bestimmte Eigenschaften zugewiesen, welche das Verhalten auf dem Canvas bestimmen. Jedes Element benötigt eine *key*-Eigenschaft und einen Namen, worüber es eindeutig identifiziert werden kann. Dies liegt an der internen Struktur von Konva. Wichtige Eigenschaften sind außerdem **draggable** und **fill**. Wenn **draggable** definiert ist, so wird das native Drag & Drop von KonvaJS aktiviert. **fill** entspricht der *color*-Variable der Elemente, hier wird die Farbe festgelegt. Des Weiteren werden einige Methoden übergeben. Hierbei ist die **dragBoundFunc** interessant. Darin wird definiert, was passieren soll, wenn der Benutzer das Element über eine bestimmte Koordinate zieht.
 
 Der Hintergrund wird über eine Abfrage verwaltet, bei der konditionelles Rendering eingesetzt wird. Mit Hilfe des **&&** wird nur ein Element gerendert, wenn das erste Statement *true* ist.
 Da der backGroundType ein String ist, kann auf keinen Fall beides gerendert werden.
@@ -380,7 +384,7 @@ Da der backGroundType ein String ist, kann auf keinen Fall beides gerendert werd
     }
 ```
 
-Je nach dem, ob der Hintergrundtyp "COLOR" oder "IMAGE" ist, wird der Hintergrund festgelegt.
+Je nach dem, ob der Hintergrundtyp "COLOR" oder "IMAGE" ist, wird der entsprechende Hintergrund festgelegt.
 
 * Bei "COLOR" wird ein vollflächiges Rechteck erstellt, welches keine **draggable** Eigenschaft besitzt und bei dem auch der Transformer deaktiviert ist.
 * Bei "IMAGE" wird ein Bild erstellt, welches den Hintergrund komplett ausfüllt.
@@ -422,7 +426,7 @@ const [deleteText, setDeleteText] = React.useState("Letztes Elem. entf.");
 const [stepSize, setStepSize] = React.useState(5);
 ```
 
-Diese States werden verwendet, um Elemente, welche auf der Webseite gerendert werden, zu verändern.
+Diese States werden verwendet, um Elemente, welche im Editor gerendert werden, zu verändern.
 
 ```javascript
 const [items, setItems] = React.useState<Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>>(props.sceneFromBackend !== undefined ? props.sceneFromBackend.scene_items : []);
@@ -467,7 +471,14 @@ const [backDialogOpen, setBackDialogOpen] = React.useState(false);
 const [clickedSaveButton, setClickedSaveButton] = React.useState(false);
 ```
 
-Diese States dienen zur Verwaltung der aktuell gewählten Daten im Dialog zur Einstellung des Intervalls für ein historisiertes Datum, welches auf die Szene hinzugefügt werden soll. **backDialogOpen** ist zudem ein Flag, über den ein Dialog geöffnet wird, durch den der Nutzer bestätigen muss, dass er zum vorherigen Schritt zurückkehren will (dabei müssen aus Gründen der Konsistenz alle Einstellungen zur Szene verworfen werden). **clickedSaveButton** blockiert den "Speichern"-Button, solange gerade ein Export der Szene an das Backend läuft, damit keine mehrfachen Exports gestartet werden können und Folgeprobleme vermieden werden.
+Die letzten States werden für Daten aus dem backend und einen Dialog verwendet. Weiterhin werden die States verwendet, um die Eingabe von historisierten Daten zu ermöglichen:
+* **selectedHistorizedElement:** Der Name des angeklickten historisierten Elements
+* **selectedInterval:** Gibt das Intervall an, welches dem ausgewählten Element für die Historisierung zu Grunde liegt.
+* **intervalToUse:** Für jedes historisierte Element liegen im Normalfall mehrere Einträge vor. Dabei beschreibt 0 den aktuellsten Wert, 1 den vorletzten, usw. Welchen Wert der Nutzer für ein ausgewähltes Element verwenden möchte, wird in diesem State gespeichert.
+* **showHistorizedLogDialog:** In diesem State wird gespeichert, ob der Dialog für das Einfügen von historisierten Daten geöffnet sein soll oder nicht. Der Dialog ist dabei genau dann geöffnet, wenn ein historisiertes Element angeklickt wurde. Bestätigt man das Einfügen des Elements im Dialog, so werden die obigen States verwendet, um das Element einzufügen.
+* **backDialogOpen** ist ein Flag, über den ein Dialog geöffnet wird, durch den der Nutzer bestätigen muss, dass er zum vorherigen Schritt zurückkehren will (dabei müssen aus Gründen der Konsistenz alle Einstellungen zur Szene verworfen werden).
+* **clickedSaveButton** blockiert den "Speichern"-Button, solange gerade ein Export der Szene an das Backend läuft, damit keine mehrfachen Exports gestartet werden können und Folgeprobleme vermieden werden.
+
 
 #### **Transformer**
 
@@ -573,7 +584,7 @@ Im Bedienfeld des Editors sind mehrere Funktionen zum Anpassen von Elementen auf
 
 Dabei werden intern auch die entsprechenden Variablen zurückgesetzt. Der zweite Knopf ermöglicht es dem Benutzer entweder das zuletzt hinzugefügte Element zu entfernen bzw. im Fall, dass der Benutzer aktuell ein Element ausgewählt hat, dieses gewählte Element zu entfernen. Dabei wird das Element in das *recentlyRemovedItems*-Array geschrieben, damit der Nutzer mit Hilfe des "Rückgängig"-Buttons das Element wieder herstellen kann. Mit Hilfe des "Klonen"-Buttons kann man ein ausgewähltes Element klonen. 
 
-Die nächsten beiden Elemente sind Farbauswahl und Schriftfarbauswahl. Mit ihnen kann man jeweils die Farbe von Formen und die Schriftfarbe ändern. Weiter kann man über "X Koordinate" und "Y Koordinate" die Koordinaten eines Elementes anpassen. Die Sprunggröße dient dazu, dass der Benutzer einstellen kann, wie viele Pixel er bei einer Änderung der X oder Y Koordinate springen möchte. 
+Die nächsten beiden Elemente sind Farbauswahl und Schriftfarbauswahl. Mit diesen kann man jeweils die Farbe von Formen und die Schriftfarbe ändern. Weiter kann man über "X Koordinate" und "Y Koordinate" die Koordinaten eines Elementes anpassen. Die Sprunggröße dient dazu, dass der Benutzer einstellen kann, wie viele Pixel er bei einer Änderung der X oder Y Koordinate springen möchte. 
 
 Für die Textanpassung stehen die nächsten drei Felder zur Verfügung. Im ersten Feld kann man eine der folgenden Schriftarten auswählen:
 
@@ -586,6 +597,7 @@ Für die Textanpassung stehen die nächsten drei Felder zur Verfügung. Im erste
 (Tipp: Benutzen Sie den folgenden Satz, um die Schriftart zu testen: "Franz jagt im komplett verwahrlosten Taxi quer durch Bayern!?"). Mit dem zweiten Feld kann man die Schriftgröße anpassen und mit dem dritten Feld die Breite des Textfeldes.
 
 Die letzten beiden Felder werden dazu verwendet, die Höhe und Breite von Elementen anzupassen.
+
 
 ### **Datenauswahl**
 Ein weiteres relevantes Feature des Szeneneditors ist das Hinzufügen von Daten des gewählten Infoproviders auf die Szene, sodass diese bei der Videogenerierung dynamisch mit den API-Daten ersetzt werden. Dazu wird auf der rechten Seite der Oberfläche eine Reihe an Listen generiert, in denen die Daten geordnet aufbereitet sind.
@@ -757,6 +769,7 @@ Die Methode *addImageElement* erstellt ein neues Image-Element, welchem die vorh
 
 ### **Speichern der Szene**
 
+
 ```javascript
 const saveHandler = (currentStage : Konva.Stage) => {
 	// create the picture of the stage
@@ -768,11 +781,11 @@ const saveHandler = (currentStage : Konva.Stage) => {
 }
 ```
 
-Wenn man die Szene speichert, so wird zunächst ein Hintergrundbild erstellt, welches als Basis für die Szene dient. Dafür wird die oben gezeigt Methode *saveHandler* verwendet. Ihr wird eine modifizierte KonvaJS Stage übergeben, welche ausschließlich Formen und den Hintergrund (Farbe oder Bild) enthält und außerhalb des Bildschirms gerendert wird. Diese Stage wird mit der KonvaJS-Methode *toDataURL()* in einen String des Formats **data:image/png;base64** umgewandelt. Anschließend wird dieser String mit Hilfe der *fetch()*-Methode in einen Blob umgewandelt. Dieser wird dann mit dem *File*-Konstruktor in eine Datei umgewandelt, welche anschließend in einer *FormData* an das Backend gesendet wird.
+Wenn man die Szene speichert, so wird zunächst ein Hintergrundbild erstellt, welches als Basis für die Szene dient. Dafür wird die oben gezeigte Methode *saveHandler* verwendet. Ihr wird eine modifizierte KonvaJS Stage übergeben, welche ausschließlich Formen und den Hintergrund (Farbe oder Bild) enthält und außerhalb des Bildschirms gerendert wird. Diese Stage wird mit der KonvaJS-Methode *toDataURL()* in einen String des Formats **data:image/png;base64** umgewandelt. Anschließend wird dieser String mit Hilfe der *fetch()*-Methode in einen Blob umgewandelt. Dieser wird dann mit dem *File*-Konstruktor in eine Datei umgewandelt, welche anschließend in einer *FormData* an das Backend gesendet wird.
 
-Wenn das Absenden des Hintergrundbildes erfolgreich war, so wird ein Vorschaubild erstellt, auf der alle sichtbaren Elemente angezeigt werden. Dafür wird die "normale" Stage verwendet. Der Ablauf ist dabei der gleiche, wie beim Hintergrundbild.
+Wenn das Absenden des Hintergrundbildes erfolgreich war, so wird ein Vorschaubild erstellt, auf der alle sichtbaren Elemente angezeigt werden. Dafür wird die "normale" Stage verwendet. Der Ablauf ist dabei der gleiche wie beim Hintergrundbild.
 
-Wenn diese beiden Bilder erstellt und erfolgreich hochgeladen wurden, so wird ein JsonExport, beschrieben in [Backenddatentypen](#backend-typen), erstellt. Ein erfolgreicher Upload schließt dann den Szeneneditor und sendet den Benutzer zurück zur Übersicht.
+Wenn diese beiden Bilder erstellt und erfolgreich hochgeladen wurden, so wird eine Variable vom Typ  JsonExport, beschrieben in [Backenddatentypen](#backend-typen), erstellt. Ein erfolgreicher Upload schließt dann den Szeneneditor. Der Nutzer sieht also wieder das Dashboard.
 <div style="page-break-after: always;"></div>
 
 ## **Editierung von Szenen**

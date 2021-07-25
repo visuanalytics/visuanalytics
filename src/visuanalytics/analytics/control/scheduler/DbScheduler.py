@@ -1,6 +1,6 @@
 """
 Modul welches den Datenbank Scheduler beeinhaltet.
-Sorgt dafür das ein Video zur richtigen Zeit gerendert wird.
+Sorgt dafür das ein Video zur richtigen Zeit gerendert und die Historisierung einer Datenquelle zur richtigen Zeit gestartet wird.
 """
 
 import logging
@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 
 class DbScheduler(Scheduler):
-    def __run_jobs(self, job_id, is_job):
+    def __run_jobs(self, job_id, is_job=False):
         if is_job:
             job_name, json_file_name, config = job.get_job_run_info(str(job_id))
             logger.info(f"Job {job_id}: '{job_name}' started")
@@ -29,12 +29,9 @@ class DbScheduler(Scheduler):
     @ignore_errors
     def __check(self, row, now, is_job):
         # check if type is "interval" and job has to be run
-        #print("__check()")
-        #print("row:", dict(row))
-        #print("is_job:", is_job)
         if row["s_type"] == "interval":
             if self._check_interval(now, get_interval(row), row["job_id" if is_job else "datasource_id"], True, is_job=is_job):
-                self.__run_jobs(row["job_id" if is_job else "datasource_id"], is_job)
+                self.__run_jobs(row["job_id" if is_job else "datasource_id"], is_job=is_job)
             return
 
         # check if time is current Time

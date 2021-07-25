@@ -12,9 +12,15 @@ export class FormelObj {
      */
     formelString: string;
 
-    constructor(formelName: string, formelString: string) {
+    /**
+     * Array with all used CustomData for the given formula
+     */
+    usedFormulaAndApiData: Array<string>;
+
+    constructor(formelName: string, formelString: string, usedFormulasAndApiData: Array<string>) {
         this.formelName = formelName;
         this.formelString = formelString;
+        this.usedFormulaAndApiData = usedFormulasAndApiData;
     }
 
 }

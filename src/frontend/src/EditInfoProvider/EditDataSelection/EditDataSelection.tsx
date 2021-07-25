@@ -37,6 +37,8 @@ interface EditDataSelectionProps {
     selectedDataSource: number;
     dataCustomizationStep: number;
     setDataCustomizationStep: (step: number) => void;
+    refetchDoneList: Array<boolean>;
+    setRefetchDoneList: (list: Array<boolean>) => void;
 }
 
 export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
@@ -57,6 +59,7 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
      */
     const dataContained = React.useCallback((listItems: Array<ListItemRepresentation>) => {
         const listItemsNames = getListItemsNames(listItems);
+        console.log(listItemsNames);
         //every key of selectedData also has to be in the listItems
         for (let index = 0; index < props.dataSource.selectedData.length; index++) {
             if(!listItemsNames.includes(props.dataSource.selectedData[index].key)) return false;
@@ -69,8 +72,13 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
                     const arrayObject: ArrayDiagramProperties = diagram.arrayObjects[innerIndex];
                     //checking is only necessary if the arrayObject is from this api
                     if(arrayObject.listItem.parentKeyName.split("|")[0]===props.dataSource.apiName) {
-                        //construct the keyName without the dataSource and the pipe at the beginning and check if it is contained in the listems
-                        if(!listItemsNames.includes(arrayObject.listItem.parentKeyName.substring(props.dataSource.apiName.length + 1) + arrayObject.listItem.keyName)) return false;
+                        //construct the keyName without the dataSource and the pipe at the beginning and check if it is contained in the lisItems
+                        //also appends "|0" since it will be contained in the list of names fetched from the dataSource
+                        if(!listItemsNames.includes((arrayObject.listItem.parentKeyName.substring(props.dataSource.apiName.length + 1).length !== 0 ? arrayObject.listItem.parentKeyName.substring(props.dataSource.apiName.length + 1) + "|" : "") + arrayObject.listItem.keyName + "|0")) {
+                            //console.log((arrayObject.listItem.parentKeyName.substring(props.dataSource.apiName.length + 1).length !== 0 ? arrayObject.listItem.parentKeyName.substring(props.dataSource.apiName.length + 1) + "|" : "") + arrayObject.listItem.keyName + "|0")
+                            //console.log(listItemsNames)
+                            return false;
+                        }
                     }
                 }
             }
@@ -80,6 +88,11 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
 
     //extract reportError from props to use in useEffect/dependencies
     const reportError = props.reportError;
+
+    //extract refetchDoneList, setRefetchDoneList and selectedDataSource from state to use it in dependency
+    const refetchDoneList = props.refetchDoneList;
+    const selectedDataSource = props.selectedDataSource;
+    const setRefetchDoneList = props.setRefetchDoneList;
 
     /**
      * Handler for the return of a successful call to the backend (getting test data)
@@ -91,27 +104,34 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
         const data = jsonData as testDataBackendAnswer;
         if (data.status !== 0) {
             reportError("Fehler: Backend meldet Fehler bei der API-Abfrage.")
-            //TODO: possibly show dialog here
         } else {
             //call the transform method
             const listItems: Array<ListItemRepresentation> = transformJSON(data.api_keys);
             setNewListItems(listItems);
             if(dataContained(listItems)) {
                 setDisplaySpinner(false);
+                //change the entry in the refetchDoneList
+                const arCopy = refetchDoneList.slice();
+                arCopy[selectedDataSource] = true;
+                setRefetchDoneList(arCopy);
             } else {
                 setErrorDialogOpen(true);
             }
         }
-    }, [dataContained, reportError]);
+    }, [dataContained, reportError, refetchDoneList, selectedDataSource, setRefetchDoneList]);
 
+    //extract backHandler from props to use in dependency
+    const backHandler = props.backHandler;
 
     /**
-     * Handler for unsuccessful call to the backend (getting test data)
+     * Handler for unsuccessful call to the backend (getting test data).
+     * Returns to the previous step so the user can edit his settings again.
      * @param err The error returned by the backend
      */
     const handleTestDataError = React.useCallback((err: Error) => {
         reportError("Fehler: API-Abfrage über das Backend fehlgeschlagen! (" + err.message + ")");
-    }, [reportError]);
+        backHandler(1);
+    }, [reportError, backHandler]);
 
 
     //this static value will be true as long as the component is still mounted
@@ -136,7 +156,9 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
         if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
         //setup a timer to stop the request after 5 seconds
         const abort = new AbortController();
-        const timer = setTimeout(() => abort.abort(), 5000);
+        const timer = setTimeout(() => {
+            abort.abort()
+        }, 5000);
         //starts fetching the contents from the backend
         fetch(url, {
             method: "POST",
@@ -177,10 +199,16 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
     }, []);
 
 
+
     //on the first load, fetch the data from the backend again
     React.useEffect(() => {
-        fetchTestData();
-    }, [fetchTestData])
+        //only fetch if it has not been done before
+        if(!refetchDoneList[selectedDataSource]) {
+            fetchTestData();
+        } else {
+            setDisplaySpinner(false);
+        }
+    }, [fetchTestData, refetchDoneList, selectedDataSource])
 
     const handleStepForward = () => {
         props.setDataCustomizationStep(0);
@@ -212,7 +240,7 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
                                 Einige der ausgewählten oder in Diagrammen verwendeten Daten dieser Datenquelle sind nicht in der Antwort der API-Abfrage vorhanden.
                             </Typography>
                             <Typography gutterBottom>
-                                Dies ist vermutlich darauf zurückzuführen, dass die API ihr Datenformat geändert hat oder in ihrer Antwort Fehler-Informationen enthäöt.
+                                Dies ist vermutlich darauf zurückzuführen, dass die API ihr Datenformat geändert hat oder in ihrer Antwort Fehler-Informationen enthält.
                             </Typography>
                             <Typography gutterBottom>
                                 Sie können die Datenquelle nicht weiter bearbeiten und die alten Einstellungen behalten (sofern sich die Datenquelle tatsächlich geändert hat werden API-Abfragen vermutlich Fehler erzeugen).
@@ -251,8 +279,8 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
                     backHandler={() => props.backHandler(1)}
                     selectedData={props.dataSource.selectedData}
                     setSelectedData={props.setSelectedData}
-                    listItems={newListItems}
-                    setListItems={() => console.log("THIS IS ONLY FOR DEBUGGING AND NOT ALLOWED IN EDIT MODE!")}
+                    listItems={props.infoProvDataSources[props.selectedDataSource].listItems}
+                    //setListItems={() => console.log("THIS IS ONLY FOR DEBUGGING AND NOT ALLOWED IN EDIT MODE!")}
                     historizedData={props.dataSource.historizedData}
                     setHistorizedData={props.setHistorizedData}
                     customData={props.dataSource.customData}

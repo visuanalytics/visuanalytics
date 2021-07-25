@@ -5,13 +5,11 @@ import Button from "@material-ui/core/Button";
 import {Diagram, diagramType, Plots} from "../../types";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
 import Box from "@material-ui/core/Box";
 import {Dialog, DialogActions, DialogContent, DialogTitle, ListItemSecondaryAction} from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import Typography from "@material-ui/core/Typography";
-import EditIcon from "@material-ui/icons/Edit";
 import ImageIcon from '@material-ui/icons/Image';
 
 interface DiagramOverviewProps {
@@ -214,23 +212,22 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
     const renderDiagramListItem = (item: Diagram) => {
         return (
             <ListItem key={item.name} divider={true}>
-                <ListItemText
-                    primary={item.name + " (" + resolveType(item.variant) + ") - nutzt " + (item.sourceType === "Array" ? "Arrays" : "historisierte Daten")}
-                    secondary={null}
-                />
-                <ListItemSecondaryAction>
-                    <IconButton aria-label="preview" color="primary" onClick={() => openPreviewDialog(item.name)}>
-                        <ImageIcon/>
-                    </IconButton>
-                    <IconButton aria-label="edit" color="primary"
-                                onClick={() => console.log("EDIT NOT IMPLEMENTED YET")}>
-                        <EditIcon/>
-                    </IconButton>
-                    <IconButton aria-label="delete" className={classes.redDeleteIcon}
-                                onClick={() => openDeleteDialog(item.name)}>
-                        <DeleteIcon/>
-                    </IconButton>
-                </ListItemSecondaryAction>
+                <Grid item xs={9}>
+                    <Typography className={classes.wrappedText}>
+                        {item.name + " (" + resolveType(item.variant) + ") - nutzt " + (item.sourceType === "Array" ? "Arrays" : "historisierte Daten")}
+                    </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                    <ListItemSecondaryAction>
+                        <IconButton aria-label="Diagrammvorschau" color="primary" onClick={() => openPreviewDialog(item.name)}>
+                            <ImageIcon/>
+                        </IconButton>
+                        <IconButton aria-label="Diagramm löschen" className={classes.redDeleteIcon}
+                                    onClick={() => openDeleteDialog(item.name)}>
+                            <DeleteIcon/>
+                        </IconButton>
+                    </ListItemSecondaryAction>
+                </Grid>
             </ListItem>
         )
     }
@@ -242,7 +239,7 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
                     Folgende Diagramme wurden bereits erstellt:
                 </Typography>
             </Grid>
-            <Grid item xs={10}>
+            <Grid item container xs={10}>
                 <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.listFrame}>
                     <List>
                         {props.diagrams.map((item) => renderDiagramListItem(item))}
@@ -262,8 +259,8 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
                 </Grid>
             </Grid>
             <Dialog aria-labelledby="deleteDialog-title" open={removeDialogOpen}>
-                <DialogTitle id="deleteDialog-title">
-                    Diagramm '{itemToRemove}' wirklich löschen?
+                <DialogTitle id="deleteDialog-title" className={classes.wrappedText}>
+                    Diagramm "{itemToRemove}" wirklich löschen?
                 </DialogTitle>
                 <DialogContent dividers>
                     <Typography gutterBottom>

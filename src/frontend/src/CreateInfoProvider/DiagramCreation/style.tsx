@@ -93,5 +93,14 @@ export const useStyles = makeStyles((theme: Theme) =>
         intervalChoiceRightLabel: {
             paddingTop: "1.75em", marginRight: "5px"
         },
+        wrappedText: {
+            overflowWrap: "break-word",
+        },
+        wrappedLabel: {
+            "& .MuiFormControlLabel-label": {
+                overflowWrap: "break-word",
+                width: "19em",
+            }
+        }
     })
 );

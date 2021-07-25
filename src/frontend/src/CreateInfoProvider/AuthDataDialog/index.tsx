@@ -7,7 +7,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from "@material-ui/core/FormControl";
 import Button from "@material-ui/core/Button";
-import {DataSourceKey, authDataDialogElement, uniqueId} from "../types";
+import {DataSourceKey, AuthDataDialogElement, uniqueId} from "../types";
 import {Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
 import {APIInputField} from "../BasicSettings/APIInputField/APIInputField";
 
@@ -21,7 +21,7 @@ interface AuthDataDialogProps {
     setApiKeyInput2: (input: string) => void;
     dataSourcesKeys: Map<string, DataSourceKey>;
     setDataSourcesKeys: (map: Map<string, DataSourceKey>) => void;
-    selectionDataSources: Array<authDataDialogElement>;
+    selectionDataSources: Array<AuthDataDialogElement>;
     apiName: string;
 }
 
@@ -126,9 +126,6 @@ export const AuthDataDialog: React.FC<AuthDataDialogProps> = (props) => {
             case "BasicAuth": {
                 return "Basic Auth"
             }
-            case "DigestAuth": {
-                return "Digest Auth"
-            }
             default: {
                 return ""
             }
@@ -181,7 +178,7 @@ export const AuthDataDialog: React.FC<AuthDataDialogProps> = (props) => {
                     <Grid item container xs={12} justify="space-between">
                         <Grid item xs={props.selectionDataSources[selectedIndex].method === "BearerToken" ? 12 : 5}>
                             <APIInputField
-                                defaultValue={(props.selectionDataSources[selectedIndex].method === "BasicAuth" || props.selectionDataSources[selectedIndex].method === "DigestAuth") ? "Nutzername" : props.selectionDataSources[selectedIndex].method === "BearerToken" ? "Token" : "Name Key-Parameter"}
+                                defaultValue={(props.selectionDataSources[selectedIndex].method === "BasicAuth") ? "Nutzername" : props.selectionDataSources[selectedIndex].method === "BearerToken" ? "Token" : "Name Key-Parameter"}
                                 //undefined is not possible here since buildDataSourceSelection set all map entries to empty strings as default
                                 value={(props.selectionDataSources[selectedIndex].name === "current--" + uniqueId) ? props.apiKeyInput1 : props.dataSourcesKeys.get(props.selectionDataSources[selectedIndex].name)!.apiKeyInput1}
                                 changeHandler={(s) => handleInputChange(1, s)}
@@ -191,7 +188,7 @@ export const AuthDataDialog: React.FC<AuthDataDialogProps> = (props) => {
                         {props.selectionDataSources[selectedIndex].method !== "BearerToken" &&
                         <Grid item xs={6}>
                             <APIInputField
-                                defaultValue={(props.selectionDataSources[selectedIndex].method === "BasicAuth" || props.selectionDataSources[selectedIndex].method === "DigestAuth") ? "Passwort" : "API-Key"}
+                                defaultValue={(props.selectionDataSources[selectedIndex].method === "BasicAuth") ? "Passwort" : "API-Key"}
                                 //undefined is not possible here since buildDataSourceSelection set all map entries to empty strings as default
                                 value={(props.selectionDataSources[selectedIndex].name === "current--" + uniqueId) ? props.apiKeyInput2 : props.dataSourcesKeys.get(props.selectionDataSources[selectedIndex].name)!.apiKeyInput2}
                                 changeHandler={(s) => {

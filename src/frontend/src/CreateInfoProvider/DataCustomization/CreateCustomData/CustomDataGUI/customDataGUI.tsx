@@ -6,15 +6,16 @@ import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import ListItem from "@material-ui/core/ListItem";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import List from "@material-ui/core/List";
 import {FormelObj} from "./formelObjects/FormelObj";
 import {
+    Collapse,
     IconButton,
     ListItemSecondaryAction
 } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import {ArrayProcessingData, SelectedDataItem} from "../../../types";
+import {Backspace, ExpandLess, ExpandMore} from "@material-ui/icons";
 
 interface CustomDataGUIProps {
     selectedData: Array<SelectedDataItem>;
@@ -28,6 +29,7 @@ interface CustomDataGUIProps {
     handleNumberButton: (number: string) => void;
     handleRightParen: (paren: string) => void;
     handleLeftParen: (paren: string) => void;
+    handleCommaButton: (comma: string) => void;
     handleDelete: () => void;
     fullDelete: () => void;
     deleteCustomDataCheck: (formelName: string) => void;
@@ -37,15 +39,21 @@ interface CustomDataGUIProps {
     numberFlag: boolean;
     rightParenFlag: boolean;
     leftParenFlag: boolean;
+    commaFlag: boolean;
     leftParenCount: number;
     rightParenCount: number;
-    openDeleteDialog: (formelName: string) => void;
+    isCommaUsed: boolean;
 }
 
 export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
 
     const classes = useStyles();
-    
+    //boolean values used to indicate if the collapse of the corresponding element ist opened
+    const [showCustomData, setShowCustomData] = React.useState(false);
+    const [showSelectedData, setShowSelectedData] = React.useState(false);
+    const [showArrayProcessings, setShowArrayProcessings] = React.useState(false);
+
+
     /**
      * Renders the Buttons for selected-data. All content from selectedData that has 'Zahl' as type is shown.
      * @param data the name of the data-value
@@ -57,15 +65,10 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
 
             return (
                 <ListItem key={data.key}>
-                    <FormControlLabel
-                        control={
-                            <Button variant={"contained"} size={"medium"} disabled={props.dataFlag}
-                                    onClick={() => props.handleDataButtons(data.key)}>
-                                {(data.key + " (" + data.type + ")")}
-                            </Button>
-                        }
-                        label={''}
-                    />
+                    <Button variant={"contained"} size={"medium"} disabled={props.dataFlag}
+                            onClick={() => props.handleDataButtons(data.key)}>
+                        <span className={classes.overflowButtonText}>{(data.key + " (" + data.type + ")")}</span>
+                    </Button>
                 </ListItem>
             );
         }
@@ -79,17 +82,12 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
     const renderListItemCustomData = (data: string) => {
         return (
             <ListItem key={data}>
-                <FormControlLabel
-                    control={
-                        <Button variant={"contained"} size={"medium"} disabled={props.dataFlag}
-                                onClick={() => props.handleDataButtons(data)}>
-                            {data + " (Formel)"}
-                        </Button>
-                    }
-                    label={''}
-                />
+                <Button variant={"contained"} size={"medium"} disabled={props.dataFlag}
+                        onClick={() => props.handleDataButtons(data)}>
+                    <span className={classes.overflowButtonText}>{data + " (Formel)"}</span>
+                </Button>
                 <ListItemSecondaryAction>
-                    <IconButton edge={"end"} disabled={props.input.length > 0} onClick={() => {props.openDeleteDialog(data)}}>
+                    <IconButton edge={"end"} disabled={props.input.length > 0} onClick={() => {props.deleteCustomDataCheck(data)}}>
                         <DeleteIcon color={"error"}/>
                     </IconButton>
                 </ListItemSecondaryAction>
@@ -98,23 +96,19 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
     };
 
     /**
-     * Renders the Buttons for array processings. All content from customData is shown with delete-option
-     * @param processing the object of the array processing
+     * Method that renders a array-processing as a button in the list of data
+     * to add to a formula.
+     * @param processing The name of the processing
      */
-    const renderListItemArrayProcessings = (processing: ArrayProcessingData) => {
+    const renderArrayProcessing = (processing: string) => {
         return (
-            <ListItem key={processing.name}>
-                <FormControlLabel
-                    control={
-                        <Button variant={"contained"} size={"medium"} disabled={props.dataFlag}
-                                onClick={() => props.handleDataButtons(processing.name)}>
-                            {processing.name + " (Array-Verarbeitung)"}
-                        </Button>
-                    }
-                    label={''}
-                />
+            <ListItem key={processing}>
+                <Button variant={"contained"} size={"medium"} disabled={props.dataFlag}
+                        onClick={() => props.handleDataButtons(processing)}>
+                    <span className={classes.overflowButtonText}>{processing}</span>
+                </Button>
             </ListItem>
-        );
+        )
     }
 
     /**
@@ -245,27 +239,31 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
                 <Grid item xs={12}>
                     <br/>
                 </Grid>
-                <Grid item container xs={3} justify={"center"}>
+                <Grid item container xs={12} justify={"space-around"}>
                     <Grid item className={classes.blockableButtonPrimary}>
                         <Button variant={"contained"} size={"large"} color={"primary"} disabled={props.numberFlag}
                                 onClick={() => props.handleNumberButton('0')}>
                             0
                         </Button>
                     </Grid>
-                </Grid>
-                <Grid item container xs={9} justify={"space-around"}>
                     <Grid item>
                         <Button variant={"contained"} size={"large"} color={"primary"}
                                 className={classes.redDeleteButton}
                                 onClick={() => props.handleDelete()}>
-                            Zurück
+                            <Backspace/>
                         </Button>
                     </Grid>
                     <Grid item>
                         <Button variant={"contained"} size={"large"} color={"primary"}
                                 className={classes.redDeleteButton}
                                 onClick={() => props.fullDelete()}>
-                            Löschen
+                            <DeleteIcon/>
+                        </Button>
+                    </Grid>
+                    <Grid item className={classes.blockableButtonPrimary}>
+                        <Button variant={"contained"} size={"large"} color={"primary"} disabled={props.commaFlag || props.isCommaUsed}
+                                onClick={() => props.handleCommaButton('.')}>
+                            .
                         </Button>
                     </Grid>
                 </Grid>
@@ -301,12 +299,86 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
                     <Box borderColor="primary.main"
                          border={4}
                          borderRadius={5}
-                         className={classes.listFrameData}>
-                        <List>
-                            {props.customData.slice().sort((a, b) => a.formelName.localeCompare(b.formelName)).map((name) => renderListItemCustomData(name.formelName))}
-                            {props.arrayProcessingsList.map((processing) => renderListItemArrayProcessings(processing))}
-                            {props.selectedData.slice().sort((a, b) => a.key.localeCompare(b.key)).map((item) => renderListItemSelectedData(item))}
-                        </List>
+                         className={classes.listFrameData}
+                    >
+                        <Grid item container xs={12}>
+                            <Grid item xs={10}>
+                                <Typography variant="h6" className={classes.customDataSelectionTitle}>
+                                    Formeln
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={2}>
+                                {!showCustomData &&
+                                <IconButton aria-label="Formeln ausklappen" onClick={() => setShowCustomData(!showCustomData)}>
+                                    <ExpandMore/>
+                                </IconButton>
+                                }
+                                {showCustomData &&
+                                <IconButton aria-label="Formeln einklappen" onClick={() => setShowCustomData(!showCustomData)}>
+                                    <ExpandLess/>
+                                </IconButton>
+                                }
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Collapse in={showCustomData}>
+                                    <List>
+                                        {props.customData.slice().sort((a, b) => a.formelName.localeCompare(b.formelName)).map((name) => renderListItemCustomData(name.formelName))}
+                                    </List>
+                                </Collapse>
+                            </Grid>
+                        </Grid>
+                        <Grid item container xs={12}>
+                            <Grid item xs={10}>
+                                <Typography variant="h6" className={classes.customDataSelectionTitle}>
+                                    API-Daten
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={2}>
+                                {!showSelectedData &&
+                                <IconButton aria-label="Infoprovider-Daten ausklappen" onClick={() => setShowSelectedData(!showSelectedData)}>
+                                    <ExpandMore/>
+                                </IconButton>
+                                }
+                                {showSelectedData &&
+                                <IconButton aria-label="Infoprovider-Daten einklappen" onClick={() => setShowSelectedData(!showSelectedData)}>
+                                    <ExpandLess/>
+                                </IconButton>
+                                }
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Collapse in={showSelectedData}>
+                                    <List>
+                                        {props.selectedData.slice().sort((a, b) => a.key.localeCompare(b.key)).map((item) => renderListItemSelectedData(item))}
+                                    </List>
+                                </Collapse>
+                            </Grid>
+                        </Grid>
+                        <Grid item container xs={12}>
+                            <Grid item xs={10}>
+                                <Typography variant="h6" className={classes.customDataSelectionTitle}>
+                                    Array-Verarbeitungen
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={2}>
+                                {!showArrayProcessings &&
+                                <IconButton aria-label="Array-Verarbeitungen ausklappen" onClick={() => setShowArrayProcessings(!showArrayProcessings)}>
+                                    <ExpandMore/>
+                                </IconButton>
+                                }
+                                {showArrayProcessings &&
+                                <IconButton aria-label="Array-Verarbeitungen einklappen" onClick={() => setShowArrayProcessings(!showArrayProcessings)}>
+                                    <ExpandLess/>
+                                </IconButton>
+                                }
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Collapse in={showArrayProcessings}>
+                                    <List>
+                                        {props.arrayProcessingsList.map((item) => renderArrayProcessing(item.name))}
+                                    </List>
+                                </Collapse>
+                            </Grid>
+                        </Grid>
                     </Box>
                 </Grid>
             </Grid>

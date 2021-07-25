@@ -144,4 +144,4 @@ def diagram_custom(values: dict, step_data: StepData, prev_paths):
     :return: Pfad zum erstellten Bild
     :rtype: str
     """
-    return generate_diagram_custom(values, step_data, prev_paths)
+    return generate_diagram_custom(values, step_data)  # , prev_paths)

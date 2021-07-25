@@ -18,136 +18,64 @@ import {
 } from "../CreateInfoProvider/types";
 import {ScheduleSelection} from "./ScheduleSelection";
 import {useCallFetch} from "../Hooks/useCallFetch";
+import {FullVideo} from "../Dashboard/types";
+import {hintContents} from "../util/hintContents";
 
-/**
- TODO:
- 10: Option auf Bearbeitung einbinden
 
- DONE:
- 1: Auslagerung Szenenerstellung in Unterkomponente für Gliederung in 3 Schritte
- 2: Fetching aller Infoprovider
- 3: Anzeigen Auswahl aller Infoprovider
- 4: Abfragen aller ausgewählten Infoprovider und Laden von Daten
- 5: Schedule-Auswahl schreiben (wie bei Historisierung mit neuer Option "einmalig")
- 6: Absenden der Daten an das Backend mit Datenformat
- 7: sessionStorage einbinden/ermöglichen
- 8: alle Szenen aus dem Backend fetchen
- 9: fehlende Docstrings hinzufügen
- */
+
+interface VideoCreationProps {
+    video?: FullVideo;
+    videoId?: number;
+}
 
 /**
  * Wrapper component for the videoCreation process.
  */
-export const VideoCreation = () => {
+export const VideoCreation: React.FC<VideoCreationProps> = (props) => {
 
     const components = React.useContext(ComponentContext);
 
     // current step of the VideoCreation
     const [videoCreationStep, setVideoCreationStep] = React.useState(0)
     // name of the videoJob
-    const [videoJobName, setVideoJobName] = React.useState("");
+    const [videoJobName, setVideoJobName] = React.useState(props.video ? props.video.name : "");
     //schedule of the videojob
-    const [schedule, setSchedule] = React.useState<Schedule>({type: "", interval: "", time: "", weekdays: []})
+    const [schedule, setSchedule] = React.useState<Schedule>(props.video ? {
+        type: props.video.schedule.type,
+        weekdays: props.video.schedule.weekdays,
+        time: props.video.schedule.time,
+        interval: props.video.schedule.time_interval,
+    } : {type: "", interval: "", time: "", weekdays: []})
     // list of all available infoproviders
     const [infoProviderList, setInfoProviderList] = React.useState<Array<InfoProviderData>>([]);
     // list of infoproviders selected by the user
-    const [selectedInfoProvider, setSelectedInfoProvider] = React.useState<Array<InfoProviderData>>([]);
+    const [selectedInfoProvider, setSelectedInfoProvider] = React.useState<Array<InfoProviderData>>(props.video ? props.video.selectedInfoprovider : []);
     // list of all infoProvider objects selected by the user - reduced to the necessary minimum of information for the video creation
     const [minimalInfoProvObjects, setMinimalInfoProvObjects] = React.useState<Array<MinimalInfoProvider>>([]);
     // list of the names of all scenes available - holds the data fetched from the backend
-    const [availableScenes, setAvailableScenes] = React.useState<Array<string>>(["Szene_1", "Szene_2", "Szene_3", "Szene_4", "Szene_5", "Szene_6"]);
+    const [availableScenes, setAvailableScenes] = React.useState<Array<string>>([]);
     // sorted list of all scenes that are selected for the video
-    const [sceneList, setSceneList] = React.useState<Array<SceneCardData>>([
-        {entryId: "Szene_1||0", sceneName: "Szene_1", exceedDisplayDuration: 1, spokenText: [{type: "text", text: "hallo"}, {type: "pause", duration: 5}, {type: "text", text: "Janek"}], visible: true},
-        {entryId: "Szene_2||0", sceneName: "Szene_2", exceedDisplayDuration: 1, spokenText: [], visible: true},
-        {entryId: "Szene_3||0", sceneName: "Szene_3", exceedDisplayDuration: 1, spokenText: [], visible: true},
-        {entryId: "Szene_4||0", sceneName: "Szene_4", exceedDisplayDuration: 1, spokenText: [], visible: true},
-        {entryId: "Szene_5||0", sceneName: "Szene_5", exceedDisplayDuration: 1, spokenText: [], visible: true},
-        {entryId: "Szene_6||0", sceneName: "Szene_6", exceedDisplayDuration: 1, spokenText: [], visible: true},
-    ]);
+    const [sceneList, setSceneList] = React.useState<Array<SceneCardData>>(props.video ? props.video.sceneList : []);
     // A list with all infoprovider-IDs which are selected for the tts. This is needed for the backend format
     const [infoproviderIDs, setInfoproviderIDs] = React.useState<Array<number>>([]);
+    //flag that indicates if the edit mode is active, stored in sesssionStorage
+    const [editModeFlag, setEditModeFlag] = React.useState(props.video !== undefined);
+    //store local copies of the props passed for editing to hold them on reload
+    const [propsVideo, setPropsVideo] = React.useState(props.video)
+    const [propsVideoId, setPropsVideoId] = React.useState(props.videoId)
+
 
     /**
-     * Restores all data of the current session when the page is loaded. Used to not loose data on reloading the page.
-     * The sets need to be converted back from Arrays that were parsed with JSON.stringify.
+     * Resets all settings that are relevant for creating a scene.
      */
-    React.useEffect(() => {
-        //videoCreationStep
-        setVideoCreationStep(Number(sessionStorage.getItem("videoCreationStep-" + uniqueId) || 0));
-        //videoJobName
-        setVideoJobName(sessionStorage.getItem("videoJobName-" + uniqueId) || "");
-        //schedule
-        setSchedule(sessionStorage.getItem("schedule-" + uniqueId) === null ? {
-            type: "",
-            interval: "",
-            time: "",
-            weekdays: []
-        } : JSON.parse(sessionStorage.getItem("schedule-" + uniqueId)!))
-        //infoProviderList
-        setInfoProviderList(sessionStorage.getItem("infoProviderList-" + uniqueId) === null ? new Array<InfoProviderData>() : JSON.parse(sessionStorage.getItem("infoProviderList-" + uniqueId)!));
-        //selectedInfoProvider
-        setSelectedInfoProvider(sessionStorage.getItem("selectedInfoProvider-" + uniqueId) === null ? new Array<InfoProviderData>() : JSON.parse(sessionStorage.getItem("selectedInfoProvider-" + uniqueId)!));
-        //minimalInfoProvObjects
-        setMinimalInfoProvObjects(sessionStorage.getItem("minimalInfoProvObjects-" + uniqueId) === null ? new Array<MinimalInfoProvider>() : JSON.parse(sessionStorage.getItem("minimalInfoProvObjects-" + uniqueId)!));
-        //availableScenes
-        setAvailableScenes(sessionStorage.getItem("availableScenes-" + uniqueId) === null ? ["Szene_1", "Szene_2", "Szene_3", "Szene_4", "Szene_5", "Szene_6"] : JSON.parse(sessionStorage.getItem("availableScenes-" + uniqueId)!));
-        //sceneList
-        setSceneList(sessionStorage.getItem("sceneList-" + uniqueId) === null ? [
-            {entryId: "Szene_1||0", sceneName: "Szene_1", exceedDisplayDuration: 1, spokenText: [{type: "text", text: "hallo"}, {type: "pause", duration: 5}, {type: "text", text: "Janek"}], visible: true},
-            {entryId: "Szene_2||0", sceneName: "Szene_2", exceedDisplayDuration: 1, spokenText: [], visible: true},
-            {entryId: "Szene_3||0", sceneName: "Szene_3", exceedDisplayDuration: 1, spokenText: [], visible: true},
-            {entryId: "Szene_4||0", sceneName: "Szene_4", exceedDisplayDuration: 1, spokenText: [], visible: true},
-            {entryId: "Szene_5||0", sceneName: "Szene_5", exceedDisplayDuration: 1, spokenText: [], visible: true},
-            {entryId: "Szene_6||0", sceneName: "Szene_6", exceedDisplayDuration: 1, spokenText: [], visible: true},
-        ] : JSON.parse(sessionStorage.getItem("sceneList-" + uniqueId)!));
-    }, [])
-
-    //store videoCreationStep in sessionStorage
-    React.useEffect(() => {
-        sessionStorage.setItem("videoCreationStep-" + uniqueId, videoCreationStep.toString());
-    }, [videoCreationStep])
-    //store videoJobName in sessionStorage
-    React.useEffect(() => {
-        sessionStorage.setItem("videoJobName-" + uniqueId, videoJobName);
-    }, [videoJobName])
-    //store schedule in sessionStorage by using JSON.stringify on it
-    React.useEffect(() => {
-        sessionStorage.setItem("schedule-" + uniqueId, JSON.stringify(schedule));
-    }, [schedule])
-    //store infoProviderList in sessionStorage by using JSON.stringify on it
-    React.useEffect(() => {
-        sessionStorage.setItem("infoProviderList-" + uniqueId, JSON.stringify(infoProviderList));
-    }, [infoProviderList])
-    //store selectedInfoProvider in sessionStorage by using JSON.stringify on it
-    React.useEffect(() => {
-        sessionStorage.setItem("selectedInfoProvider-" + uniqueId, JSON.stringify(selectedInfoProvider));
-    }, [selectedInfoProvider])
-    //store minimalInfoProvObjects in sessionStorage by using JSON.stringify on it
-    React.useEffect(() => {
-        sessionStorage.setItem("minimalInfoProvObjects-" + uniqueId, JSON.stringify(minimalInfoProvObjects));
-    }, [minimalInfoProvObjects])
-    //store availableScenes in sessionStorage by using JSON.stringify on it
-    React.useEffect(() => {
-        sessionStorage.setItem("availableScenes-" + uniqueId, JSON.stringify(availableScenes));
-    }, [availableScenes])
-    //store availableScenes in sessionStorage by using JSON.stringify on it
-    React.useEffect(() => {
-        sessionStorage.setItem("sceneList-" + uniqueId, JSON.stringify(sceneList));
-    }, [sceneList])
-
-    /**
-     * Removes all items of this component from the sessionStorage.
-     */
-    const clearSessionStorage = () => {
-        sessionStorage.removeItem("videoCreationStep-" + uniqueId);
-        sessionStorage.removeItem("videoJobName-" + uniqueId);
-        sessionStorage.removeItem("schedule-" + uniqueId);
-        sessionStorage.removeItem("infoProviderList-" + uniqueId);
-        sessionStorage.removeItem("selectedInfoProvider-" + uniqueId);
-        sessionStorage.removeItem("minimalInfoProvObjects-" + uniqueId);
-        sessionStorage.removeItem("availableScenes-" + uniqueId);
-        sessionStorage.removeItem("sceneList-" + uniqueId);
+    const resetJobSettings = () => {
+        setSchedule({type: "", interval: "", time: "", weekdays: []});
+        setVideoJobName("");
+        setMinimalInfoProvObjects([]);
+        setAvailableScenes([]);
+        setSceneList([]);
+        //also set the complete settings to undefined when removing things in editing
+        //setPropsVideo(undefined);
     }
 
 
@@ -163,29 +91,6 @@ export const VideoCreation = () => {
     const reportError = React.useCallback((message: string) => {
         dispatchMessage({type: "reportError", message: message});
     }, [dispatchMessage])
-
-    /**
-     * Handler method for the proceed/continue buttons. Increments the step by 1
-     * and triggers sending the videojob to the backend when the end is reached.
-     */
-    const continueHandler = () => {
-        if (videoCreationStep === 2) sendVideoToBackend();
-        else setVideoCreationStep(videoCreationStep + 1);
-    }
-
-    /**
-     * Handler method for back buttons. Decrements the step by 1 and returns
-     * to the dashboard when clicking back on the first step.
-     */
-    const backHandler = () => {
-        if(videoCreationStep === 0) {
-            clearSessionStorage()
-            components?.setCurrent("dashboard")
-        } else {
-            setVideoCreationStep(videoCreationStep -1)
-        }
-    }
-
 
     /**
      * Method block for fetching all infoproviders from the backend
@@ -264,6 +169,143 @@ export const VideoCreation = () => {
         }, [fetchAllInfoprovider]
     );
 
+    /**
+     * Restores all data of the current session when the page is loaded. Used to not loose data on reloading the page.
+     * The sets need to be converted back from Arrays that were parsed with JSON.stringify.
+     */
+    React.useEffect(() => {
+        //TODO: document this behaviour
+        //dont load data necessary for editing on the first load
+        if (sessionStorage.getItem("firstVideoCreationEntering-" + uniqueId) !== null) {
+            //editModeFlag
+            setEditModeFlag(sessionStorage.getItem("editModeFlag-" + uniqueId) === "true");
+            //propsVideo
+            setPropsVideo(sessionStorage.getItem("propsVideo-" + uniqueId) === null ? undefined : JSON.parse(sessionStorage.getItem("propsVideo-" + uniqueId)!));
+            //propsVideoId
+            setPropsVideoId(sessionStorage.getItem("propsVideoId-" + uniqueId) === null ? undefined : Number(sessionStorage.getItem("propsVideoId-" + uniqueId)!));
+            //selectedInfoProvider
+            setSelectedInfoProvider(sessionStorage.getItem("selectedInfoProvider-" + uniqueId) === null ? new Array<InfoProviderData>() : JSON.parse(sessionStorage.getItem("selectedInfoProvider-" + uniqueId)!));
+            //videoJobName
+            setVideoJobName(sessionStorage.getItem("videoJobName-" + uniqueId) || "");
+            //schedule
+            setSchedule(sessionStorage.getItem("schedule-" + uniqueId) === null ? {
+                type: "",
+                interval: "",
+                time: "",
+                weekdays: []
+            } : JSON.parse(sessionStorage.getItem("schedule-" + uniqueId)!))
+            //sceneList
+            setSceneList(sessionStorage.getItem("sceneList-" + uniqueId) === null ? [] : JSON.parse(sessionStorage.getItem("sceneList-" + uniqueId)!));
+
+        } else {
+            //leave a marker in the sessionStorage to identify if this is the first entering
+            sessionStorage.setItem("firstVideoCreationEntering-" + uniqueId, "false");
+        }
+        if(sessionStorage)
+
+
+        //videoCreationStep
+        setVideoCreationStep(Number(sessionStorage.getItem("videoCreationStep-" + uniqueId) || 0));
+        //infoProviderList
+        setInfoProviderList(sessionStorage.getItem("infoProviderList-" + uniqueId) === null ? new Array<InfoProviderData>() : JSON.parse(sessionStorage.getItem("infoProviderList-" + uniqueId)!));
+        //minimalInfoProvObjects
+        setMinimalInfoProvObjects(sessionStorage.getItem("minimalInfoProvObjects-" + uniqueId) === null ? new Array<MinimalInfoProvider>() : JSON.parse(sessionStorage.getItem("minimalInfoProvObjects-" + uniqueId)!));
+        //availableScenes
+        setAvailableScenes(sessionStorage.getItem("availableScenes-" + uniqueId) === null ? [] : JSON.parse(sessionStorage.getItem("availableScenes-" + uniqueId)!));
+        if(Number(sessionStorage.getItem("sceneEditorStep-" + uniqueId)) === 0) {
+            // when step 0 is loaded, reload the list of infoproviders from backend
+            fetchAllInfoprovider();
+        }
+
+    }, [fetchAllInfoprovider])
+
+    //store videoCreationStep in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("videoCreationStep-" + uniqueId, videoCreationStep.toString());
+    }, [videoCreationStep])
+    //store videoJobName in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("videoJobName-" + uniqueId, videoJobName);
+    }, [videoJobName])
+    //store schedule in sessionStorage by using JSON.stringify on it
+    React.useEffect(() => {
+        sessionStorage.setItem("schedule-" + uniqueId, JSON.stringify(schedule));
+    }, [schedule])
+    //store infoProviderList in sessionStorage by using JSON.stringify on it
+    React.useEffect(() => {
+        sessionStorage.setItem("infoProviderList-" + uniqueId, JSON.stringify(infoProviderList));
+    }, [infoProviderList])
+    //store selectedInfoProvider in sessionStorage by using JSON.stringify on it
+    React.useEffect(() => {
+        sessionStorage.setItem("selectedInfoProvider-" + uniqueId, JSON.stringify(selectedInfoProvider));
+    }, [selectedInfoProvider])
+    //store minimalInfoProvObjects in sessionStorage by using JSON.stringify on it
+    React.useEffect(() => {
+        sessionStorage.setItem("minimalInfoProvObjects-" + uniqueId, JSON.stringify(minimalInfoProvObjects));
+    }, [minimalInfoProvObjects])
+    //store availableScenes in sessionStorage by using JSON.stringify on it
+    React.useEffect(() => {
+        sessionStorage.setItem("availableScenes-" + uniqueId, JSON.stringify(availableScenes));
+    }, [availableScenes])
+    //store availableScenes in sessionStorage by using JSON.stringify on it
+    React.useEffect(() => {
+        sessionStorage.setItem("sceneList-" + uniqueId, JSON.stringify(sceneList));
+    }, [sceneList])
+    //store editModeFlag in sessionStorage by using JSON.stringify on it
+    React.useEffect(() => {
+        console.log("setting editModeFlag: " + editModeFlag)
+        sessionStorage.setItem("editModeFlag-" + uniqueId, editModeFlag.toString());
+    }, [editModeFlag])
+    //store propsVideo in sessionStorage by using JSON.stringify on it
+    React.useEffect(() => {
+        if(propsVideo !== undefined)
+            sessionStorage.setItem("propsVideo-" + uniqueId, JSON.stringify(propsVideo));
+    }, [propsVideo])
+    //store propsVideo in sessionStorage
+    React.useEffect(() => {
+        if(propsVideoId !== undefined)
+            sessionStorage.setItem("propsVideoId-" + uniqueId, propsVideoId.toString());
+    }, [propsVideoId])
+
+    /**
+     * Removes all items of this component from the sessionStorage.
+     */
+    const clearSessionStorage = () => {
+        sessionStorage.removeItem("videoCreationStep-" + uniqueId);
+        sessionStorage.removeItem("videoJobName-" + uniqueId);
+        sessionStorage.removeItem("schedule-" + uniqueId);
+        sessionStorage.removeItem("infoProviderList-" + uniqueId);
+        sessionStorage.removeItem("selectedInfoProvider-" + uniqueId);
+        sessionStorage.removeItem("minimalInfoProvObjects-" + uniqueId);
+        sessionStorage.removeItem("availableScenes-" + uniqueId);
+        sessionStorage.removeItem("sceneList-" + uniqueId);
+        sessionStorage.removeItem("editModeFlag-" + uniqueId);
+        sessionStorage.removeItem("firstVideoCreationEntering-" + uniqueId);
+        sessionStorage.removeItem("propsVideo-" + uniqueId);
+        sessionStorage.removeItem("propsVideoId-" + uniqueId);
+    }
+
+    /**
+     * Handler method for the proceed/continue buttons. Increments the step by 1
+     * and triggers sending the videojob to the backend when the end is reached.
+     */
+    const continueHandler = () => {
+        if (videoCreationStep === 2) sendVideoToBackend();
+        else setVideoCreationStep(videoCreationStep + 1);
+    }
+
+    /**
+     * Handler method for back buttons. Decrements the step by 1 and returns
+     * to the dashboard when clicking back on the first step.
+     */
+    const backHandler = () => {
+        if(videoCreationStep === 0) {
+            clearSessionStorage()
+            components?.setCurrent("dashboard")
+        } else {
+            setVideoCreationStep(videoCreationStep -1)
+        }
+    }
 
     /**
      * Method block for fetching all scenes from the backend
@@ -279,7 +321,10 @@ export const VideoCreation = () => {
         const data = jsonData as FetchAllScenesAnswer;
         const availableScenes: Array<string> = [];
         data.forEach((scene) => availableScenes.push(scene.scene_name));
-        //setAvailableScenes(availableScenes); //TODO: comment in once testing is done
+        setAvailableScenes(availableScenes);
+        //remove the original selection array from sessionStorage stored there by InfoProviderSelection
+        sessionStorage.removeItem("originalSelectedInfoProvider-" + uniqueId);
+        sessionStorage.removeItem("firstInfoProvSelectionEntering-" + uniqueId)
         continueHandler();
     }
 
@@ -315,7 +360,6 @@ export const VideoCreation = () => {
      */
     const createImagesObject = () => {
         console.trace()
-        //TODO: possibly find smarter solution without any type
         const imagesObject: any = {};
         //index to label each scene - secures the ordering and allows use the same scene multiple times
         let index = 1;
@@ -333,7 +377,6 @@ export const VideoCreation = () => {
      * Method that creates the object with all audios necessary for the backend.
      */
     const createAudiosObject = () => {
-        //TODO: possibly find smarter solution without any type
         const audioObject: any = {};
         let index = 1;
         sceneList.forEach((scene) => {
@@ -369,12 +412,12 @@ export const VideoCreation = () => {
         return audioObject;
     }
 
-    //TODO: check the status of the answer
     /**
      * Handler method for success on posting the video to the backend.
      * @param jsonData The answer returned by the backend.
      */
     const sendVideoSuccessHandler = (jsonData: any) => {
+        clearSessionStorage();
         components?.setCurrent("dashboard")
     }
 
@@ -392,7 +435,7 @@ export const VideoCreation = () => {
      * called inside of it on every render.
      */
     const sendVideoToBackend = () => {
-        let url = "visuanalytics/videojob";
+        let url = ((propsVideo && propsVideoId) ? "visuanalytics/videojob/" + propsVideoId : "visuanalytics/videojob");
         //if this variable is set, add it to the url
         if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
         //setup a timer to stop the request after 5 seconds
@@ -400,7 +443,7 @@ export const VideoCreation = () => {
         const timer = setTimeout(() => abort.abort(), 5000);
         //starts fetching the contents from the backend
         fetch(url, {
-            method: "POST",
+            method: propsVideo ? "PUT" : "POST",
             headers: {
                 "Content-Type": "application/json\n"
             },
@@ -459,6 +502,8 @@ export const VideoCreation = () => {
                         fetchAllScenes={() => fetchAllScenes()}
                         infoproviderIDs={infoproviderIDs}
                         setInfoproviderIDs={setInfoproviderIDs}
+                        isEditMode={editModeFlag}
+                        resetJobSettings={() => resetJobSettings()}
                     />
                 )
             }
@@ -495,7 +540,7 @@ export const VideoCreation = () => {
     return (
         <StepFrame
             heading={"Video-Editor"}
-            hintContent={null}
+            hintContent={hintContents.videoEditor}
             large={"lg"}
         >
             {selectContent()}

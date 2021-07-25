@@ -1,5 +1,4 @@
 /* CreateInfoProvider */
-//TODO: possibly find a better solution - objects are a nice structure, but comparison takes up compute time since conversions are necessary
 //data type for elements contained in selectedData
 import {FormelObj} from "./DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 
@@ -38,8 +37,9 @@ export type DataSource = {
 export type BackendCalculate = {
     type: string;
     action: string;
-    keys: Array<String>;
-    new_keys: Array<String>;
+    keys: Array<string>;
+    innerKey?: Array<string>;
+    new_keys: Array<string>;
     decimal: number;
 }
 
@@ -85,6 +85,7 @@ export type BackendDataSource = {
     historized_data: Array<string>;
     arrayProcessingsList: Array<ArrayProcessingData>;
     stringReplacementList: Array<StringReplacementData>;
+    listItems: Array<ListItemRepresentation>;
 }
 
 //type/format of infoproviders returned by the backend
@@ -110,28 +111,11 @@ export type DataSourceKey = {
     apiKeyInput2: string;
 }
 
-//TODO: rename
-export type authDataDialogElement = {
+export type AuthDataDialogElement = {
     name: string;
     method: string;
 }
 
-//Type providing constants for all supported diagram types
-export type diagramType = "dotDiagram" | "lineChart" | "horizontalBarChart" | "verticalBarChart" | "pieChart"
-
-/**
- * Represents a diagram created by the user.
- * @param name Name of the diagram, has to be unique
- * @param variant displays the type of diagram defined.
- */
-export type Diagram = {
-    name: string;
-    variant: diagramType;
-    sourceType: string;
-    arrayObjects?: Array<ArrayDiagramProperties>;
-    historizedObjects?: Array<HistorizedDiagramProperties>;
-    amount: number;
-}
 
 //unique application id used to avoid collisions in session storage
 export const uniqueId = "ddfdd278-abf9-11eb-8529-0242ac130003"
@@ -155,7 +139,7 @@ export type testDataBackendAnswer = {
  */
 export type ListItemRepresentation = {
     keyName: string;
-    value: any;
+    value: string|Array<ListItemRepresentation>;
     parentKeyName: string;
     arrayRep: boolean;
     arrayLength: number;
@@ -173,18 +157,36 @@ export type customDataBackendAnswer = {
 
 
 /* DiagramCreation */
+//Type providing constants for all supported diagram types
+export type diagramType = "dotDiagram" | "lineChart" | "horizontalBarChart" | "verticalBarChart" | "pieChart"
+
+/**
+ * Represents a diagram created by the user.
+ * @param name Name of the diagram, has to be unique
+ * @param variant displays the type of diagram defined.
+ */
+export type Diagram = {
+    name: string;
+    variant: diagramType;
+    sourceType: string;
+    arrayObjects?: Array<ArrayDiagramProperties>;
+    historizedObjects?: Array<HistorizedDiagramProperties>;
+    amount: number;
+    customLabels: boolean;
+    labelArray: Array<string>;
+    stringAttribute: SelectedStringAttribute;
+}
+
+
 /**
  * Represents an array selected for diagram creation and holds attributes for all settings
  */
 export type ArrayDiagramProperties = {
     listItem: ListItemRepresentation;
     numericAttribute: string;
-    stringAttribute: string;
-    labelArray: Array<string>;
     color: string;
     numericAttributes: Array<ListItemRepresentation>;
     stringAttributes: Array<ListItemRepresentation>
-    customLabels: boolean;
 }
 
 /**
@@ -192,12 +194,19 @@ export type ArrayDiagramProperties = {
  */
 export type HistorizedDiagramProperties = {
     name: string;
-    labelArray: Array<string>;
     color: string;
     intervalSizes: Array<number>;
-    dateLabels: boolean;
-    dateFormat: string;
 }
+
+/**
+ * Represents a string attribute selected for labeling,
+ * containing its name and the array it belongs to.
+ */
+export type SelectedStringAttribute = {
+    key: string;
+    array: string;
+}
+
 
 /**
  * Plot typed which is used for sending diagrams to the backend in fitting format.
@@ -205,7 +214,6 @@ export type HistorizedDiagramProperties = {
 export type Plots = {
     customLabels?: boolean;
     primitive?: boolean;
-    dateLabels?: boolean;
     plot: {
         type: string;
         x: Array<number>;
@@ -213,7 +221,6 @@ export type Plots = {
         color: string;
         numericAttribute?: string;
         stringAttribute?: string;
-        dateFormat?: string;
         x_ticks: {
             ticks: Array<string>;
         };
@@ -223,7 +230,7 @@ export type Plots = {
 /* ArrayProcessings */
 export type ArrayProcessingData = {
     name: string;
-    array: string;
+    array: ProcessableArray;
     operation: Operation;
 }
 
@@ -239,4 +246,15 @@ export type StringReplacementData = {
     string: string;
     replace: string;
     with: string;
+}
+
+//TODO: document this!
+/**
+ * Type that contains the information about a processable array.
+ * Used for displaying information in the ArrayProcessings and transforming to calculates.
+ */
+export type ProcessableArray = {
+    valueInObject: boolean; //true if this is a numeric value in an object contained in an array
+    key: string;
+    innerKey: string; //only used when valueInObject is 'true' - used to display the key path inside the object in the array
 }

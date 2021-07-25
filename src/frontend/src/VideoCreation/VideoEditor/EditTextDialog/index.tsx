@@ -47,6 +47,8 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
     // The state, which holds the value for a pause that should be added. Please note that this state is not used for modifying existing pauses
     const [newPause, setNewPause] = React.useState<number | undefined>(0);
 
+    //TODO: document new formats
+
     // This state holds all information for the audio of the scene. Audio can be text or pause at the moment. If non spoken text is provided, an audio element with no text is generated for the state
     const [audioElements, setAudioElements] = React.useState<Array<AudioElement>>(props.spokenText.length === 0 ? [{
         type: "text",
@@ -85,9 +87,9 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
      * The item is always inserted to the textfield, which was clicked last by the mouse.
      * @param item The item name that should be added to the textfield. This should be the full path, beginning with the infoprovider name
      */
-    const insertSelectedOrCustomData = (item: string) => {
+    const insertSelectedOrCustomData = (item: string, noReq: boolean) => {
         const arrCopy = audioElements.slice();
-        arrCopy[lastEditedTTSTextIndex].text = arrCopy[lastEditedTTSTextIndex].text + "{:" + item + ":} ";
+        arrCopy[lastEditedTTSTextIndex].text = arrCopy[lastEditedTTSTextIndex].text + (!noReq ? "{_req|" : "{") + item + "} ";
         setAudioElements(arrCopy);
     }
 
@@ -98,7 +100,7 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
     const insertHistorizedData = () => {
         if(selectedInterval !== undefined) {
             const arrCopy = audioElements.slice();
-            arrCopy[lastEditedTTSTextIndex].text = arrCopy[lastEditedTTSTextIndex].text + "{:" + selectedHistorizedElement + "{" + selectedInterval.toString() + "}:} ";
+            arrCopy[lastEditedTTSTextIndex].text = arrCopy[lastEditedTTSTextIndex].text + "{_req|" + selectedHistorizedElement.replace("|", "_") + "_HISTORY|" + selectedInterval.toString() + "} ";
             setAudioElements(arrCopy);
             setSelectedInterval(0);
             setShowHistorizedDialog(false);
@@ -174,7 +176,7 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
      */
     const isInvalidCombination = () => {
         for(let i = 0; i < audioElements.length; i++) {
-            if(audioElements[i].type === "text" && audioElements[i].text === "") return true;
+            if(audioElements[i].type === "text" && (audioElements[i].text === "" || audioElements[i].text!.replace(/\s/g, "").length === 0)) return true;
             else if(audioElements[i].type === "pause" && (audioElements[i].duration === undefined || audioElements[i].duration! < 0)) return true;
         }
         return false;
@@ -233,32 +235,30 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
         setShowHistorizedDialog(true);
     }
 
-    //TODO: possibly find better solution than abusing span
     /**
      * Renders clickable buttons for the historized data of an infoprovider, so they can be inserted into textfields
      * @param item The item name
      * @param schedule The corresponding schedule for the rendered element, this is needed for passing to the next dialog if clicked
      */
-    const renderHistorizedData = (item: string, schedule: Schedule) => {
+    const renderHistorizedData = (item: string, infoProvName: string, schedule: Schedule) => {
         return (
             <ListItem key={item}>
                 <Button variant="contained" size="large" onClick={() => handleClickOnHistorizedData(item, schedule)}>
-                    <span className={classes.overflowButtonText}>{item}</span>
+                    <span className={classes.overflowButtonText}>{infoProvName + "|" + item}</span>
                 </Button>
             </ListItem>
         );
     }
 
-    //TODO: possibly find better solution than abusing span
     /**
      * This method renders clickable buttons for inserting selected and custom data from an infoprovider into a textfield.
      * @param item The name of the item that should be rendered
      */
-    const renderData = (item: string) => {
+    const renderData = (item: string, infoProvName: string, noReq: boolean, withoutDataSourceName?: string) => {
         return (
             <ListItem key={item}>
-                <Button variant="contained" size="large" onClick={() => insertSelectedOrCustomData(item)}>
-                    <span className={classes.overflowButtonText}>{item}</span>
+                <Button variant="contained" size="large" onClick={() => insertSelectedOrCustomData(withoutDataSourceName !== undefined ? withoutDataSourceName : item, noReq)}>
+                    <span className={classes.overflowButtonText}>{infoProvName + "|" + item}</span>
                 </Button>
             </ListItem>
         );
@@ -271,7 +271,7 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
      */
     const renderDataSource = (dataSource: MinimalDataSource, infoProviderName: string) => {
         return (
-            <Grid item container xs={12}>
+            <Grid item container xs={12} key={dataSource.apiName}>
                 <Grid item xs={12}>
                     <Typography variant="body1" className={classes.categoryText}>
                         Gewählte Daten
@@ -279,7 +279,7 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
                 </Grid>
                 <Grid item xs={12}>
                     <List key={dataSource.apiName + "-SelectedData"} disablePadding={true}>
-                        {extractKeysFromSelection(dataSource.selectedData).map((item: string) => renderData(infoProviderName + "|" + dataSource.apiName + "|" + item))}
+                        {extractKeysFromSelection(dataSource.selectedData).map((item: string) => renderData(dataSource.apiName + "|" + item, infoProviderName, false))}
                     </List>
                 </Grid>
                 <Grid item xs={12}>
@@ -289,7 +289,7 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
                 </Grid>
                 <Grid item xs={12}>
                     <List key={dataSource.apiName + "-SelectedData"} disablePadding={true}>
-                        {dataSource.arrayProcessingList.map((item: ArrayProcessingData) => renderData(infoProviderName + "|" + dataSource.apiName + "|" + item.name))}
+                        {dataSource.arrayProcessingList.map((item: ArrayProcessingData) => renderData(dataSource.apiName + "|" + item.name, infoProviderName, true, item.name))}
                     </List>
                 </Grid>
                 <Grid item xs={12}>
@@ -299,7 +299,7 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
                 </Grid>
                 <Grid item xs={12}>
                     <List key={dataSource.apiName + "-SelectedData"} disablePadding={true}>
-                        {dataSource.stringReplacementList.map((item: StringReplacementData) => renderData(infoProviderName + "|" + dataSource.apiName + "|" + item.name))}
+                        {dataSource.stringReplacementList.map((item: StringReplacementData) => renderData(dataSource.apiName + "|" + item.name, infoProviderName,true, item.name))}
                     </List>
                 </Grid>
                 <Grid item xs={12} className={classes.elementLargeMargin}>
@@ -309,7 +309,7 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
                 </Grid>
                 <Grid item xs={12} className={classes.elementLargeMargin}>
                     <List key={dataSource.apiName + "-CustomData"} disablePadding={true}>
-                        {dataSource.customData.map((item: FormelObj) => renderData(infoProviderName + "|" + dataSource.apiName + "|" + item.formelName))}
+                        {dataSource.customData.map((item: FormelObj) => renderData(dataSource.apiName + "|" + item.formelName, infoProviderName, true, item.formelName))}
                     </List>
                 </Grid>
                 <Grid item xs={12}>
@@ -319,7 +319,7 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
                 </Grid>
                 <Grid item xs={12}>
                     <List key={dataSource.apiName + "-HistorizedData"} disablePadding={true}>
-                        {dataSource.historizedData.map((item: string) => renderHistorizedData(infoProviderName + "|" + dataSource.apiName + "|" + item, dataSource.schedule))}
+                        {dataSource.historizedData.map((item: string) => renderHistorizedData(dataSource.apiName + "|" + item, infoProviderName, dataSource.schedule))}
                     </List>
                 </Grid>
             </Grid>
@@ -398,7 +398,7 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
                                         <TextField fullWidth error={newPause === undefined || newPause < 0} label="Pause vor nächstem Text in ms" type="number" value={newPause} onChange={event => setNewPause(event.target.value === "" ? undefined : Number(event.target.value))}/>
                                     </Grid>
                                     <Grid item xs={12} className={classes.blockableButtonPrimaryMarginTop}>
-                                        <Button variant="contained" color="primary" disabled={newPause === undefined || newPause < 0 || audioElements[audioElements.length - 1].text === ""} onClick={addNewText}>
+                                        <Button variant="contained" color="primary" disabled={newPause === undefined || newPause < 0 || audioElements[audioElements.length - 1].text === "" || audioElements[audioElements.length - 1].text!.replace(/\s/g, "").length === 0} onClick={addNewText}>
                                             Neuen Abschnitt hinzufügen
                                         </Button>
                                     </Grid>
@@ -445,27 +445,27 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
                                 Legen Sie bitte das Intervall fest, welches für die TTS verwendet werden soll. Die Zahl 0 meint dabei das aktuellste Intervall, die Zahl 1 das Vorletzte, usw.
                             </Typography>
                         </Grid>
-                        <Grid item xs={12}>
-                            <Typography variant="h5">
+                        <Grid item xs={12} className={classes.elementLargeMargin}>
+                            <Typography variant="h6">
                                 Informationen zu Historisierungszeitpunkten des gewählten Elements:
                             </Typography>
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid item xs={12} className={classes.elementLargeMargin}>
                             <ScheduleTypeTable schedule={selectedSchedule}/>
                         </Grid>
-                        <Grid item xs={12}>
-                            <TextField error={selectedInterval === undefined || selectedInterval < 0} label="Wahl des Intervalls für das einzufügende Element" type="number" value={selectedInterval} onChange={event => setSelectedInterval(event.target.value === "" ? undefined : Number(event.target.value))}/>
+                        <Grid item xs={12} className={classes.elementLargeMargin}>
+                            <TextField className={classes.ttsIntervalInput} error={selectedInterval === undefined || selectedInterval < 0} label="Wahl des Intervalls für das einzufügende Element" type="number" value={selectedInterval} onChange={event => setSelectedInterval(event.target.value === "" ? undefined : Number(event.target.value))}/>
                         </Grid>
                     </Grid>
                 </DialogContent>
                 <DialogActions className={classes.elementLargeMargin}>
-                    <Grid container justify="space-between">
-                        <Grid item xs={12}>
+                    <Grid item container justify="space-between">
+                        <Grid item>
                             <Button variant="contained" color="primary" onClick={() => cancelHistorizedDataAdding()}>
                                 Abbrechen
                             </Button>
                         </Grid>
-                        <Grid item xs={12} className={classes.blockableButtonSecondary}>
+                        <Grid item className={classes.blockableButtonSecondary}>
                             <Button variant="contained" color="secondary" disabled={selectedInterval === undefined || selectedInterval < 0} onClick={() => insertHistorizedData()}>
                                 Speichern
                             </Button>

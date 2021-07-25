@@ -80,13 +80,31 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
     /**
      * Used for arrays that contain objects. Returns all attributes that are numeric to present them as a choice to the user.
      * @param object The object contained in the array.
+     * @param baseArrayName Name of the array that is the basis of these numeric attributes. Used for keeping the same name in subobjects.
      */
-    const getNumericAttributes = (object: Array<ListItemRepresentation>) => {
-        const numericAttributes: Array<ListItemRepresentation> = []
+    const getNumericAttributes = (object: Array<ListItemRepresentation>, baseArrayName: string = "") => {
+        //if no baseArrayName is set, get it from the parentKeyName of the first element - necessary to set the same parent name for all nested objects
+        if(baseArrayName === "") baseArrayName = object.length > 0 ? object[0].parentKeyName : "";
+        let numericAttributes: Array<ListItemRepresentation> = [];
         for (let index = 0; index < object.length; ++index) {
             //console.log("checking: " + object[index].keyName);
-            if (object[index].value === "Zahl") numericAttributes.push(object[index]);
+            if (object[index].value === "Zahl" || object[index].value === "Gleitkommazahl") {
+                //before pushing, we need to create a new object that has the full keyPath from the parent array on as its keyName
+                //get the full keyName of the innerKey, then cut the array name from it
+                const keyPath = (object[index].parentKeyName + "|" + object[index].keyName).substring(baseArrayName.length + 1);
+                console.log(keyPath);
+                numericAttributes.push({
+                    ...object[index],
+                    keyName: keyPath
+                })
+            }
+            //check if this is an sub-object - we need to check it too then
+            else if(Array.isArray(object[index].value) && !object[index].arrayRep) {
+                //also pass the baseArrayName to let it be the same
+                numericAttributes = numericAttributes.concat(getNumericAttributes(object[index].value as Array<ListItemRepresentation>, baseArrayName));
+            }
         }
+        console.log(numericAttributes)
         return numericAttributes;
     }
 
@@ -95,10 +113,14 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
      * @param object The object contained in the array.
      */
     const getStringAttributes = (object: Array<ListItemRepresentation>) => {
-        const stringAttributes: Array<ListItemRepresentation> = []
+        let stringAttributes: Array<ListItemRepresentation> = []
         for (let index = 0; index < object.length; ++index) {
             //console.log("checking: " + object[index].keyName);
             if (object[index].value === "Text") stringAttributes.push(object[index]);
+            //check if this is an sub-object - we need to check it too then
+            else if(Array.isArray(object[index].value) && !object[index].arrayRep) {
+                stringAttributes = stringAttributes.concat(getStringAttributes(object[index].value as Array<ListItemRepresentation>));
+            }
         }
         return stringAttributes;
     }
@@ -127,12 +149,9 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
                 const arrayObject = {
                     listItem: item,
                     numericAttribute: "",
-                    stringAttribute: "",
-                    labelArray: new Array(1).fill(""),
                     color: "#000000",
                     numericAttributes: numericAttributes,
                     stringAttributes: stringAttributes,
-                    customLabels: stringAttributes.length === 0
                 }
                 arrayObjects.push(arrayObject);
             }
@@ -149,11 +168,8 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
         selectedHistorized.forEach((item) => {
             const historizedObject = {
                 name: item,
-                labelArray: new Array(1).fill(""),
                 color: "#000000",
                 intervalSizes: new Array(1).fill(0),
-                dateLabels: false,
-                dateFormat: "dd.mm.yyyy"
             }
             historizedObjects.push(historizedObject);
         })
@@ -272,6 +288,7 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
                 <ListItemText
                     primary={keyString}
                     secondary={null}
+                    className={classes.wrappedText}
                 />
             </ListItem>
         )
@@ -296,6 +313,7 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
                 <ListItemText
                     primary={item}
                     secondary={null}
+                    className={classes.wrappedText}
                 />
             </ListItem>
         )
@@ -327,12 +345,14 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
                                             Folgende Arrays des Infoproviders sind kompatibel mit Diagrammen:
                                         </Typography>
                                     </Grid>
-                                    <Grid item xs={12}>
+                                    <Grid item container xs={12}>
                                         <Box borderColor="primary.main" border={4} borderRadius={5}
                                              className={classes.choiceListFrame}>
-                                            <List disablePadding={true}>
-                                                {props.compatibleArrays.map((item) => renderArrayListItem(item))}
-                                            </List>
+                                            <Grid item xs={12}>
+                                                <List disablePadding={true}>
+                                                    {props.compatibleArrays.map((item) => renderArrayListItem(item))}
+                                                </List>
+                                            </Grid>
                                         </Box>
                                     </Grid>
                                 </Grid>

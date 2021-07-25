@@ -2,7 +2,12 @@ import React from "react";
 import {useStyles} from "../../style";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import {ListItemRepresentation, diagramType, uniqueId, ArrayDiagramProperties} from "../../../types";
+import {
+    diagramType,
+    uniqueId,
+    ArrayDiagramProperties,
+    SelectedStringAttribute, ListItemRepresentation
+} from "../../../types";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Radio from "@material-ui/core/Radio";
 import Box from "@material-ui/core/Box";
@@ -30,6 +35,12 @@ interface ArrayDiagramCreatorProps {
     fetchPreviewImage: () => void;
     imageURL: string;
     setImageURL: (url: string) => void;
+    customLabels: boolean;
+    setCustomLabels: (customLabels: boolean) => void;
+    labelArray: Array<string>;
+    setLabelArray: (labels: Array<string>) => void;
+    selectedStringAttribute: SelectedStringAttribute;
+    setSelectedStringAttribute: (stringAttribute: SelectedStringAttribute) => void;
 }
 
 /**
@@ -45,22 +56,59 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
 
     //holds the index of the currently selected arrayObject
     const [selectedArrayOrdinal, setSelectedArrayOrdinal] = React.useState<number>(0);
+    //holds a list of all available string attributes
+    const [availableStringAttributes, setAvailableStringAttributes] = React.useState<Array<SelectedStringAttribute>>([]);
+    //holds the index of the selected stringAttribute
+    const [stringAttributeIndex, setStringAttributeIndex] = React.useState(-1);
     //boolean flag used for opening and closing the preview dialog
     const [previewOpen, setPreviewOpen] = React.useState(false);
     //boolean flag used for opening and closing the cancel dialog
     const [cancelOpen, setCancelOpen] = React.useState(false);
 
     /**
-     * Restore the selected ordinal from sessionStorage to not loose it on reload.
+     * Restore data from sessionStorage to not loose it on reload.
      */
     React.useEffect(() => {
         //selectedArrayOrdinal
         setSelectedArrayOrdinal(Number(sessionStorage.getItem("selectedArrayOrdinal-" + uniqueId) || 0));
+        //availableStringAttributes
+        setAvailableStringAttributes(sessionStorage.getItem("availableStringAttributes-" + uniqueId) === null ? [] : JSON.parse(sessionStorage.getItem("availableStringAttributes-" + uniqueId)!))
     }, [])
     //store selectedArrayOrdinal in sessionStorage
     React.useEffect(() => {
         sessionStorage.setItem("selectedArrayOrdinal-" + uniqueId, selectedArrayOrdinal.toString());
     }, [selectedArrayOrdinal])
+    //store availableStringAttributes in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("availableStringAttributes-" + uniqueId, JSON.stringify(availableStringAttributes));
+    }, [availableStringAttributes])
+
+    //extract arrayObjects from props to use in dependencies
+    const arrayObjects = props.arrayObjects;
+
+    /**
+     * Create the list of available string attributes on the first render.
+     */
+    React.useEffect(() => {
+        //console.log("generated list of available attributes")
+        const availableStringAttributes: Array<SelectedStringAttribute> = [];
+        arrayObjects.forEach((array) => {
+            array.stringAttributes.forEach((stringAttribute) => {
+                //calculate the path of the array without the dataSource in front of it to use it for cutting the innerKey name
+                const arrayFull = array.listItem.parentKeyName === "" ? array.listItem.keyName : array.listItem.parentKeyName + "|" + array.listItem.keyName
+                const arrayNoDataSource = arrayFull.substring(arrayFull.indexOf("|") + 1) + "|0|";
+                //now get the innerKey without the parent to use it for generating
+                const innerKeyFull = stringAttribute.parentKeyName + "|" + stringAttribute.keyName;
+                const innerKeyNoParent = innerKeyFull.substring(arrayNoDataSource.length);
+                availableStringAttributes.push({
+                    key: innerKeyNoParent,
+                    array: arrayFull
+                })
+            })
+        })
+        setAvailableStringAttributes(availableStringAttributes)
+    }, [arrayObjects])
+
 
     /**
      * Handler method for the back button.
@@ -71,10 +119,18 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
         props.setArrayObjects([]);
         props.setDiagramType("verticalBarChart");
         props.setDiagramName("");
+        props.setCustomLabels(true);
+        props.setLabelArray(Array(1).fill(""));
+        props.setSelectedStringAttribute({array: "", key: ""})
         sessionStorage.removeItem("amount-" + uniqueId);
         sessionStorage.removeItem("arrayObjects-" + uniqueId);
         sessionStorage.removeItem("diagramType-" + uniqueId);
         sessionStorage.removeItem("diagramName-" + uniqueId);
+        sessionStorage.removeItem("customLabels-" + uniqueId);
+        sessionStorage.removeItem("labelArray-" + uniqueId);
+        sessionStorage.removeItem("selectedArrayOrdinal-" + uniqueId);
+        sessionStorage.removeItem("selectedStringAttribute-" + uniqueId);
+        sessionStorage.removeItem("availableStringAttributes-" + uniqueId);
         props.backHandler();
     }
 
@@ -84,18 +140,20 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
      * Checks if properties are selected for each object and/or a string is typed for custom labels when it is selected
      */
     const checkProceed = () => {
+        //check if custom labels are set when selected
+        if (props.customLabels) {
+            for (let j = 0; j < props.labelArray.length; j++) {
+                if (props.labelArray[j] === "") return false;
+            }
+        } else {
+            //check if a stringAttribute is selected when customLabels are not used
+            if (props.selectedStringAttribute.key === "" || props.selectedStringAttribute.array === "") return false;
+        }
+        //go trough all arrays and heck if a numeric attribute is selected (only necessary for non-primitive arrays
         for (let i = 0; i < props.arrayObjects.length; i++) {
             const item = props.arrayObjects[i];
             //if it is an object, check if a numeric attribute is selected
             if (Array.isArray(item.listItem.value) && item.numericAttribute === "") return false;
-            //check if it is primitive or customLabels are selected
-            if (!(Array.isArray(item.listItem.value)) || item.customLabels) {
-                for (let j = 0; j < item.labelArray.length; j++) {
-                    if (item.labelArray[j] === "") return false;
-                }
-            } else {
-                if (item.stringAttribute === "") return false;
-            }
         }
         return true;
     }
@@ -111,15 +169,10 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
 
 
     /**
-     * Toggles the customLabel property for the current array.
+     * Toggles between selection of customLabels and stringAttribute
      */
     const toggleCustomLabel = () => {
-        let objCopy = {
-            ...props.arrayObjects[selectedArrayOrdinal],
-            customLabels: !(props.arrayObjects[selectedArrayOrdinal].customLabels)
-        }
-        //console.log(event.target.value);
-        props.changeObjectInArrayObjects(objCopy, selectedArrayOrdinal);
+        props.setCustomLabels(!props.customLabels);
     }
 
 
@@ -128,8 +181,7 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
      * @param event The event caused by the input.
      */
     const colorChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-        delayedColorChange(event.target.value)
-
+        delayedColorChange(event.target.value);
     }
 
     /**
@@ -191,24 +243,22 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
 
     /**
      * Event handler that is called when the string attribute choice is changed.
+     * Sets the globally selected StringAttribute to the new selection and updates the selected index.
      * @param event The change event caused by changing the attribute.
      */
     const stringAttributeChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-        let objCopy = {
-            ...props.arrayObjects[selectedArrayOrdinal],
-            stringAttribute: event.target.value
-        }
-        props.changeObjectInArrayObjects(objCopy, selectedArrayOrdinal);
+        const index = Number(event.target.value);
+        props.setSelectedStringAttribute(availableStringAttributes[index]);
+        setStringAttributeIndex(index);
     };
 
     /**
-     * Renders an item to be displayed in the list of numeric attributes.
+     * Renders an item to be displayed in the lists of numeric attributes and string attributes.
      * @param item The item to be displayed
-     * Will not display the full path since the names are unique within one object.
      */
-    const renderAttributeListItem = (item: ListItemRepresentation) => {
+    const renderNumericAttributeItem = (item: ListItemRepresentation) => {
         return (
-            <FormControlLabel value={item.keyName} control={
+            <FormControlLabel className={classes.wrappedLabel} value={item.keyName} control={
                 <Radio
                 />
             } label={item.keyName} key={item.keyName}
@@ -217,55 +267,52 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
     }
 
     /**
+     * Renders an item to be displayed in the lists of numeric attributes and string attributes.
+     * @param item The item to be displayed
+     * @param index The index of the item in the list
+     */
+    const renderStringAttributeItem = (item: SelectedStringAttribute, index: number) => {
+        return (
+            <FormControlLabel className={classes.wrappedLabel} value={index} control={
+                <Radio
+                />
+            } label={item.array + "|" + item.key} key={item.array + "|" + item.key}
+            />
+        )
+    }
+
+    /**
      * Renders the currently necessary detailed selection by checking if the selected array contains objects or primitives
      */
     const renderSelections = () => {
-        if (Array.isArray(props.arrayObjects[selectedArrayOrdinal].listItem.value)) {
             //selections for arrays containing objects
             return (
                 <Grid item container xs={12} className={classes.elementLargeMargin}>
                     <Grid item xs={6}>
                         <Typography variant="body1">
-                            Bitte wählen sie das Zahl-Attribut zur Darstellung im Diagramm:
+                            {Array.isArray(props.arrayObjects[selectedArrayOrdinal].listItem.value) ? "Bitte wählen sie das Zahl-Attribut zur Darstellung im Diagramm:" : "Das Array enthält primitive Werte, eine Attribut-Auswahl ist nicht notwendig."}
                         </Typography>
                     </Grid>
                     <Grid item xs={6}>
                         <Typography variant="body1">
-                            {props.arrayObjects[selectedArrayOrdinal].customLabels ? "Bitte wählen sie zu jedem Wert eine Beschriftung:" : "Bitte wählen sie das String-Attribut zur Beschriftung der Werte:"}
+                            {props.customLabels ? "Bitte wählen sie zu jedem Wert eine Beschriftung:" : "Bitte wählen sie das String-Attribut zur Beschriftung der Werte:"}
                         </Typography>
                     </Grid>
                     <Grid item xs={6}>
-                        <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.choiceListFrame}>
-                            <FormControl>
-                                <RadioGroup value={props.arrayObjects[selectedArrayOrdinal].numericAttribute}
+                            { Array.isArray(props.arrayObjects[selectedArrayOrdinal].listItem.value) &&
+                                <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.choiceListFrame}>
+                                    <FormControl>
+                                        <RadioGroup value={props.arrayObjects[selectedArrayOrdinal].numericAttribute}
                                             onChange={numericAttributeChangeHandler}>
-                                    {props.arrayObjects[selectedArrayOrdinal].numericAttributes.map((item) => renderAttributeListItem(item))}
-                                </RadioGroup>
-                            </FormControl>
-                        </Box>
+                                            {props.arrayObjects[selectedArrayOrdinal].numericAttributes.map((item) => renderNumericAttributeItem(item))}
+                                        </RadioGroup>
+                                    </FormControl>
+                                </Box>
+                            }
                     </Grid>
                     {getLabelSelection()}
                 </Grid>
             )
-        } else {
-            //selections for arrays containing primitives
-            return (
-                <Grid item container xs={12}>
-                    <Grid item xs={12}>
-                        <Typography variant="body1">
-                            Das gewählte Array enthält Zahlen - bitte wählen sie die Beschriftungen, die zu den
-                            einzelnen Werten angezeigt werden sollen:
-                        </Typography>
-                    </Grid>
-                    <CustomLabels
-                        amount={props.amount}
-                        arrayObjects={props.arrayObjects}
-                        selectedArrayOrdinal={selectedArrayOrdinal}
-                        changeObjectInArrayObjects={props.changeObjectInArrayObjects}
-                    />
-                </Grid>
-            )
-        }
     }
 
 
@@ -274,14 +321,13 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
      * If the user has selected customLabels, then the input is offered. If not, the list of string attributes is displayed.
      */
     const getLabelSelection = () => {
-        if (props.arrayObjects[selectedArrayOrdinal].customLabels) {
+        if (props.customLabels) {
             return (
                 <Grid item container xs={6}>
                     <CustomLabels
                         amount={props.amount}
-                        arrayObjects={props.arrayObjects}
-                        selectedArrayOrdinal={selectedArrayOrdinal}
-                        changeObjectInArrayObjects={props.changeObjectInArrayObjects}
+                        labelArray={props.labelArray}
+                        setLabelArray={props.setLabelArray}
                     />
                 </Grid>
             )
@@ -290,9 +336,14 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
                 <Grid item xs={6}>
                     <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.choiceListFrame}>
                         <FormControl>
-                            <RadioGroup value={props.arrayObjects[selectedArrayOrdinal].stringAttribute}
+                            <RadioGroup value={stringAttributeIndex}
                                         onChange={stringAttributeChangeHandler}>
-                                {props.arrayObjects[selectedArrayOrdinal].stringAttributes.map((item) => renderAttributeListItem(item))}
+                                {availableStringAttributes.map((item, index) => renderStringAttributeItem(item, index))}
+                                { availableStringAttributes.length === 0 &&
+                                    <Typography variant="body1">
+                                        Die Objekte der gewählten Arrays enthalten keine String-Attribute.
+                                    </Typography>
+                                }
                             </RadioGroup>
                         </FormControl>
                     </Box>
@@ -344,27 +395,12 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
                         Vorschau generieren
                     </Button>
                 </Grid>
-                {(Array.isArray(props.arrayObjects[selectedArrayOrdinal].listItem.value) && props.arrayObjects[selectedArrayOrdinal].stringAttributes.length === 0) ? (
-                        <Grid item xs={4}>
-                            <Typography variant="body1">
-                                Die Objekte des Arrays enthalten keine String-Attribute.
-                            </Typography>
-                        </Grid>
-
-                    ) :
-                    (Array.isArray(props.arrayObjects[selectedArrayOrdinal].listItem.value) ? (
-                            <Grid item>
-                                <Button variant="contained" size="large" color="primary"
-                                        onClick={() => toggleCustomLabel()}>
-                                    {props.arrayObjects[selectedArrayOrdinal].customLabels ? "Attribut-Beschriftung" : "eigene Beschriftungen"}
-                                </Button>
-                            </Grid>
-                        ) : (
-                            <React.Fragment>
-                            </React.Fragment>
-                        )
-                    )
-                }
+                    <Grid item>
+                        <Button variant="contained" size="large" color="primary"
+                                onClick={() => toggleCustomLabel()}>
+                            {props.customLabels ? "Attribut-Beschriftung" : "eigene Beschriftungen"}
+                        </Button>
+                    </Grid>
             </Grid>
             <Grid item container xs={12} justify="space-between" className={classes.elementLargeMargin}>
                 <Grid item>
