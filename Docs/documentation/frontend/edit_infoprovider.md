@@ -4,11 +4,11 @@ Die Komponente EditInfoProvider dient dem Bearbeiten eines Infoproviders. Ein Us
 
 Um das zu ermöglichen, wird der gewünschte Infoprovider vom Backend angefragt. Dieser Vorgang findet in **InfoProviderOverview** statt und ist auch dort in der Dokumentation erklärt. Dort wird beschrieben, dass der Komponente **EditInfoProvider** die wichtigen Informationen in den Properties übergeben wird. Die Informationen sind die Infoprovider-Id (**infoProvId**) und der Infoprovider als ein vom Frontend lesbares Objekt (**infoProvider**). Die Infoprovider-Id ist eine Nummer und kann zu genau einem Infoprovider zugeordnet werden. Sie wird erst wieder benötigt, wenn der bearbeitete Infoprovider zurück an das Backend geschickt wird. Das Backend wird dann den Infoprovider mit der übergebenen Id löschen und durch den neu geschickten ersetzen, was einer Bearbeitung gleich kommt.
 Das InfoProvider-Objekt enthält alle Informationen des Infoproviders. Diese Informationen soll der User nun einsehen und bearbeiten können. Das Infoprovider-Objekt hat folgende Struktur:
-**!!!Vorsicht, noch die alte Version!!!**
 ```javascript
-export type InfoProviderObj = {
-    name: string;
+export type FrontendInfoProvider = {
+    infoproviderName: string;
     dataSources: Array<DataSource>;
+    dataSourcesKeys: Map<string, DataSourceKey>;
     diagrams: Array<Diagram>;
 }
 ```
@@ -23,17 +23,20 @@ export type DataSource = {
     customData: FormelObj[];
     historizedData: string[];
     schedule: Schedule;
-    listItems: Array<ListItemRepresentation>
+    listItems: Array<ListItemRepresentation>;
+    arrayProcessingsList: Array<ArrayProcessingData>;
+    stringReplacementList: Array<StringReplacementData>;
 }
+
 ```
-**InfoProviderObj** ist dabei schon aus **InfoProviderOverview** und **Datasource** aus **CreateInfoProvider** bekannt. Wir haben so den kompletten lesbaren und schreibbaren Zugriff auf die Daten von einem Infoprovider. Sie können direkt verändert und genutzt werden. 
+**FrontendInfoProvider** ist dabei schon aus **InfoProviderOverview** und **Datasource** aus **CreateInfoProvider** bekannt. Wir haben so den kompletten lesbaren und schreibbaren Zugriff auf die Daten von einem Infoprovider. Sie können direkt verändert und genutzt werden. 
 Um dies zu ermöglichen, wird ein State in **EditInfoProvider/index** mit den übergebenen Informationen initialisiert.
 ```javascript
-const [infoProvName, setInfoProvName] = React.useState(infoProvider.name);
+const [infoProvName, setInfoProvName] = React.useState(props.infoProvider !== undefined ? props.infoProvider.infoproviderName : "");
+    const [infoProvDataSources, setInfoProvDataSources] = React.useState<Array<DataSource>>(sessionStorage.getItem("infoProvDataSources-" + uniqueId) === null ? props.infoProvider!.dataSources : JSON.parse(sessionStorage.getItem("infoProvDataSources-" + uniqueId)!));
 
-const [infoProvDataSource, setInfoProvDataSource] = React.useState<Array<DataSource>>(infoProvider.dataSources)
 
-const [infoProvDiagrams, setInfoProvDiagrams] = React.useState<Array<Diagram>>(infoProvider.diagrams);
+    const [infoProvDiagrams, setInfoProvDiagrams] = React.useState(props.infoProvider !== undefined ? props.infoProvider.diagrams : new Array<Diagram>());
 ```
 Damit hat die Komponente alle Daten zur Verfügung und die grundlegende Anforderung ist erfüllt.
 
