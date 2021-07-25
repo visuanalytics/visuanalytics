@@ -1084,6 +1084,23 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             return;
         }
 
+        if (currentlyEditing) {
+            const localItems = items.slice();
+            const index = items.indexOf(selectedObject);
+            const objectCopy = {
+                ...selectedObject,
+                textContent: textEditContent,
+                x: textEditX,
+                y: textEditY,
+            };
+            localItems[index] = objectCopy;
+            setSelectedObject(objectCopy);
+            setItems(localItems);
+            setTextEditVisibility(false);
+            setCurrentlyEditing(false);
+            return;
+        }
+
         // if the user clicked on an element the following code will be executed
         if (name !== undefined && name !== '') {
             // set the selected item name to the name of the element
@@ -1353,6 +1370,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             setItems(localItems);
             setTextEditVisibility(false);
             setCurrentlyEditing(false);
+            return;
         }
         const localItems = items.slice();
         const index = items.indexOf(selectedObject);
