@@ -282,9 +282,9 @@ export type ArrayProcessingData = {
 }
 ```
 Auf Basis dieser Liste wird mit **renderProcessingsListItem** für alle Verarbeitungen ein Listeneintrag generiert, der in der Liste existierender Verarbeitungen auf der rechten Seite der Komponente zu sehen ist. In dieser Liste hat jeder Eintrag auch ein **DeleteIcon** zum Löschen. Bei diesem bestehen wie auch an anderen Stellen (z.B. in **DataSelection** oder **CreateCustomData**) Löschabhänigkeiten, die berücksichtigt werden müssen:
-* Formeln können die Ergebnisse der Verarbeitung nutzen - alle Formeln, die dies tun müssen gelöscht werden.
-* Wenn eine Verarbeitung historisiert wird kann man sie in historisierten Diagrammen verwenden - dann müsste ein solches Diagramm ebenfalls gelöscht werden.
-* Wenn die Verarbeitung historisiert wurde muss man sie ebenfalls aus der Liste historisierter Daten löschen.
+* Formeln können die Ergebnisse der Verarbeitung nutzen - alle Formeln, die dies tun, müssen gelöscht werden.
+* Wenn eine Verarbeitung historisiert wird, kann man sie in historisierten Diagrammen verwenden - dann müsste ein solches Diagramm ebenfalls gelöscht werden.
+* Wenn die Verarbeitung historisiert wurde, muss man sie ebenfalls aus der Liste historisierter Daten löschen.
 
 Das Prinzip ist hierbei gleich wie bei allen anderen Umsetzungen von Löschabhängigkeiten - wenn nur historisierte Daten gelöscht werden, geschieht dies ohne Fragen. Wenn jedoch eine Formel oder ein Diagramm gelöscht werden müsste, wird ein **Dialog** angezeigt, der die entsprechenden Formeln und Diagramme auflistet (gespeichert in **formulasToRemove** und **diagramsToRemove**) und Bestätigung verlangt.
 * Die Prüfung auf Abhängigkeiten übernimmt **checkDeleteDependencies**, das Löschen wird durch die Methode **removeProcessing** umgesetzt.
@@ -315,14 +315,16 @@ Intern besitzt die Komponente verschiedene boolean-Werte (im Folgendem als **Fla
 * **opFlag**: für die Tasten für Rechenoperationen (+, -, *, /, %),
 * **dataFlag**: für die Tasten für die Eingabe eines Datums aus der Datenauswahl und erstellte Formeln,
 * **leftParenFlag**: für"Klammer auf",
-* und **rightParenFlag**: für "Klammer zu".
+* **rightParenFlag**: für "Klammer zu",
+* und das **commaFlag**: für ein Komma.
 
 Jede dieser Kategorien besitzt eine eigene Handler-Methode, die die anderen und das eigene Flag neu setzt und somit die folgende Eingabe einschränkt. Zusammengefasst sind das die Folgenden:
 * **handleNumberButtons()**: für Ziffern,
 * **handleDataButtons()**: für Daten und erstellte Formeln,
 * **handleOperatorButtons()**: für Rechenoperationen,
 * **handleLeftParen()**: für "Klammer auf",
-* und **handleRightParen()**: für "Klammer zu"
+* **handleRightParen()**: für "Klammer zu"
+* und **handleCommaButton():** für ein Komma.
 
 So können zum Beispiel Eingaben, wie 	```7 + / 8``` oder ```10 - 6BspDatum *``` verhindert werden.
 Manche Flags nehmen auch direkt Einfluss auf die "Speichern"-Schaltfläche und können diese ebenfalls deaktivieren. **handleLeftParen()** und **handleRightParen()** zählen zusätzlich mit, wie oft sie aufgerufen wurden (**leftParenCount**; **rightParenCount**). Dadurch kann eine Formel nur dann abgespeichert werden, wenn die Anzahl offener Klammen gleich der Anzahl geschlossener Klammern ist.
@@ -368,12 +370,12 @@ setInput(calculationToString(dataAsObj));
 Der wichtige Teil ist, die Flags der Input-Tasten richtig neu zu setzten. In den **StrArg**s ist festgehalten, um welche Eingabe es sich handelt. So kann in dieser Handler-Methode explizit auf jede Eingabe individuell reagiert werden, damit sich das Deaktivieren der Tasten korrekt verhält.
 ```javascript
 const handleDelete = () => {
-...
+/*...*/
     if (dataAsObj[dataAsObj.length - 1].isNumber) {
         // korrektes Setzten der Flags, falls das zu löschende Zeichen eine Ziffer ist.
         // -> letztes Element von dataAsObj
     }
-...
+/*...*/
 }
 ```
 Falls **DataAsObj** nur aus einem Objekt besteht, wird automatisch der Handler für "löschen" aufgerufen.
