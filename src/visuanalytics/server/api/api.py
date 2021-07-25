@@ -614,7 +614,10 @@ def testformula():
             err = flask.jsonify({"err_msg": "Missing field 'formula'"})
             return err, 400
 
-        str2json(queries.remove_toplevel_key(formula["formula"]).replace("|", "uzjhnjtdryfguljkm"))
+        tmp = queries.remove_toplevel_key(formula["formula"])
+        if tmp[0].isdigit:
+            tmp = "|" + tmp
+        str2json(tmp.replace("|", "uzjhnjtdryfguljkm"))
         return flask.jsonify({"accepted": True})
 
     except SyntaxError:

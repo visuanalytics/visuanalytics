@@ -199,10 +199,11 @@ def replace(values: dict, data: StepData):
         value = str(data.get_data(key, values))
         new_key = get_new_keys(values, idx)
 
-        #new_value = value.replace(data.format(values["old_value"], values),
-        #                          data.format(values["new_value"], values),
-        #                          data.get_data(values.get("count", -1), values, int))
-        new_value = re.sub(data.format(values["old_value"], values), data.format(values["new_value"], values), value)
+        new_value = value.replace(data.format(values["old_value"], values),
+                                  data.format(values["new_value"], values),
+                                  data.get_data(values.get("count", -1), values, int))
+        # test mit RegEx
+        # new_value = re.sub(data.format(values["old_value"], values), data.format(values["new_value"], values), value, count=data.get_data(values.get("count", 0), values, int))
         data.insert_data(new_key, new_value, values)
 
 

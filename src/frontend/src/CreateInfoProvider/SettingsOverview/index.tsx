@@ -78,7 +78,6 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
     //holds the name of all diagrams that need to be removed when deleting the current selection
     const diagramsToRemove = React.useRef<Array<string>>([]);
 
-    //TODO: document delete mechanism
     /**
      * Handler method for clicking the delete data source button.
      * Gets the currently selected datasource by the selectedDataSource state and checks if deleting it

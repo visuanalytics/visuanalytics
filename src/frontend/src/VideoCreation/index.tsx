@@ -174,7 +174,6 @@ export const VideoCreation: React.FC<VideoCreationProps> = (props) => {
      * The sets need to be converted back from Arrays that were parsed with JSON.stringify.
      */
     React.useEffect(() => {
-        //TODO: document this behaviour
         //dont load data necessary for editing on the first load
         if (sessionStorage.getItem("firstVideoCreationEntering-" + uniqueId) !== null) {
             //editModeFlag

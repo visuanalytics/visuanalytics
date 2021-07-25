@@ -33,7 +33,6 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
 
     //the current step of the creation process, numbered by 0 to 1
     //setting one in editing is not necessary since the dialog will be displayed directly
-    //TODO: document this behaviour!!!
     const [sceneEditorStep, setSceneEditorStep] = React.useState(props.sceneFromBackend !== undefined ? 1 : 0);
     //the list of all infoproviders fetched from the backend
     const [infoProviderList, setInfoProviderList] = React.useState<Array<InfoProviderData>>([]);
@@ -60,7 +59,6 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
     const [sceneFromBackend, setSceneFromBackend] = React.useState(props.sceneFromBackend);
     const [editId, setEditId] = React.useState(props.editId);
 
-
     /* mutable flag that is true when currently images are being fetched because of a reload
     * this is used to block the continueHandler call after successful fetches. This way,
     * no additional methods are required to fetch the images on reload.
@@ -71,7 +69,6 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
     const [displaySpinner, setDisplaySpinner] = React.useState(false);
     //true when the dialog for refetching images is opened
     //is also opened when starting editing mode first to fetch the images before entering the SceneEditor component - this will make them available from the start on
-    //TODO: Document this!!
     const [fetchImageDialogOpen, setFetchImageDialogOpen] = React.useState(props.sceneFromBackend !== undefined);
 
     // contains the names of the steps to be displayed in the stepper
@@ -248,9 +245,13 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
         reportError("Fehler beim Abrufen eines Hintergrundbildes: " + err);
         //enable the continue button again
         setStep0ContinueDisabled(false);
-        refetchingImages.current = false;
-        // deactivate the spinner
-        setDisplaySpinner(false);
+        //check if this is refetching - display the dialog again then
+        if(refetchingImages.current) setFetchImageDialogOpen(true)
+        else {
+            refetchingImages.current = false;
+            // deactivate the spinner
+            setDisplaySpinner(false);
+        }
         setDisplayLoadMessage(false);
     }
 
@@ -288,26 +289,6 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
         }).finally(() => clearTimeout(timer));
     }
 
-    /*const fetchAllBackgroundImages = React.useCallback(() => {
-        while(allBackgroundImageList.current.length !== 0) {
-            while(requestRunning.current);
-            const nextId = allBackgroundImageList.current[0].image_id;
-            //delete the image with this id from the images that still need to be fetched
-            allBackgroundImageList.current  = allBackgroundImageList.current.filter((image) => {
-                return image.image_id !== nextId;
-            })
-            requestRunning.current = true;
-            //fetch the image with the id from the backend
-            fetchBackgroundImageById(nextId, handleBackgroundImageByIdSuccess, handleBackgroundImageByIdError);
-        }
-        //set the state to the fetched list
-        setBackgroundImageList(backgroundImageFetchResults.current);
-        console.log(backgroundImageFetchResults.current);
-        //start fetching all diagram previews
-        //fetchNextDiagram();
-        setDisplayLoadMessage(false);
-        handleContinue();
-    }, [fetchBackgroundImageById, handleBackgroundImageByIdError, handleContinue])*/
 
 
     /**
@@ -330,9 +311,13 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
         reportError("Fehler beim Laden der Liste aller Hintergrundbilder: " + err);
         //enable the continue button again
         setStep0ContinueDisabled(false);
-        refetchingImages.current = false;
-        // deactivate the spinner
-        setDisplaySpinner(false);
+        //check if this is refetching - display the dialog again then
+        if(refetchingImages.current) setFetchImageDialogOpen(true);
+        else {
+            refetchingImages.current = false;
+            // deactivate the spinner
+            setDisplaySpinner(false);
+        }
         setDisplayLoadMessage(false);
     }, [])
 
@@ -405,9 +390,13 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
         reportError("Fehler beim Abrufen eines Bildes: " + err);
         //enable the continue button again
         setStep0ContinueDisabled(false);
-        refetchingImages.current = false;
-        // deactivate the spinner
-        setDisplaySpinner(false);
+        //check if this is refetching - display the dialog again then
+        if(refetchingImages.current) setFetchImageDialogOpen(true)
+        else {
+            refetchingImages.current = false;
+            // deactivate the spinner
+            setDisplaySpinner(false);
+        }
         setDisplayLoadMessage(false);
     }, [])
 
@@ -473,29 +462,6 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
         }
     }
 
-    /*const fetchAllImages = React.useCallback(() => {
-        while(allBackgroundImageList.current.length !== 0) {
-            //busy waiting until the last request has finished
-            while(requestRunning.current);
-            //get the id of the next image to be fetched
-            const nextId = allImageList.current[0].image_id;
-            const nextURL = allImageList.current[0].path;
-            //delete the image with this id from the images that still need to be fetched
-            allImageList.current  = allImageList.current.filter((image) => {
-                return image.image_id !== nextId;
-            })
-            //set the blocking variable
-            requestRunning.current = true;
-            //fetch the image with the id from the backend
-            console.log("starting to fetch for: " + nextId)
-            fetchImageById(nextId, nextURL, handleImageByIdSuccess, handleImageByIdError);
-        }
-        //set the state to the fetched list
-        setImageList(imageFetchResults.current);
-        console.log(imageFetchResults.current);
-        //start the fetching of all background images
-        fetchBackgroundImageList();
-    }, [fetchBackgroundImageList, fetchImageById, handleImageByIdSuccess, handleImageByIdError])*/
 
     /**
      * Method that handles successful calls to the backend for fetching a list of all images.
@@ -516,9 +482,13 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
         reportError("Fehler beim Laden der Liste aller Bilder: " + err);
         //activate the continue button again
         setStep0ContinueDisabled(false);
-        refetchingImages.current = false;
-        // deactivate the spinner
-        setDisplaySpinner(false);
+        //check if this is refetching - display the dialog again then
+        if(refetchingImages.current) setFetchImageDialogOpen(true);
+        else {
+            refetchingImages.current = false;
+            // deactivate the spinner
+            setDisplaySpinner(false);
+        }
         setDisplayLoadMessage(false);
     }
 
@@ -622,9 +592,13 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
         reportError("Fehler beim Abrufen des Preview eines Diagramms: " + err);
         // activate the continue button again
         setStep0ContinueDisabled(false);
-        refetchingImages.current = false;
-        // deactivate the spinner
-        setDisplaySpinner(false);
+        //check if this is refetching - display the dialog again then
+        if(refetchingImages.current) setFetchImageDialogOpen(true)
+        else {
+            refetchingImages.current = false;
+            // deactivate the spinner
+            setDisplaySpinner(false);
+        }
         setDisplayLoadMessage(false);
     }
 
@@ -664,6 +638,7 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
     const sceneFromBackendMutable = React.useRef(props.sceneFromBackend)
 
 
+
     /**
      * Calls for sessionStorage handling
      */
@@ -689,13 +664,12 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
         //selectedId
         setSelectedId(Number(sessionStorage.getItem("selectedId-" + uniqueId) || 0));
 
-        //TODO: document this
         //dont set the data for editing when fetching first
         if (sessionStorage.getItem("firstSceneCreationEntering-" + uniqueId) !== null) {
             //fetchImageDialogOpen
             setFetchImageDialogOpen(sessionStorage.getItem("fetchImageDialogOpen-" + uniqueId) === "true");
             //editId
-            setEditId(Number(sessionStorage.getItem("editId-" + uniqueId)));
+            setEditId(Number(sessionStorage.getItem("editId-" + uniqueId)) || undefined);
             //sceneFromBackend
             setSceneFromBackend(sessionStorage.getItem("sceneFromBackend-" + uniqueId) === null ? undefined : JSON.parse(sessionStorage.getItem("sceneFromBackend-" + uniqueId)!))
             sceneFromBackendMutable.current = sessionStorage.getItem("sceneFromBackend-" + uniqueId) === null ? undefined : JSON.parse(sessionStorage.getItem("sceneFromBackend-" + uniqueId)!)
@@ -1006,7 +980,7 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
                             continueHandler={() => handleContinue()}
                             backHandler={() => handleBack()}
                             infoProvider={infoProvider}
-                            infoProviderId={editId !== undefined ? editId : selectedId}
+                            infoProviderId={sceneFromBackend !== undefined ? sceneFromBackend.used_infoproviders[0] : selectedId}
                             selectedDataList={selectedDataList}
                             customDataList={customDataList}
                             historizedDataList={historizedDataList}

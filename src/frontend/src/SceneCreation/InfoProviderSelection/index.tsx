@@ -51,7 +51,7 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
      * @param infoProvider The object of the Backend, transformed to the frontend representation.
      */
     const processBackendAnswer = (infoProvider: FrontendInfoProvider) => {
-        console.log(infoProvider)
+        //console.log(infoProvider)
         // set the basic variable containing the complete object
         props.setInfoProvider(infoProvider);
         // extract the list of all selectedData, customData, historizedData, arrayProcessings and stringReplacements
@@ -161,10 +161,6 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
             "Content-Type": "application/json\n"
         }
     }, handleFetchInfoProviderSuccess, handleFetchInfoProviderError);
-
-
-
-
 
 
     /**

@@ -203,7 +203,7 @@ def insert_infoprovider(infoprovider):
             # add request memory, if datasource stores data
             use_last = get_max_use_last(infoprovider_json["images"])
             for storing_config in datasource_json["storing"]:
-                datasource_json["api"]["steps_value"].append(f"{datasource_json['name']}_{storing_config['key'].replace('_req|', '').replace('|', '_')}_HISTORY")
+                datasource_json["api"]["steps_value"].append(f"{datasource_json['name']}_{storing_config['key'].replace('_req|', '').replace(datasource_json['name'] + '|','').replace('|', '_')}_HISTORY")
                 datasource_json["api"]["requests"].append({
                     "type": "request_memory",
                     "name": dict(storing_config)["name"],
@@ -252,6 +252,7 @@ def insert_video_job(video, update=False, job_id=None):
     tts_infoprovider_ids = video["tts_ids"]
     tts_names = []
     infoprovider_names = [infoprovider["infoprovider_name"] for infoprovider in video["selectedInfoprovider"]]
+    video["audio"] = remove_toplevel_key(video["audio"])
 
     # Namen aller Infoprovider die in TTS genutzt werden laden
     for tts_id in tts_infoprovider_ids:
@@ -764,7 +765,7 @@ def get_infoprovider_logs(infoprovider_id):
             "object_id": datasource_log["job_id"],
             "object_name": datasource_log["datasource_name"],
             "state": datasource_log["state"],
-            "errorMsg": datasource_log["error_msg"] if datasource_log["error_msg"] != "" else "successful",
+            "errorMsg": datasource_log["error_msg"] if datasource_log["error_msg"] else "successful",
             "errorTraceback": datasource_log["error_traceback"],
             "duration": datasource_log["duration"],
             "startTime": time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(datasource_log["start_time"]))
@@ -790,7 +791,7 @@ def get_videojob_logs(videojob_id):
         "object_id": log["job_id"],
         "object_name": log["job_name"],
         "state": log["state"],
-        "errorMsg": log["error_msg"] if log["error_msg"] != "" else "successful",
+        "errorMsg": log["error_msg"] if log["error_msg"] else "successful",
         "errorTraceback": log["error_traceback"],
         "duration": log["duration"],
         "startTime": time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(log["start_time"]))
@@ -871,7 +872,7 @@ def insert_scene(scene):
         "name": scene_name,
         "used_images": used_images,
         "used_infoproviders": used_infoproviders,
-        "images": images,
+        "images": remove_toplevel_key(images),
         "backgroundImage": scene["backgroundImage"],
         "backgroundType": scene["backgroundType"],
         "backgroundColor": scene["backgroundColor"],
@@ -1000,7 +1001,7 @@ def update_scene(scene_id, updated_data):
     scene_json.update({"name": scene_name})
     scene_json.update({"used_images": used_images})
     scene_json.update({"used_infoproviders": used_infoproviders})
-    scene_json.update({"images": images})
+    scene_json.update({"images": remove_toplevel_key(images)})
     scene_json.update({"backgroundImage": updated_data["backgroundImage"]})
     scene_json.update({"backgroundType": updated_data["backgroundType"]})
     scene_json.update({"backgroundColor": updated_data["backgroundColor"]})
@@ -1496,6 +1497,7 @@ def _extend_formula_keys(obj, datasource_name, formula_keys):
             try:
                 float(part)
             except Exception:
+                transformed_keys = [key if key not in part else part for key in transformed_keys]
                 if part != "" and part not in formula_keys and part not in transformed_keys:
                     transformed_keys.append(part)
                     part_temp = remove_toplevel_key(part)

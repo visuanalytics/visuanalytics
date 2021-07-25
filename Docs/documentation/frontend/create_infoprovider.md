@@ -7,14 +7,14 @@ Die Komponentenstruktur der Anwendung ist in diesem Abschnitt wie folgt aufgebau
 Die Komponente `CreateInfoProvider` stellt die umschließende Wrapper-Komponente für die gesamte Info-Provider-Erstellung dar, von der aus die restlichen Komponenten für die einzelnen Schritte der Erstellung geladen werden.
 
 ### **Verwaltung des aktuellen Schritts**
-Dazu enthält der State der Komponente die Variable `step`, welche als Zahlwert von 0-5 repräsentiert, in welchem der 6 Schritte sich der Nutzer gerade befindet.
+Dazu enthält der State der Komponente die Variable `createStep`, welche als Zahlwert von 0-5 repräsentiert, in welchem der 6 Schritte sich der Nutzer gerade befindet.
 
 Diese Variable wird in der Methode `selectContent(step: number)` in einem switch-case-Statement verarbeitet, in welchem für jeden der möglichen Schritt 0-5 ein case existiert, welcher die passende Komponente zurückgibt. Die Methode wird letztendlich innerhalb des `return`-Statements aufgerufen, welches das eigentliche Rendering bestimmt.
 
-`step` wird über die beiden Methoden `handleContinue()` und `handleBack()` inkrementiert bzw. dekrementiert, diese Methoden werden alle als *props* an die dargestellten Komponenten übergeben, sodass diese sie in ihren Buttons "weiter" und "zurück" nutzen können.
+`createStep` wird über die beiden Methoden `handleContinue()` und `handleBack()` inkrementiert bzw. dekrementiert, diese Methoden werden alle als *props* an die dargestellten Komponenten übergeben, sodass diese sie in ihren Buttons "weiter" und "zurück" nutzen können.
 * Von einem Rendern dieser Buttons aus `CreateInfoProvider` heraus wurde abgesehen, da die einzelnen Unter-Komponenten zusätzlich noch eigene Logik wie das Absenden von Daten an das Backend an den Button binden müssen.
 
-Zur Visualisierung des Schritts wird die von MaterialUI zur Verfügung gestellte `Stepper`-Komponente genutzt, welche das Array `steps` als Datengrundlage mit Beschriftungen sowie `step` für den aktuellen Schritt erhält.
+Zur Visualisierung des Schritts wird die von MaterialUI zur Verfügung gestellte `Stepper`-Komponente genutzt, welche das Array `steps` als Datengrundlage mit Beschriftungen sowie `createStep` für den aktuellen Schritt erhält.
 <br></br>
 
 ### **Verwaltung des States**
@@ -240,6 +240,9 @@ Der angesprochene Dialog wird deshalb eingesetzt, da Formeln und Diagramme ander
 * Mit "Löschen bestätigen" löst er hingegen das Löschen aller historisierten Daten, Diagramme und Formeln aus, die wegen abgewählten Elementen nicht mehr gültig sind. Anschließend sorgt der Aufruf von **props.continueHandler** für das Weitergehen zum nächsten Schritt.
     * Hinweis: Das Löschen von Formeln erfordert ein kaskadierendes Löschen, welches hier angewendet wird. Die genaue Beschreibung des Mechanismus ist in dem Abschnitt zum Löschen der Dokumentation der Komponente **CreateCustomData** zu finden.
 
+Beim Klicken auf "zurück" wird zudem geprüft, ob der Nutzer Daten abgewählt hat - in diesem Fall wird ein Dialog angezeigt, der ihm mitteilt, dass seine Änderungen verworfen werden müssen, wenn er zurückgeht. Auf diese Weise könnte er Elemente abwählen, ohne dabei Diagramme oder Formeln zu invalidieren. Deshalb wird mit Bestätigen des Dialogs, der durch **backDialogOpen** gesteuert wird, die Auswahl auf den Ursprungszustand, den wir in **oldSelectedData** speichern.
+* Man hätte auch hier die Löschabhängigkeiten einbauen können, wir haben uns aber aus Gründen der Komplexität entschieden, dass wir beim Zurückgehen Änderungen verwerfen und nur beim Weitergehen Änderungen und ihre Löschabhängigkeiten usmetzen.
+
 <div style="page-break-after: always;"></div>
 
 ## **DataCustomization**
@@ -281,14 +284,23 @@ War die Prüfung ohne Fehler, so wird die neue Verarbeitung gespeichert. Dazu di
 ```javascript
 export type ArrayProcessingData = {
     name: string;
-    array: string;
+    array: ProcessableArray;
     operation: Operation;
 }
+
+export type ProcessableArray = {
+    valueInObject: boolean; //true if this is a numeric value in an object contained in an array
+    key: string;
+    innerKey: string; //only used when valueInObject is 'true' - used to display the key path inside the object in the array
+}
 ```
+* Die Unterteilung der Daten des Array durch **ProcessableArray** dient dazu, zwischen "komplexen" Arrays, die Objekte enthalten, und primitiven Arrays differenzieren zu können. Das ist notwendig für die spätere Generierung des Backend-Datenformats.
+    * Bei der Generierung innerhalb des Arrays dienen zur Verwaltung der Aufteilung **keyPath**, in welches anfangs der Pfad des Arrays gesetzt wird, und **innerKeyPath**, welches den Pfad des Wertes innerhalb des Arrays umfasst. Während **keyPath** nur einmalig gesetzt wird hängt man an **inerKeyPath** jedes Mal etwas an, wenn man in die Untersuchung eines Subobjektes geht, um damit die verschachtelten inneren Pfade zu erstellen.
+
 Auf Basis dieser Liste wird mit **renderProcessingsListItem** für alle Verarbeitungen ein Listeneintrag generiert, der in der Liste existierender Verarbeitungen auf der rechten Seite der Komponente zu sehen ist. In dieser Liste hat jeder Eintrag auch ein **DeleteIcon** zum Löschen. Bei diesem bestehen wie auch an anderen Stellen (z.B. in **DataSelection** oder **CreateCustomData**) Löschabhänigkeiten, die berücksichtigt werden müssen:
-* Formeln können die Ergebnisse der Verarbeitung nutzen - alle Formeln, die dies tun, müssen gelöscht werden.
-* Wenn eine Verarbeitung historisiert wird, kann man sie in historisierten Diagrammen verwenden - dann müsste ein solches Diagramm ebenfalls gelöscht werden.
-* Wenn die Verarbeitung historisiert wurde, muss man sie ebenfalls aus der Liste historisierter Daten löschen.
+* Formeln können die Ergebnisse der Verarbeitung nutzen - alle Formeln, die dies tun müssen gelöscht werden.
+* Wenn eine Verarbeitung historisiert wird kann man sie in historisierten Diagrammen verwenden - dann müsste ein solches Diagramm ebenfalls gelöscht werden.
+* Wenn die Verarbeitung historisiert wurde muss man sie ebenfalls aus der Liste historisierter Daten löschen.
 
 Das Prinzip ist hierbei gleich wie bei allen anderen Umsetzungen von Löschabhängigkeiten - wenn nur historisierte Daten gelöscht werden, geschieht dies ohne Fragen. Wenn jedoch eine Formel oder ein Diagramm gelöscht werden müsste, wird ein **Dialog** angezeigt, der die entsprechenden Formeln und Diagramme auflistet (gespeichert in **formulasToRemove** und **diagramsToRemove**) und Bestätigung verlangt.
 * Die Prüfung auf Abhängigkeiten übernimmt **checkDeleteDependencies**, das Löschen wird durch die Methode **removeProcessing** umgesetzt.
@@ -477,7 +489,9 @@ export type DataSource = {
     customData: FormelObj[];
     historizedData: string[];
     schedule: Schedule;
-    listItems: Array<ListItemRepresentation>
+    listItems: Array<ListItemRepresentation>;
+    arrayProcessingsList: Array<ArrayProcessingData>;
+    stringReplacementList: Array<StringReplacementData>;
 }
 ```
 
@@ -496,7 +510,7 @@ Wie die Keys bei Neuladen der Seite wiederhergestellt werden, wurde bereits in e
 
 Die Methode `addToDataSources` überprüft dabei auch, ob die einzufügende Datenquelle bereits in den Datenquellen vorhanden ist. Ist dies der Fall, so wird diese Datenquelle einfach mit den neuen Werten überschrieben.
 
-> Hinweis: Zum aktuellen Zeitpunkt des Projektes ist es nicht möglich, dass eine Datenquelle bei hinzufügen übeschrieben wird, da für jede Datenquelle ein eigenständiges Objekt existiert und bei zurückgehen aus dem `SettingsOverview` die ausgewählte Datenquelle wieder aus der Liste aller Quellen entfernt wird. Auf diese Art und Weise kann eine Datenquelle auch während der Erstellung eines Infoproviders wieder simpel bearbeitet werden.
+> Hinweis: Zum aktuellen Zeitpunkt des Projektes ist es nicht möglich, dass eine Datenquelle beim Hinzufügen übeschrieben wird, da für jede Datenquelle ein eigenständiges Objekt existiert und bei zurückgehen aus dem `SettingsOverview` die ausgewählte Datenquelle wieder aus der Liste aller Quellen entfernt wird. Auf diese Art und Weise kann eine Datenquelle auch während der Erstellung eines Infoproviders wieder simpel bearbeitet werden.
 
 Insgesamt wird dieser Mechanismus benötigt, damit ein Infoprovider aus mehr als einer einzelnen Datenquelle (API) bestehen kann.
 
@@ -505,6 +519,7 @@ Mittels der `checkProceedMethod`-Methode wird geprüft, ob Daten für die Histor
 
 Die Methode `renderListItem` wird dabei durch das Rendern der Komponente aufgerufen. Dabei wird die `historizedData.map` verwendet, um für jedes Element aus dem Array ein passendes Listenelement zu generieren.
 
+Das Zurückgehen mit "zurück" hat wie auch in **DataSelection** das Problem, dass man so Diagramme invalidieren könnte, die dann gelöscht werden müssen. Wie auch im vorherigen Fall haben wir uns entschieden, die Löschabhängigkeiten nur beim Weitergehen umzusetzen und beim Zurückgehen die Änderungen zu verwerfen. Wir lassen hierzu wieder einen entsprechenden Dialog anzeigen, den der Nutzer bestätigen muss.
 
 ### **HistoryScheduleSelection**
 Der State `currentTimeSelection` wird benötigt, um die aktuelle Uhrzeit, welche vom Nutzer durch einen Picker eingestellt wird, zu speichern. 
@@ -549,6 +564,12 @@ Diese Komponente dient der Darstellung der Informationen zu den vom Nutzer gewä
 Mit den Methoden `getIntervalString`, `getTypeString` und `getWeekdaySelectionString` können dann die einzelnen Werte für den Nutzer lesbar umgewandelt werden, da das Schedule-Objekt nur eine interne Repräsentation der Daten beinhaltet. Die Methode `getWeekdayString` ist eine Hilfsmethode, welche für eine Zahl den entsprechenden Wochentag zurückgibt. Dabei steht die 0 für Montag und die 6 für Sonntag, alle anderen Werte liegen also dazwischen.
 
 Das Rendering der Komponente generiert dann anhand des Arrays, welches durch `generateTableRows` zurückgegeben wird, die Tabelle mit ihren entsprechenden Zeilen.
+
+### **Löschen von Datenquellen**	
+Sofern mehr als eine Datenquelle existiert ist es möglich, Datenquellen per Button zu löschen. Dabei wird die Methode **deleteDataSourceHandler** aufgerufen, welche für die aktuell ausgewählte Datenquelle (welche gelöscht werden soll) alle Diagramme durchläuft und prüft, ob eines dieser Arrays oder historisierte Daten der Datenquelle nutzt. Alle Diagramme, auf die dies zutrifft werden in **localDiagramsToRemove** mit ihrem Namen gespeichert.	
+Die Ergebnisse werden mit **diagramsToRemove.current = localDiagramsToRemove** in eine **useRef**-Variable übertragen und dann ein mit **deleteDialogOpen** gesteuerter Dialog geöffnet, in dem der Nutzer das Löschen bestätigen muss. Sofern **diagramsToRemove.current** Namen enthält zeigt dieser Dialog dann alle Diagramme an, die gelöscht werden müssten. Der Nutzer muss hier die Löschung der Datenquelle bestätigen.	
+* **deleteSelectedDataSource** übernimmt dann sowohl das Entfernen der Datenquelle aus **dataSources**, das Entfernen der Authentifizierungsdaten aus **dataSourcesKeys**, das Setzen der ausgewählten Datenquelle auf eine andere als auch das Löschen der Diagramme, die von der Datenquelle abhängen.
+
 <div style="page-break-after: always;"></div>
 
 ## **DiagramCreation**

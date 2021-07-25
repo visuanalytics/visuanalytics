@@ -32,9 +32,7 @@ export const ComponentProvider: React.FC<Props> = ({ children }) => {
   const handleSetCurrent = (next: ComponentKey, props?: Object) => {
     setCurrent({ ...mainComponents[next], props: props });
   };
-
-  //TODO: check if this possibly breaks the old frontend
-
+  
   /* keep current context in sessionStorage */
   React.useEffect(() => {
     //get the componentKey from sessionStorage and choose the correct context object

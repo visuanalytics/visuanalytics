@@ -340,6 +340,31 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         sessionStorage.setItem("sceneName-" + uniqueId, sceneName);
     }, [sceneName])
 
+    React.useEffect(() => {
+        const leaveAlert = (e: BeforeUnloadEvent) => {
+            if (currentlyEditing) {
+                const localItems = items.slice();
+                const index = items.indexOf(selectedObject);
+                const objectCopy = {
+                    ...selectedObject,
+                    textContent: textEditContent,
+                    x: textEditX,
+                    y: textEditY,
+                };
+                localItems[index] = objectCopy;
+                setSelectedObject(objectCopy);
+                setItems(localItems);
+                setTextEditVisibility(false);
+                setCurrentlyEditing(false);
+            }
+            e.returnValue = "";
+        }
+        window.addEventListener("beforeunload", leaveAlert);
+        return () => {
+            window.removeEventListener("beforeunload", leaveAlert);
+        }
+    }, [currentlyEditing, items, selectedObject, textEditContent, textEditX, textEditY]);
+
     /**
      * Removes all items of this component from the sessionStorage.
      */
@@ -528,6 +553,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     //extract infoProviderId from props to use in dependencies
     const infoProviderId = props.infoProviderId;
 
+
     /**
      * Method that takes all necessary data of the scene creation and
      * forms a JSON object as specified by the backend to post the scene to the backend.
@@ -589,7 +615,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                         type: "image",
                         pos_x: element.x, //X-Coordinate
                         pos_y: element.y, //Y-Coordinate
-                        //TODO: document this - rounding because backend doesnt allow floats
                         size_x: Math.round(element.width * element.scaleX), //Breite optional
                         size_y: Math.round(element.height * element.scaleY), //Höhe optional
                         color: "RGBA",
@@ -1084,6 +1109,23 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             return;
         }
 
+        if (currentlyEditing) {
+            const localItems = items.slice();
+            const index = items.indexOf(selectedObject);
+            const objectCopy = {
+                ...selectedObject,
+                textContent: textEditContent,
+                x: textEditX,
+                y: textEditY,
+            };
+            localItems[index] = objectCopy;
+            setSelectedObject(objectCopy);
+            setItems(localItems);
+            setTextEditVisibility(false);
+            setCurrentlyEditing(false);
+            return;
+        }
+
         // if the user clicked on an element the following code will be executed
         if (name !== undefined && name !== '') {
             // set the selected item name to the name of the element
@@ -1353,6 +1395,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             setItems(localItems);
             setTextEditVisibility(false);
             setCurrentlyEditing(false);
+            return;
         }
         const localItems = items.slice();
         const index = items.indexOf(selectedObject);
@@ -1830,7 +1873,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 x: 20,
                 y: 20,
                 id: 'text-' + itemCounter.toString(),
-                textContent: (handlingHistorizedItem && intervalToUse !== undefined) ? '{_req|' + item.replace("|", "_") + '_HISTORY|' + intervalToUse.toString() + '}' : '{' + item + '}',
+                textContent: (handlingHistorizedItem && intervalToUse !== undefined) ? '{_req|' + item.replaceAll("|", "_") + '_HISTORY|' + intervalToUse.toString() + '}' : '{' + item + '}',
                 width: 200,
                 scaleX: 1,
                 scaleY: 1,
@@ -1851,7 +1894,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 const index = items.indexOf(selectedObject);
                 const objectCopy = {
                     ...selectedObject,
-                    textContent: (selectedObject as CustomText).textContent + ((handlingHistorizedItem && intervalToUse !== undefined) ? '{' + item + '{' + intervalToUse.toString() + '}}' : '{' + item + '}')
+                    textContent: (selectedObject as CustomText).textContent + ((handlingHistorizedItem && intervalToUse !== undefined) ? '{_req|' + item.replaceAll("|", "_") + '_HISTORY|' + intervalToUse.toString() + '}' : '{' + item + '}')
                 };
                 localItems[index] = objectCopy;
                 setItems(localItems);
@@ -1862,6 +1905,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             }
         }
     }
+
 
     /**
      * Method that renders the list items to be displayed in the list of all available data.
@@ -1912,7 +1956,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         )
     }
 
-    //TODO document the new diagramName property
     /**
      * Method to handle the click on an image loaded form the backend
      * @param src the image URL (blob) of the selected image

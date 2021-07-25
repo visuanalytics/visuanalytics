@@ -194,7 +194,6 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
         };
     }, []);
 
-    //TODO: document this new feature
     /**
      * Method that checks if any infoproviders were unselected compared to the original state.
      * Returns true if this is the case.
@@ -218,7 +217,7 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
         return false;
     }
 
-    console.log(originalSelectedInfoProvider)
+    //console.log(originalSelectedInfoProvider)
 
     /**
      * Method to check if a certain infoProviderID is included in the list of selected infoproviders

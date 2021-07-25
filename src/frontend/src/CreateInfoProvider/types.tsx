@@ -68,7 +68,6 @@ export type BackendDataSource = {
         method: string;
         response_type: string;
     };
-    // TODO use real data type for arrays (Backend needs to provide information)
     transform: Array<any>;
     storing: Array<any>;
     formulas: Array<FormelObj>,
@@ -248,7 +247,6 @@ export type StringReplacementData = {
     with: string;
 }
 
-//TODO: document this!
 /**
  * Type that contains the information about a processable array.
  * Used for displaying information in the ArrayProcessings and transforming to calculates.

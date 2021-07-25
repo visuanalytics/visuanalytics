@@ -45,7 +45,10 @@ def center(draw, position, content, font_size, font_colour, font_path, width=Non
     w, h = ttype.getsize(content)
     if width:
         y_text = h
-        lines = textwrap.wrap(content, width=calc_num_character(ttype, content[0], width))
+        if content != "":
+            lines = textwrap.wrap(content, width=calc_num_character(ttype, content[0], width))
+        else:
+            lines = [content]
         for line in lines:
             draw.text(((position[0] - (w / 2)), y_text + position[1]), line,
                           font=ImageFont.truetype(resources.get_resource_path(font_path), font_size),
@@ -83,10 +86,14 @@ def left(draw, position, content, font_size, font_colour, font_path, width=None)
     ttype = ImageFont.truetype(resources.get_resource_path(font_path), font_size)
     w, h = ttype.getsize(content)
     if width:
-        y_text = h
-        lines = textwrap.wrap(content, width=calc_num_character(ttype, content[0], width))
+        print("position", position, "width", width, "w", w, "height", h)
+        y_text = 0
+        if content != "":
+            lines = textwrap.wrap(content, width=calc_num_character(ttype, content, width))
+        else:
+            lines = [content]
         for line in lines:
-            draw.text(((position[0] - (w / 2)), y_text + position[1]), line,
+            draw.text(((position[0]), y_text + position[1]), line,
                           font=ImageFont.truetype(resources.get_resource_path(font_path), font_size),
                           fill=font_colour)
             y_text += h
@@ -94,6 +101,7 @@ def left(draw, position, content, font_size, font_colour, font_path, width=None)
         draw.text(((position[0] - (w / 2)), position[1]), content,
                   font=ImageFont.truetype(resources.get_resource_path(font_path), font_size),
                   fill=font_colour)
+
 
 def calc_num_character(ttype, text, width):
     """
@@ -105,5 +113,7 @@ def calc_num_character(ttype, text, width):
 
     :return: Anzahl an maximal erlaubten Character pro Zeile
     """
-    w = ttype.getsize(text)[0]
+    character_sizes = [ttype.getsize(x)[0] for x in text]
+    character_sizes = [x for x in character_sizes if x > 0]
+    w = sum(character_sizes) // len(character_sizes) if character_sizes else 1
     return width // w

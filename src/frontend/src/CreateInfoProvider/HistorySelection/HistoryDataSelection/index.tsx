@@ -67,7 +67,6 @@ export const HistoryDataSelection: React.FC<HistoryDataSelectionProps> = (props)
         sessionStorage.removeItem("firstHistDataSelectionEntering-" + uniqueId)
     }
 
-    //TODO: document this and why it is needed
     /**
      * Handler method for clicking the back button.
      * Checks if any selections were removed - if so, it warns the user that all changes will be reverted.

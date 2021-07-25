@@ -93,7 +93,6 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
     const [dataCustomizationStep, setDataCustomizationStep] = React.useState(0);
     //true when the button for submitting the infoprovider is blocked because a request is running
     const [submitInfoProviderDisabled, setSubmitInfoProviderDisabled] = React.useState(false);
-    //TODO: document this!!
     //array that contains a boolean for each dataSource indicating if refetching of api-data for checkup has already been done on them
     const [refetchDoneList, setRefetchDoneList] = React.useState<Array<boolean>>(new Array(sessionStorage.getItem("infoProvDataSources-" + uniqueId) === null ? props.infoProvider!.dataSources.length : JSON.parse(sessionStorage.getItem("infoProvDataSources-" + uniqueId)!).length).fill(false))
     console.log(refetchDoneList)
@@ -161,7 +160,6 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
      * The sets need to be converted back from Arrays that were parsed with JSON.stringify.
      */
     React.useEffect(() => {
-        //TODO: document firstentering
         if (sessionStorage.getItem("firstEntering-" + uniqueId) !== null) {
             //infoProvId
             setInfoProvId(Number(sessionStorage.getItem("infoProvId-" + uniqueId) || 0));
@@ -650,7 +648,6 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                     historized_data: dataSource.historizedData,
                     arrayProcessingsList: dataSource.arrayProcessingsList,
                     stringReplacementList: dataSource.stringReplacementList,
-                    //TODO: ADD THIS TO DOCUMENTATION!!!
                     listItems: dataSource.listItems
                 })
             }
@@ -751,13 +748,11 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                 for (let index = 0; index < diagram.historizedObjects.length; index++) {
                     const item = diagram.historizedObjects[index];
                     const plots = {
-                        //dateLabels: item.dateLabels, //deactivated since there is currently no support for date labels by the backend
                         plot: {
                             type: type,
                             x: item.intervalSizes,
-                            y: "{_req|" + item.name + "}",
+                            y: "{_req|" + item.name.replaceAll("|", "_") + "_HISTORY}",
                             color: item.color,
-                            //dateFormat: item.dateFormat,
                             x_ticks: {
                                 //only set the ticks on the last Plot - this is necessary to render it last when layering the Plots in the diagrams
                                 ticks: index === diagram.historizedObjects.length-1 ? diagram.labelArray : []

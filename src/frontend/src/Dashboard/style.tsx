@@ -111,7 +111,7 @@ export const useStyles = makeStyles((theme: Theme) =>
             width: "2em",
             overflowWrap: "break-word"
         },
-        //TODO: document that this maxWidth is probably "abusing" some kind of CSS things happening
+        // this maxWidth is probably "abusing" some kind of CSS things happening
         logMessageTableCell: {
             maxWidth: '1em',
             overflowWrap: "break-word"
