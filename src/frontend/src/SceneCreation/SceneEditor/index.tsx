@@ -553,6 +553,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     //extract infoProviderId from props to use in dependencies
     const infoProviderId = props.infoProviderId;
 
+
     /**
      * Method that takes all necessary data of the scene creation and
      * forms a JSON object as specified by the backend to post the scene to the backend.
@@ -1904,6 +1905,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             }
         }
     }
+
 
     /**
      * Method that renders the list items to be displayed in the list of all available data.

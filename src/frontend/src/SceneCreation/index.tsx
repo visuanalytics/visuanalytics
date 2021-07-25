@@ -59,7 +59,6 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
     const [sceneFromBackend, setSceneFromBackend] = React.useState(props.sceneFromBackend);
     const [editId, setEditId] = React.useState(props.editId);
 
-
     /* mutable flag that is true when currently images are being fetched because of a reload
     * this is used to block the continueHandler call after successful fetches. This way,
     * no additional methods are required to fetch the images on reload.
@@ -639,6 +638,7 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
     const sceneFromBackendMutable = React.useRef(props.sceneFromBackend)
 
 
+
     /**
      * Calls for sessionStorage handling
      */
@@ -669,7 +669,7 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
             //fetchImageDialogOpen
             setFetchImageDialogOpen(sessionStorage.getItem("fetchImageDialogOpen-" + uniqueId) === "true");
             //editId
-            setEditId(Number(sessionStorage.getItem("editId-" + uniqueId)));
+            setEditId(Number(sessionStorage.getItem("editId-" + uniqueId)) || undefined);
             //sceneFromBackend
             setSceneFromBackend(sessionStorage.getItem("sceneFromBackend-" + uniqueId) === null ? undefined : JSON.parse(sessionStorage.getItem("sceneFromBackend-" + uniqueId)!))
             sceneFromBackendMutable.current = sessionStorage.getItem("sceneFromBackend-" + uniqueId) === null ? undefined : JSON.parse(sessionStorage.getItem("sceneFromBackend-" + uniqueId)!)
@@ -980,7 +980,7 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
                             continueHandler={() => handleContinue()}
                             backHandler={() => handleBack()}
                             infoProvider={infoProvider}
-                            infoProviderId={editId !== undefined ? editId : selectedId}
+                            infoProviderId={sceneFromBackend !== undefined ? sceneFromBackend.used_infoproviders[0] : selectedId}
                             selectedDataList={selectedDataList}
                             customDataList={customDataList}
                             historizedDataList={historizedDataList}
