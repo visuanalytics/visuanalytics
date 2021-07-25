@@ -203,7 +203,7 @@ def insert_infoprovider(infoprovider):
             # add request memory, if datasource stores data
             use_last = get_max_use_last(infoprovider_json["images"])
             for storing_config in datasource_json["storing"]:
-                datasource_json["api"]["steps_value"].append(f"{datasource_json['name']}_{storing_config['key'].replace('_req|', '').replace('|', '_')}_HISTORY")
+                datasource_json["api"]["steps_value"].append(f"{datasource_json['name']}_{storing_config['key'].replace('_req|', '').replace(datasource_json['name'] + '|','').replace('|', '_')}_HISTORY")
                 datasource_json["api"]["requests"].append({
                     "type": "request_memory",
                     "name": dict(storing_config)["name"],
