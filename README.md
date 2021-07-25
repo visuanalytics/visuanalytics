@@ -1,13 +1,13 @@
 # VisuAnalytics [![Tests](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/workflows/Automated%20Testing/badge.svg)](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/actions?query=workflow%3A%22Automated+Testing%22) [![Documentation Status](https://readthedocs.org/projects/visuanalytics/badge/?version=latest)](https://visuanalytics.readthedocs.io/de/latest/?badge=latest)
 
 ## **Release: VisuAnalytics 2.0**
-Im Rahmen der Veranstaltung [**Softwaretechnik-Praktikum**](https://www.thm.de/organizer/index.php?option=com_organizer&view=subject_item&id=13) im Sommersemester 2021 aufbauend auf der Software Visuanalytics dieses Projekt zum Thema **Data Analytics** durchgeführt.
+Im Rahmen der Veranstaltung [**Softwaretechnik-Praktikum**](https://www.thm.de/organizer/index.php?option=com_organizer&view=subject_item&id=13) im Sommersemester 2021 wurde aufbauend auf der Software Visuanalytics dieses Projekt zum Thema **Data Analytics** durchgeführt.
 
 Die Veranstaltung gehört zum Curriculum der Bachelorstudiengänge der Informatik an der [Technischen Hochschule Mittelhessen](https://www.thm.de).
 
 Ziel war dabei, die bestehende Infrastruktur des Visuanalytics-Projekts zu nutzen und diese um ein Frontend zu erweitern, über welches die notwendigen JSON-Dateien für Datenabfragen und Videos einfach generiert werden können. Gleichzeitig wurde die Backend-Infrastruktur um neue Features erweitert, mit denen weitergehende Datenverarbeitungen möglich sind. Dabei werden statt den bisherigen vier Job-Arten nun beliebige APIs unterstützt.
 
-Grundkonzept der Anwendung ist nun die Erstellung sogenannter Infoprovider, in welchen mehrere API-Datenquellen zusammengefasst werden können. Diese Infoprovider können dann bei der Erstellung von statischen Szenen über einen grafischen Editor genutzt werden, um API-Daten in die Szene einfügen zu lassen. Szenen werden dann in Form von Videojobs aneinandergereiht und um Text-To-Speech (ebenfalls mit Infoprovider-Daten) erweitert. Auf Basis der Backend-Infrastruktur von `Visuanalytics` wird dann zu vom Nutzer festgelegten Zeitpunkten eine Generierung der konfigurierten Videos mit den aktuellsten Datenwerten der APIs vorgenommen.
+Grundkonzept der Anwendung ist nun die Erstellung sogenannter Infoprovider, in welchen mehrere API-Datenquellen zusammengefasst werden können. Diese Infoprovider können dann bei der Erstellung von Szenen (Standbilder mit dynamischen Daten) über einen grafischen Editor genutzt werden, um API-Daten in die Szene einfügen zu lassen. Szenen werden dann in Form von Videojobs aneinandergereiht und um Text-To-Speech (ebenfalls mit Infoprovider-Daten) erweitert. Auf Basis der Backend-Infrastruktur von `Visuanalytics` wird dann zu vom Nutzer festgelegten Zeitpunkten eine Generierung der konfigurierten Videos mit den aktuellsten Datenwerten der APIs vorgenommen.
 
 ### Features
 Folgende Liste stellt eine grobe Übersicht über die neuen Features von `Visuanalytics 2.0` dar:
@@ -16,7 +16,7 @@ Folgende Liste stellt eine grobe Übersicht über die neuen Features von `Visuan
 * **Neue Datenverarbeitungen:** Es stehen neue Datenverarbeitung zur Verfügung: Summen, Mittelwerte, Minima und Maxima von numerischen Arrays, Ersetzung von Zeichenketten in Strings sowie das Erstellen komplexer Formeln auf Basis von API-Daten.
 * **Historisierung von Daten:** Die Backend-Infrastruktur erlaubt es, APIs unabhängig von Videojobs zu beliebigen Zeitpunkten anzufragen, um Daten von diesem abzufragen und in einer Datenbank zu speichern. Diese historisierten Daten können wie auch die aktuellsten Datenwerte zum Beispiel in Videos verwendet werden!
 * **Erstellung von Diagrammen:** Auf Grundlage numerischer Arrays sowie historisierter Daten können Säulen-, Balken-, Torten-, Punkt/Streu- sowie Liniendiagramme erstellt werden, die dann zur Visualisierung von Daten in Videos eingebunden werden können.
-* **Grafischer Szenen-Editor:** Die einzelnen Szenen, aus denen Videos zusammengesetzt werden können in einem einfachen Drag-And-Drop-Szenen-Editor erstellt werden. Dieser erlaubt das Einfügen von Formen, Texten, API-Datenwerten und Diagrammen und eine grundlegende Formatierung dieser. Weiterhin können eigene Bilder hochgeladen und als Bilder auf der Szene oder Hintergrundbild eingebunden werden.
+* **Grafischer Szenen-Editor:** Die einzelnen Szenen, aus denen Videos zusammengesetzt werden können, in einem einfachen Drag-And-Drop Szenen-Editor erstellt werden. Dieser erlaubt das Einfügen von Formen, Texten, API-Datenwerten und Diagrammen und eine grundlegende Formatierung dieser. Weiterhin können eigene Bilder hochgeladen und als Bilder auf der Szene oder Hintergrundbild eingebunden werden.
 * **Videojob-Editor:** Mehrere Szenen können in diesem Editor aneinandergereiht werden und um die Definition von Texten für die Text-To-Speech-Ausgabe erweitert werden (auch diese erlauben das Einbinden von API-Daten).
 
 ### Abwärtskompatibilität
