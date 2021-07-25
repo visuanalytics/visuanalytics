@@ -1,14 +1,18 @@
-# Infoprovider-Bearbeitung (EditInfoprovider)
+# **Infoprovider-Bearbeitung (EditInfoprovider)**
+Die Komponentenstruktur dieses Abschnitts ist wie folgt aufgebaut:
+![Übersicht_Info_Provider_Bearbeitung.png](images/edit_infoprovider/Übersicht_Info_Provider_Bearbeitung.png)
+<div style="page-break-after: always;"></div>
 
-Die Komponente EditInfoProvider dient dem Bearbeiten eines Infoproviders. Ein User kann hier die Konfiguration eines erstellten Infoproviders ansehen und verändern.
+## **EditInfoProvider**
+Die Komponente **EditInfoProvider** dient dem Bearbeiten eines Infoproviders. Ein User kann hier die Konfiguration eines erstellten Infoproviders ansehen und verändern.
 
 Um das zu ermöglichen, wird der gewünschte Infoprovider vom Backend angefragt. Dieser Vorgang findet in **InfoProviderOverview** statt und ist auch dort in der Dokumentation erklärt. Dort wird beschrieben, dass der Komponente **EditInfoProvider** die wichtigen Informationen in den Properties übergeben wird. Die Informationen sind die Infoprovider-Id (**infoProvId**) und der Infoprovider als ein vom Frontend lesbares Objekt (**infoProvider**). Die Infoprovider-Id ist eine Nummer und kann zu genau einem Infoprovider zugeordnet werden. Sie wird erst wieder benötigt, wenn der bearbeitete Infoprovider zurück an das Backend geschickt wird. Das Backend wird dann den Infoprovider mit der übergebenen Id löschen und durch den neu geschickten ersetzen, was einer Bearbeitung gleich kommt.
 Das InfoProvider-Objekt enthält alle Informationen des Infoproviders. Diese Informationen soll der User nun einsehen und bearbeiten können. Das Infoprovider-Objekt hat folgende Struktur:
-**!!!Vorsicht, noch die alte Version!!!**
 ```javascript
-export type InfoProviderObj = {
-    name: string;
+export type FrontendInfoProvider = {
+    infoproviderName: string;
     dataSources: Array<DataSource>;
+    dataSourcesKeys: Map<string, DataSourceKey>;
     diagrams: Array<Diagram>;
 }
 ```
@@ -23,17 +27,20 @@ export type DataSource = {
     customData: FormelObj[];
     historizedData: string[];
     schedule: Schedule;
-    listItems: Array<ListItemRepresentation>
+    listItems: Array<ListItemRepresentation>;
+    arrayProcessingsList: Array<ArrayProcessingData>;
+    stringReplacementList: Array<StringReplacementData>;
 }
+
 ```
-**InfoProviderObj** ist dabei schon aus **InfoProviderOverview** und **Datasource** aus **CreateInfoProvider** bekannt. Wir haben so den kompletten lesbaren und schreibbaren Zugriff auf die Daten von einem Infoprovider. Sie können direkt verändert und genutzt werden. 
+**FrontendInfoProvider** ist dabei schon aus **InfoProviderOverview** und **Datasource** aus **CreateInfoProvider** bekannt. Wir haben so den kompletten lesbaren und schreibbaren Zugriff auf die Daten von einem Infoprovider. Sie können direkt verändert und genutzt werden. 
 Um dies zu ermöglichen, wird ein State in **EditInfoProvider/index** mit den übergebenen Informationen initialisiert.
 ```javascript
-const [infoProvName, setInfoProvName] = React.useState(infoProvider.name);
+const [infoProvName, setInfoProvName] = React.useState(props.infoProvider !== undefined ? props.infoProvider.infoproviderName : "");
+    const [infoProvDataSources, setInfoProvDataSources] = React.useState<Array<DataSource>>(sessionStorage.getItem("infoProvDataSources-" + uniqueId) === null ? props.infoProvider!.dataSources : JSON.parse(sessionStorage.getItem("infoProvDataSources-" + uniqueId)!));
 
-const [infoProvDataSource, setInfoProvDataSource] = React.useState<Array<DataSource>>(infoProvider.dataSources)
 
-const [infoProvDiagrams, setInfoProvDiagrams] = React.useState<Array<Diagram>>(infoProvider.diagrams);
+    const [infoProvDiagrams, setInfoProvDiagrams] = React.useState(props.infoProvider !== undefined ? props.infoProvider.diagrams : new Array<Diagram>());
 ```
 Damit hat die Komponente alle Daten zur Verfügung und die grundlegende Anforderung ist erfüllt.
 * Wichtig ist hierbei jedoch, dass der sessionStorage in diesem Fall die aus **props** entnommenen Initialwerte direkt wieder überschreiben würde. Deshalb wenden wir eine Technik an, bei der vor dem Laden von Werten aus dem sessionStorage geprüft, ob dieser einen Eintrag für **firstEntering** enthält - ist das nicht der Fall, liegt das erste Rendering vor und es wird nichts geladen. Stattdessen setzt man einen Wert für den Eintrag und hinterlässt so einen Marker im sessionStorage an dem man feststellen kann, dass es nicht mehr das erste Laden ist.
@@ -60,34 +67,42 @@ Zusätzlich zu den übernommenen Komponenten werden unter den angezeigten Daten 
 
 Beim Betätigen von "Abbrechen" wird ein Dialog geöffnet, in dem der User die Aktion bestätigen muss und darauf hingewiesen wird, dass alle Änderungen verloren gehen. Der Dialog verhält sich genauso, wie an den anderen Stellen, wo dieses Konstrukt schon verwendet wurde.
 
-## EditSettingsOverview
+## **EditSettingsOverview**
 Diese Unter-Komponente enthält den Überblick über die vom Infoprovider beinhalteten Daten. Da der Infoprovider bereits erstellt und mit Daten gefüllt ist, ist es nicht sinnvoll dieselbe Reihenfolge der Schritte, wie bei **CreateInfoProvider** zu wählen. Praktischer ist es, dem User zuerst einen Überblick über den Infoprovider zu geben. Deswegen ist dies der erste Schritt der Infoprovider-Bearbeitung. Diese Komponente basiert auf **SettingsOverview** in **CreateInfoProvider**. Genauso, wie in der Komponente innerhalb von **CreateInfoprovider**, werden hier alle Daten zusammengefasst angezeigt.
 
-### Hinzufügen von neuen Datenquellen
+### **Hinzufügen von neuen Datenquellen**
 Um neue Datenquellen zu einem bereits bestehenden Infoprovider hinzufügen zu können, haben wir die `CreateInfoprovider`-Komponente wiederverwendet. Dazu hat diese ein Interface für die Properties bekommen:
 
 ```javascript
 interface CreateInfoproviderProps {
     finishDataSourceInEdit?: (dataSource: DataSource, apiKeyInput1: string, apiKeyInput2: string) => void;
     cancelNewDataSourceInEdit?: () => void;
+    /*...*/
 }
 ```
 
 Die beiden Methoden sind als Optional gekennzeichnet und werden nur in der Bearbeitung übergeben. Dadurch ändert sich nichts an den bisherigen Aufrufen dieser Komponente. Die beiden im Interface definierten Methoden werden dabei in `handleContinue` bzw. `handleBack` aufgerufen. Im Handler für den nächsten Schritt wird dabei geprüft, ob der aktuelle Schritt = 4 (Historisierung) ist und ob die Funktion `finishDataSourceInEdit` definiert ist. Falls dies zutrifft, so wird die eben angesprochene Funktion aufgerufen. Bei `handleBack` wird ein ähnliches Vorgehen benutzt. Hier wird allerdings geprüft, ob der aktuelle Step = 0 ist und die Methode `cancelNewDataSourceInEdit` definiert ist. Ist dies der Fall, so wird der Session-Storage von `CreateInfoprovider` geleert und die Funktion `cancelNewDataSourceInEdit` wird ausgeführt.
 
-#### finishNewDataSource und cancelDataSourceCreation
+#### **finishNewDataSource und cancelDataSourceCreation**
 `finishNewDataSource` bekommt eine `DataSource` und die beiden Keys für die API übergeben. Die neue `DataSource` wird hierbei einfach zu den bestehenden hinzugefügt. Die Keys werden ebenfalls lediglich in die Map der bisherigen Schlüssel eingetragen. In beiden Fällen wird der zugehörige State mit den neuen Objekten überschrieben.
 
 `cancelDataSourceCreation` erhält keine Parameter und setzt den State `newDataSourceMode` mittels der entsprechenden setter-Methode wieder auf false. Der Boolean-Flag `newDataSourceMode` wird dabei benötigt, um in `selectContent` von `EditInfoprovider` die Komponente an der richtigen Stelle zu rendern. Diese wird dabei im `EditSettingsOverview` bei betätigen des entsprechenden Buttons auf true gesetzt. Dafür wird der State mittels props an die Komponente übergeben.
 
-## EditBasicSettings
+Die beiden Methoden werden dabei, falls diese definiert sind im continue- bzw. back-handler von `CreateInfoprovider` aufgerufen. `finishDataSourceInEdit` wird dabei genau dann aufgerufen, wenn sie nicht `undefined` ist und wenn die Historisierung abgeschlossen ist (`step == 4`). `cancelNewDataSourceInEdit` wird aufgerufen, wenn im diese Methode definiert ist und der Nutzer sich im step 0 der Infoprovider-Erstellung befindet.
+
+#### **Prüfen auf Namensduplikate**
+Ein Problem, welches sich hier ergibt, ist die Prüfung auf Duplikate in API-Namen, da `CreateInfoprovider` nicht in der Lage ist zu wissen, welche Datenquellen-Namen es bereits in der Editierung gibt. Die Lösung war es hier dem Interface von `CreateInfoprovider` einen weiteren optionalen Parameter zu übergeben: `checkDuplicateNameInEdit`. Die Funktionsweise ist identisch zur beschriebenen Methode in der Dokumentation zur Infoprovider-Erstellung. Weiterhin fällt bei Betrachten des Codes auf, dass es eine zweite Methode gibt, welche eine sehr ähnliche Funktionalität in `EditInfoprovider` erfüllt. Zu welchem Zwecke diese benötigt wird, wird im nächsten Kapitel erklärt.
+<div style="page-break-after: always;"></div>
+
+## **EditBasicSettings**
 Um die Komponente `BasicSettings` aus der Erstellung von Infoprovidern übernehmen zu können, musste an dieser eine kleine Modifikation durchgeführt werden. So enthält diese Komponente nun eine Property `isInEditMode`, welche bei Erstellung eines Infoproviders auf `false` gesetzt wird und bei Bearbeitung auf `true`. Mittels der Variable kann in `handleProceed`überprüft werden, ob die Komponente aus der Bearbeitung geladne wurde oder nicht. Wird die Komponente im Kontext der Bearbeitung verwendet, so wird nur der übergebene Continue-Handler aufgerufen. Andernfalls wird der bisherige Code ausgeführt.
 
 Die Komponente `EditBasicSettings` kann die Komponente `BasicSettings` mit dieser einfachen Modifikation verwenden. Weiterhin speichert die Komponente allerdings auch alle relevanten Werte, wie die Query, den API-Namen, etc. ab, um bei betätigen von "zurück" prüfen zu können, ob es eine Änderung gab. Hierfür gibt es entsprechend eine Methode, welche Veränderungen per Boolean-Wert anzeigen kann. Wird nach einer Veränderung die Schaltfläche "zurück" in `BasicSettings` aufgerufen, so wird ein Dialog angezeigt, welcher dem Nutzer aufzeigt, dass seine Änderungen verloren gehen. Wurden keine Änderungen gemacht, so wird auch entsprechender Dialog nicht angezeigt. Die beiden Handler für für continue und back in dieser Komponente, wechseln dabei einfach zum vorherigen bzw. nachfolgenden Step der Infoprovider-Bearbeitung. Dabei war es nicht einfach möglich die Handler aus `EditInfoprovider` zu übernehmen, da diese einen Step erwarten, zu welchem gesprungen werden soll.
 
-In der Oberkomponente `EditInfoprovider` wurden dabei einige Methoden angelegt, welche das Setzen eines einzelnen States simulieren, wenn in `EditBasicSettings` Änderungen vorgenommen wurden. Diese Methoden sind notwendig, da `BasicSettings` die Änderungen auf diese Weise gleich in die richtigen States schreibt. Auch gibt es hier wieder eine Methode für den Check auf Duplikate bei API-Namen. Diese returned aber nicht `true` falls die API-Namen gleich sind, aber die aktuell durchsuchte Datenquelle der ausgewählten Datenquelle entspricht, denn der Name ist an sich zwar vereben, aber eben genau an die ausgewählte Quelle und soll daher verwendet werden können.
+In der Oberkomponente `EditInfoprovider` wurden dabei einige Methoden angelegt, welche das Setzen eines einzelnen States simulieren, wenn in `EditBasicSettings` Änderungen vorgenommen wurden. Diese Methoden sind notwendig, da `BasicSettings` die Änderungen auf diese Weise gleich in die richtigen States schreibt. Auch gibt es hier wieder eine Methode für den Check auf Duplikate bei API-Namen. Diese returned aber nicht `true` falls die API-Namen gleich sind, aber die aktuell durchsuchte Datenquelle der ausgewählten Datenquelle entspricht, denn der Name ist an sich zwar vereben, aber eben genau an die ausgewählte Quelle und soll daher verwendet werden können. Die zugehörige Methode heißt `checkDuplicateNameForEditDataSource`.
+<div style="page-break-after: always;"></div>
 
-## EditDataSelection
+## **EditDataSelection**
 Die Komponente **EditDataSelection** ist das Gegenstück zu **DataSelection** aus der Erstellung von Infoprovidern und ermöglicht es entsprechend, die Auswahl der Daten der API zu ändern, die man verwenden möchte (d.h. die für Szenen, Diagramme, Formeln, Historisierung usw. zur Verfügung stehen).
 
 Da die Oberfläche sich nicht weiter von der von **DataSelection** unterscheidet macht es wenig Sinn, die Komponente erneut zu schreiben - stattdessen ist es hier deutlich sinnvoller, einfach von dieser Komponente aus **DataSelection** im Rendering einzubinden. Damit spart man nicht nur Code, sondern muss auch alle Abhängigkeits-Funktionalitäten nicht neu implementieren:
@@ -114,26 +129,28 @@ Solange der Dialog oder DataSelection noch nicht angezeigt werden zeigt die Komp
 Um das Problem zu umgehen, dass durch **fetchTestData** bei jedem Vor- und Zurückgehen eine API-Request ausgelöst wird und somit möglicherweise begrenzte Abfrage-Anzahlen unnötig belastet werden verwaltet **EditInfoProvider** in seinem State ein Array **refetchDoneList**. Dieses enthält für jeden Infoprovider einen Boolean-Wert, der dann **true** ist, wenn die Überprüfung erfolgreich stattgefunden. Ist der Wert für die aktuelle Datenquelle **true**, so erfolgt keine erneute Abfrage.
 * In der Verwaltung der Liste werden auch das Löschen von Datenquellen oder das Hinzufügen neuer Datenquellen berücksichtigt (diese sind automatisch auf **true** gesetzt).
 
-## EditDataCustomization
+<div style="page-break-after: always;"></div>
+
+## **EditDataCustomization**
 Wie auch in der Erstellung eines Infoproviders kann man bei der Editierung auf drei verschiedene Abschnitte zugreifen - Array-Operationen, Formel-Erstellung und String-Ersetzungen. Da alle drei wieder in einem Schritt zusammengefasst werden sollen gibt es die Komponente **EditDataCustomization**, welche per **props** den aktuellen Schritt **dataCustomizationStep** übergeben bekommt. Anhand dieses Schritts wählt sie in **getContents** aus, welche Komponente für einen der drei Schritte angezeigt werden soll.
 
 Dabei ist es so, dass **ArrayProcessing** und **StringProcessing** ohne Anpassung verwendet werden können - man ruft die Komponenten schlicht auf und übergibt per **props** die Variablen der aktuell bearbeiteten Datenquelle. Daher verzichten wir auf weitere Erläuterungen und verweisen auf die Dokumentation zu **CreateInfoProvider**, in der beide Komponenten detailliert vorgestellt werden.
 
-## EditCustomData
+## **EditCustomData**
 
 Hier kann der User seine erstellten Formeln einsehen und bearbeiten. Hierbei müssen die Formeln des Infoproviders wieder in einer Liste angezeigt werden, wobei jedes Listenelement den Namen der Formel und den zugehörigen Formel-String enthält. Zusätzlich soll man die Möglichkeit haben eine ausgewählte Formel zu löschen oder zu Bearbeiten. 
 
-### Liste der Formeln
+### **Liste der Formeln**
 
 Die Liste der Formeln wird in einer Hilfskomponente **FormelList** erstellt, die in **EditCustomData** eingebunden wird. Mit ```props.infoProvDataSources[props.selectedDataSource].customData``` können wir dieser Komponente, die nötigen Informationen übergeben. In **FormelList** werden quasi zwei Listen nebeneinander dargestellt. Die eine beinhaltet die Namen der Formeln, die andere die Formel als String mit zwei Schaltflächen für das Löschen und Bearbeiten. Da beide Listen nebeneinander und in einem Schritt erstellt sind, gehören die nebeneinander liegenden Items jeweils zueinander. Es wird also der Name immer neben der dazugehörigen Formel gerendert, auch wenn die Listen im Grunde unabhängig voneinander erstellt werden. Die Methode **renderListName()** übernimmt dabei die Namen und die Methode **FormelListItem** den Formel-String. In **FormelList** kann durch die *map*-Funktion auf dem übergebenen **customData**-Array auf jedes darin enthaltene **formelObj** zugegriffen werden. Diese werden den renderList-Methoden übergeben. Somit können die Daten dem User korrekt angezeigt werden.
 Zusätzlich werden für jede Formel die Löschen- und Bearbeiten-Schaltfläche generiert. Die hier verwendeten Handler-Methoden wurden auch per Properties übergeben und sind in **EditCustomData** implementiert.
 
-#### Löschen von Formeln
+#### **Löschen von Formeln**
 
 Da wir lesenden und schreibenden Zugriff auf das aktuelle Objekt haben, stellt sich diese Aufgabe als weniger anspruchsvoll heraus. Die jeweilige Formel kann durch ihren Namen eindeutig identifiziert werden. Sie muss nun nur aus **customData** und **historizedData** entfernt werden und die Formel ist aus dem Objekt endgültig gelöscht. Es wird ebenfalls wieder ein Dialog verwendet, der über **removeDialogOpen** geöffnet oder geschlossen werden kann. Mittels **handleDelete** wird der Wert von **removeDialogOpen** auf true gesetzt. Dadurch wird der Dialog gerendert. Aufgerufen wird handleDelete durch die entsprechende Löschen-Schaltfläche. Bei der Bestätigung des Users wird **confirmDelete()** aufgerufen und der Löschvorgang wird ausgeführt. Hier wird zusätzlich die Methode **checkForHistorizedData** aus **EditCustomData/index** aufgerufen. Da Formeln Teil von den historisierten Daten sein können, müssen sie auch bei einem Löschvorgang aus diesen entfernt werden. Dadurch kann es passieren, das es keine weiteren historisierten Daten gibt. In diesem Fall mus das dazugehörige **Schedule**-Objekt auch gelöscht werden.
 * Hinweis: Das Löschen von Formeln erfordert eine Löschkaskade, die weitere abhängige Formeln und Diagramme löscht. Eine genaue Beschreibung des Mechanismus findet sich im Dokumentationsabschnitt zur Komponente **CreateCustomData** im Segment zum Löschen von Formeln.
 
-### Bearbeiten von Formeln
+### **Bearbeiten von Formeln**
 
 Durch den lesenden und schreibenden Zugriff ist das Bearbeiten bzw. Ersetzen kein Problem. Es ergibt sich jedoch eine Herausforderung. Im Backend ist die Formel als String dargestellt. Unter der in **CreateCustomData** verwendeten **CustomDataGUI** ist die Formel jedoch als Array von **StrArg**-Objekten implementiert. Aufgabe hier ist es also, einen String in die Objekt-Struktur zu übersetzen, um die **CustomDataGUI** korrekt weiterzuverwenden.
 
@@ -148,6 +165,9 @@ export type formelContext = {
     opFlag: boolean;
     leftParenFlag: boolean;
     rightParenFlag: boolean;
+    commaFlag: boolean;
+    usedComma: boolean;
+    usedFormulaAndApiData: Array<string>;
 }
 ```
 Ein gefülltes Objekt dieses Typen kann **EditSingleFormel** übergeben werden. Dort können sie durch den **initialState** zugewiesen werden. In **EditCustomData** ist die ausschlaggebende Methode **makeFormelContext** implementiert. Sie übernimmt einen Formel-Namen und ein Formel-String (der Inhalt von einem **formelObj**) und gibt ein passendes **formelContext**-Objekt zurück.
@@ -166,7 +186,7 @@ Durch Klammer entstehen allerdings noch Strings, die nicht korrekt als **StrArg*
     * ```5))``` -> ```5```
     
 * Zuerst wird auf ein Operator geprüft. Dafür ist eine Hilfsmethode implementiert worden. **checkOperator()** bekommt einen String übergeben und gibt true zurück, falls das erste Element des Strings +, -, *, / oder % ist. Dabei muss nur das erste Element geprüft werden, da ein Operator nur ein Zeichen hat. Es wird trotzdem geprüft, ob der **Formel-Abschnitt** nur ein Zeichen lang ist. Andernfalls würde das erste Zeichen zu einem Daten-Wert-Namen gehören. Wenn beide Überprüfungen true ergeben, wird ein **StrArg** mit dem **Formel-Abschnitt**, der ein Operator ist, in **formelAsObj** hinzugefügt.
-* Als Nächstes wird darauf geprüft, ob der **Formel-Abschnitt** nur Nummern (0-9) enthält. Dazu gibt es eine weitere Hilfsmethode namens **checkFindOnlyNumbers**. Diese bekommt einen String übergeben und gibt true zurück, falls dieser aus nur Nummern besteht. Ist das der Fall, wird ein **StrArg** mit dem **Formel-Abschnitt**, der eine Nummer ist, in **formelObj** hinzugefügt.
+* Als Nächstes wird darauf geprüft, ob der **Formel-Abschnitt** eine Nummer ist (0-9 oder . ). Dazu gibt es eine weitere Hilfsmethode namens **checkNumbers**. Diese bekommt einen String übergeben und gibt true zurück, falls dieser aus nur Nummern mit oder ohne einen Komma(.) besteht. Ist das der Fall, wird für jeden für jeden Character in dem aktuellen String ein entsprechendes **StrArg** in **formelAsObj** hinzugefügt. Das bedeutet, dass jede Nummer und falls ein Komma enthalten ist auch das Komma als eigenes **StrArg** angehängt wird.
 * Jetzt sind alle Möglichkeiten ausgeschlossen, außer ein Daten-Wert (wie ```Array2|Data0```). Wenn also bisher noch nichts in **formelAsObj** hinzugefügt wurde (ausgeschlossen von Klammern) kann mit Sicherheit davon ausgegangen werden, dass der **Formel-Abschnitt** ein Daten-Wert ist. Dafür wird **notPushed** überprüft. Wenn dieser noch true ist, wird ein **StrArg** mit dem **Formel-Abschnitt** in **formelAsObj** hinzugefügt.
 * Als Letztes muss **countClosingParens** mal oft ein **StrArg** mit ")" in **formelAsObj** hinzugefügt werden.
 
@@ -176,5 +196,5 @@ Nach diesem Schritt ist das **formelContext**-Objekt vollständig und wird zurü
 Ein zusätzlicher kleiner Unterschied zu dem Original ist hier, dass keine Löschen-Schaltflächen neben den Formel-Werten in der Liste generiert werden. Die Option eine Formel zu löschen erhält man in **EditCustomData** in der Formel-Übersicht.
 Falls ein User eine neue Formel erstellen will, wird **EditSingleFormelGUI** ein leeres **formelContext**-Objekt mit den Initial-Flags übergeben. So verhält sich die **EditSingleFormelGUI** auch bei keinem Input richtig.
 
-## Diagramme editieren
+## **Diagramme editieren**
 Die Editierung der Diagramme stellt die einfachste aller Implementierungen dar - gegenüber der Komponente **DiagramCreation** aus der Erstellung der Infoprovider sind keinerlei Anpassungen oder Ergänzungen nötig, sodass man einfach die Datenwerte des bearbeiteten Infoproviders per **props** übergibt und die Komponente direkt aus **EditInfoProvider** heraus aufruft.

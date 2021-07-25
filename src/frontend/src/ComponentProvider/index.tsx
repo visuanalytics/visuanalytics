@@ -37,7 +37,7 @@ export const ComponentProvider: React.FC<Props> = ({ children }) => {
   React.useEffect(() => {
     //get the componentKey from sessionStorage and choose the correct context object
     //dashboard is the default when nothing is selected
-    setCurrent(mainComponents[sessionStorage.getItem("currentComponent-" + uniqueId)||"dashboard"])
+    setCurrent(mainComponents[sessionStorage.getItem("currentComponent-" + uniqueId)||"dashboard"]);
   }, [])
 
   /* on every context change, store the componentKey of the new context in sessionStorage */
@@ -68,7 +68,7 @@ export const ComponentProvider: React.FC<Props> = ({ children }) => {
         break;
       }
     }
-    sessionStorage.setItem("currentComponent-" + uniqueId, keyName)
+    sessionStorage.setItem("currentComponent-" + uniqueId, keyName);
   }, [current])
 
   return (
