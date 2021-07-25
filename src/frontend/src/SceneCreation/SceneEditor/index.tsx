@@ -340,6 +340,31 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         sessionStorage.setItem("sceneName-" + uniqueId, sceneName);
     }, [sceneName])
 
+    React.useEffect(() => {
+        const leaveAlert = (e: BeforeUnloadEvent) => {
+            if (currentlyEditing) {
+                const localItems = items.slice();
+                const index = items.indexOf(selectedObject);
+                const objectCopy = {
+                    ...selectedObject,
+                    textContent: textEditContent,
+                    x: textEditX,
+                    y: textEditY,
+                };
+                localItems[index] = objectCopy;
+                setSelectedObject(objectCopy);
+                setItems(localItems);
+                setTextEditVisibility(false);
+                setCurrentlyEditing(false);
+            }
+            e.returnValue = "";
+        }
+        window.addEventListener("beforeunload", leaveAlert);
+        return () => {
+            window.removeEventListener("beforeunload", leaveAlert);
+        }
+    }, [currentlyEditing, items, selectedObject, textEditContent, textEditX, textEditY]);
+
     /**
      * Removes all items of this component from the sessionStorage.
      */
@@ -1083,6 +1108,23 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             return;
         }
 
+        if (currentlyEditing) {
+            const localItems = items.slice();
+            const index = items.indexOf(selectedObject);
+            const objectCopy = {
+                ...selectedObject,
+                textContent: textEditContent,
+                x: textEditX,
+                y: textEditY,
+            };
+            localItems[index] = objectCopy;
+            setSelectedObject(objectCopy);
+            setItems(localItems);
+            setTextEditVisibility(false);
+            setCurrentlyEditing(false);
+            return;
+        }
+
         // if the user clicked on an element the following code will be executed
         if (name !== undefined && name !== '') {
             // set the selected item name to the name of the element
@@ -1352,6 +1394,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             setItems(localItems);
             setTextEditVisibility(false);
             setCurrentlyEditing(false);
+            return;
         }
         const localItems = items.slice();
         const index = items.indexOf(selectedObject);
