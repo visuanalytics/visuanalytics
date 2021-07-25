@@ -1,18 +1,18 @@
 # VisuAnalytics [![Tests](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/workflows/Automated%20Testing/badge.svg)](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/actions?query=workflow%3A%22Automated+Testing%22) [![Documentation Status](https://readthedocs.org/projects/visuanalytics/badge/?version=latest)](https://visuanalytics.readthedocs.io/de/latest/?badge=latest)
 
 ## **Release: VisuAnalytics 2.0**
-Im Rahmen der Veranstaltung [**Softwaretechnik-Praktikum**](https://www.thm.de/organizer/index.php?option=com_organizer&view=subject_item&id=13) im Sommersemester 2021 wurde aufbauend auf der Software Visuanalytics dieses Projekt zum Thema **Data Analytics** durchgeführt.
+Im Rahmen der Veranstaltung [**Softwaretechnik-Praktikum**](https://www.thm.de/organizer/index.php?option=com_organizer&view=subject_item&id=13) im Sommersemester 2021 wurde aufbauend auf der Software VisuAnalytics dieses Projekt zum Thema **Data Analytics** durchgeführt.
 
 Die Veranstaltung gehört zum Curriculum der Bachelorstudiengänge der Informatik an der [Technischen Hochschule Mittelhessen](https://www.thm.de).
 
-Ziel war dabei, die bestehende Infrastruktur des Visuanalytics-Projekts zu nutzen und diese um ein Frontend zu erweitern, über welches die notwendigen JSON-Dateien für Datenabfragen und Videos einfach generiert werden können. Gleichzeitig wurde die Backend-Infrastruktur um neue Features erweitert, mit denen weitergehende Datenverarbeitungen möglich sind. Dabei werden statt den bisherigen vier Job-Arten nun beliebige APIs unterstützt.
+Ziel war dabei, die bestehende Infrastruktur des VisuAnalytics-Projekts zu nutzen und diese um ein Frontend zu erweitern, über welches die notwendigen JSON-Dateien für Datenabfragen und Videos einfach generiert werden können. Gleichzeitig wurde die Backend-Infrastruktur um neue Features erweitert, mit denen weitergehende Datenverarbeitungen möglich sind. Dabei werden statt den bisherigen vier Job-Arten nun beliebige APIs unterstützt.
 
-Grundkonzept der Anwendung ist nun die Erstellung sogenannter Infoprovider, in welchen mehrere API-Datenquellen zusammengefasst werden können. Diese Infoprovider können dann bei der Erstellung von Szenen (Standbilder mit dynamischen Daten) über einen grafischen Editor genutzt werden, um API-Daten in die Szene einfügen zu lassen. Szenen werden dann in Form von Videojobs aneinandergereiht und um Text-To-Speech (ebenfalls mit Infoprovider-Daten) erweitert. Auf Basis der Backend-Infrastruktur von `Visuanalytics` wird dann zu vom Nutzer festgelegten Zeitpunkten eine Generierung der konfigurierten Videos mit den aktuellsten Datenwerten der APIs vorgenommen.
+Grundkonzept der Anwendung ist nun die Erstellung sogenannter Infoprovider, in welchen mehrere API-Datenquellen zusammengefasst werden können. Diese Infoprovider können dann bei der Erstellung von Szenen (Standbilder mit dynamischen Daten) über einen grafischen Editor genutzt werden, um API-Daten in die Szene einfügen zu lassen. Szenen werden dann in Form von Videojobs aneinandergereiht und um Text-To-Speech (ebenfalls mit Infoprovider-Daten) erweitert. Auf Basis der Backend-Infrastruktur von `VisuAnalytics` wird dann zu vom Nutzer festgelegten Zeitpunkten eine Generierung der konfigurierten Videos mit den aktuellsten Datenwerten der APIs vorgenommen.
 
 ### Features
-Folgende Liste stellt eine grobe Übersicht über die neuen Features von `Visuanalytics 2.0` dar:
+Folgende Liste stellt eine grobe Übersicht über die neuen Features von `VisuAnalytics 2.0` dar:
 * **Neues Frontend:** Das neue Frontend erlaubt das Erstellen der notwendigen JSON-Konfigurationen über eine einfache, interaktive Oberfläche.
-* **Beliebige APIs**: `Visuanalytics 2.0` unterstützt nun nicht nur vier Job-Arten, sondern beliebige APIs. Nach Eingabe einer API findet eine grafische Aufbereitung ihrer Daten im Frontend statt.
+* **Beliebige APIs**: `VisuAnalytics 2.0` unterstützt nun nicht nur vier Job-Arten, sondern beliebige APIs. Nach Eingabe einer API findet eine grafische Aufbereitung ihrer Daten im Frontend statt.
 * **Neue Datenverarbeitungen:** Es stehen neue Datenverarbeitung zur Verfügung: Summen, Mittelwerte, Minima und Maxima von numerischen Arrays, Ersetzung von Zeichenketten in Strings sowie das Erstellen komplexer Formeln auf Basis von API-Daten.
 * **Historisierung von Daten:** Die Backend-Infrastruktur erlaubt es, APIs unabhängig von Videojobs zu beliebigen Zeitpunkten anzufragen, um Daten von diesem abzufragen und in einer Datenbank zu speichern. Diese historisierten Daten können wie auch die aktuellsten Datenwerte zum Beispiel in Videos verwendet werden!
 * **Erstellung von Diagrammen:** Auf Grundlage numerischer Arrays sowie historisierter Daten können Säulen-, Balken-, Torten-, Punkt/Streu- sowie Liniendiagramme erstellt werden, die dann zur Visualisierung von Daten in Videos eingebunden werden können.
@@ -20,7 +20,7 @@ Folgende Liste stellt eine grobe Übersicht über die neuen Features von `Visuan
 * **Videojob-Editor:** Mehrere Szenen können in diesem Editor aneinandergereiht werden und um die Definition von Texten für die Text-To-Speech-Ausgabe erweitert werden (auch diese erlauben das Einbinden von API-Daten).
 
 ### Abwärtskompatibilität
-Bei der Entwicklung von `Visuanalytics 2.0` wurde großer Wert darauf gelegt, die Abwärtskompatibilität zum ursprünglichen Visuanalytics-Projekt zu gewährleisten.
+Bei der Entwicklung von `VisuAnalytics 2.0` wurde großer Wert darauf gelegt, die Abwärtskompatibilität zum ursprünglichen VisuAnalytics-Projekt zu gewährleisten.
 
 Eine Rückkehr zum alten Frontend ist derzeit nur durch Code-Anpassungen möglich:
 
@@ -72,7 +72,7 @@ const legacyFrontend = React.useRef<boolean>(true);
 ```
 
 **Hinweis**:
-> Die Umstellung auf das alte Frontend wurde nicht umfangreich getestet. Es wird daher empfohlen, statt diesem Vorgehen das [ursprüngliche Visuanalytics-Projekt](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics) zu verwenden.
+> Die Umstellung auf das alte Frontend wurde nicht umfangreich getestet. Es wird daher empfohlen, statt diesem Vorgehen das [ursprüngliche VisuAnalytics-Projekt](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics) zu verwenden.
 
 <br></br>
 
