@@ -88,19 +88,19 @@ Der SceneOverview gibt dem Nutzer einen Überblick über alle erstellten Szenen.
 * Szenen zu bearbeiten,
 * und Szenen zu löschen.
 
-### Neue Szene
+### **Neue Szene**
 
 Genau so wie bei einem neuen Infoprovider gibt es den **SceneEditor**, der für die Erstellung von Szenen zuständig ist. Dieser ist eine eigene Komponente zu der gewechselt werden muss. Dazu wird eine Schaltfläche generiert und erneut **setCurrent** verwendet:
 ```javascript
 onClick={() => components?.setCurrent("sceneEditor")}
 ```
 
-### Liste der erstellten Szenen
+### **Liste der erstellten Szenen**
 
 Die Liste der erstellten Szenen unterscheidet sich im Design von den gezeigten Infoprovidern. Wir verwenden hier das React-Element **Card**. Eine Card eignet sich gut, um das Vorschaubild mit dem Szenen-Namen zu zeigen. Wenn der Nutzer eine solche Card auswählt, wird ein Dialog geöffnet, in dem er mit der Szene interagieren kann. Die Funktionalität eines solchen Dialogs wird nicht weiter erläutert, da das in den Beschreibungen für das Löschen und Editieren eines Infoproviders ausreichend getan wurde.
 Bei der Darstellung ist die Herausforderung, dass mehrmals das Backend angefragt werden muss. Zum einen werden alle Szenen geladen und zum anderen muss für jede Szene das Vorschaubild angefragt werden.
 
-#### Laden der Ressourcen
+#### **Laden der Ressourcen**
 
 Die Route für das Laden aller Szenen unterscheidet sich nicht groß, mit der für die Infoprovider, nur das alle Szenen empfangen werden. Dabei ist das Format wieder ein Paar aus **scene_name** und **scenen_id**. Die benötigten Typen im Frontend sind:
 ```javascript
@@ -117,11 +117,11 @@ Nun kann **fetchPreviewImgById** ausgeführt werden. Diese Methode benutzt die R
 Damit haben wird **allScenes** und **previewImgList**, die alle geforderten Informationen enthalten. Diese werden **SceneOverview** übergeben.
 Für alle Anfragen an das Backend gilt, dass es ebenfalls ein ErrorHandler gibt, der im Fehlerfall den Fehler ausgeben würde. Die Anfragen wären dann ungültig.
 
-### Löschen einer Szene
+### **Löschen einer Szene**
 
 Für das Löschen einer Szene ist ein Dialog implementiert, in dem der Nutzer die Aktion bestätigen muss. Wenn das geschehen ist, wird **deleteSceneInBackend** aufgerufen, die über die Route ``visuanalytics/scene/" + currentScene.scene_id`` und der Methode **DELETE** die Szene im Backend löscht. Mögliche Lösch-Abhängigkeiten sind im Backend implementiert.
 
-### Bearbeiten einer Szene
+### **Bearbeiten einer Szene**
 
 Für das Bearbeiten einer Szene ist ebenfalls ein Dialog implementiert. Nach Bestätigen wird über **fetchSceneById** und die Route ``visuanalytics/scene/" + currentScene.scene_id`` mit der Methode **GET** die geforderte Szene angefragt. Der Rückgabetyp ist dabei:
 ```javascript
@@ -142,7 +142,64 @@ export type FullScene = {
 
 Danach müssen die von der Szene benutzen Infoprovider ebenfalls geladen werden. Dazu wird im SuccessHandler **fetchInfoProvider** aufgerufen. Hier wird der gebrauchte Infoprovider angefragt. Nachdem die Information verfügbar ist, kann über **setCurrent** die Komponente gewechselt werden. Die Informationen können dem SceneEditor über Properties übergeben werden.
 
-## VideoOverview
+## **VideoOverview**
+
+Im VideoOverview kann der Nutzer alle erstellten Videos einsehen. Wie auch bei den anderen Overviews hat man hier die Möglichkeit:
+* Ein neues Video zu erstellen,
+* ein bestehendes Video zu löschen
+* und ein bestehendes Video zu bearbeiten.
+
+### **Neues Video**
+
+Wir haben eine entsprechende Schaltfläche implementiert, die über **setCurrent** die Komponente auf die Video-Erstellung wechselt.
+```javascript
+onClick={() => components?.setCurrent("videoCreator")}
+```
+
+### **Liste der erstellten Videos**
+
+Die Liste der Videos wird genau so dargestellt, wie die Liste der Infoprovider. Das Backend liefert die geforderten Informationen in Form von Paaren aus **videojob_name** und **videojo_id**. Die erstellten Typen im Frontend sind dabei:
+```javascript
+export type BackendVideo = {
+    videojob_id: number;
+    videojob_name: string;
+}
+
+export type BackendVideoList = Array<BackendVideo>;
+```
+
+#### **Laden der Ressourcen**
+
+Die Anfrage an das Backend findet in der **index.tsx** statt. Hier wird bei einem Tab-Wechsel auf den VideoOverview **fetchAllVideos** aufgerufen. Diese Methode erhält über die Route ```/visuanalytics/videojob/all``` alle Videos aus dem Backend. Im SuccessHandler wird die Variable **allVideos** gesetzt und der Zugriff auf die erforderlichen Informationen ist gegeben. Mit **setValue** wird der TabContent final auf den VideoOverview gesetzt. Die Video-Liste kann nun ohne Probleme erstellt werden.
+
+### **Löschen eines Videos**
+
+Für das Löschen eines Videos ist ein Dialog implementiert, in dem der Nutzer die Aktion bestätigen muss. Wenn das geschehen ist, wird **deleteVideoInBackend** aufgerufen, die über die Route ```visuanalytics/videojob/" + currentVideo.videojob_id``` und der Methode **DELETE** das Video im Backend löscht. Mögliche Lösch-Abhängigkeiten sind im Backend implementiert.
+
+### **Bearbeiten eines Videos**
+
+Der Nutzer muss das Bearbeiten eines Videos auch in einem Dialog bestätigen. Damit wird **editVideo** aufgerufen, welche das zu bearbeitende Video aus dem Backend anfragt. Die Route dabei ist ```visuanalytics/videojob/" + currentVideo.videojob_id``` mit der Methode **GET**.
+Im SuccessHandler wird ein Objekt eines Typen erstellt, der sich mit dem Format der Backend-Antwort gleicht:
+```javascript
+export type FullVideo = {
+    audio: any;
+    images: any;
+    name: string;
+    sceneList: Array<SceneCardData>;
+    schedule: {
+        type: string;
+        time: string;
+        date: string;
+        time_interval: string;
+        weekdays: Array<number>
+    };
+    selectedInfoprovider: Array<InfoProviderData>;
+    sequence: any;
+    tts_ids: Array<number>;
+    video_name: string;
+}
+```
+Über ```setCurrent``` wird zu der Komponente Video-Erstellung gewechselt. Der Unterschied zur Erstellung eines Videos ist, dass das angefragte Video über Properties übergeben wird und die gegebenen Daten editiert werden können.
 
 ## **LogDialog**
 Ein zentrales Element der Anwendung ist es Logs zu Infoprovidern und Videojobs einsehen zu können. Diese Ansicht wird durch die Komponente `LogDialog` zur Verfügung gestellt. Diese ist dabei so entwickelt worden, dass diese für Videojobs und Infoprovider gleichermaßen verwendet werden kann.
