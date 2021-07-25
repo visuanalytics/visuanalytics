@@ -171,7 +171,10 @@ def _bi_calculate(values: dict, data: StepData, op):
             res = op(value_left, right)
         else:
             # If value_right is present use that value
-            right = data.get_data(value_right, values, numbers.Number)
+            if not value_right:
+                right = data.get_data(key, values)
+            else:
+                right = data.get_data(value_right, values, numbers.Number)
             res = op(value_left, right)
 
         if decimal is not None:
