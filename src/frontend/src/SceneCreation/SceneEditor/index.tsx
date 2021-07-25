@@ -1872,7 +1872,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 x: 20,
                 y: 20,
                 id: 'text-' + itemCounter.toString(),
-                textContent: (handlingHistorizedItem && intervalToUse !== undefined) ? '{_req|' + item.replace("|", "_") + '_HISTORY|' + intervalToUse.toString() + '}' : '{' + item + '}',
+                textContent: (handlingHistorizedItem && intervalToUse !== undefined) ? '{_req|' + item.replaceAll("|", "_") + '_HISTORY|' + intervalToUse.toString() + '}' : '{' + item + '}',
                 width: 200,
                 scaleX: 1,
                 scaleY: 1,
@@ -1893,7 +1893,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 const index = items.indexOf(selectedObject);
                 const objectCopy = {
                     ...selectedObject,
-                    textContent: (selectedObject as CustomText).textContent + ((handlingHistorizedItem && intervalToUse !== undefined) ? '{_req|' + item.replace("|", "_") + '_HISTORY|' + intervalToUse.toString() + '}' : '{' + item + '}')
+                    textContent: (selectedObject as CustomText).textContent + ((handlingHistorizedItem && intervalToUse !== undefined) ? '{_req|' + item.replaceAll("|", "_") + '_HISTORY|' + intervalToUse.toString() + '}' : '{' + item + '}')
                 };
                 localItems[index] = objectCopy;
                 setItems(localItems);

@@ -748,13 +748,11 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                 for (let index = 0; index < diagram.historizedObjects.length; index++) {
                     const item = diagram.historizedObjects[index];
                     const plots = {
-                        //dateLabels: item.dateLabels, //deactivated since there is currently no support for date labels by the backend
                         plot: {
                             type: type,
                             x: item.intervalSizes,
-                            y: "{_req|" + item.name + "}",
+                            y: "{_req|" + item.name.replaceAll("|", "_") + "_HISTORY}",
                             color: item.color,
-                            //dateFormat: item.dateFormat,
                             x_ticks: {
                                 //only set the ticks on the last Plot - this is necessary to render it last when layering the Plots in the diagrams
                                 ticks: index === diagram.historizedObjects.length-1 ? diagram.labelArray : []

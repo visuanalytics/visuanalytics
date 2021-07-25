@@ -98,7 +98,7 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
     const insertHistorizedData = () => {
         if(selectedInterval !== undefined) {
             const arrCopy = audioElements.slice();
-            arrCopy[lastEditedTTSTextIndex].text = arrCopy[lastEditedTTSTextIndex].text + "{_req|" + selectedHistorizedElement.replace("|", "_") + "_HISTORY|" + selectedInterval.toString() + "} ";
+            arrCopy[lastEditedTTSTextIndex].text = arrCopy[lastEditedTTSTextIndex].text + "{_req|" + selectedHistorizedElement.replaceAll("|", "_") + "_HISTORY|" + selectedInterval.toString() + "} ";
             setAudioElements(arrCopy);
             setSelectedInterval(0);
             setShowHistorizedDialog(false);
