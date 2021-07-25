@@ -2,7 +2,7 @@ import React from "react";
 import {Box, Button, Grid, List, ListItem, Typography} from "@material-ui/core";
 import {useStyles} from "../../style";
 import {BackendVideo, BackendVideoList} from "../../types";
-import {MessageRounded, PlayCircleFilledOutlined, SettingsRounded} from "@material-ui/icons";
+import {MessageRounded, SettingsRounded} from "@material-ui/icons";
 import DeleteIcon from "@material-ui/icons/Delete";
 import {LogDialog} from "../../LogDialog";
 
@@ -64,15 +64,15 @@ export const VideoList: React.FC<VideoListProps> = (props) => {
                             </Grid>
                         </Grid>
                         <Grid item xs={5}>
-                            <Grid item xs={12}>
+                            {/**<Grid item xs={12}>
                                 <Button variant={"contained"} size={"small"} className={classes.showVideo}
                                         startIcon={<PlayCircleFilledOutlined fontSize="small"/>}
                                         onClick={() => console.log("??")}
                                 >
                                     Video
                                 </Button>
-                            </Grid>
-                            <Grid item xs={12} className={classes.logIconTopMargin}>
+                            </Grid>*/}
+                            <Grid item xs={12} /*className={classes.logIconTopMargin}*/>
                                 <Button variant={"contained"} size={"small"} className={classes.logs}
                                         startIcon={<MessageRounded fontSize="small"/>}
                                         onClick={() =>  openLogDialog(data.videojob_id, data.videojob_name)}
