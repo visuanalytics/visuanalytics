@@ -1,4 +1,4 @@
-# Erläuterungen zum Farbdesign
+# **Erläuterungen zum Farbdesign**
 * Wahl der Grundfarbe nach Nick Kolenda
 * Anwenden der Farbe auf Material Design, Suche nach zweitem Farbton
 * Ideen mit Orange, Entscheidung für Grün
@@ -9,8 +9,8 @@ In der Planungsphase unseres Projektes legten wir im Frontend-Team besonderen We
 Der erste Ansatzpunkt war dabei für uns der Artikel *"Color Psychology: A Full Guide"* von Nick Kolenda (Autor im Bereich Psychologie und Marketing), in welchem sehr ausführlich psychologische Prinzipien hinter der Wahrnehmung von Farben präsentiert werden. Neben den theoretischen Grundlagen stellt er dabei auch Tabellen zur Verfügung, mit denen man durch die Zuordnung von Attributen zur eigenen Applikation Einschätzungen erhält, welche Farben aus wissenschaftlicher Sicht sinnvoll wären.
 
 Die Auswertung der Tabellen gestaltete sich dabei wie folgt:
-![images/color_design/kolenda_1.png](images/color_design/kolenda_1.png)
-![images/color_design/kolenda_2.png](images/color_design/kolenda_2.png)
+<img height="1200px" alt="images/color_design/kolenda_1.png" src="images/color_design/kolenda_1.png">
+<img height="1130px" alt="images/color_design/kolenda_2.png" src="images/color_design/kolenda_2.png">
 
 Vor allem wegen der Attribute Intelligenz, Zuverlässigkeit und Sicherheit, die maßgeblich für den Charakter unserer Anwendung sind, aber auch wegen der sachlich-funktionalen und vom Gedanken des Anbietens neuer Möglichkeiten geprägten Zielsetzung wurde für unsere Anwendung hier blau als sinnvolle Farbwahl dargestellt, sodass wir beim Entwurf unserer Designs diese Grundfarbe gewählt haben. Während im alten Frontend des Projektes quasi nur blau genutzt wurden wollten wir dieses um eine weitere Farbe ergänzen.
 
