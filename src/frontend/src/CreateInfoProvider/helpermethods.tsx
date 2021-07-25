@@ -272,9 +272,9 @@ export const checkFindOnlyNumbers = (arg: string): boolean => {
  */
 export const transformBackendInfoProvider = (data: InfoProviderFromBackend) => {
     const infoProviderName: string = data.infoprovider_name;
-    console.log(infoProviderName);
+    //console.log(infoProviderName);
     const diagrams: Array<Diagram> = data.diagrams_original;
-    console.log(diagrams);
+    //console.log(diagrams);
     const dataSources: Array<DataSource> = [];
     const dataSourcesKeys: Map<string, DataSourceKey> = new Map();
     data.datasources.forEach((backendDataSource) => {
@@ -313,13 +313,13 @@ export const transformBackendInfoProvider = (data: InfoProviderFromBackend) => {
         })
     })
 
-    console.log("created infoProvider for editing:");
-    console.log({
+    //console.log("created infoProvider for editing:");
+    /*console.log({
         infoproviderName: infoProviderName,
         dataSources: dataSources,
         dataSourcesKeys: dataSourcesKeys,
         diagrams: diagrams
-    });
+    });*/
     return {
         infoproviderName: infoProviderName,
         dataSources: dataSources,

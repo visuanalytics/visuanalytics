@@ -340,6 +340,31 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         sessionStorage.setItem("sceneName-" + uniqueId, sceneName);
     }, [sceneName])
 
+    React.useEffect(() => {
+        const leaveAlert = (e: BeforeUnloadEvent) => {
+            if (currentlyEditing) {
+                const localItems = items.slice();
+                const index = items.indexOf(selectedObject);
+                const objectCopy = {
+                    ...selectedObject,
+                    textContent: textEditContent,
+                    x: textEditX,
+                    y: textEditY,
+                };
+                localItems[index] = objectCopy;
+                setSelectedObject(objectCopy);
+                setItems(localItems);
+                setTextEditVisibility(false);
+                setCurrentlyEditing(false);
+            }
+            e.returnValue = "";
+        }
+        window.addEventListener("beforeunload", leaveAlert);
+        return () => {
+            window.removeEventListener("beforeunload", leaveAlert);
+        }
+    }, [currentlyEditing, items, selectedObject, textEditContent, textEditX, textEditY]);
+
     /**
      * Removes all items of this component from the sessionStorage.
      */
