@@ -89,7 +89,7 @@
 	* 1.1. [**Neuer Infoprovider**](#NeuerInfoprovider)
 	* 1.2. [**Liste der erstellten Infoprovider**](#ListedererstelltenInfoprovider)
 		* 1.2.1. [**Laden der Infoprovider aus dem Backend**](#LadenderInfoproviderausdemBackend)
-		* 1.2.2. [**Infoprovider Löschen**](#InfoproviderLschen)
+		* 1.2.2. [**Infoprovider löschen**](#Infoproviderlschen)
 		* 1.2.3. [**Infoprovider bearbeiten**](#Infoproviderbearbeiten)
 * 2. [**SceneOverview**](#SceneOverview)
 	* 2.1. [**Neue Szene**](#NeueSzene)
@@ -125,14 +125,14 @@
 	* 3.3. [**Datenauswahl**](#Datenauswahl)
 		* 3.3.1. [**API-Texte**](#API-Texte)
 		* 3.3.2. [**ImageLists**](#ImageLists)
-		* 3.3.3. [**DiagramsList**](#DiagramsList)
+		* 3.3.3. [**DiagramList**](#DiagramList)
 		* 3.3.4. [**Hinzufügen von Bildern auf dem Canvas**](#HinzufgenvonBildernaufdemCanvas)
 	* 3.4. [**Speichern der Szene**](#SpeichernderSzene)
 * 4. [**Editierung von Szenen**](#EditierungvonSzenen)
 	* 4.1. [**Besonderheit in der sessionStorage-Verwendung**](#BesonderheitindersessionStorage-Verwendung)
 	* 4.2. [**Vorbereitung der Backend-Daten**](#VorbereitungderBackend-Daten)
 	* 4.3. [**Identifikation der korrekten Bilder**](#IdentifikationderkorrektenBilder)
-	* 4.4. [**Absenden des bearbeiteten Infoproviders**](#AbsendendesbearbeitetenInfoproviders)
+	* 4.4. [**Absenden der bearbeiteten Szene**](#AbsendenderbearbeitetenSzene)
 ### **Videojob**
 * 1. [**VideoCreation**](#VideoCreation)
 	* 1.1. [**Fetch-Methoden**](#Fetch-Methoden)
@@ -268,7 +268,7 @@ Grundsätzlich handelt es sich um eine Adaption der Komponente **PageTemplate**,
 * **{children}** nutzt die Möglichkeit von React, alle als Children-Tags für die Komponente eingebundenen Elemente darstellen zu lassen. Auf diese Weise kann man also den gesamten Seiteninhalt, der sich in dem Frame befindet einfach einfügen und die Vorlage so generisch nutzen.
 * Titel und Hinweistext werden ebenso variabel als Property übergeben.
 
-Da **PageTemplate** jedoch für unsere Anpassung angepasst werden musste haben wir uns dazu entschieden, die Modifikation in einer Kopie der Komponente vorzunehmen.
+Da **PageTemplate** jedoch für unsere Anwendung angepasst werden musste haben wir uns dazu entschieden, die Modifikation in einer Kopie der Komponente vorzunehmen.
 * Auf diese Weise bleibt das originale Frontend hinsichtlich dieser Komponente funktional und könnte in Zukunft bei Bedarf wieder eingesetzt werden.
 
 <div style="page-break-after: always;"></div>
@@ -1502,7 +1502,7 @@ React.useEffect(() => {
 Hiermit wird **fetchAllInfoprovider** automatisch aufgerufen, wenn man zu den **InfoProviderOverview** wechselt, sodass die Liste der Infoprovider immer aktuell aus dem Backend geladen wird.
 Die Infoprovider liegen bisher nur als Information vor und sind noch nicht für den User erkennbar. Die Liste mit den Infoprovidern, die der User sieht, wird durch **InfoProviderList** beschrieben. **InfoProviderList** bekommt in den Properties den State **infoprovider** übergeben und kann somit die Informationen verarbeiten. Für jedes Objekt in **infoprovider** wird hier **renderListItem()** ausgeführt. **renderListItem()** macht nichts anderes, als ein **jsonRef** zu erhalten und mit dessen Name einen Eintrag in der Liste mit einer Löschen- und Bearbeiten-Schaltfläche zu generieren. So wird für jeden Infoprovider die Liste erweitert.
 
-####  1.2.2. <a name='InfoproviderLschen'></a>**Infoprovider Löschen**
+####  1.2.2. <a name='Infoproviderlschen'></a>**Infoprovider löschen**
 
 Um ein Infoprovider endgültig zu löschen, muss er aus der Datenbank im Backend entfernt werden. Wenn dieses Entfernen bestätigt ist, werden auch die im Frontend liegenden Informationen aktualisiert, damit in der GUI auch die aktuelle Änderungen übernommen werden. 
 Wenn der User die Löschen-Schaltfläche betätigt, wird ein Dialog geöffnet. Hier muss der User nochmal bestätigen, ob der Infoprovider wirklich gelöscht werden soll. Das Verwenden eines Dialogs dient der Benutzerfreundlichkeit, falls ein User sich verklickt. Intern gibt es im State von **InfoProviderOverview** ein Boolean-Wert namens **removeDialogOpen**. Wenn dieser *true* ist, wird der Dialog angezeigt. **handleDeleteButton** ist die Handler-Methode für die Löschen-Schaltfläche. Sie wird aufgerufen, wenn die Schaltfläche betätigt wird. In ihr werden die zwei Variablen **currentDeleteName** und **currentDeleteId**, die im State initialisiert sind zugewiesen. Das dient dem Abspeichern, der Information für den zu löschenden Infoprovider. Danach wird **removeDialogOpen** auf true gesetzt und der Dialog erscheint.
@@ -2370,7 +2370,7 @@ Neben dem Auswählen bereits vorhandener Bilder gibt es die Möglichkeit, auch w
     * Diese Handler-Methoden entnehmen dem übergebenen Event mit **event.target.files** die hochgeladene Datei und verpacken diese in eine **FormData**. Ein Aufruf der Methode **postImage**/**postBackgroundImage** sendet dann die FormData an die jeweilige Backend-Route `visuanalytics/image/pictures` bzw. `visuanalytics/image/backgrounds`.
     * Das Backend antwortet auf dieses Posten mit der ID des Bildes im Backend- die Sucess-Handler fragen dann das Bild dieser ID an, generieren eine URL für das erhaltene Blob und hängen das neue Bild an **imageList** bzw. **backgroundImageList** an. Auf diese Weise können die hochgeladenen Bilder direkt verwendet werden.
 
-####  3.3.3. <a name='DiagramsList'></a>**DiagramsList**
+####  3.3.3. <a name='DiagramList'></a>**DiagramList**
 Analog zu **ImageLists** stellt **DiagramLists** die Diagramme dar, die zur Verfügung stehen. Die Liste wird per **props.diagramList** übergeben und durch **renderDiagramEntry** dargestellt. Jeder Eintrag umfasst ein Bild, einen Namen und einen Typ.
 
 Die Generierung des Bildes ist im Grunde gleich wie bei **ImageLists**, auch die Handler-Methode **handleDiagramClick** ist gleich, da für sie einfach **handleImageClick** übergeben wird. Daher soll auf genauere Ausführungen mit dem Verweis auf den vorangehenden Abschnitt verzichtet werden.
@@ -2544,7 +2544,7 @@ Damit werden die Methoden **findRightBackgroundImage** und **findRightImages** z
 
 Nach diesem Vorgang ist der Szenen-Editor vollständig zur Editierung vorbereitet und kann ab diesem Punkt wie in der Erstellung genutzt werden.
 
-###  4.4. <a name='AbsendendesbearbeitetenInfoproviders'></a>**Absenden des bearbeiteten Infoproviders**
+###  4.4. <a name='AbsendenderbearbeitetenSzene'></a>**Absenden der bearbeiteten Szene**
 Zuletzt anzumerken ist noch das unterschiedliche Absenden der Ergebnisse: Das Hintergrund-Bild und das Preview-Bild werden auf gleiche Weise abgesendet, das Backend sorgt hier für ein Löschen der alten Bilder. Der einzige Unterschied ist **postSceneExport**, welches für die beiden Fälle der Erstellung und Editierung unterschiedliche URLs generiert:
 ```javascript
  //check if the edit mode is active by looking for the props object - post to different route if editing!
