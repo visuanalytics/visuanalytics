@@ -59,7 +59,7 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
      */
     const dataContained = React.useCallback((listItems: Array<ListItemRepresentation>) => {
         const listItemsNames = getListItemsNames(listItems);
-        console.log(listItemsNames);
+        //console.log(listItemsNames);
         //every key of selectedData also has to be in the listItems
         for (let index = 0; index < props.dataSource.selectedData.length; index++) {
             if(!listItemsNames.includes(props.dataSource.selectedData[index].key)) return false;

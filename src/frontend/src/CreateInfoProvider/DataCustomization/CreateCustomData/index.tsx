@@ -398,7 +398,7 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
         //find all diagrams to remove
         let diagramsToRemove: Array<string> = findDependentDiagrams(formelName);
         const formulasToRemove: Array<string> = [];
-        console.log(formelName);
+        //console.log(formelName);
         //check if any formula needs to be removed
         props.customData.forEach((formula) => {
             if (formula.usedFormulaAndApiData.includes(formelName + " ") || formula.formelString.endsWith(formelName)) {
@@ -569,7 +569,7 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
 
         const data = jsonData as customDataBackendAnswer;
 
-        console.log(data.accepted)
+        //console.log(data.accepted)
 
         if (data.accepted) {
             const arCopy = props.customData.slice();

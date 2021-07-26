@@ -237,8 +237,8 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
         oldSelection.forEach((oldItem) => {
             if(!newSelection.includes(oldItem)) missingSelections.push(oldItem)
         })
-        console.log("missing selections: ");
-        console.log(missingSelections)
+        //console.log("missing selections: ");
+        //console.log(missingSelections)
         if(missingSelections.length > 0) {
             //check if removal of formula is necessary
             let formulasToRemove: Array<string> = [];
@@ -443,7 +443,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
      */
     const handleContinue = () => {
         const removalObj = calculateItemsToRemove();
-        console.log(removalObj);
+        //(removalObj);
         //if checkRemoval returns false, no removal dialog is necessary and proceeding is possible
         if(removalObj.formulasToRemove.length > 0 || removalObj.diagramsToRemove.length > 0) {
             setHistorizedToRemove(removalObj.historizedToRemove);

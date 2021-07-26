@@ -149,8 +149,8 @@ export const SceneOverview: React.FC<SceneOverviewProps> = (props) => {
 
     const handleSuccessDelete = () => {
 
-        console.log(currentScene.scene_id + " SCENE_ID");
-        console.log(previewImgList.length + " LÄNGE")
+        //console.log(currentScene.scene_id + " SCENE_ID");
+        //console.log(previewImgList.length + " LÄNGE")
 
         setScenes(
             scenes.filter((data) => {

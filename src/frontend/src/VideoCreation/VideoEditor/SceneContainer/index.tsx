@@ -80,7 +80,7 @@ export const SceneContainer: React.FC<SceneContainerProps> = (props) => {
      * @param direction Direction of the movement.
      */
     const moveScene = (sourceIndex: number, direction: Direction) => {
-        console.log("moveScene")
+        //console.log("moveScene")
         //if the we try to go out of bounds, nothing will happen
         if ((sourceIndex < 1 && direction === Direction.Left) || (sourceIndex >= props.sceneList.length - 1 && direction === Direction.Right)) return;
         //create a copy of the moved scene with visibility set to false

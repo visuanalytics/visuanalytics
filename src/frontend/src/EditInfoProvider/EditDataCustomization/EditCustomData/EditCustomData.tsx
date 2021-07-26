@@ -90,7 +90,7 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
         //find all diagrams to remove
         let diagramsToRemove: Array<string> = findDependentDiagrams(formelName);
         const formulasToRemove: Array<string> = [];
-        console.log(formelName);
+        //console.log(formelName);
         //check if any formula needs to be removed
         props.infoProvDataSources[props.selectedDataSource].customData.forEach((formula) => {
             if (formula.usedFormulaAndApiData.includes(formelName + " ") || formula.formelString.endsWith(formelName)) {
@@ -299,8 +299,8 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
         //assign the correct flags
         setRightFlags(finalFormel);
 
-        console.log(finalFormel.commaFlag)
-        console.log(finalFormel.usedComma)
+        //console.log(finalFormel.commaFlag)
+        //console.log(finalFormel.usedComma)
         //return finalFormel
         return finalFormel;
     }

@@ -95,7 +95,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
     const [submitInfoProviderDisabled, setSubmitInfoProviderDisabled] = React.useState(false);
     //array that contains a boolean for each dataSource indicating if refetching of api-data for checkup has already been done on them
     const [refetchDoneList, setRefetchDoneList] = React.useState<Array<boolean>>(new Array(sessionStorage.getItem("infoProvDataSources-" + uniqueId) === null ? props.infoProvider!.dataSources.length : JSON.parse(sessionStorage.getItem("infoProvDataSources-" + uniqueId)!).length).fill(false))
-    console.log(refetchDoneList)
+    //console.log(refetchDoneList)
 
 
     /**
@@ -106,7 +106,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
         //check the current data source
         //if((!noKey)&&(apiKeyInput1!==""||apiKeyInput2!=="")) return true;
         //check all other data sources
-        console.log(infoProvDataSources);
+        //console.log(infoProvDataSources);
         for (let index = 0; index < infoProvDataSources.length; index++) {
             const dataSource = infoProvDataSources[index];
             if (infoProvDataSourcesKeys.get(dataSource.apiName) !== undefined) {
@@ -514,7 +514,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                 }
             }
         })
-        console.log(diagramsToRemove)
+        //console.log(diagramsToRemove)
         //delete all diagrams found
         if (diagramsToRemove.length > 0) {
             setInfoProvDiagrams(infoProvDiagrams.filter((diagram) => {

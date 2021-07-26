@@ -199,7 +199,7 @@ export const HistoryDataSelection: React.FC<HistoryDataSelectionProps> = (props)
             removeFromHistorySelection(data);
         } else {
             addToHistorySelection(data)
-            console.log("new: " + props.historizedData.includes(data));
+            //console.log("new: " + props.historizedData.includes(data));
         }
         //console.log(props.selectedData.values().next())
     };

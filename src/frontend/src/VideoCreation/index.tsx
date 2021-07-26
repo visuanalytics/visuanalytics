@@ -252,7 +252,7 @@ export const VideoCreation: React.FC<VideoCreationProps> = (props) => {
     }, [sceneList])
     //store editModeFlag in sessionStorage by using JSON.stringify on it
     React.useEffect(() => {
-        console.log("setting editModeFlag: " + editModeFlag)
+        //console.log("setting editModeFlag: " + editModeFlag)
         sessionStorage.setItem("editModeFlag-" + uniqueId, editModeFlag.toString());
     }, [editModeFlag])
     //store propsVideo in sessionStorage by using JSON.stringify on it
@@ -368,7 +368,7 @@ export const VideoCreation: React.FC<VideoCreationProps> = (props) => {
                 key: scene.sceneName
             }
         })
-        console.log(imagesObject);
+        //console.log(imagesObject);
         return imagesObject;
     }
 

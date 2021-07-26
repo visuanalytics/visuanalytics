@@ -379,7 +379,7 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
         });
         //fetch the next image afterwards
         fetchNextImage();
-        console.log("success fetching the image with id " + id)
+        //console.log("success fetching the image with id " + id)
     }
 
     /**
@@ -836,7 +836,7 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
     React.useEffect(() => {
         //check if editing is active
         if (sceneFromBackendMutable.current !== undefined) {
-            console.log("preparing infoprovider for editing");
+            //console.log("preparing infoprovider for editing");
             if(sceneFromBackendMutable.current.infoProvider !== undefined) {
                 // set the basic variable containing the complete object
                 setInfoProvider(sceneFromBackendMutable.current.infoProvider);
