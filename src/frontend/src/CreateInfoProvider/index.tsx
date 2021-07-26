@@ -898,6 +898,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                         setArrayProcessingsList={(processings: Array<ArrayProcessingData>) => setArrayProcessingsList(processings)}
                         setStringReplacementList={(replacements: Array<StringReplacementData>) => setStringReplacementList(replacements)}
                         submitInfoProviderDisabled={submitInfoProviderDisabled}
+                        setDataCustomizationStep={(step: number) => setDataCustomizationStep(step)}
                     />
                 )
             case 6:

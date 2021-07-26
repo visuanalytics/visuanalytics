@@ -61,6 +61,7 @@ interface SettingsOverviewProps {
     setArrayProcessingsList: (processings: Array<ArrayProcessingData>) => void;
     setStringReplacementList: (replacements: Array<StringReplacementData>) => void;
     submitInfoProviderDisabled: boolean;
+    setDataCustomizationStep: (step: number) => void;
 }
 
 /**
@@ -201,6 +202,7 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
         sessionStorage.removeItem("listItems-" + uniqueId);
         sessionStorage.removeItem("arrayProcessingsList-" + uniqueId);
         sessionStorage.removeItem("stringReplacementList-" + uniqueId);
+        sessionStorage.removeItem("dataCustomizationStep-" + uniqueId);
 
         // Reset the states that need to be cleaned
         props.setApiName("");
@@ -218,6 +220,7 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
         props.setListItems(new Array<ListItemRepresentation>());
         props.setArrayProcessingsList(new Array<ArrayProcessingData>());
         props.setStringReplacementList(new Array<StringReplacementData>());
+        props.setDataCustomizationStep(0);
     }
 
     /**
