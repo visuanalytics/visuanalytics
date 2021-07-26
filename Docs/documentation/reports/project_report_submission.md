@@ -1,3 +1,17 @@
+<div style="width: 75%; margin: auto; text-align: center;">
+    <p style="font-size: 50px; font-weight: bold;">VisuAnalytics 2.0</p>
+    <br>
+    <p style="font-size: 30px; font-weight: bold;">Projektbericht</p>
+    <br><br>
+    <p style="font-size: 20px;">Softwaretechnik-Projekt - Sommersemester 2021</p>
+    <p style="font-size: 20px;">Prof. Dr. Frank Kammer</p>
+    <p style="font-size: 20px;">Technische Hochschule Mittelhessen</p>
+    <br><br>
+    <p style="font-size: 18px; width: 80%; margin: auto;"><strong>Daniel Spengler, Tristan Elias Wolfram, Philipp Helfenritter, Janek Berg, Sören Clausen, Tim Wolfgang Helmut Schwabe</strong></p>
+</div>
+
+<div style="page-break-after: always;"></div>
+
 # Projektbericht
 
 ## Das Team
