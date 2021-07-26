@@ -1,7 +1,7 @@
 # VisuAnalytics [![Tests](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/workflows/Automated%20Testing/badge.svg)](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/actions?query=workflow%3A%22Automated+Testing%22) [![Documentation Status](https://readthedocs.org/projects/visuanalytics/badge/?version=latest)](https://visuanalytics.readthedocs.io/de/latest/?badge=latest)
 
 ## **Release: VisuAnalytics 2.0**
-Im Rahmen der Veranstaltung [**Softwaretechnik-Praktikum**](https://www.thm.de/organizer/index.php?option=com_organizer&view=subject_item&id=13) im Sommersemester 2021 wurde aufbauend auf der Software VisuAnalytics dieses Projekt zum Thema **Data Analytics** durchgeführt.
+Im Rahmen der Veranstaltung [**Softwaretechnik-Projekt**](https://www.thm.de/organizer/index.php?option=com_organizer&view=subject_item&id=13) im Sommersemester 2021 wurde aufbauend auf der Software VisuAnalytics dieses Projekt zum Thema **Data Analytics** durchgeführt.
 
 Die Veranstaltung gehört zum Curriculum der Bachelorstudiengänge der Informatik an der [Technischen Hochschule Mittelhessen](https://www.thm.de).
 
@@ -18,6 +18,9 @@ Folgende Liste stellt eine grobe Übersicht über die neuen Features von `VisuAn
 * **Erstellung von Diagrammen:** Auf Grundlage numerischer Arrays sowie historisierter Daten können Säulen-, Balken-, Torten-, Punkt/Streu- sowie Liniendiagramme erstellt werden, die dann zur Visualisierung von Daten in Videos eingebunden werden können.
 * **Grafischer Szenen-Editor:** Die einzelnen Szenen, aus denen Videos zusammengesetzt werden können, in einem einfachen Drag-And-Drop Szenen-Editor erstellt werden. Dieser erlaubt das Einfügen von Formen, Texten, API-Datenwerten und Diagrammen und eine grundlegende Formatierung dieser. Weiterhin können eigene Bilder hochgeladen und als Bilder auf der Szene oder Hintergrundbild eingebunden werden.
 * **Videojob-Editor:** Mehrere Szenen können in diesem Editor aneinandergereiht werden und um die Definition von Texten für die Text-To-Speech-Ausgabe erweitert werden (auch diese erlauben das Einbinden von API-Daten).
+
+### Informationen und Dokumentation
+Für einen allgemeinen Überblick über `VisuAnalytics 2.0` empfehlen wir einen Blick in das [Benutzerhandbuch](Docs/usage/Benutzeranleitung.pdf), welches die Funktionen der Anwendung übersichtlich darstellt. Für Details zur Implementierung und Entwicklung des Frontends existiert eine umfassende [Dokumentation des neuen Frontends](Docs/documentation/frontend/complete_frontend_documentation.pdf).
 
 ### Abwärtskompatibilität
 Bei der Entwicklung von `VisuAnalytics 2.0` wurde großer Wert darauf gelegt, die Abwärtskompatibilität zum ursprünglichen VisuAnalytics-Projekt zu gewährleisten.
