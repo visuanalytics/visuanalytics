@@ -1,3 +1,17 @@
+<div style="width: 75%; margin: auto; text-align: center;">
+    <p style="font-size: 50px; font-weight: bold;">VisuAnalytics 2.0</p>
+    <br>
+    <p style="font-size: 30px; font-weight: bold;">Projektbericht</p>
+    <br><br>
+    <p style="font-size: 20px;">Softwaretechnik-Projekt - Sommersemester 2021</p>
+    <p style="font-size: 20px;">Prof. Dr. Frank Kammer</p>
+    <p style="font-size: 20px;">Technische Hochschule Mittelhessen</p>
+    <br><br>
+    <p style="font-size: 18px; width: 80%; margin: auto;"><strong>Daniel Spengler, Tristan Elias Wolfram, Philipp Helfenritter, Janek Berg, Sören Clausen, Tim Wolfgang Helmut Schwabe</strong></p>
+</div>
+
+<div style="page-break-after: always;"></div>
+
 # Projektbericht
 
 ## Das Team
@@ -92,14 +106,14 @@ Die angesprochenen Automatisierungen in den ersten beiden Abschnitten dieses Kap
 ### Dokumentation
 Für das Backend haben wir die Dokumentation mit dem Tool **Sphinx** aus Doc-Strings generiert. Dabei wurde möglichst jede Methode in ihrer Funktionsweise beschrieben. Weiterhin haben wir innerhalb der Funktionen Kommentare hinzugefügt, um komplexere Abschnitte in Funktionen möglichst verständlich zu halten.
 
-Das Frontend hingegen hat die zugehörige Dokumentation nicht aus Doc-Strings generiert, sondern händisch erstellt. Hierbei haben wir nicht Methode für Methode dokumentiert, da dies einem Leser der Dokumentation gerade im Frontend nicht unbedingt weiterhilft. Dies liegt primär daran, dass die einzelnen Funktionen meist relativ simpel sind und es auf das Zusammenspiel zwischen den Funktionen ankommt. Dieses Zusammenspiel lässt sich in einer ausformulierten Dokumentation besser beschreiben, als in Doc-Strings, welche einer einzelnen Funktion zugeordnet werden. Neben dieser händisch erstellten Dokumentation hat das Frontend-Team allerdings auch Doc-Strings hinzugefügt, damit für Leser des Codes schnell klar wird, was eine einzelne Funktion für eine Aufgabe hat. Auch haben wir hier probiert innerhalb weniger Wörter darauf einzugehen, wofür diese Funktion später gebraucht wird.
+Das Frontend hingegen hat die zugehörige Dokumentation nicht aus Doc-Strings generiert, sondern händisch erstellt. Hierbei haben wir nicht Methode für Methode dokumentiert, da dies einem Leser der Dokumentation gerade im Frontend nicht unbedingt weiterhilft. Dies liegt primär daran, dass die einzelnen Funktionen meist relativ simpel sind und es auf das Zusammenspiel zwischen den Funktionen ankommt. Dieses Zusammenspiel lässt sich in einer ausformulierten Dokumentation besser beschreiben, als in Doc-Strings, welche einer einzelnen Funktion zugeordnet werden. Neben dieser händisch erstellten Dokumentation hat das Frontend-Team allerdings auch Doc-Strings hinzugefügt, damit für Leser des Codes schnell klar wird, was eine einzelne Funktion für eine Aufgabe hat. Auch haben wir hier probiert innerhalb weniger Wörter darauf einzugehen, wofür diese Funktion später gebraucht wird. Die händisch erstellte Dokumentation wurde dabei mittels [Code Spell Checker](https://marketplace.visualstudio.com/items?itemName=streetsidesoftware.code-spell-checker) mit der zugehörigen [Erweiterung für die deutsche Sprache](https://marketplace.visualstudio.com/items?itemName=streetsidesoftware.code-spell-checker-german) auf Rechtschreibfehler hin untersucht.
 
 #### Bereitstellung der Dokumentation
 Die Dokumentation wurde dem Auftraggeber als Ordner mit den folgenden Dateien übergeben:
 * Projektbericht (Dieses Dokument)
 * Frontend-Dokumentation
 * Backend-Dokumentation
-
+* Benutzeranleitung
 Die Dateien liegen dabei alle als PDF-Datei vor.
 
 Zusätzlich zu dieser Abgabe existiert im Repository des Projekts ebenfalls die Dokumentation. Möchte man sich diese anschauen, so kann man dies beispielsweise tun, indem man mittels Sphinx eine HTML-Repräsentation generiert:
