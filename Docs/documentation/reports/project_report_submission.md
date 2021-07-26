@@ -12,18 +12,208 @@
 
 <div style="page-break-after: always;"></div>
 
+#  Inhaltsverzeichnis
+* 1. [Das Team](#DasTeam)
+	* 1.1. [Backend](#Backend)
+	* 1.2. [Frontend](#Frontend)
+* 2. [Zeit- und Aufgabenmanagement](#Zeit-undAufgabenmanagement)
+	* 2.1. [Rahmenbedingungen](#Rahmenbedingungen)
+	* 2.2. [Meetings](#Meetings)
+	* 2.3. [Aufteilung der Aufgaben](#AufteilungderAufgaben)
+	* 2.4. [Aufteilung der Arbeitszeiten](#AufteilungderArbeitszeiten)
+	* 2.5. [Zeitmanagement mittels Jira](#ZeitmanagementmittelsJira)
+	* 2.6. [Kommunikation im Team](#KommunikationimTeam)
+* 3. [Versionsverwaltung / Entwicklung neuer Features](#VersionsverwaltungEntwicklungneuerFeatures)
+	* 3.1. [Entwicklung neuer Features](#EntwicklungneuerFeatures)
+	* 3.2. [Automatisiertes Testen](#AutomatisiertesTesten)
+	* 3.3. [Ablauf der Code-Reviews](#AblaufderCode-Reviews)
+	* 3.4. [Verwendung der angesprochenen Automatisierungen](#VerwendungderangesprochenenAutomatisierungen)
+	* 3.5. [Dokumentation](#Dokumentation)
+		* 3.5.1. [Bereitstellung der Dokumentation](#BereitstellungderDokumentation)
+* 4. [Entwicklungsumgebung, Programmiersprachen](#EntwicklungsumgebungProgrammiersprachen)
+	* 4.1. [Entwicklungsumgebungen](#Entwicklungsumgebungen)
+	* 4.2. [Verwendete Programmiersprachen](#VerwendeteProgrammiersprachen)
+	* 4.3. [Hinweis: Version von Material-UI](#Hinweis:VersionvonMaterial-UI)
+* 5. [Projektfazit / Abschluss](#ProjektfazitAbschluss)
+	* 5.1. [Zielsetzung](#Zielsetzung)
+	* 5.2. [Abgeschlossene Aufgaben](#AbgeschlosseneAufgaben)
+		* 5.2.1. [Abgeschlossene Must-Haves](#AbgeschlosseneMust-Haves)
+		* 5.2.2. [Abgeschlossene Nice-To-Haves](#AbgeschlosseneNice-To-Haves)
+		* 5.2.3. [Abgeschlossene If-Time-Allows](#AbgeschlosseneIf-Time-Allows)
+	* 5.3. [Bewährte Kommunikationsmittel](#BewhrteKommunikationsmittel)
+	* 5.4. [Erweiterbarkeit](#Erweiterbarkeit)
+	* 5.5. [Abwärtskompatibilität](#Abwrtskompatibilitt)
+	* 5.6. [Test der Software](#TestderSoftware)
+	* 5.7. [WordPress](#WordPress)
+	* 5.8. [Bekannte Fehler / Bugs](#BekannteFehlerBugs)
+	* 5.9. [Mögliche Fehler / Bugs](#MglicheFehlerBugs)
+	* 5.10. [Abschließende Reflektion](#AbschlieendeReflektion)
+* 6. [Anhang](#Anhang)
+* 7. [**Anhang A: Lastenheft**](#AnhangA:Lastenheft)
+	* 7.1. [**Momentaner Stand der Anwendung VisuAnalytics**](#MomentanerStandderAnwendungVisuAnalytics)
+	* 7.2. [**Zielbestimmung**](#Zielbestimmung)
+		* 7.2.1. [**Aufteilung in Kategorien**](#AufteilunginKategorien)
+	* 7.3. [**Einsatz der Software**](#EinsatzderSoftware)
+	* 7.4. [**Übersicht über die Benutzeroberfläche**](#bersichtberdieBenutzeroberflche)
+		* 7.4.1. [**Übersichtsseite**](#bersichtsseite)
+	* 7.5. [**Anlegen eines Infoproviders**](#AnlegeneinesInfoproviders)
+		* 7.5.1. [**Erstellen eines Videojobs**](#ErstelleneinesVideojobs)
+	* 7.6. [**Qualitätsanforderungen**](#Qualittsanforderungen)
+	* 7.7. [**Anmerkungen**](#Anmerkungen)
+	* 7.8. [**Quellen**](#Quellen)
+	* 7.9. [**Anhang**](#Anhang-1)
+		* 7.9.1. [**Übersicht über das Programm**](#bersichtberdasProgramm)
+* 8. [**Anhang B: Pflichtenheft**](#AnhangB:Pflichtenheft)
+	* 8.1. [**Einleitung**](#Einleitung)
+		* 8.1.1. [**Auftraggeber**](#Auftraggeber)
+		* 8.1.2. [**Das Entwicklerteam**](#DasEntwicklerteam)
+		* 8.1.3. [**Kurzbeschreibung des Projekts**](#KurzbeschreibungdesProjekts)
+	* 8.2. [**Informationen zum Auftrag**](#InformationenzumAuftrag)
+		* 8.2.1. [**Rahmenbedingungen**](#Rahmenbedingungen-1)
+		* 8.2.2. [**Besonderheiten**](#Besonderheiten)
+		* 8.2.3. [**Etappenziele**](#Etappenziele)
+	* 8.3. [**Bereits bestehende Systeme**](#BereitsbestehendeSysteme)
+	* 8.4. [**Teams und Schnittstellen**](#TeamsundSchnittstellen)
+		* 8.4.1. [**Teams**](#Teams)
+		* 8.4.2. [**Jira für die Projektverwaltung**](#JirafrdieProjektverwaltung)
+		* 8.4.3. [**GitHub zur Verwaltung des Quellcodes**](#GitHubzurVerwaltungdesQuellcodes)
+		* 8.4.4. [**Meetings**](#Meetings-1)
+		* 8.4.5. [**Kommunikationswege**](#Kommunikationswege)
+	* 8.5. [**Technische Anforderungen**](#TechnischeAnforderungen)
+	* 8.6. [**Frontend**](#Frontend-1)
+		* 8.6.1. [**Backend**](#Backend-1)
+	* 8.7. [**Problemanalyse**](#Problemanalyse)
+		* 8.7.1. [**Mehraufwand des Frontends**](#MehraufwanddesFrontends)
+		* 8.7.2. [**Erstellung des Szeneneditors**](#ErstellungdesSzeneneditors)
+		* 8.7.3. [**Zeitmangel**](#Zeitmangel)
+	* 8.8. [**Qualität**](#Qualitt)
+		* 8.8.1. [**Qualitätskontrolle**](#Qualittskontrolle)
+		* 8.8.2. [**Abnahmekriterien**](#Abnahmekriterien)
+	* 8.9. [**Projektentwicklung und Zeitplan**](#ProjektentwicklungundZeitplan)
+	* 8.10. [**Anhang**](#Anhang-1)
+* 9. [Anhang C: Protokolle / Statusberichte](#AnhangC:ProtokolleStatusberichte)
+	* 9.1. [Startbesprechung (08.04.2021)](#Startbesprechung08.04.2021)
+		* 9.1.1. [Aufgaben](#Aufgaben)
+		* 9.1.2. [Nächstes Treffen](#NchstesTreffen)
+	* 9.2. [Sprintplanung (12.04.2021)](#Sprintplanung12.04.2021)
+		* 9.2.1. [Inhalt des Lastenhefts](#InhaltdesLastenhefts)
+		* 9.2.2. [Konfigurationsdatei](#Konfigurationsdatei)
+		* 9.2.3. [Entwicklerteam](#Entwicklerteam)
+		* 9.2.4. [Aufgaben](#Aufgaben-1)
+		* 9.2.5. [Aufgaben des Frontends](#AufgabendesFrontends)
+		* 9.2.6. [Backend-Aufgaben](#Backend-Aufgaben)
+		* 9.2.7. [Generell](#Generell)
+		* 9.2.8. [Aufteilung der einzelnen Aufgaben](#AufteilungdereinzelnenAufgaben)
+		* 9.2.9. [Nächste Termine](#NchsteTermine)
+	* 9.3. [Statusbericht (16.04.2021)](#Statusbericht16.04.2021)
+		* 9.3.1. [Zusammenfassung](#Zusammenfassung)
+		* 9.3.2. [Aufgaben bis zum nächsten Meeting](#AufgabenbiszumnchstenMeeting)
+		* 9.3.3. [Nächstes Meeting](#NchstesMeeting)
+	* 9.4. [Sprintplanung (19.04.2021)](#Sprintplanung19.04.2021)
+		* 9.4.1. [Zusammenfassung](#Zusammenfassung-1)
+		* 9.4.2. [Aufgaben für den Sprint](#AufgabenfrdenSprint)
+		* 9.4.3. [Nächstes Meeting](#NchstesMeeting-1)
+	* 9.5. [Fortschrittsbesprechung (23.04.2021)](#Fortschrittsbesprechung23.04.2021)
+		* 9.5.1. [Zusammenfassung](#Zusammenfassung-1)
+		* 9.5.2. [Diskutierte Probleme](#DiskutierteProbleme)
+		* 9.5.3. [Weitere Aufgaben](#WeitereAufgaben)
+	* 9.6. [Sprintplanung (26.04.2021)](#Sprintplanung26.04.2021)
+		* 9.6.1. [Zusammenfassung](#Zusammenfassung-1)
+		* 9.6.2. [Aufgaben der aktuellen Woche](#AufgabenderaktuellenWoche)
+		* 9.6.3. [Nächste Treffen](#NchsteTreffen)
+	* 9.7. [Fortschrittsbesprechung (30.04.2021)](#Fortschrittsbesprechung30.04.2021)
+		* 9.7.1. [Zusammenfassung](#Zusammenfassung-1)
+		* 9.7.2. [Arrays als Daten](#ArraysalsDaten)
+		* 9.7.3. [Umfrage zur Zufriedenheit](#UmfragezurZufriedenheit)
+		* 9.7.4. [Ziele](#Ziele)
+	* 9.8. [Sprintplanung (03.05.2021)](#Sprintplanung03.05.2021)
+		* 9.8.1. [Zusammenfassung](#Zusammenfassung-1)
+		* 9.8.2. [Aufgaben für die kommende Woche](#AufgabenfrdiekommendeWoche)
+	* 9.9. [Fortschrittsbesprechung (09.05.2021)](#Fortschrittsbesprechung09.05.2021)
+		* 9.9.1. [Zusammenfassung](#Zusammenfassung-1)
+		* 9.9.2. [Aufgaben für das Wochenende](#AufgabenfrdasWochenende)
+	* 9.10. [Sprintplanung (10.05.2021)](#Sprintplanung10.05.2021)
+		* 9.10.1. [Zusammenfassung](#Zusammenfassung-1)
+		* 9.10.2. [Aufgaben für die Woche vom 10.05.2021 - 16.05.2021](#AufgabenfrdieWochevom10.05.2021-16.05.2021)
+	* 9.11. [Fortschrittsbesprechung (14.05.2021)](#Fortschrittsbesprechung14.05.2021)
+		* 9.11.1. [Zusammenfassung](#Zusammenfassung-1)
+	* 9.12. [**Sprintplanung (17.05.2021)**](#Sprintplanung17.05.2021)
+		* 9.12.1. [**Zusammenfassung**](#Zusammenfassung-1)
+		* 9.12.2. [**Aufgaben**](#Aufgaben-1)
+	* 9.13. [Fortschrittsbesprechung (21.05.2021)](#Fortschrittsbesprechung21.05.2021)
+		* 9.13.1. [Zusammenfassung](#Zusammenfassung-1)
+		* 9.13.2. [Aufgaben für das Wochenende](#AufgabenfrdasWochenende-1)
+	* 9.14. [Planungsmeeting (24.05.2021)](#Planungsmeeting24.05.2021)
+		* 9.14.1. [Zusammenfassung](#Zusammenfassung-1)
+		* 9.14.2. [Aufgaben](#Aufgaben-1)
+	* 9.15. [Fortschrittsbesprechung (28.05.2021)](#Fortschrittsbesprechung28.05.2021)
+		* 9.15.1. [Zusammenfassung](#Zusammenfassung-1)
+		* 9.15.2. [Stand der Zwischenpräsentation](#StandderZwischenprsentation)
+		* 9.15.3. [Aufgaben für das Wochenende](#AufgabenfrdasWochenende-1)
+	* 9.16. [Sprintplanung (31.05.2021)](#Sprintplanung31.05.2021)
+		* 9.16.1. [Zusammenfassung](#Zusammenfassung-1)
+		* 9.16.2. [Aufgaben](#Aufgaben-1)
+	* 9.17. [Wochenfortschritt (04.06.2021)](#Wochenfortschritt04.06.2021)
+		* 9.17.1. [Zusammenfassung](#Zusammenfassung-1)
+		* 9.17.2. [Aufgaben für das Wochenende](#AufgabenfrdasWochenende-1)
+	* 9.18. [Sprintplanung (07.06.2021)](#Sprintplanung07.06.2021)
+		* 9.18.1. [Zusammenfassung](#Zusammenfassung-1)
+		* 9.18.2. [Aufgaben für die aktuelle Woche](#AufgabenfrdieaktuelleWoche)
+	* 9.19. [Fortschrittsbesprechung (11.06.2021)](#Fortschrittsbesprechung11.06.2021)
+		* 9.19.1. [Zusammenfassung](#Zusammenfassung-1)
+		* 9.19.2. [Aufgaben für das Wochenende](#AufgabenfrdasWochenende-1)
+	* 9.20. [Planungsmeeting (14.06.2021)](#Planungsmeeting14.06.2021)
+		* 9.20.1. [Zusammenfassung](#Zusammenfassung-1)
+		* 9.20.2. [Aufgaben für die aktuelle Woche](#AufgabenfrdieaktuelleWoche-1)
+	* 9.21. [Fortschrittsbesprechung (18.06.2021)](#Fortschrittsbesprechung18.06.2021)
+		* 9.21.1. [Zusammenfassung](#Zusammenfassung-1)
+		* 9.21.2. [Aufgaben für das Wochenende](#AufgabenfrdasWochenende-1)
+		* 9.21.3. [Ergebnis der Zwischenpräsentation](#ErgebnisderZwischenprsentation)
+	* 9.22. [Planungsmeeting (21.06.2021)](#Planungsmeeting21.06.2021)
+		* 9.22.1. [Zusammenfassung](#Zusammenfassung-1)
+		* 9.22.2. [Aufgaben](#Aufgaben-1)
+	* 9.23. [Fortschrittsbesprechung (25.06.2021)](#Fortschrittsbesprechung25.06.2021)
+		* 9.23.1. [Zusammenfassung](#Zusammenfassung-1)
+	* 9.24. [Planungsmeeting (28.06.2021)](#Planungsmeeting28.06.2021)
+		* 9.24.1. [Zusammenfassung](#Zusammenfassung-1)
+		* 9.24.2. [Aufgaben für die Woche](#AufgabenfrdieWoche)
+	* 9.25. [Fortschrittsbesprechung (02.07.2021)](#Fortschrittsbesprechung02.07.2021)
+		* 9.25.1. [Zusammenfassung](#Zusammenfassung-1)
+		* 9.25.2. [Aufgaben für das Wochenende](#AufgabenfrdasWochenende-1)
+	* 9.26. [Planungsmeeting (05.07.2021)](#Planungsmeeting05.07.2021)
+		* 9.26.1. [Zusammenfassung](#Zusammenfassung-1)
+		* 9.26.2. [Aufgaben für die aktuelle Woche](#AufgabenfrdieaktuelleWoche-1)
+	* 9.27. [Fortschrittsbesprechung (09.07.2021)](#Fortschrittsbesprechung09.07.2021)
+		* 9.27.1. [Zusammenfassung](#Zusammenfassung-1)
+		* 9.27.2. [Aufgaben für das Wochenende](#AufgabenfrdasWochenende-1)
+	* 9.28. [Planungsmeeting (12.07.2021)](#Planungsmeeting12.07.2021)
+		* 9.28.1. [Zusammenfassung](#Zusammenfassung-1)
+		* 9.28.2. [Aufgaben für diese Woche](#AufgabenfrdieseWoche)
+		* 9.28.3. [Kommende Meetings](#KommendeMeetings)
+	* 9.29. [Präsentationsübung (16.07.2021)](#Prsentationsbung16.07.2021)
+		* 9.29.1. [Zusammenfassung](#Zusammenfassung-1)
+		* 9.29.2. [Aufgaben für das Wochenende](#AufgabenfrdasWochenende-1)
+		* 9.29.3. [Letztes Planungsmeeting](#LetztesPlanungsmeeting)
+	* 9.30. [Planungsmeeting (20.07.2021)](#Planungsmeeting20.07.2021)
+	* 9.31. [Zusammenfassung](#Zusammenfassung-1)
+	* 9.32. [Fortschrittsbesprechung (23.07.2021)](#Fortschrittsbesprechung23.07.2021)
+		* 9.32.1. [Zusammenfassung](#Zusammenfassung-1)
+		* 9.32.2. [Reflektion des Teams](#ReflektiondesTeams)
+
+<div style="page-break-after: always;"></div>
+
 # Projektbericht
 
-## Das Team
+##  1. <a name='DasTeam'></a>Das Team
 Wir haben das Entwickler-Team, bestehend aus sechs Mitgliedern, in zwei Teams aufgeteilt:
 
-### Backend
+###  1.1. <a name='Backend'></a>Backend
 * Sören Clausen
 * Tim Schwabe
 
 Dieses Team hatte primär die Aufgabe, das bisherige Backend in seiner Logik zu verstehen und passend zu erweitern. Zu diesen Erweiterungen gehörte unter anderem die Erweiterung der Datenbank oder das Implementieren neuer Features auf Basis der bereits bestehenden Funktionen. Dabei war es eine Priorität eine Abwärtskompatibilität zum bisherigen Backend zu gewährleisten, damit alte Videos nach wie vor generiert werden können.
 
-### Frontend
+###  1.2. <a name='Frontend'></a>Frontend
 * Tristan Wolfram
 * Philipp Helfenritter
 * Janek Berg
@@ -31,35 +221,35 @@ Dieses Team hatte primär die Aufgabe, das bisherige Backend in seiner Logik zu 
 
 Das Frontend hatte primär die Aufgabe das User-Interface stark zu erweitern, sodass die Dateien zur Generierung von Videos nicht mehr per Hand geschrieben werden müssen. Viel mehr sollten die Dateien automatisch generiert werden. Dem Nutzer sollte dafür eine einfache GUI zur Verfügung gestellt werden. Das Team des Frontends wurde dabei mit mehr Mitgliedern als das Backend besetzt, da hier mehr Aufgaben angefallen sind.
 
-## Zeit- und Aufgabenmanagement
+##  2. <a name='Zeit-undAufgabenmanagement'></a>Zeit- und Aufgabenmanagement
 
-### Rahmenbedingungen
+###  2.1. <a name='Rahmenbedingungen'></a>Rahmenbedingungen
 Die Software **VisuAnalytics** ist im Rahmen des **Softwaretechnik-Projekts** im Sommersemester 2021 an der **Technischen Hochschule Mittelhessen** unter der Leitung von Prof. Dr. Frank Kammer entstanden. Dabei startete das Projekt am **08.04.2021** und endet am **26.07.2021**.
 
 In diesem Zeitraum sollte jedes Teammitglied **mindestens 220 Arbeitsstunden** für das Projekt aufbringen.
 
-### Meetings
+###  2.2. <a name='Meetings'></a>Meetings
 Das Team hatte insgesamt drei feste Meetings pro Woche:
 * **Montags:** Während dieses Meetings wurden die Aufgaben für die aktuelle Woche verteilt. Dabei wurden die Aufgaben zunächst gröber und somit größer gehalten, um das Meeting möglichst kurz zu halten.
 * **Donnerstags:** In diesem Meeting hat sich das Team mit dem Auftraggeber getroffen, um mögliche Probleme zu besprechen. Hier konnte allerdings auch der aktuelle Fortschritt gezeigt werden, und der Auftraggeber hatte die  Möglichkeit Feedback zu geben.
 * **Freitags:** Während dieses Meetings hat sich das Team getroffen, um untereinander den aktuellen Fortschritt zu zeigen. Dabei war diese Vorführung meist etwas detaillierter als die Vorführung beim Auftraggeber, da hier mehr Zeit für die Vorstellungen war. Außerdem wurden bei diesem Meeting aufgetretene Probleme besprochen.
 
-### Aufteilung der Aufgaben
+###  2.3. <a name='AufteilungderAufgaben'></a>Aufteilung der Aufgaben
 Die Aufteilung der Aufgaben erfolgte in zwei Phasen:
 * **Phase 1:** Im Planungsmeeting der Woche (jeden Montag) wurden im gesamten Team die groben Aufgaben für die aktuelle Woche besprochen und in einem Protokoll festgehalten. Dabei wurden die Aufgaben entsprechend der beiden Teams (Front- und Backend) aufgeteilt. Je nach Situation gab es teilweise auch weitere Aufgabenkategorien, wie z.B. die Erstellung des Lasten- oder Pflichtenheftes, welche zur Kategorie **Organisation** gezählt werden können.
 * **Phase 2:** Nach dem gemeinsamen Planungsmeeting wurden die Aufgaben vom jeweils zuständigen Team konkretisiert und an die einzelnen Entwickler verteilt. Somit war jedem Teammitglied zu Beginn der Woche bekannt, welche Aufgaben es zu erledigen hatte. Sollten die Aufgaben schnell erledigt worden sein, so konnten einzelne Teammitglieder weitere Aufgaben übernehmen, welche erst zu einem späteren Zeitpunkt geplant gewesen wären.
 
-### Aufteilung der Arbeitszeiten
+###  2.4. <a name='AufteilungderArbeitszeiten'></a>Aufteilung der Arbeitszeiten
 Grundsätzlich war es jedem Teammitglied freigestellt, wann dieses arbeitet und wie viele Stunden dieses pro Woche in das Projekt investiert hat. Diese Aussage galt während des Projekts grundsätzlich, es sei denn es gab schwerwiegende Fehler, welche dringend behoben werden mussten. Natürlich löst diese freie Aufteilung der Zeiten die 220 Stunden, welche geleistet werden sollten, nicht ab. Für die Einhaltung dieser "Regel" war jedes Teammitglied für sich verantwortlich. Sollten einem Mitglied einmal die Aufgaben ausgegangen sein, so hat das restliche Team versucht, weitere Aufgaben zu finden, um das Mitglied bei der Erreichung der erforderlichen Stunden zu unterstützen.
 
-### Zeitmanagement mittels Jira
+###  2.5. <a name='ZeitmanagementmittelsJira'></a>Zeitmanagement mittels Jira
 Um Arbeitszeiten verwalten zu können, haben wir auf die Plattform **Jira** gesetzt, welche von der THM zur Verfügung gestellt wird. Hierbei haben wir das Projekt zu Beginn in **User Stories** eingeteilt, welche in Jira eingetragen wurden. Für jede dieser **User Stories** haben sich die Teammitglieder, entsprechend ihrer Aufgaben, Unteraufgaben erstellt, für welche dann auch Zeiten eingetragen wurden. Dabei ermöglicht Jira es, die Aufgaben auf einem **Board** anzuordnen, um zu visualisieren, wie der Status einer bestimmten Aufgabe zum aktuellen Zeitpunkt ist.
 
 Um die Zeiten zu exportieren, haben wir das Tool ["Wochenberichtstool"](https://github.com/kowalski2019/Weekly_report_tool/wiki) verwendet. In diesem kann man einzelne Arbeitswochen hinzufügen und dabei direkt Daten von Jira importieren. Hierfür erstellt man mit Jira einen Bericht für die geleistete Arbeitszeit und beschränkt die Zeitspanne für diesen Bericht auf eine Woche (in unserem Fall von Montag bis einschließlich Samstag). Anschließend kann man die heruntergeladene CSV-Datei einfach im genanntem Tool importieren. Dabei erstellt das Werkzeug die benötigten Tabellen. Dazu gehört eine Übersicht über alle Aufgaben, sortiert nach der Woche. Weiterhin gibt es Tabellen für jeden Mitarbeiter, in welchen nur die Aufgaben des jeweiligen Mitglieds gelistet werden.
 
 Auf diese Art, war es für uns einfach und schnell möglich die Zeiten aller Mitglieder zu erfassen und als Datei an unseren Auftraggeber zu senden.
 
-### Kommunikation im Team
+###  2.6. <a name='KommunikationimTeam'></a>Kommunikation im Team
 Die Kommunikation innerhalb des Teams erfolgte primär durch die oben genannten Meetings und über die Plattform [Slack](https://slack.com/intl/de-de/).
 
 Bei Slack handelt es sich um eine Plattform, auf welcher primär Textnachrichten und Dokumente ausgetauscht werden können. Die Kommunikation erfolgt dabei in verschiedenen **Channels**. Für unseren Anwendungszweck haben wir uns unter anderem die folgenden Channels erstellt:
@@ -70,10 +260,10 @@ Bei Slack handelt es sich um eine Plattform, auf welcher primär Textnachrichten
 
 Weiterhin existierte eine Gruppe auf der Plattform [WhatsApp](https://www.whatsapp.com/). Hier wurden Nachrichten ausgetauscht, wenn es etwas sehr kurzfristiges zu besprechen gab oder wenn es sich um eine äußerst dringliche Angelegenheit gehandelt hat.
 
-## Versionsverwaltung / Entwicklung neuer Features
+##  3. <a name='VersionsverwaltungEntwicklungneuerFeatures'></a>Versionsverwaltung / Entwicklung neuer Features
 Um unser Projekt zu verwalten haben wir [ein bereits bestehendes Repository](https://github.com/Biebertal-mach-mit-TV/Data-Analytics) auf der Plattform Github verwendet. Dieses Repository wurde dabei vom Vorgänger-Projekt erstellt und von uns für die Weiterentwicklung verwendet. Dabei stellt das Repository einige Features bereit, welche uns aktiv bei der Entwicklung unterstützt haben. Auf diese Features soll in den folgenden Abschnitten eingegangen werden.
 
-### Entwicklung neuer Features
+###  3.1. <a name='EntwicklungneuerFeatures'></a>Entwicklung neuer Features
 Wenn ein neues Feature entwickelt werden sollte oder auch ein Fehler korrigiert wurde, so wurde dies immer in einem eigens dafür erstellten Branch gemacht. Die Besonderheit ist nun, dass dieser Branch nicht manuell erstellt werden musste, sondern automatisiert von Github erstellt wurde. Damit dies möglich war, ist es nötig wie folgt bei der Erstellung eines Issues vorzugehen.
 1. Den Tab **Issues** im Repository wählen.
 2. Auf der angezeigten Seite die Erstellung eines neuen Issues wählen.
@@ -84,14 +274,14 @@ Wenn ein neues Feature entwickelt werden sollte oder auch ein Fehler korrigiert 
 
 Hat ein Entwickler die Arbeit an einem Feature / Bugfix abgeschlossen, so konnte das entsprechende Feature auf die Spalte **Review** verschoben werden. Hierbei wurde das Repository so eingerichtet, dass automatisch ein **Pull request** für den **Master branch** gestellt wurde. Gleichzeitig erfolgten nach diesem Schritt die automatisierten Tests und unser Review-Prozess.
 
-### Automatisiertes Testen
+###  3.2. <a name='AutomatisiertesTesten'></a>Automatisiertes Testen
 Wie im vorherigen Abschnitt angesprochen, wurden bei Erstellung eines **Pull requests** automatisiert Tests angestoßen. Die Tests haben sich dabei in **Frontend Tests** und **Backend Tests** aufgeteilt.
 
 Für das Frontend wurde dabei unter anderem ein Linter verwendet, welcher die Qualität des Codes sicherstellen sollte und z.B. auf ungenutzte Variablen oder Imports aufmerksam gemacht hat. Gleichzeitig haben die Tests aber auch versucht das Frontend zu starten und konnten so auch benachrichtigen, wenn ein Syntax-Fehler oder ähnliches vorlag.
 
 Im Backend werden bislang während der automatisierten Tests nur die entwickelten **Unit Tests** geprüft. Können diese erfolgreich abgeschlossen werden, so wird auch der automatisierte Test erfolgreich abgeschlossen.
 
-### Ablauf der Code-Reviews
+###  3.3. <a name='AblaufderCode-Reviews'></a>Ablauf der Code-Reviews
 Sobald ein Issue auf die Spalte **Review** im Projekt verschoben wurde, begann auch der Review-Prozess. Hierzu wurde vom jeweiligen Entwickler des Features zunächst das restliche Entwicklungsteam (Front- oder Backend) benachrichtigt. Anschließend hat ein anderes Mitglied dieses Teams sich gemeldet, um das Code-Review durchzuführen. Dazu wurden während des Code-Reviews standardmäßig die beiden folgenden Schritte ausgeführt:
 * Anwendung starten und neue Funktionalität rudimentär testen.
 * Den neu geschriebenen Code möglichst detailliert nachvollziehen und kritisch hinterfragen.
@@ -100,20 +290,21 @@ Während dieser Arbeit war der Reviewer dazu angehalten sich Notizen zu Auffäll
 
 Der Review-Prozess fand nur in den Fällen nicht statt, in welchen mindestens zwei Mitglieder am gleichen Feature entwickelt haben (Pair-Programming). In diesem Fall sehen wir die Kontrolle der Qualität durch die jeweils zuschauende Person als gegeben an.
 
-### Verwendung der angesprochenen Automatisierungen
+###  3.4. <a name='VerwendungderangesprochenenAutomatisierungen'></a>Verwendung der angesprochenen Automatisierungen
 Die angesprochenen Automatisierungen in den ersten beiden Abschnitten dieses Kapitels wurden nicht eigenständig von uns entwickelt, sondern wurden bereits vom Vorgängerteam implementiert. Für eine genauere Dokumentation zu diesen Features empfehlen wir die Abschnitte der [zugehörigen Dokumentation](https://visuanalytics.readthedocs.io/de/latest/mainreport/Projektbericht.html) zu lesen. In diesen gibt es weitere Informationen zu diesen Features.
 
-### Dokumentation
+###  3.5. <a name='Dokumentation'></a>Dokumentation
 Für das Backend haben wir die Dokumentation mit dem Tool **Sphinx** aus Doc-Strings generiert. Dabei wurde möglichst jede Methode in ihrer Funktionsweise beschrieben. Weiterhin haben wir innerhalb der Funktionen Kommentare hinzugefügt, um komplexere Abschnitte in Funktionen möglichst verständlich zu halten.
 
-Das Frontend hingegen hat die zugehörige Dokumentation nicht aus Doc-Strings generiert, sondern händisch erstellt. Hierbei haben wir nicht Methode für Methode dokumentiert, da dies einem Leser der Dokumentation gerade im Frontend nicht unbedingt weiterhilft. Dies liegt primär daran, dass die einzelnen Funktionen meist relativ simpel sind und es auf das Zusammenspiel zwischen den Funktionen ankommt. Dieses Zusammenspiel lässt sich in einer ausformulierten Dokumentation besser beschreiben, als in Doc-Strings, welche einer einzelnen Funktion zugeordnet werden. Neben dieser händisch erstellten Dokumentation hat das Frontend-Team allerdings auch Doc-Strings hinzugefügt, damit für Leser des Codes schnell klar wird, was eine einzelne Funktion für eine Aufgabe hat. Auch haben wir hier probiert innerhalb weniger Wörter darauf einzugehen, wofür diese Funktion später gebraucht wird. Die händisch erstellte Dokumentation wurde dabei mittels [Code Spell Checker](https://marketplace.visualstudio.com/items?itemName=streetsidesoftware.code-spell-checker) mit der zugehörigen [Erweiterung für die deutsche Sprache](https://marketplace.visualstudio.com/items?itemName=streetsidesoftware.code-spell-checker-german) auf Rechtschreibfehler hin untersucht.
+Das Frontend hingegen hat die zugehörige Dokumentation nicht aus Doc-Strings generiert, sondern händisch erstellt. Hierbei haben wir nicht Methode für Methode dokumentiert, da dies einem Leser der Dokumentation gerade im Frontend nicht unbedingt weiterhilft. Dies liegt primär daran, dass die einzelnen Funktionen meist relativ simpel sind und es auf das Zusammenspiel zwischen den Funktionen ankommt. Dieses Zusammenspiel lässt sich in einer ausformulierten Dokumentation besser beschreiben als in Doc-Strings, welche einer einzelnen Funktion zugeordnet werden. Neben dieser händisch erstellten Dokumentation hat das Frontend-Team allerdings auch Doc-Strings hinzugefügt, damit für Leser des Codes schnell klar wird, was eine einzelne Funktion für eine Aufgabe hat. Auch haben wir hier probiert innerhalb weniger Wörter darauf einzugehen, wofür diese Funktion später gebraucht wird. Die händisch erstellte Dokumentation wurde dabei mittels [Code Spell Checker](https://marketplace.visualstudio.com/items?itemName=streetsidesoftware.code-spell-checker) mit der zugehörigen [Erweiterung für die deutsche Sprache](https://marketplace.visualstudio.com/items?itemName=streetsidesoftware.code-spell-checker-german) auf Rechtschreibfehler hin untersucht.
 
-#### Bereitstellung der Dokumentation
+####  3.5.1. <a name='BereitstellungderDokumentation'></a>Bereitstellung der Dokumentation
 Die Dokumentation wurde dem Auftraggeber als Ordner mit den folgenden Dateien übergeben:
 * Projektbericht (Dieses Dokument)
 * Frontend-Dokumentation
 * Backend-Dokumentation
 * Benutzeranleitung
+
 Die Dateien liegen dabei alle als PDF-Datei vor.
 
 Zusätzlich zu dieser Abgabe existiert im Repository des Projekts ebenfalls die Dokumentation. Möchte man sich diese anschauen, so kann man dies beispielsweise tun, indem man mittels Sphinx eine HTML-Repräsentation generiert:
@@ -122,14 +313,14 @@ Zusätzlich zu dieser Abgabe existiert im Repository des Projekts ebenfalls die 
 3. Den Befehl `make html` aufrufen.
 4. Im Ordner `build` liegt nun die generierte Dokumentation. Hier kann man die `index.html` aufrufen und somit die Startseite der Dokumentation öffnen.
 
-## Entwicklungsumgebung, Programmiersprachen
+##  4. <a name='EntwicklungsumgebungProgrammiersprachen'></a>Entwicklungsumgebung, Programmiersprachen
 
-### Entwicklungsumgebungen
+###  4.1. <a name='Entwicklungsumgebungen'></a>Entwicklungsumgebungen
 Innerhalb unseres Teams wurden zwei verschiedene Entwicklungsumgebungen eingesetzt:
 * **WebStorm:** Entwicklung des Frontends
 * **PyCharm:** Entwicklung des Backends.
 
-### Verwendete Programmiersprachen
+###  4.2. <a name='VerwendeteProgrammiersprachen'></a>Verwendete Programmiersprachen
 Da wir kein vollständig neues Projekt entwickelt haben, haben wir uns dazu entschieden die Programmiersprachen, welche durch das Vorgänger-Team definiert und verwendet wurden, selbst zu verwenden:
 * [Python](https://www.python.org/)
 * [TypeScript](https://www.typescriptlang.org/)
@@ -138,24 +329,24 @@ Das Frontend hat dabei insbesondere die Frameworks [React](https://reactjs.org/)
 
 Im Backend kamen primär die Frameworks [Flask](https://palletsprojects.com/p/flask/) für die Bereitstellung des Servers, [ast](https://docs.python.org/3/library/ast.html) für die Syntax-Überprüfung von Formeln, [Matplotlib](https://matplotlib.org/) für die Generierung von Diagrammen und [Pillow](https://pillow.readthedocs.io/en/stable/) für das Arbeiten mit Bildern zum Einsatz.
 
-### Hinweis: Version von Material-UI
+###  4.3. <a name='Hinweis:VersionvonMaterial-UI'></a>Hinweis: Version von Material-UI
 Momentan ist es nicht möglich die neueste Version von **Material-UI** für das Frontend zu verwenden, da diese mit den alten Frontend-Komponenten des Vorgängerprojekts nicht kompatibel wäre. Beim versuchten Update sind in diesen Komponenten Syntax-Fehler entstanden. Wir hatten während des Projekts keine Zeit diese zu beheben und haben uns deshalb dafür entschieden, kein Update von Material-UI einzubinden.
 
 Die Komponenten des alten Frontends haben wir nicht entfernt, da wir der Meinung sind, dass es ein nützliches Feature sein könnte in der Weiterentwicklung dem Nutzer die Möglichkeit zu geben, zwischen beiden Versionen zu wechseln.
 
-## Projektfazit / Abschluss
+##  5. <a name='ProjektfazitAbschluss'></a>Projektfazit / Abschluss
 
-### Zielsetzung
+###  5.1. <a name='Zielsetzung'></a>Zielsetzung
 Unser Ziel war es, die Anwendung **VisuAnalytics**, welche im letzten Sommersemester an der THM entstanden ist, generell benutzerfreundlicher zu machen, indem neue Themen / Videos für die Anwendung nun nicht mehr vom Nutzer in einer JSON-Datei spezifiziert werden müssen. Mit unserer Erweiterung sollte es möglich werden, dass ein Nutzer die benötigten Einstellungen in einer **GUI** wählen und individualisieren kann. Dabei sollte sich die Anwendung nicht auf eine bestimmte API beschränken, aus welcher Informationen bezogen werden können, sondern generisch aufgebaut sein, sodass alle APIs, welche XML- oder JSON-Objekte als Antwort liefern, verwendet werden können.
 
-Diese Zielsetzung wurde durch unsere Arbeit in den letzten Monaten erfüllt. Es ist zwar nicht möglich gewesen in der gegebenen Zeit, alle Möglichkeiten, welche bereits im Backend zur Verfügung standen, auch im neuen Frontend umzusetzen, jedoch ist es möglich, ein sehr individuelles Video nach eigenen Vorstellungen zu generieren. Dabei benötigt ein Nutzer nun deutlich weniger Fachwissen. Dennoch sollte die Zielgruppe sich im Bereich IT etwas auskennen, um die Dokumentationen von APIs zu verstehen, welche er benutzen möchte.
+Diese Zielsetzung wurde durch unsere Arbeit in den letzten Monaten erfüllt. Es ist zwar nicht möglich gewesen in der gegebenen Zeit alle Möglichkeiten, welche bereits im Backend zur Verfügung standen, auch im neuen Frontend umzusetzen, jedoch ist es möglich, ein sehr individuelles Video nach eigenen Vorstellungen zu generieren. Dabei benötigt ein Nutzer nun deutlich weniger Fachwissen. Dennoch sollte die Zielgruppe sich im Bereich IT etwas auskennen, um die Dokumentationen von APIs zu verstehen, welche er benutzen möchte.
 
 Auf spezifischere Teile der Zielsetzung, welche später im **Pflichtenheft** definiert wurden, soll im weiteren Verlauf dieses Kapitels eingegangen werden.
 
-### Abgeschlossene Aufgaben
+###  5.2. <a name='AbgeschlosseneAufgaben'></a>Abgeschlossene Aufgaben
 Im Folgenden sollen die Aufgaben genannt werden, welche während des Projekts umgesetzt werden konnten. Dabei sind diese Aufgaben kategorisiert nach **Must-Have**, **Nice-To-Have** und **If-Time-Allows**. Die entsprechenden Einträge wurden dabei in ihrem Sinn aus dem **Lastenheft** übernommen.
 
-#### Abgeschlossene Must-Haves
+####  5.2.1. <a name='AbgeschlosseneMust-Haves'></a>Abgeschlossene Must-Haves
 * Als Nutzer möchte ich einen **Infoprovider** erstellen können. Diesem kann ich einen Namen geben und eine URL zu einer API, sowie den zugehörigen API-Key übergeben. Anschließend wird mit diesen Daten und durch Abfrage der API eine Liste von verfügbaren Parametern generiert, aus welcher ich beliebig viele Parameter wählen kann. Diese möchte ich später für die Erstellung von Videojobs verwenden können. Wahlweise kann ich zu einem Infoprovider auch mehrere APIs hinzufügen.
 * Als Nutzer möchte ich **Formeln** aus den Attributen des Infoproviders erstellen und so z.B. eine Differenz von zwei Werten bestimmen können.
 * Als Nutzer möchte ich im Infoprovider Daten auswählen können, welche ich historisieren möchte, um später Zugriff auf ältere Werte zu haben. Außerdem möchte ich dabei beliebige Zeitpunkte für die Historisierung wählen können.
@@ -165,58 +356,58 @@ Im Folgenden sollen die Aufgaben genannt werden, welche während des Projekts um
 * Als Nutzer möchte ich Videojobs und Szenen bearbeiten können, damit ich für kleine Änderungen nicht einen vollständig neuen Job erstellen muss.
 * Als Nutzer möchte ich einen Infoprovider für verschiedene Videojobs und Szenen verwenden können.
 
-#### Abgeschlossene Nice-To-Haves
+####  5.2.2. <a name='AbgeschlosseneNice-To-Haves'></a>Abgeschlossene Nice-To-Haves
 * Als Nutzer möchte ich, dass bei Absturz des Servers die Infoprovider samt ihrer Historisierung erhalten bleiben. Es sollen also keine Daten verloren gehen.
 * Als Benutzer möchte ich im Szeneneditor **Hilfen zur Anordnung** (alignment) für Elemente haben, damit diese perfekt ausgerichtet sind. (Alignment wurde bei uns dabei durch die manuelle Eingaben von Koordinaten für die Position ermöglicht.)
 
-#### Abgeschlossene If-Time-Allows
+####  5.2.3. <a name='AbgeschlosseneIf-Time-Allows'></a>Abgeschlossene If-Time-Allows
 Es wurden aus zeitlichen Gründen keine **If-Time-Allows** abgeschlossen. Hierfür war der gegebene Zeitrahmen zu knapp gewählt.
 
-### Bewährte Kommunikationsmittel
+###  5.3. <a name='BewhrteKommunikationsmittel'></a>Bewährte Kommunikationsmittel
 Während des Projekts hat sich insbesondere **Slack** als Kommunikationsmethode bewährt. Nachdem jeder die Funktionsweise von Slack verstanden hatte, gab es hier eine sehr gute Struktur und die Nachrichten, welche gesucht wurden, konnten schnell gefunden werden. Auch war jedes Mitglied über den Nachrichtendienst gut erreichbar. So konnten meist sehr schnell Meetings ausgemacht werden, wenn es größere Probleme gab. Auch konnten schnell Probleme gelöst werden, wenn die benötigten Personen die Nachrichten entsprechend schnell sahen. Es wäre bei Slack sogar möglich gewesen eine **Github-Erweiterung** zu installieren, mit welcher es möglich gewesen wäre, den Fortschritt im Repository direkt auf Slack einzusehen. Wir haben uns damit allerdings aus zeittechnischen Gründen nicht auseinandergesetzt.
 
 Auch die Meetings haben sich bewährt und dafür gesorgt, dass wir ein gutes Arbeitstempo vorweisen konnten. Dabei hat sich auch die angesprochene Struktur / Anzahl der Meetings bewährt und musste nicht weiter angepasst werden.
 
 Die Gruppe auf **WhatsApp** blieb während des Projekts in den allermeisten Fällen ruhig und wurde kaum benötigt. In dringenden Fällen wurden aber auch hier Nachrichten ausgetauscht. Es hat sich hier also um eine gute Ergänzung zu Slack gehandelt.
 
-### Erweiterbarkeit
+###  5.4. <a name='Erweiterbarkeit'></a>Erweiterbarkeit
 Ein Ziel von uns war es, die Anwendung so zu entwickeln, dass weitere Features hinzugefügt werden können. Wir sind der Meinung, dieses Ziel durch eine gute Doku und eine geeignete Struktur des Quellcodes auch erreicht zu haben. Dennnoch wird es für weitere Teams schwierig sein sich in den Code einzuarbeiten, da dieser auf Grund der Anforderungen an einigen Stellen ein sehr hohes Level an Komplexität erreicht hat.
 
-### Abwärtskompatibilität
+###  5.5. <a name='Abwrtskompatibilitt'></a>Abwärtskompatibilität
 Ein weiteres Ziel unserer Anwendung war es **abwärtskompatibel** zur "alten" Version der Anwendung zu sein. Da wir am ursprünglichen Backend nur wenig ändern mussten und die ehemaligen Strukturen weiterhin existieren, sollte auch dieser Teil der Zielsetzung erfüllt worden sein.
 
-### Test der Software
-Für den Test der Software hatten wir vergleichsweise wenig zeit. Jedoch haben wir uns so organisiert, dass das Backend mit intensiven Tests 10 Tage vor Abgabe beginnen konnte. Damit ist nicht gemeint, dass vorherige Teile der Anwendung nicht getestet wurden (dies passierte immer im Review-Prozess), sondern viel mehr der Test der Anwendung im Zusammenspiel mit allen entwickelten Komponenten. Wir sind trotz dieses kurzen Zeitraums allerdings der Meinung die Anwendung gut getestet haben zu können. Wir schließen kleinere Fehler dennoch nicht aus.
+###  5.6. <a name='TestderSoftware'></a>Test der Software
+Für den Test der Software hatten wir vergleichsweise wenig Zeit. Jedoch haben wir uns so organisiert, dass das Backend mit intensiven Tests 10 Tage vor Abgabe beginnen konnte. Damit ist nicht gemeint, dass vorherige Teile der Anwendung nicht getestet wurden (dies passierte immer im Review-Prozess), sondern viel mehr der Test der Anwendung im Zusammenspiel mit allen entwickelten Komponenten. Wir sind trotz dieses kurzen Zeitraums allerdings der Meinung, die Anwendung gut getestet haben zu können. Wir schließen kleinere Fehler dennoch nicht aus.
 
-### WordPress
+###  5.7. <a name='WordPress'></a>WordPress
 Auf Grund fehlender Zeit und der Zusicherung, dass am WordPress-Plugin, welches letztes Semester entstanden ist, nichts mehr verändert werden muss, haben wir das Plugin nicht getestet. 
 
-### Bekannte Fehler / Bugs
+###  5.8. <a name='BekannteFehlerBugs'></a>Bekannte Fehler / Bugs
 Trotz dem Anspruch an eine hohe Code-Qualität durch die ergriffenen Maßnahmen und Methoden, konnten wir bis zum Ende des Projekts die folgenden Fehler nicht korrigieren:
 * Update von Material-UI, da durch das Update Fehler auftreten werden. Auf dieses Problem wurde bereits im Abschnitt **Entwicklungsumgebung, Programmiersprachen und Frameworks** eingegangen.
 * Auf Säulen- und Balkendiagrammen kann es vorkommen, dass einzelne Balken / Säulen nicht zu sehen sind, da diese von anderen verdeckt werden. Dies passiert dabei nur bei Diagrammen, welche mehr als ein einzelnes Datum visualisieren sollen.
 
-### Mögliche Fehler / Bugs
+###  5.9. <a name='MglicheFehlerBugs'></a>Mögliche Fehler / Bugs
 Da die Anwendung stark weiterentwickelt wurde und es unter Umständen Fälle gibt, welche wir durch unsere Tests nicht abdecken konnten, kann es - wie bei jeder anderen Software auch - zu Fehlern kommen, welche uns noch nicht bekannt waren.
 
-### Abschließende Reflektion
+###  5.10. <a name='AbschlieendeReflektion'></a>Abschließende Reflektion
 Insgesamt hat das Team in den vergangenen Monaten eine spannende Zeit erleben dürfen. Allerdings ist sich das Team einig, dass das Projekt für den gegebenen Zeitraum vermutlich zu umfangreich war. So war es zu Beginn sehr schwierig sich in das Projekt einzuarbeiten, da vor allem im Backend bereits sehr viel - auch komplexer - Code vorhanden war. Im Frontend war vor allem der Szeneneditor problematisch in seiner Implementierung, da es zunächst überhaupt schwierig war ein geeignetes Framework zu finden. Nachdem dieses gefunden war, war es zusätzlich aber auch schwierig die Implementierung damit umzusetzen, da sämtliche offizielle Beispiele in **ECMA-Script** geschrieben wurden. So erforderte es einige Versuche, bis eine erste Version des Szeneneditors zustande kommen konnte. Ein weiterer Faktor war es, dass die Bugs der Software teils erst sehr spät gefunden werden konnten, da viele dieser Bugs nur auftreten, wenn man den letzten Schritt der Videogenerierung ausführt. Hier wird nämlich nicht nur etwas abgespeichert, sondern die Daten werden zur Verarbeitung genutzt. Aufgrund dieses Aspektes war es enorm schwierig, länger angesetzte Tests zu organisieren.
 
 Wenn wir als Team unsere getane Arbeit im Nachhinein betrachten, so erkennen wir die zeitlichen Probleme und die dadurch zu kurz ausgefallenen Tests, allerdings sind wir mit unserer entstandenen Arbeit dennoch sehr zufrieden.
 
-## Anhang
+##  6. <a name='Anhang'></a>Anhang
 
-## **Anhang A: Lastenheft**
+##  7. <a name='AnhangA:Lastenheft'></a>**Anhang A: Lastenheft**
 
-### **Momentaner Stand der Anwendung VisuAnalytics**
+###  7.1. <a name='MomentanerStandderAnwendungVisuAnalytics'></a>**Momentaner Stand der Anwendung VisuAnalytics**
 Bisher ist es mit der Software VisuAnalytics möglich, sich Videos zu bestimmten Themen, wie z.B. einem Wetterbericht, generieren zu lassen. Dabei werden die Informationen für den Wetterbericht von einer spezifizierten API abgegriffen und durch Definitionen in Form eines JSON-Objekts so aufbereitet, dass ein Video automatisiert erstellt werden kann. Welche APIs mit welchen Daten hierbei unterstützt werden, wird ebenfalls durch JSON-Dateien festgelegt.
 Es ist außerdem möglich, die Erstellung des Videos bis zu einem gewissen Grad zu individualisieren. Dafür können bei Erstellung des Videos vorgegebene Parameter verändert werden. So wird es beispielsweise möglich, die gleiche API zu verwenden, um den Wetterbericht für zwei verschiedene Orte zu generieren.
 
 
-### **Zielbestimmung**
+###  7.2. <a name='Zielbestimmung'></a>**Zielbestimmung**
 Das Projekt **VisuAnalytics** aus dem Softwaretechnik-Projekt des letzten Sommersemesters soll im Laufe dieses Projektes erweitert werden. Unter anderem soll die Anwendung dadurch generell benutzerfreundlicher werden und mehr Möglichkeiten als bisher bieten. Um welche Verbesserungen es sich dabei konkret handelt, soll in Form von **User Stories** erläutert werden.
 
-#### **Aufteilung in Kategorien**
+####  7.2.1. <a name='AufteilunginKategorien'></a>**Aufteilung in Kategorien**
 Die Anforderungen an die Erweiterung sollen im nachfolgenden in die drei Kategorien *Must-Have*, *Nice-To-Have* und *If-Time-Allows* gegliedert werden, um eine Priorisierung der einzelnen Aufträge zu ermöglichen.
 
 ##### **Must-Have**
@@ -249,63 +440,63 @@ Die Anforderungen an die Erweiterung sollen im nachfolgenden in die drei Kategor
 * Wenn ich mit dem WordPress-Plugin der Anwendung arbeite, so möchte ich das Theme meiner WordPress-Seite für die Anwendung übernehmen können.
 * Zu den einzelnen Videos, welche generiert werden, möchte ich die Möglichkeit haben, Untertitel einzubinden.
 
-### **Einsatz der Software**
+###  7.3. <a name='EinsatzderSoftware'></a>**Einsatz der Software**
 Genau wie die ursprüngliche Software, soll die Erweiterung den Betreibern der Seite [https://biebertal.mach-mit.tv/](https://biebertal.mach-mit.tv/) zur Verfügung gestellt werden. Dort soll diese produktiv genutzt werden können. Die Videos, welche dabei generiert werden, müssen so gespeichert werden können, dass sie von den Betreibern bei Bedarf öffentlich gemacht werden können.
 
 Die Zielgruppe, welche die Videojobs erstellt, sollte grundlegende IT-Kenntnisse besitzen, um aus einer Dokumentation einer API herausfinden zu können, welchen API-Endpunkt sie für bestimmte Informationen anfragen muss. Die Zielgruppe, für welche die Videos generiert werden, ist durch die Entwicklung des Produktes nicht genau definierbar, da durch den generischen Aufbau Videos zu Themen aus verschiedensten Bereichen entstehen können.
 
 
 
-### **Übersicht über die Benutzeroberfläche**
+###  7.4. <a name='bersichtberdieBenutzeroberflche'></a>**Übersicht über die Benutzeroberfläche**
 Die folgende Übersicht geht nur auf Elemente der Kategorie **Must-have** ein. Weitere Elemente welche das UI betreffen, werden bei Bedarf hier ergänzt.
 
-#### **Übersichtsseite**
+####  7.4.1. <a name='bersichtsseite'></a>**Übersichtsseite**
 Hier soll ein Nutzer eine grundlegende Übersicht bekommen. So soll es u.a. möglich sein, die angelegten Infoprovider anzusehen und zu bearbeiten, die erstellten Videojobs inklusive zugehöriger Details einsehen und auch neue Videojobs sowie Infoprovider erstellen zu können.
 
-### **Anlegen eines Infoproviders**
+###  7.5. <a name='AnlegeneinesInfoproviders'></a>**Anlegen eines Infoproviders**
 Hier kann der Nutzer zunächst einen Namen für seinen neuen Infoprovider angeben, anschließend eine API spezifizieren und deren Key eingeben. Anschließend wird ihm eine Liste von verfügbaren Attributen angezeigt, aus welcher er seine gewünschten Daten auswählen kann. Zusätzlich steht ihm für jedes Attribut die Möglichkeit zur Verfügung, auszuwählen, ob die Daten dieses Felds historisiert werden sollen. Weiterhin soll dem Nutzer noch die Möglichkeit gegeben werden, auszuwählen, wie viele Datensätze in der Datenbank gleichzeitig vorliegen sollen und zu welchen Zeitpunkten die Daten historisiert werden.
 
 
 
-#### **Erstellen eines Videojobs**
+####  7.5.1. <a name='ErstelleneinesVideojobs'></a>**Erstellen eines Videojobs**
 Dieser Vorgang teilt sich auf mehrere Schritte auf:
 1. Der Nutzer spezifiziert einen Namen für den Videojob.
 2. Nun gelangt der Nutzer zu einem Videoeditor, in welchem er die Bearbeitung abschließen kann oder weitere Szenen hinzufügen kann. Für die einzelnen Szenen kann er außerdem entscheiden, ob die Szene eine von ihm festgelegte Länge erhält, oder ob die Länge aus dem Audio bestimmt werden soll. In letzterem Fall soll der Nutzer auch angeben, ob das Bild länger eingeblendet werden soll als die Audio. Bei Erstellung einer neuen Szene gelangt der Nutzer in einen weiteren Editor, in welchem ihm Tools zur Verfügung stehen, um Elemente in der Szene zu platzieren. Für die Erstellung von Szenen kann der Nutzer außerdem Infoprovider auswählen, deren Daten er anschließend in die Szene einfügen kann. Während der Erstellung des Videojobs kann der Nutzer außerdem eine Audiospur für das Video generieren und diese mit TTS und eigenen Audio-Dateien befüllen, welche, falls gewünscht, auch auf Daten des Infoproviders zugreifen können.
 3. Nun kann der Nutzer weitere Einstellungen vornehmen, wie beispielsweise die Konfiguration der Zeiten, zu welchen das Video generiert werden soll. (Bei Generierung des Videos wird dabei durch den Infoprovider eine Abfrage an die API gesendet, um aktuelle Daten zu erhalten.)
 
-### **Qualitätsanforderungen**
+###  7.6. <a name='Qualittsanforderungen'></a>**Qualitätsanforderungen**
 1. Die Erweiterung soll die gleichen Qualitätsanforderungen wie die aktuelle Version des Produkts besitzen.
 2. Durch die eingeführten Erweiterungen soll das Generieren von Videos mit neuen Themen deutlich einfacher werden, da keine Kenntnisse über JSON vorausgesetzt werden müssen. Nutzer sollen sich lediglich damit auseinandersetzen, welche API passend für den Zweck ist.
 3. Das Produkt sollte größtenteils barrierefrei umgesetzt sein, um nicht in rechtliche Schwierigkeiten zu kommen.
 
-### **Anmerkungen**
+###  7.7. <a name='Anmerkungen'></a>**Anmerkungen**
 * Die Barrierefreieheit wird für digitale Medien immer weiter durch gesetzliche Vorgaben vorangetrieben, insbesondere durch den European Accessibility Act (EAA). Nach dessen Vorgaben ist es zwar noch nicht gesetzlich gefordert das Produkt barrierefrei umzusetzen, in Zukunft könnte dies allerdings der Fall werden. Um einen großen Umbau zu verhindern ist unser Vorschlag daher, wenn möglich, Barrierefreiheit im Produkt umzusetzen. Auch schlagen wir eine Dokumentation der verwendeten Techniken vor, damit bei eventuellen späteren Erweiterungen darauf zurückggegriffen werden kann.
 
-### **Quellen**
+###  7.8. <a name='Quellen'></a>**Quellen**
 * Einführung in den European Accessibility Act (letzter Zugriff am 12.04.2021): [https://www.bundesfachstelle-barrierefreiheit.de/DE/Themen/European-Accessibility-Act/european-accessibility-act.html?nn=1108170#doc1108168bodyText2](https://www.bundesfachstelle-barrierefreiheit.de/DE/Themen/European-Accessibility-Act/european-accessibility-act.html?nn=1108170#doc1108168bodyText2)
 
-### **Anhang**
+###  7.9. <a name='Anhang-1'></a>**Anhang**
 
-#### **Übersicht über das Programm**
+####  7.9.1. <a name='bersichtberdasProgramm'></a>**Übersicht über das Programm**
 Das nachfolgende Diagramm soll eine visuelle Übersicht über den Ablauf des Programms darstellen:
 
 ![Übersicht](images/overview.png)
 
-## **Anhang B: Pflichtenheft**
+##  8. <a name='AnhangB:Pflichtenheft'></a>**Anhang B: Pflichtenheft**
 
 
 
-### **Einleitung**
+###  8.1. <a name='Einleitung'></a>**Einleitung**
 
 
 
-#### **Auftraggeber**
+####  8.1.1. <a name='Auftraggeber'></a>**Auftraggeber**
 
 Im Rahmen des Softwaretechnik-Projekts an der Technischen Hochschule Mittelhessen (THM) wurde dem Entwicklerteam von Herrn Prof. Dr. Kammer der Auftrag erteilt, die VisuAnalytics-Software aus dem vorherigen Sommersemester weiterzuentwickeln. Das Ziel ist es, die neue Version der Gemeinde Biebertal zur Verfügung zu stellen.
 
 
 
-#### **Das Entwicklerteam**
+####  8.1.2. <a name='DasEntwicklerteam'></a>**Das Entwicklerteam**
 
 Das Entwicklerteam besteht aus den nachfolgend aufgelisteten Mitgliedern.
 
@@ -318,29 +509,29 @@ Das Entwicklerteam besteht aus den nachfolgend aufgelisteten Mitgliedern.
 
 
 
-#### **Kurzbeschreibung des Projekts**
+####  8.1.3. <a name='KurzbeschreibungdesProjekts'></a>**Kurzbeschreibung des Projekts**
 
 Mit der von uns umzusetzenden Erweiterung von **Visuanalytics** soll es für einen Nutzer einfach möglich sein, Videos zu generieren, welche unter anderem Informationen von eigens gewählten APIs aufbereitet anzeigen können. Dazu ist es ebenfalls geplant dem Nutzer ein Werkzeug an die Hand zu geben, mit welchem er sich neue APIs in der Software speichern kann. Somit entsteht also ein sehr generisches Framework, mit welchem Videos zu allen denkbaren Themen erstellt werden können.
 
 
 
-### **Informationen zum Auftrag**
+###  8.2. <a name='InformationenzumAuftrag'></a>**Informationen zum Auftrag**
 
 
 
-#### **Rahmenbedingungen**
+####  8.2.1. <a name='Rahmenbedingungen-1'></a>**Rahmenbedingungen**
 
 Die Weiterentwicklung der Anwendung **VisuAnalytics** erfolgt im Rahmen des Sommersemester 2021 an der Technischen Hochschule Mittelhessen im Pflichtmodul **Softwaretechnik-Projekt**, welches von Herrn Prof. Dr. Kammer begleitet wird. Dabei hat das Modul eine Gewichtung von 9 Creditpoints, d.h. ca. 270 Stunden Arbeitsaufwand pro Person. Dies ergibt einen Arbeitsaufwand von ca. 16 Stunden pro Woche. Wie sich die einzelnen Mitglieder diese Zeiten aufteilen, ist ihnen selbst überlassen, solange alle vorgegebenen Aufgaben in der vorgegebenen Zeit erledigt werden.
 
 
 
-#### **Besonderheiten**
+####  8.2.2. <a name='Besonderheiten'></a>**Besonderheiten**
 
 Hervorgehoben sei an dieser Stelle, dass die Anwendung jede beliebige API zur Informationsgewinnung nutzen kann, solange diese ein JSON-Objekt oder eine XML-Datei als Antworttext versenden kann. Dadurch ist es möglich ein Video zu einem Thema einmal zu erstellen und die Aktualisierung dieses Videos wird dann von der Software selbst erledigt. Es benötigt also beispielsweise keine Person, die jeden Tag einen neuen Wetterbericht hochlädt, denn nach dessen Erstellung und Eingabe von verwendeten API-Daten wird die Software diesen Bericht zu festgelegten Zeiten selbstständig erneuern. Weiterhin ist es geplant die Software so zu erweitern, dass auch Internetseiten ohne eine API zur Informationsgewinnung genutzt werden können. Dafür soll ein Webscraper entwickelt werden, welcher die Informationen einer Webseite extrahieren kann. Welche Informationen dabei gesammelt werden sollen, kann durch den Nutzer festgelegt werden. Dazu ist es geplant eine einfache Skriptsprache zu entwickeln, welche durch Eingabe von wenigen Parametern die Webseite nach den gewünschten Informationen durchsucht.
 
 
 
-#### **Etappenziele**
+####  8.2.3. <a name='Etappenziele'></a>**Etappenziele**
 
 Um eine bessere Struktur in das Projekt und über die anstehenden Aufgaben zu bekommen, soll die folgende Auflistung einen kurzen Überblick über die einzelnen Etappen liefern:
 
@@ -354,7 +545,7 @@ Nach Abschluss dieser drei Etappen würde das Grundgerüst der Anwendung stehen.
 
 
 
-### **Bereits bestehende Systeme**
+###  8.3. <a name='BereitsbestehendeSysteme'></a>**Bereits bestehende Systeme**
 
 Bereits im letzten Semester ist ein Projekt erstellt worden, in welchem es möglich ist, sich Videos zu vorgegebenen Themen erstellen zu lassen. Dabei haben die Nutzer allerdings nur wenig Anpassungsmöglichkeiten und neue Themen können nur durch Kenntnisse im Umgang mit JSON-Dateien hinzugefügt werden.
 
@@ -362,11 +553,11 @@ Das Ziel unseres Projekts ist es deshalb, diese Basis zu verwenden und eine benu
 
 
 
-### **Teams und Schnittstellen**
+###  8.4. <a name='TeamsundSchnittstellen'></a>**Teams und Schnittstellen**
 
 
 
-#### **Teams**
+####  8.4.1. <a name='Teams'></a>**Teams**
 
 Das Entwicklerteam besteht aus insgesamt sechs Mitgliedern, welche sich auf zwei kleinere Teams, Front- und Backend, aufgeteilt haben. Dadurch kann jedes Teammitglied seinen eigenen Schwerpunkt setzen, und kann sich auf seinen zugewiesenen Bereich konzentrieren.
 
@@ -374,7 +565,7 @@ Der Projektleiter unterstützt dabei in der Entwicklung das Frontend-Team, verfo
 
 
 
-#### **Jira für die Projektverwaltung**
+####  8.4.2. <a name='JirafrdieProjektverwaltung'></a>**Jira für die Projektverwaltung**
 
 Bei einem Projekt ist es wichtig einen Überblick darüber zu behalten, welche Aufgaben von welcher Person erledigt werden und welche Aufgaben demnächst anstehen oder bereits erledigt worden sind. Auch ist es wichtig, die Arbeitszeiten strukturiert zu verwalten, um einen Überblick über die bereits geleistete Arbeit zu haben.
 
@@ -384,13 +575,13 @@ Zusätzlich kann mit Jira die Arbeitszeit für jede Aufgabe von jedem Teammitgli
 
 
 
-#### **GitHub zur Verwaltung des Quellcodes**
+####  8.4.3. <a name='GitHubzurVerwaltungdesQuellcodes'></a>**GitHub zur Verwaltung des Quellcodes**
 
 Wenn in einem Team an einer Software entwickelt wird, ist eine Möglichkeit von Nöten, den Code über verschiedene Rechner hinweg synchron zu halten. Hierfür verwenden wir die Plattform GitHub, mit einem bereitgestellten Repository. Dieses enthält bereits bestimmte Automatisierungen, wie z.B. das Erstellen eines neuen Branches, sobald ein Issue den Status "In Progress" erhält. Durch diese Automatisierung ist es leicht möglich, zu erkennen, welches Mitglied gerade an welchem Feature arbeitet.
 
 
 
-#### **Meetings**
+####  8.4.4. <a name='Meetings-1'></a>**Meetings**
 
 Alle sechs Teammitglieder treffen sich pro Woche insgesamt drei Mal für Meetings:
 
@@ -408,7 +599,7 @@ Zusätzlich ist es nicht ausgeschlossen, dass sich einzelne Mitglieder zu Meetin
 
 <br>
 
-#### **Kommunikationswege**
+####  8.4.5. <a name='Kommunikationswege'></a>**Kommunikationswege**
 
 Grundsätzlich verwendet unser Team die folgenden Kommunikationswege:
 
@@ -418,13 +609,13 @@ Grundsätzlich verwendet unser Team die folgenden Kommunikationswege:
 
 
 
-### **Technische Anforderungen**
+###  8.5. <a name='TechnischeAnforderungen'></a>**Technische Anforderungen**
 
 Im Folgenden sollen die Anforderungen an das Projekt detailliert beschrieben und die technischen Mittel zur Umsetzung genannt werden.
 
 
 
-### **Frontend**
+###  8.6. <a name='Frontend-1'></a>**Frontend**
 
 Die Implementierung der geforderten Features für das Frontend erfolgt mit dem Framework React.js und der Sprache TypeScript. Für das Design wird dabei auf das CSS-Framework MaterialUI gesetzt. Damit unterscheidet sich die Umsetzung des Frontends in den verwendeten Technologien nicht zum Ursprungsprojekt.
 
@@ -529,7 +720,7 @@ In der Datenbank der Anwendung werden bei Durchläufen von Jobs detaillierte Log
 
 Diese Logs sollen sehr aussagekräftig sein, damit der Nutzer Fehler in seiner Konfiguration leicht finden kann. Bei Bedarf kann der Nutzer die Logs löschen, um Speicherplatz auf der Festplatte zurückzugewinnen. Dabei kann der Nutzer die Logs manuell löschen oder eine Regel festlegen, nach welcher Logs automatisiert gelöscht werden.
 
-#### **Backend**
+####  8.6.1. <a name='Backend-1'></a>**Backend**
 
 Das Backend wird ebenfalls in der Sprache, in welcher es begonnen wurde, weiterentwickelt. Dies bedeutet, dass für die Implementierung Python und für das Networking weiterhin Flask verwendet wird. Ziel ist es im Backend, ohne große Teile des Codes neu schreiben zu müssen, die geforderte Funktionalität umzusetzen. Bleibt der Code vollständig erhalten, so ist es sogar möglich, dass alle bisher erstellten Jobs verwendbar sind. Hauptsächlich muss im Backend dafür die Datenbank erweitert werden, und es müssen neue API-Endpunkte hinzugefügt werden.
 
@@ -638,29 +829,29 @@ Wie erkennbar sein sollte, wird mit den geplanten Erweiterungen versucht, so zu 
 
 
 
-### **Problemanalyse**
+###  8.7. <a name='Problemanalyse'></a>**Problemanalyse**
 
 
 
-#### **Mehraufwand des Frontends**
+####  8.7.1. <a name='MehraufwanddesFrontends'></a>**Mehraufwand des Frontends**
 
 Bei den beschriebenen Aufgaben fällt auf, dass das Frontend deutlich mehr Aufgaben hat als das Backend. Dies könnte dazu führen, dass das Frontend weitere Unterstützung benötigen könnte. In diesem Fall wäre es möglich einen Entwickler aus dem Backend in beide Teams zu verschieben. Dieser würde dann also als Art Schnittstelle dienen und immer dort helfen, wo gerade Hilfe benötigt wird.
 
 
 
-#### **Erstellung des Szeneneditors**
+####  8.7.2. <a name='ErstellungdesSzeneneditors'></a>**Erstellung des Szeneneditors**
 Da es kein passendes Framework für die Erstellung einer Szene mit unseren Anforderungen gibt, haben wir uns dazu entschieden, einen eigenen Editor zu entwickeln. Hierbei ist es gut möglich, dass es zu Verzögerungen in der Entwicklung kommt, da der Aufwand für diesen Editor nur schwer einschätzbar ist.
 
 <br>
 
 
-#### **Zeitmangel**
+####  8.7.3. <a name='Zeitmangel'></a>**Zeitmangel**
 
 Bei einem solchen Projekt ist es immer schwierig abzusehen, ob die gedachten Pläne sich auch wirklich so umsetzen lassen. Deshalb ist es theoretisch möglich, dass nicht alle Features implementiert werden können. In solch einem Fall ist es notwendig, dass die Arbeiten von einem späteren Team fortgeführt werden.
 
 
 
-### **Qualität**
+###  8.8. <a name='Qualitt'></a>**Qualität**
 
 1. Es soll ein universeller Einsatz auf allen Betriebssystemen durch die Architektur als Webseite möglich sein und bleiben.
 2. Sicherheit hat Priorität: Die API-Keys müssen zu jeder Zeit sicher aufbewahrt sein und dürfen nicht an die Öffentlichkeit gelangen.
@@ -669,19 +860,19 @@ Bei einem solchen Projekt ist es immer schwierig abzusehen, ob die gedachten Pl�
 
 
 
-#### **Qualitätskontrolle**
+####  8.8.1. <a name='Qualittskontrolle'></a>**Qualitätskontrolle**
 
 Als Qualitätskontrolle sollen Tests von jedem Teammitglied der Anwendung dienen und es sollen auch die automatisierten Tests erweitert werden.
 
 
 
-#### **Abnahmekriterien**
+####  8.8.2. <a name='Abnahmekriterien'></a>**Abnahmekriterien**
 
 Das Programm bietet die fehlerfreie Möglichkeit, Videos zu verschiedenen Themenbereichen zu generieren. Videos können von Nutzern einfach selbst erstellt werden, wobei grundlegendes Wissen von Nutzern in der IT vorausgesetzt wird.
 
 
 
-### **Projektentwicklung und Zeitplan**
+###  8.9. <a name='ProjektentwicklungundZeitplan'></a>**Projektentwicklung und Zeitplan**
 
 * 10.05.2021: Abschluss der Entwicklung des Infoproviders (Daten des Infoproviders können in die Datenbank eingetragen werden und zugehörige JSON-Objekte können erzeugt werden. Außerdem sollte die Historisierung von Daten auch möglich sein.)
 * 31.05.2021: Abschluss der Szenenerstellung
@@ -695,7 +886,7 @@ Die Dokumentation des Projekts soll simultan zur Implementierung erfolgen, damit
 
 
 
-### **Anhang**
+###  8.10. <a name='Anhang-1'></a>**Anhang**
 
 In diesem Anhang sind die Mockups der meisten Teile der Benutzeroberfläche zu finden. Es sei an dieser Stelle gesagt, dass die Mockups eher die Funktionalität und die Aufteilung wiederspiegeln. An der konkreten Gestaltung wird sich im Verlaufe des Projekts vermutlich durch hinzukommende Features noch einiges tun.
 
@@ -866,23 +1057,23 @@ Per Pop-Up kann der Nutzer die Texte für die TTS-Ausgabe editieren und dabei au
 
 Den Abschluss der Videoerstellung bildet die Auswahl der Zeitpunkte, an denen das Video generiert werden soll.
 
-## Anhang C: Protokolle / Statusberichte
+##  9. <a name='AnhangC:ProtokolleStatusberichte'></a>Anhang C: Protokolle / Statusberichte
 
-### Startbesprechung (08.04.2021)
+###  9.1. <a name='Startbesprechung08.04.2021'></a>Startbesprechung (08.04.2021)
 
-#### Aufgaben
+####  9.1.1. <a name='Aufgaben'></a>Aufgaben
 Wir haben festgelegt, dass bis zum nächsten Montag die folgenden Aufgaben von jedem Teammitglied erledigt werden sollten:
 1.	Jeder sollte sich einen Überblick darüber verschaffen, worum genau es bei einem Lastenheft geht, und welche Inhalte dieses umfassen sollte.
 2.	Die Aufgabenstellung des Projektes sollte von allen verstanden worden sein. Falls Fragen aufkommen sollten, können diese im Team gemeinsam besprochen werden.
 3.	Das bereits existierende Projekt sollte installiert / aufgesetzt werden, um sich damit auseinandersetzen zu können.
 4.	Jedes Mitglied sollte sich Notizen zum Entwurf eines Lastenhefts machen, damit am Montag eine gute Arbeit besser ermöglicht wird.
 
-#### Nächstes Treffen
+####  9.1.2. <a name='NchstesTreffen'></a>Nächstes Treffen
 Das nächste Treffen unseres Teams findet am Montag den 12.04.2021 um 09:30 Uhr statt. Ziel dieses Meetings wird es sein, einen ersten Entwurf für das Lastenheft zu entwerfen.
 
-### Sprintplanung (12.04.2021)
+###  9.2. <a name='Sprintplanung12.04.2021'></a>Sprintplanung (12.04.2021)
 
-#### Inhalt des Lastenhefts
+####  9.2.1. <a name='InhaltdesLastenhefts'></a>Inhalt des Lastenhefts
 Während des Meetings wurden für das Lastenheft die folgenden Punkte festgehalten. Diese umfassen dabei die zu implementierenden Features, welche nach „Must have“, „Nice to have“ und „If time allows“ sortiert werden sollen. Teilweise ist dies in der nachfolgenden Auflistung bereits passiert.
 * Infoprovider sollen mit API-Request, eigenem Schlüssel, Datenhistorisierung und Formeln aus den vorhandenen Attributen erstellt werden können
 * Videos mit einem Editor aus mehreren Szenen erstellen
@@ -894,46 +1085,46 @@ Während des Meetings wurden für das Lastenheft die folgenden Punkte festgehalt
 * Rechenaufgaben generieren (If-Time-Allows)
 * Infoprovider und Videovorlagen als JSON-Format exportieren / importieren (Nice-To-Have)
 
-#### Konfigurationsdatei
+####  9.2.2. <a name='Konfigurationsdatei'></a>Konfigurationsdatei
 Um den bisherigen Stand der Entwicklung vollständig testen zu können, besorgt Daniel Spengler die Konfigurationsdatei für das Projekt, in welcher die bisherigen API-Keys stehen.
 
-#### Entwicklerteam
+####  9.2.3. <a name='Entwicklerteam'></a>Entwicklerteam
 Im Meeting wurden die 6 Teammitglieder auf Front- und Backend verteilt, wobei hierbei die Interessen der Einzelnen berücksichtigt wurden.
 * Frontend: Janek Berg, Tristan Wolfram, Philipp Helfenritter
 * Backend: Tim Schwabe, Sören Clausen, Daniel Spengler
 
-#### Aufgaben
+####  9.2.4. <a name='Aufgaben-1'></a>Aufgaben
 Für den kommenden Sprint wurden die Folgenden Aufgaben definiert und in ihre Zuständigkeitsbereiche unterteilt.
 
-#### Aufgaben des Frontends
+####  9.2.5. <a name='AufgabendesFrontends'></a>Aufgaben des Frontends
 * React beibringen
 * Recherche für ein passendes Framework, um einen Videoeditor einzubinden
 * Mockups erstellen
 * Farbkonzept für die Mockups erstellen
 
-#### Backend-Aufgaben
+####  9.2.6. <a name='Backend-Aufgaben'></a>Backend-Aufgaben
 * Die Benutzung von FFMPEG in der bisherigen Anwendung analysieren
 * Recherche für einen sinnvollen Einsatz von Web-Scrapern
 * Teile der aktuellen API und Datenbank auf Wiederverwendbarkeit überprüfen
 * Heraussuchen von APIs, welche zum Testen der entstehenden Anwendung verwendet werden können.
 
-#### Generell
+####  9.2.7. <a name='Generell'></a>Generell
 * Einen Durchlauf der Anwendung visualisieren (Janek Berg)
 * Regelwerk für Projektzeitenerfassung erstellen und Einarbeitung in Jira (Daniel Spengler)
 
-#### Aufteilung der einzelnen Aufgaben
+####  9.2.8. <a name='AufteilungdereinzelnenAufgaben'></a>Aufteilung der einzelnen Aufgaben
 Die Front- und Backend-Aufgaben werden in den jeweiligen Teams in Eigenverantwortung aufgeteilt. Andere Aufgaben werden von den Personen erledigt, deren Namen in Klammern hinter der jeweiligen Aufgabe stehen.
 
-#### Nächste Termine
+####  9.2.9. <a name='NchsteTermine'></a>Nächste Termine
 * Donnerstag 09:45 Uhr: Treffen mit Prof. Dr. Kammer für die aktuelle Besprechung und offene Fragen
 * Freitag 17:00 Uhr: Sprint-Retrospektive
 * Montag 08:00 Uhr: Sprint-Planning
 
-### Statusbericht (16.04.2021)
+###  9.3. <a name='Statusbericht16.04.2021'></a>Statusbericht (16.04.2021)
 
 Thema: Vorstellung der Mockups und Informationen über das Backend
 
-#### Zusammenfassung
+####  9.3.1. <a name='Zusammenfassung'></a>Zusammenfassung
 
 Das Team des Frontends hat Mockups, zu den meisten Oberflächen erstellt und diese vorgestellt. Das restliche Entwicklerteam hatte keine Kritik an diesen Mockups, sodass nun die Gestaltung des Farbkonzepts angegangen werden kann. Dieses soll zeitlich so fertig werden, dass die Abbildungen in das Pflichtenheft aufgenommen werden können. Damit dies möglich ist, hat sich Sören Clausen bereit erklärt über das Wochenende am Farbdesign zu helfen. Außerdem hat jedes Mitglied des Frontend-Teams sich in React eingearbeitet und führt die Einarbeitung nun, durch das erlernen von Type Script, fort.
 
@@ -941,7 +1132,7 @@ Das Backend-Team hat auch Fortschritte gemacht und ist dabei sich in den bestehe
 
 
 
-#### Aufgaben bis zum nächsten Meeting
+####  9.3.2. <a name='AufgabenbiszumnchstenMeeting'></a>Aufgaben bis zum nächsten Meeting
 
 Bis zum Meeting am Montag den 18.04.2021 sollen die folgenden Dinge erledigt werden:
 
@@ -950,22 +1141,22 @@ Bis zum Meeting am Montag den 18.04.2021 sollen die folgenden Dinge erledigt wer
 * Farbdesign der Mockups ausarbeiten (Frontend-Team + Sören Clausen)
 * Bearbeiten des Lastenhefts (Daniel Spengler)
 
-#### Nächstes Meeting
+####  9.3.3. <a name='NchstesMeeting'></a>Nächstes Meeting
 
 Unser nächstes Meeting findet am 19.04.2021 statt. In diesem sollen kurz die Ergebnisse vom Wochenende zusammengetragen werden und der Plan für die nächste Woche erstellt werden.
 
-### Sprintplanung (19.04.2021)
+###  9.4. <a name='Sprintplanung19.04.2021'></a>Sprintplanung (19.04.2021)
 
 Thema: Besprechung der Ergebnisse vom Wochenende und Vergabe von weiteren Aufgaben.
 
-#### Zusammenfassung
+####  9.4.1. <a name='Zusammenfassung-1'></a>Zusammenfassung
 
 Am Wochenende hat Sören Clausen einen ersten Entwurf für das Farbdesign der App angefertigt, welches heute präsentiert wurde. Grundsätzlich hat das Team keine Einwände gegen das Farbdesign. Allerdings muss dieses noch weiter ausgearbeitet werden. Dies ist eines der Ziele für die laufende Woche.
 
 Weiterhin haben wir uns darauf geeinigt, dass Daniel Spengler die Notizen zum Pflichtenheft veröffentlicht, damit dazu unter Berücksichtigung der Kommentare des restlichen Teams, in der laufenden Woche ein erster Entwurf entstehen kann.
 
 
-#### Aufgaben für den Sprint
+####  9.4.2. <a name='AufgabenfrdenSprint'></a>Aufgaben für den Sprint
 
 Am Ende dieses Sprints soll ein geeignetes Datenbankmodell, so wie ein Prototyp des Erstellungsprozesses des Infoproviders vorliegen. Um dem Ende der Planungsphase näher zu kommen, ist es weiterhin wichtig einen ersten Entwurf für das Pflichtenheft zu erstellen. Hierzu werden die folgenden Aufgaben definiert.
 
@@ -990,19 +1181,19 @@ Am Ende dieses Sprints soll ein geeignetes Datenbankmodell, so wie ein Prototyp 
 * Es soll ein erster Entwurf für das Pflichtenheft entstehen. (Daniel)
 * Die User-Stories für das Projekt sollen in Jira übertragen werden. (Daniel)
 
-#### Nächstes Meeting
+####  9.4.3. <a name='NchstesMeeting-1'></a>Nächstes Meeting
 
 Am Donnerstag um 09:45 Uhr gibt es eine Besprechung mit Prof. Dr. Kammer. Eventuell müssen wir hier aber nicht alle anwesend sein. Das nächste verpflichtende Meeting findet dann am Freitag um 17:00 Uhr statt.
 
-### Fortschrittsbesprechung (23.04.2021)
+###  9.5. <a name='Fortschrittsbesprechung23.04.2021'></a>Fortschrittsbesprechung (23.04.2021)
 
 Thema: Besprechung der bisherigen Ergebnisse und Klärung von Problemen.
 
-#### Zusammenfassung
+####  9.5.1. <a name='Zusammenfassung-1'></a>Zusammenfassung
 
 Sowohl das Front-, als auch das Backend-Team haben ihre Ergebnisse für diese Woche vorgestellt. Dabei ist im Frontend der Infoprovider schon in guten Teilen implementiert. Das Backend konnte zwar noch nicht mit der Implementierung beginnen, konnte aber grundlegende Dinge klären, welche den Arbeitsaufwand deutlich reduzieren, da das bisherige Backend vollständig übernommen werden kann, und im Grunde nur erweitert werden muss. Außerdem konnte das Backend-Team einen ersten Entwurf der erweiterten Datenbank vorstellen, gegen welchen das restliche Team nicht groß etwas einzuwenden hat. Es ist jedoch angemerkt worden, dass eine Szene mehrere Bilder beinhalten können soll. Dies erfordert eine kleinere Änderung im vorgestellten Modell. Da die Datenbank hier auch nur erweitert wird und die bisherigen Tabellen nicht umstrukturiert werden, ist eine Rückwärtskompatibilität auch bei Hinzufügen der neuen Tabellen möglich.
 
-#### Diskutierte Probleme
+####  9.5.2. <a name='DiskutierteProbleme'></a>Diskutierte Probleme
 
 ##### Array als Wert in einem JSON-Objekt
 
@@ -1015,23 +1206,23 @@ Wenn beispielsweise die Github-Jobs-API nach möglichen Jobs abgefragt wird, lie
 In der bisherigen Anwendung werden API-Schlüssel in einer privaten config.json gespeichert. Auf den zugehörigen Namen wurde dann von den Themenkonfigurationen zugegriffen. Wir haben uns entschieden den angegebenen API-Key mit einem Zufalls-String als Namen in dieser Konfigurationsdatei zu speichern, sobald der Infoprovider vom Nutzer final angelegt wird. Dadurch entsteht zwar grundsätzlich die Möglichkeit API-Keys doppelt zu speichern, jedoch ist es leichter API-Keys aus der Konfiguration zu entfernen, wenn ein Infoprovider gelöscht wird.
 
 
-#### Weitere Aufgaben
+####  9.5.3. <a name='WeitereAufgaben'></a>Weitere Aufgaben
 
 Es wurden für das Wochenende keine Aufgaben verteilt. Jedoch werden Sören Clausen und Tim Schwabe weiter den Aufbau der Themenkonfigurationsdatei analysieren, um so die Details dieser Datei zu erfassen. Dies ist von substantieller Bedeutung, da die am Ende entstehende Datei eines Jobs den bisherigen Dateiformaten entsprechen muss. Andernfalls ist ein großer Umbau im Backend notwendig, welcher vermutlich zeitlich nicht in diesem Projekt zu bewältigen ist.
 
 Daniel Spengler wird außerdem die restlichen Beziehungen im Datenbankmodell ergänzen, damit dieses im Pflichtenheft vorgewiesen werden kann.
 
-### Sprintplanung (26.04.2021)
+###  9.6. <a name='Sprintplanung26.04.2021'></a>Sprintplanung (26.04.2021)
 
 Thema: Sprintplanung für VW4
 
-#### Zusammenfassung
+####  9.6.1. <a name='Zusammenfassung-1'></a>Zusammenfassung
 
 Insgesamt wurden die Ziele der letzten Woche größtenteils erreicht. Dabei ist der Infoprovider zwar noch nicht vollständig fertig, allerdings schon in gewissen Teilen. Die Aufgabe, einen Prototypen für API-Abfragen zu erstellen, wurde nicht direkt gelöst, allerdings ist den Entwicklern klar, an welchen Stellen sie für die Erweiterung ansetzen müssen. Für das Frontend steht noch kein eindeutiger Canvas-Editor fest, mit welchem die Szenen erstellt werden sollen. Im Team wurde sich nun allerdings darauf geeinigt, dass bis Dienstag / Mittwoch eine Lösung bereitstehen muss, damit diese in das Pflichtenheft mitaufgenommen werden kann. Weiterhin wurden die Aufgaben für die kommende Woche für Back- und Frontend aufgeteilt. Im Groben ist es das Idealziel, den Infoprovider spätestens im Laufe der nächsten Woche abzuschließen. Dafür sollen im Laufe dieser Woche die meisten Grundbausteine gelegt werden.
 
 Zusätzlich soll ein erster Entwurf für das Pflichtenheft entstehen, welcher Herrn Kammer eingereicht werden kann.
 
-#### Aufgaben der aktuellen Woche
+####  9.6.2. <a name='AufgabenderaktuellenWoche'></a>Aufgaben der aktuellen Woche
 
 ##### Frontend
 * Formeleditor: Entscheidung für eigene Implementierung oder Framework gefolgt von passender Umsetzung
@@ -1056,68 +1247,68 @@ Zusätzlich soll ein erster Entwurf für das Pflichtenheft entstehen, welcher He
 ##### Dokumentation
 * Ersten Entwurf für das Pflichtenheft fertigstellen
 
-#### Nächste Treffen
+####  9.6.3. <a name='NchsteTreffen'></a>Nächste Treffen
 
 * Donnerstag 09:45 Uhr: Treffen mit Herr Prof. Dr. Kammer
 * Freitag 17:00 Uhr: Besprechung des aktuellen Zwischenstands
 
-### Fortschrittsbesprechung (30.04.2021)
+###  9.7. <a name='Fortschrittsbesprechung30.04.2021'></a>Fortschrittsbesprechung (30.04.2021)
 
-#### Zusammenfassung
+####  9.7.1. <a name='Zusammenfassung-1'></a>Zusammenfassung
 
 Insgesamt sind diese Woche einige Fortschritte zu verzeichnen. So ist im Frontend die Erstellung des Infoproviders deutlich voran gekommen. Im Backend konnten allerdings auch einige Fortschritte erzielt werden, sodass die Fertigstellung des Infoproviders bald abgeschlossen sein sollte. Im Frontend wurde diese Woche zusätzlich entschieden, dass der Szeneneditor ohne ein Framework entwickelt wird, da es keines gibt, welches den Anforderungen bzw. Voraussetzungen, welche wir stellen, gerecht wird.
 
 Durch diese Feststellung steigt der Arbeitsaufwand im Frontend weiter an. Aufgrund des sich dadurch ergebenden Mehraufwands des Frontends im Gegensatz zum Backend, haben wir uns nun dazu entschlossen, Daniel Spengler dem Frontend-Team zuzuordnen, damit die Aufgaben insgesamt im Projekt gleichmäßiger verteilt werden können.
 
-#### Arrays als Daten
+####  9.7.2. <a name='ArraysalsDaten'></a>Arrays als Daten
 
 Wir haben uns dazu entschlossen, bei der Infoprovider-Erstellung zunächst immer das Element an dem Index 0 aus dem Array für die Weiterverarbeitung, beispielsweise in Formeln, zu wählen. Dies kann später noch angepasst werden, soll aber zunächst für erste Testzwecke so implementiert werden.
 
 
-#### Umfrage zur Zufriedenheit
+####  9.7.3. <a name='UmfragezurZufriedenheit'></a>Umfrage zur Zufriedenheit
 
 Die Teammitglieder haben eine Umfrage erhalten, an welcher sie anonymisiert teilnehmen können, um Kritik über das Projekt loszuwerden. Sollten hier Kritikpunkte gemeldet werden, so wird darüber in einer zukünftigen Sitzung gesprochen.
 
-#### Ziele
+####  9.7.4. <a name='Ziele'></a>Ziele
 Das Team des Backends hat geplant den API-Endpunkt für das registrieren neuer Infoprovider zur Verfügung zu stellen und das Schema der erweiterten Datenbank einzubinden. Im Frontend sollen die letzten Komponenten fertiggestellt werden, um eine erste Demo des gesamten Infoproviders vorlegen zu können. Später soll auf dieser Basis der Infoprovider noch erweitert werden.
 
 Daniel Spengler wird sich über das Wochenende in React einarbeiten, damit dieser ab der Woche vom 03.05. das Frontend bei der Entwicklung unterstützen kann.
 
-### Sprintplanung (03.05.2021)
+###  9.8. <a name='Sprintplanung03.05.2021'></a>Sprintplanung (03.05.2021)
 
-#### Zusammenfassung
+####  9.8.1. <a name='Zusammenfassung-1'></a>Zusammenfassung
 Die meisten Ziele der letzten Woche wurden erreicht. Lediglich die Gesamtübersicht für den Infoprovider und die Dokumentation des Frontends wurden auf diese Woche verschoben.
 
 Im Backend wurden über das Wochenende die meisten API-Endpunkte für den Infoprovider implementiert. Weiterhin wurden die passenden Queries für die Datenbank erstellt, und das Schema wurde ebenfalls erweitert.
 Im Frontend wurde weiterhin an Conva gearbeitet. Dieses Framework soll später für den Szeneneditor verwendet werden, da es eine Canvas-Funktionalität bereitstellt. Weiterhin wurde das Design des Infoproviders nahezu fertiggestellt.
 
-#### Aufgaben für die kommende Woche
+####  9.8.2. <a name='AufgabenfrdiekommendeWoche'></a>Aufgaben für die kommende Woche
 Da es viele kleinere Aufgaben gibt, sollen diese der Übersicht zu Gute hier nur zusammengefasst dargelegt werden. Die genauen Aufgaben werden auf dem Canban-Board von Jira veröffentlicht.
 
 Am Ende dieser Woche soll der Infoprovider in großen Teilen abgeschlossen sein, sodass eine erste Demo des Infoproviders im Grunde möglich ist. Dabei wird es noch einige kleine Features geben, welche durch das Pflichtenheft gefordert werden, aber noch nicht implementiert sind. Diese sollen zu einem späteren Zeitpunkt fertiggestellt werden. Neben der restlichen Implementierung sollen auch erste Tests und Dokumentationen zu den einzelnen Bereichen erfolgen.
 
-### Fortschrittsbesprechung (09.05.2021)
+###  9.9. <a name='Fortschrittsbesprechung09.05.2021'></a>Fortschrittsbesprechung (09.05.2021)
 
-#### Zusammenfassung
+####  9.9.1. <a name='Zusammenfassung-1'></a>Zusammenfassung
 Sowohl Back- als auch Frontend konnten beim heutigen Meeting gute Fortschritte präsentieren. Im Backend wurde die Datenbank angepasst und es wurden die benötigten API-Routen hinzugefügt. Außerdem hat sich das Backend-Team Gedanken darüber gemacht, welche Diagrammtypen unterstützt werden könnten.
 
 Im Frontend wurden die verbleibenden Schritte in einfacher Weise (es fehlen teils noch kleinere Features) implementiert. Dazu gehört die Zeitauswahl für die Historisierung und die Übersicht für die Infoprovider. Weiterhin wurden viele Fehler behoben, welche den Infoprovider und die zugehörigen Komponenten betroffen haben. Auch beim Canvas-Editor konnten Fortschritte erzielt werden. So ist es nun möglich Texte zu verschieben und zu vergrößern / verkleinern. Weiterhin gibt es Buttons zum Löschen des letzten Objektes oder zum Rückgängig machen der letzten Aktion.
 
 Das Frontend wird über das Wochenende hinweg den Branch zur Erstellung des Infoproviders in den Master mergen, sodass das neue Frontend in Kombination mit dem Backend getestet werden kann.
 
-#### Aufgaben für das Wochenende
+####  9.9.2. <a name='AufgabenfrdasWochenende'></a>Aufgaben für das Wochenende
 Janek wird sich mit der Implementierung der Diagramme im Frontend beschäftigen. Hierzu wird der Infoprovider um einen weiteren Schritt der Erstellung erweitert. Im Backend soll die Implementierung ebenfalls weitergehen und das restliche Frontend-Team will kleinere Verbesserungen am Infoprovider vornehmen.
 
 Außerdem soll spätestens nächste Woche eine Struktur für die Dokumentation unserer Version von VisuAnalytics entstehen, damit die einzelnen Dokumente zusammengetragen werden können.
 
-### Sprintplanung (10.05.2021)
+###  9.10. <a name='Sprintplanung10.05.2021'></a>Sprintplanung (10.05.2021)
 
-#### Zusammenfassung
+####  9.10.1. <a name='Zusammenfassung-1'></a>Zusammenfassung
 Grundsätzlich wurden die Ziele der letzten Woche alle erfüllt. Teilweise konnten sogar bereits Aufgaben begonnen werden, welche nicht auf der Liste der zu erledigenden Aufgaben standen, so z.B. das Umschreiben des Schedulers.
 
 Für diese Woche ist es u.a. das Ziel weitere Anpassungen am Infoprovider vorzunehmen, sodass dieser mit dem Backend gut zusammen funktioniert.
 
-#### Aufgaben für die Woche vom 10.05.2021 - 16.05.2021
+####  9.10.2. <a name='AufgabenfrdieWochevom10.05.2021-16.05.2021'></a>Aufgaben für die Woche vom 10.05.2021 - 16.05.2021
 Im Folgenden werden die Aufgaben nach Zuständigkeitsbereich aufgelistet. Dabei stellt die Auflistung, wie nun auch in Zukunft, keine vollständig detaillierte Liste dar, sondern lediglich einen groben Überblick.
 
 ##### Frontend
@@ -1135,18 +1326,18 @@ Einige Mockups müssen für das neue Pflichtenheft (Version 3) hinzugefügt oder
 
 Damit die Dokumentation der neuen Features geführt werden kann, soll ein neues Doku-Verzeichnis entstehen, welches die Wurzel der Dokumentation von Version 2 von VisuAnalytics bilden soll.
 
-### Fortschrittsbesprechung (14.05.2021)
+###  9.11. <a name='Fortschrittsbesprechung14.05.2021'></a>Fortschrittsbesprechung (14.05.2021)
 
-#### Zusammenfassung
+####  9.11.1. <a name='Zusammenfassung-1'></a>Zusammenfassung
 Im Frontend konnten weite Teile des Dashboards fertiggestellt werden. Es müssen lediglich noch wenige Funktionen und Design-Elemente angepasst werden. Gleichzeitig wurden viele Fortschritte in der Komponente für die Diagrammerstellung gemacht. Hier werden im Laufe der nächsten Woche noch kleinere Anpassungen vorgenommen, um diese Komponente abzuschließen. Der Szeneneditor hat auch weitere Fortschritte gemacht und enthält nun unter anderem die Möglichkeit, Objekte zu duplizieren, gezielt Objekte zu löschen und verschiedene Tools auszuwählen. Weiterhin wird in der Gesamtübersicht nun angezeigt, welche Historisierungszeitpunkte vom Nutzer ausgewählt wurden.
 
 Im Backend wurden auch weitere Anpassungen vorgenommen und Routen hinzugefügt. Hier soll viel Arbeit allerdings noch am Wochenende geschehen, da das Backend-Team unter der Woche wenig Zeit hatte.
 
 Das Dokumentationsverzeichnis wird von uns neu aufgebaut, da dass Alte gesichert werden kann und somit in der neuen Version nicht mehr von Nöten ist. Dies wurde dabei mit dem Teamleiter der ersten Version von VisuAnalytics so abgesprochen. Der genaue Aufbau der Dokumentation wird in den nächsten Tagen / Wochen dem Team in einem seperaten Dokument zur Verfügung gestellt, da dies im Grunde auch ein Teil der Dokumentation ist.
 
-### **Sprintplanung (17.05.2021)**
+###  9.12. <a name='Sprintplanung17.05.2021'></a>**Sprintplanung (17.05.2021)**
 
-#### **Zusammenfassung**
+####  9.12.1. <a name='Zusammenfassung-1'></a>**Zusammenfassung**
 Viele Ziele, welche für die vergangene Woche festgehalten wurden, konnten erreicht werden. Lediglich einige wenige Ziele passten der Zeit nach nicht mehr in die vergangene Woche:
 * Bearbeitung von Infoprovidern
 * Transformierung der Daten durch den Infoprovider in ein Format, welches für das Backend verständliches ist
@@ -1156,7 +1347,7 @@ Die Aufgaben werden diese Woche nachgeholt. Es werden allerdings auch weitere Au
 
 Über das Wochenende hinweg hat Philipp noch weiter am Szeneneditor geschrieben. Dieser enthält nun fast alle wichtigen Elemente. So ist es nun beispielsweise möglich Hintergrundfarben und Bilder zu verwenden, sowie einen Text in seiner Schriftgröße und Farbe zu verändern.
 
-#### **Aufgaben**
+####  9.12.2. <a name='Aufgaben-1'></a>**Aufgaben**
 
 ##### **Frontend**
 Diese Woche sollen im Frontend die neu entstandenen Teile der letzten Woche einem Review unterzogen werden und anschließend auch in den Master gemerged werden. Weiterhin soll die Diagrammerstellung abgeschlossen werden und es soll möglich werden, einem Infoprovider mehrere Datenquellen hinzuzufügen. Auch das Dashboard soll abgeschlossen werden. Von dort aus soll nun eine Möglichkeit gegeben werden, die bestehenden Infoprovider zu bearbeiten.
@@ -1169,9 +1360,9 @@ Im Backend soll diese Woche der Scheduler auf Korrektheit getestet werden. Weite
 ##### **Generelles**
 In dieser Woche soll die vierte Version des Pflichtenhefts entstehen. Dieses soll die Änderungswünsche von Herrn Prof. Dr. Kammer enthalten. Das Ziel ist es, dass Pflichtenheft mit dieser Version zum Abschluss zu bringen.
 
-### Fortschrittsbesprechung (21.05.2021)
+###  9.13. <a name='Fortschrittsbesprechung21.05.2021'></a>Fortschrittsbesprechung (21.05.2021)
 
-#### Zusammenfassung
+####  9.13.1. <a name='Zusammenfassung-1'></a>Zusammenfassung
 Im Backend wurde der neue Scheduler fertiggestellt und getestet. Diagramme können ebenfalls vom Backend mit angegebenen Daten generiert werden, d.h. sobald dieser Teil auch im Frontend abgeschlossen ist, sollten Diagramme nutzbar sein. Der Umbau der gespeicherten Daten im Frontend für den Infoprovider muss allerdings neu gemacht werden, da hier die zugehörigen Methoden falsch verstanden wurden. Damit wird nun allerdings gewartet, bis im Frontend die Auswahl mehrerer APIs fertig ist, um somit sicher zu gehen, dass die neue Methode auch mit mehreren Datenquellen funktioniert.
 
 Im Frontend wurden hauptsächlich verschiedene Fehler behoben. Ein großes Problem war dabei die bisherige Methode, mit welcher Daten vom Backend angefragt wurden. Diese funktioniert für unsere Anforderungen in den meisten Fällen nicht. Dies sorgte diese Woche für ein hohes Maß an Frustration.
@@ -1179,17 +1370,17 @@ Der Szeneneditor und die Erstellung von Diagrammen im Frontend hat ebenfalls For
 Die Auswahl von mehreren Datenquellen für einen Infoprovider wurde nun auch implementiert und funktioniert soweit. Lediglich das Design muss an einigen Stellen ausgebessert werden.
 Die Dokumentation für das Frontend wurde ebenfalls erweitert, sodass einige der neuen Komponenten in dieser bereits enthalten sind.
 
-#### Aufgaben für das Wochenende
+####  9.13.2. <a name='AufgabenfrdasWochenende-1'></a>Aufgaben für das Wochenende
 Am Wochenende wird noch die Bearbeitung von Infoprovidern begonnen. Außerdem wird noch am Szeneneditor weitergearbeitet.
 
-### Planungsmeeting (24.05.2021)
+###  9.14. <a name='Planungsmeeting24.05.2021'></a>Planungsmeeting (24.05.2021)
 
-#### Zusammenfassung
+####  9.14.1. <a name='Zusammenfassung-1'></a>Zusammenfassung
 Es konnten wieder einige Ziele der letzten Woche erreicht werden. Bei einigen Punkten, wird allerdings im Laufe dieser Woche noch nachgebessert, damit die Features fehlerfrei implementiert und wie geplant eingebaut sind.
 
 Über das Wochenende hinweg wurde noch die Bearbeitung des Infoproviders begonnen und der Szeneneditor fortgeführt. In diesem ist es nun auch möglich, Daten von Infoprovidern einzupflegen. Dazu werden die entsprechenden Textstellen mit Unterstrichen getagged.
 
-#### Aufgaben
+####  9.14.2. <a name='Aufgaben-1'></a>Aufgaben
 
 ##### Frontend
 Im Frontend soll diese Woche die Bearbeitung des Infoproviders fortgeführt werden. Gleichzeitig soll die Komponente für die Diagrammerstellung zum Review freigegeben und auch durchgeschaut werden. Außerdem soll es möglich werden, die angelegten Datenquellen wieder zu löschen und auch an das Backend zu senden, um diese abzuspeichern. Weiterhin sollen viele kleinere Bugs behoben werden. Schließlich soll auch der Szeneneditor weitergeführt werden und in das Repository übertragen werden.
@@ -1202,35 +1393,35 @@ Diese Woche wird vom Teamleiter eine grobe Struktur für die Zwischenpräsentati
 
 Nach diesen Meetings soll die Struktur finalisiert werden, damit anschließend an der Präsentation selbst gearbeitet werden kann.
 
-### Fortschrittsbesprechung (28.05.2021)
+###  9.15. <a name='Fortschrittsbesprechung28.05.2021'></a>Fortschrittsbesprechung (28.05.2021)
 
-#### Zusammenfassung
+####  9.15.1. <a name='Zusammenfassung-1'></a>Zusammenfassung
 Das Backend hat den Scheduler so umgestellt, dass dieser mit mehreren API-Quellen umgehen kann. Außerdem wurde die Diagramm-Funktion so angepasst, dass das Backend die vom Frontend gesendeten Daten versteht.
 Weiterhin wurden Absprachen getroffen, wie erstellte Szenen im Backend behandelt werden, bzw. wie diese an das Backend gesendet werden.
 
 Im Frontend wurde die Bearbeitung des Infoproviders fortgeführt und es wurden viele kleinere Dinge korrigiert. Einer der Bugs hatte dabei mit zyklischen Strukturen zu tun, weshalb das nachfolgend beschriebene Pattern für die weitere Entwicklung im Frontend verwendet werden soll:
 Jeder Typ, der in mehreren Komponenten verwendet wird, wird nun nicht mehr in einer Oberkomponente mittels `export` definiert, sondern zusammen mit anderen Typen in eine eigene Datei geschrieben. Jede Komponente, die diesen Typen verwenden will, importiert diesen dann aus der Datei. Dadurch können zyklische Strukturen vermieden werden.
 
-#### Stand der Zwischenpräsentation
+####  9.15.2. <a name='StandderZwischenprsentation'></a>Stand der Zwischenpräsentation
 Es sind alle Gespräche abgeschlossen und die Themen wurden verteilt. Bis Anfang der nächsten Woche soll jedes Teammitglied sich Notizen zu seinem Thema machen. Diese sollen dem Teamleiter zugesendet werden, sodass sie ohne große Probleme auf eine Powerpoint-Präsentation übertragen werden können. Dabei umfassen die Notizen auch die zugehörigen Abbildungen.
 
 Vor dem abschicken sollte jedes Teammitglied durch Vorsprechen überprüfen, ob die angestrebten Inhalte in drei Minuten zu erklären sind. So soll ein späterer Umbau der Präsentation umgangen werden.
 
-#### Aufgaben für das Wochenende
+####  9.15.3. <a name='AufgabenfrdasWochenende-1'></a>Aufgaben für das Wochenende
 Der bisherige Diagramm-Branch soll nach den geschehenen Code-Reviews gemerged werden. Weiterhin soll im Backend begonnen werden, die Methode zu entwerfen, welche dazu verwendet werden soll, um die Daten des Frontends so umzubauen, dass das Backend das Format für die spätere Verwendung versteht. Falls noch Zeit ist, werden die bereits implementierten Routen für die Diagramme auch im Zusammenspiel mit dem Frontend getestet.
 
 Außerdem wollen einige Mitglieder über das Wochenende ihre Notizen zur Präsentation bereits erstellen.
 
-### Sprintplanung (31.05.2021)
+###  9.16. <a name='Sprintplanung31.05.2021'></a>Sprintplanung (31.05.2021)
 
-#### Zusammenfassung
+####  9.16.1. <a name='Zusammenfassung-1'></a>Zusammenfassung
 Insgesamt konnten alle Aufgaben für die letzte Woche erfüllt werden. Der Szeneneditor wurde zwar noch nicht in das Projekt integriert, dies wird aber zu Beginn dieser Woche nachgeholt werden.
 
 In dieser Woche soll der Infoprovider fertiggestellt werden, d.h. eine Kommunikation zwischen Back- und Frontend wird möglich. Gleichzeitig soll die Bearbeitung des Infoproviders fortgeführt, und der Szeneneditor in das Hauptprojekt transferiert werden.
 
 Die Transformierung, welche in den letzten Protokollen angedacht wurde, ist nun nicht mehr notwendig und kann daher ignoriert werden. Weiterhin haben wir uns im Team darauf geeinigt, Arrays bei der Datenauswahl zunächst so zu behandeln, wie dies bisher von uns implementiert wurde. Dies bedeutet, dass bei Arrays immer zuerst der Index 0 ausgewählt wird, und der Nutzer daran selbst nichts ändern kann. Sollte am Ende des Projektes noch Zeit sein, die Funktionalität dahingehend zu erweitern, so wird dies gemacht.
 
-#### Aufgaben
+####  9.16.2. <a name='Aufgaben-1'></a>Aufgaben
 
 ##### Frontend
 Im Frontend werden diese Woche noch die restlichen Bugs gefixt, welche in den letzten Wochen aufgefallen sind. Gleichzeitig wird eine Möglichkeit gegeben, erstellte Datenquellen noch vor dem versenden an das Backend wieder zu löschen. Außerdem muss die Methode geschrieben werden, welche die Struktur des Frontends in eine für das Backend lesbare Struktur übersetzt. Nachdem auch die Diagramme dann auf mehrere Datenquellen umfunktioniert wurden, ist der Infoprovider in seiner Erstellung abgeschlossen.
@@ -1245,16 +1436,16 @@ Außerdem soll geschaut werden, in welcher Form das Backend bereits die bedingte
 ##### Präsentation
 Im Laufe des heutigen Tages oder des morgigen Tages, sollen die Notizen für die Zwischenpräsentation von allen Teammitgliedern fertiggestellt werden. Mit diesen Notizen werden Sören und Daniel diese Woche die Powerpoint-Präsentation erstellen. Ziel ist es, dass diese im Laufe der Woche entweder via Slack bereitgestellt, oder auf der Fortschrittsbesprechung gezeigt werden kann.
 
-### Wochenfortschritt (04.06.2021)
+###  9.17. <a name='Wochenfortschritt04.06.2021'></a>Wochenfortschritt (04.06.2021)
 
-#### Zusammenfassung
+####  9.17.1. <a name='Zusammenfassung-1'></a>Zusammenfassung
 Bisher wurden die restlichen Bugs im Frontend gefixt und der Szeneneditor wurde größtenteils in das eigentliche Projekt übertragen. Hier gibt es aber noch kleinere Probleme, wenn das Frontend zusammen mit dem Backend gestartet wird. Weiterhin wurden die Diagramme auf mehrere Datenquellen erweitert, und es wurde eine Methode geschrieben, welche einen Infoprovider an das Backend senden kann. Diese Methode muss jedoch noch getestet werden.
 
 Das Backend hat ebenfalls seine Aufgaben größtenteils erfüllt. Über das Wochenende wurde die Aufgabe erteilt, die erwähnte Methode zum senden von Infoprovidern aus dem Frontend zu testen, damit bei Fehlern nächste Woche noch daran gearbeitet werden kann.
 
 Weiterhin wurde der erste Entwurf der Zwischenpräsentation vorgestellt, welcher nur kleineren Verbesserungen unterzogen werden muss.
 
-#### Aufgaben für das Wochenende
+####  9.17.2. <a name='AufgabenfrdasWochenende-1'></a>Aufgaben für das Wochenende
 
 ##### Frontend
 Über das Wochenende hinweg soll nach Möglichkeit ein "Löschen"-Button für Datenquellen implementiert werden. Wenn dieser allerdings erst nächste Woche gemacht wird, wäre dies auch nicht schlimm.
@@ -1265,16 +1456,16 @@ Das Backend soll über das Wochenende hinweg primär testen, ob das Übersenden 
 ##### Zwischenpräsentation
 Über das Wochenende hinweg soll die Zwischenpräsentation mit den Anmerkungen des Teams überarbeitet werden. Hierzu sind vor allem kleinere Anpassungen in der Rechtschreibung oder Formulierung zu machen. Weiterhin sind einige wenige Screenshots hinzuzufügen bzw. zu bearbeiten.
 
-### Sprintplanung (07.06.2021)
+###  9.18. <a name='Sprintplanung07.06.2021'></a>Sprintplanung (07.06.2021)
 
-#### Zusammenfassung
+####  9.18.1. <a name='Zusammenfassung-1'></a>Zusammenfassung
 Über das Wochenende hinweg ist die Dokumentation zum Dashboard und zur Bearbeitung des Infoproviders größtenteils fertiggeworden. Außerdem wurde die Integration des Szeneneditors in das Hauptprojekt fortgeführt. Diese soll diese Woche abgeschlossen werden und die restlichen Bugs sollen korrigiert werden. Auch ist es nun möglich bei der Erstellung von Infoprovidern Datenquellen wieder zu löschen. Eine Bearbeitung von bestehenden Quellen während der Erstellung ist nicht umgesetzt und auch nicht geplant.
 
 Im Backend wurden die Routen für die restlichen Features weitergeführt, sind aber noch nicht abgeschlossen.
 
 Auch wurde die Zwischenpräsentation bereits in Teilen überarbeitet und soll bis zum 08.06.2021 vollständig überarbeitet sein, um diese Herrn Kammer präsentieren zu können. Auch wurde eine Übersicht der erledigten und noch offenen Aufgaben für diese Woche erstellt, um abzuschätzen, welche Aufgaben noch machbar sind. Die Erstellung des Dokuments wurde deshalb in Auftrag gegeben, da vom Team eine Übersicht benötigt wurde, um einen Fokus setzen zu können. Dadurch soll das Projekt mit einem runden Abschluss abgegeben werden können.
 
-#### Aufgaben für die aktuelle Woche
+####  9.18.2. <a name='AufgabenfrdieaktuelleWoche'></a>Aufgaben für die aktuelle Woche
 
 ##### Frontend
 Im Frontend soll vorrangig die Bearbeitung von Infoprovidern abgeschlossen werden und die zugehörige Dokumentation soll in großen Teilen abgeschlossen werden. Gleichzeitig sollen die bisherigen Änderungen geprüft und zum Merge freigegeben werden. Auch soll der Szeneneditor diese Woche möglichst fertiggestellt werden.
@@ -1282,16 +1473,16 @@ Im Frontend soll vorrangig die Bearbeitung von Infoprovidern abgeschlossen werde
 ##### Backend
 Das Backend wird diese Woche vorrangig Funktionstests durchführen (auch zusammen mit der Frontend-Komponente). Dabei werden insbesondere die programmierten Routen getestet. Auch soll vom Backend her geschaut werden, ob es möglich ist, Bilder als BLOP zur versenden. Weiterhin  soll dem Frontend das Datenformat für die Erstellung von Videos zur Verfügung gestellt werden.
 
-### Fortschrittsbesprechung (11.06.2021)
+###  9.19. <a name='Fortschrittsbesprechung11.06.2021'></a>Fortschrittsbesprechung (11.06.2021)
 
-#### Zusammenfassung
+####  9.19.1. <a name='Zusammenfassung-1'></a>Zusammenfassung
 Die Aufgaben der Woche wurden größtenteils bereits erfüllt. Lediglich manche Reviews müssen noch durchgeführt werden und einige wenige Komponenten sind für die Bearbeitung des Infoproviders noch von Nöten. Der Szeneneditor hat ebenfalls Fortschritte gemacht, konnte allerdings noch nicht vollständig fertiggestellt werden.
 
 Selbst ein erster Entwurf für einen Videojob-Editor wurde erstellt. Dieser muss allerdings zunächst ohne Drag & Drop funktionieren, da hier die Frameworks für React und Type-Script allesamt massive Bugs aufweisen.
 
 Das Backend hat seine Aufgaben, welche es geplant hatte, erledigt und arbeitet weiter an den Routen, um neu hochgeladene Bilder speichern zu können.
 
-#### Aufgaben für das Wochenende
+####  9.19.2. <a name='AufgabenfrdasWochenende-1'></a>Aufgaben für das Wochenende
 
 ##### Frontend
 Hier wird die Bearbeitung am Wochenende größtenteils fertiggestellt. Nächste Woche soll hier lediglich die Komponente für Basiseinstellungen hinzukommen, um die Bearbeitung abschließen zu können. Auch werden noch einige Reviews vorgenommen. Weiterhin sollen die Bugs im Szeneneditor korrigiert werden, welche momentan noch vorhanden sind.
@@ -1299,14 +1490,14 @@ Hier wird die Bearbeitung am Wochenende größtenteils fertiggestellt. Nächste 
 ##### Zwischenpräsentation
 Bis Montagabend soll die Version der Präsentation fertig sein, welche auch für die Zwischenpräsentation verwendet wird. Dafür sollen über das Wochenende hinweg die einzelnen Anmerkungen von Herrn Kammer in die Präsentation mitaufgenommen werden. Sören wird die Präsentation größtenteils bearbeiten, benötigt aber dafür die Screenshots der einzelnen Teammitglieder. Diese sollten deshalb bis spätestens Montagmorgen fertiggestellt sein.
 
-### Planungsmeeting (14.06.2021)
+###  9.20. <a name='Planungsmeeting14.06.2021'></a>Planungsmeeting (14.06.2021)
 
-#### Zusammenfassung
+####  9.20.1. <a name='Zusammenfassung-1'></a>Zusammenfassung
 Über Das Wochenende hinweg wurde der Szeneneditor größtenteils an das Design des aktuellen Frontends angepasst. Hierbei müssen nun nur noch kleinere Dinge angepasst werden. Ebenfalls wurde die Bearbeitung von historisierten Daten implementiert. Dabei ist ein Bug aufgefallen, bei welchem in `EditDataSelection` fälschlicherweise angezeigt wird, dass sich API-Daten verändert haben und die bisherige Auswahl verloren geht, obwohl sich nichts zur ursprünglichen API geändert hat.
 
 Auch wurde am Wochenende der Code reviewt, welcher die Funktion bereitstellt, neue Datenquellen bei der Bearbeitung hinzuzufügen.
 
-#### Aufgaben für die aktuelle Woche
+####  9.20.2. <a name='AufgabenfrdieaktuelleWoche-1'></a>Aufgaben für die aktuelle Woche
 
 ##### Frontend
 Im Frontend soll an verschiedenen Stellen weitergearbeitet werden, welche hier grob skizziert werden:
@@ -1323,29 +1514,29 @@ Im Backend sollen die Routen für Szenen fertiggestellt werden und es sollen ein
 ##### Zwischenpräsentation
 Bis heute Abend soll der finale Entwurf für die Zwischenpräsentation fertiggestellt werden. Gleichzeitig hat jedes Teammitglied die Aufgabe seinen eigenen Präsentationsteil zu üben. Am Dienstag um 09:30 Uhr wird die Präsentation dann zusammen geübt. Sollte diese Generalprobe gut funktionieren, so kann die Vorbereitung der Zwischenpräsentation als abgeschlossen betrachtet werden.
 
-### Fortschrittsbesprechung (18.06.2021)
+###  9.21. <a name='Fortschrittsbesprechung18.06.2021'></a>Fortschrittsbesprechung (18.06.2021)
 
-#### Zusammenfassung
+####  9.21.1. <a name='Zusammenfassung-1'></a>Zusammenfassung
 Die vergangene Woche steht im Zeichen der Zwischenpräsentation. Für diese wurde diese Woche viel Zeit investiert, um diese gut vortragen zu können. Dabei wurden viele Bugs und Test-Buttons behoben, damit die Benutzeroberfläche einen guten Eindruck machen kann. Weiterhin wurde an vielen Fehlern gearbeitet, welche nicht zwangsläufig für die Präsentation wichtig waren, jedoch trotzdem behoben werden sollten.
 
 Aber auch Feature-seitig wurde weiterhin gearbeitet. So ist die Einbindung der Komponente zum Bearbeiten der Basiseinstellungen bei der Editierung eines Infoproviders fast fertig. Das Backend hat außerdem die Routen für Szenen und Videos fertiggestellt. Hier ist es ebenfalls bereits möglich, Videos mit der neuen modularisierten Datenstruktur zu erstellen.
 
-#### Aufgaben für das Wochenende
+####  9.21.2. <a name='AufgabenfrdasWochenende-1'></a>Aufgaben für das Wochenende
 
 ##### Frontend
 Im Frontend soll die Editierung der Basiseinstellungen fortgesetzt und der Szeneneditor soll weiter implementiert werden. Gleichzeitig soll die Doku zu den Bug-Fixes erstellt werden, die diese Woche gemacht wurden.
 
-#### Ergebnis der Zwischenpräsentation
+####  9.21.3. <a name='ErgebnisderZwischenprsentation'></a>Ergebnis der Zwischenpräsentation
 Das Team ist zufrieden mit dem Ergebnis der Zwischenpräsentation und nimmt das Feedback auf jeden Fall mit in die Endpräsentation. Die Arbeit an dieser soll in ca. 1,5 Wochen begonnen werden.
 
-### Planungsmeeting (21.06.2021)
+###  9.22. <a name='Planungsmeeting21.06.2021'></a>Planungsmeeting (21.06.2021)
 
-#### Zusammenfassung
+####  9.22.1. <a name='Zusammenfassung-1'></a>Zusammenfassung
 Über das Wochenende hinweg wurde die Möglichkeit fertiggestellt, auch die `BasicSettings` einer Datenquelle zu bearbeiten. Weiterhin wurde im Szeneneditor der Datentyp erstellt, mit welchem eine Szene an das Backend gesendet werden kann. Hier muss lediglich noch die Kommunikation mit dem Backend erfolgen.
 
 Insgesamt konnten viele Ziele der letzten Woche erreicht werden. Lediglich die Textbearbeitung beim Videoeditor und einige Teile der Dokumentation konnten letzte Woche nicht abgeschlossen werden. Diese Aufgabenteile werden allerdings diese Woche nachgeholt.
 
-#### Aufgaben
+####  9.22.2. <a name='Aufgaben-1'></a>Aufgaben
 
 ##### Frontend
 Im Folgenden sollen die Aufgaben des Frontends für diese Woche grob skizziert werden:
@@ -1362,23 +1553,23 @@ Das Backend soll insbesondere dabei helfen, den Datentyp des Szeneneditors richt
 ##### Generell
 Bevor die Arbeit an der Abschlusspräsentation nächste Woche startet, soll sich jedes Teammitglied Gedanken darüber machen, was es im Zuge dieser Präsentation vorstellen möchte. Diese Gedanken sollen noch nicht finalisiert sein. Für einen schnelleren Ablauf in der Vorbereitung ist es jedoch nützlich, wenn jeder bereits eine grobe Idee hat.
 
-### Fortschrittsbesprechung (25.06.2021)
+###  9.23. <a name='Fortschrittsbesprechung25.06.2021'></a>Fortschrittsbesprechung (25.06.2021)
 
-#### Zusammenfassung
+####  9.23.1. <a name='Zusammenfassung-1'></a>Zusammenfassung
 Grundsätzlich konnten bis zu diesem Zeitpunkt der Woche im Grunde alle Aufgaben erledigt werden, welche angesetzt waren. Lediglich bei der Bearbeitung der TTS fehlt noch die Option, historisierte Daten zu verwenden. Diese soll allerdings über das Wochenende hinweg, falls möglich hinzugefügt werden. Was ebenfalls noch fehlt, ist die Möglichkeit, Bilder hochzuladen während der Erstellung einer Szene. Dies soll allerdings als Nächstes in Angriff genommen werden.
 
 Konkret wurde diese Woche der Videoeditor in vielen Teilen fertiggestellt. So ist es nun möglich, als ersten Schritt die verwendeten Infoprovider zu wählen und anschließend die Szenen. Dabei können die Szenen, wie bereits letzte Woche erwähnt, verschoben werden. Neu ist die Funktionalität, Texte oder Pausen für jede Szene hinzuzufügen. Dabei kann bei den Texten auf die Daten der Infoprovider zurückgegriffen werden. Diese werden dann immer in das aktuell ausgewählte Textfeld hinzugefügt. Weiterhin wurden viele Bugfixes im Frontend vorgenommen und ein erster Entwurf für die Szenen auf der Startseite ist entstanden. Dieser hat bisher noch das "Problem", dass um die Szenen zu laden, ein Button geklickt werden muss. Dies hängt mit React-spezifischen Problemen zusammen, welche in diesem Protokoll jedoch nicht weiter erklärt werden sollen.
 
 Im Backend wurden viele Bugfixes vorgenommen, sodass unter anderem der Server nicht mehr abstürzt, wenn einige Diagramme gerendert wurden. Weiterhin wurden einige neue Routen erstellt, um die Vorschau für Szenen anzuzeigen. Bereits bestehende Routen wurden ebenfalls teilweise angepasst, damit diese mehr den Wünschen und dem Format des Frontends entsprechen.
 
-### Planungsmeeting (28.06.2021)
+###  9.24. <a name='Planungsmeeting28.06.2021'></a>Planungsmeeting (28.06.2021)
 
-#### Zusammenfassung
+####  9.24.1. <a name='Zusammenfassung-1'></a>Zusammenfassung
 Im heutigen Meeting wurde zu Beginn der fertiggestellte Texteditor für die Erstellung von Texten für die TTS gezeigt. Am Freitag fehlten dem zugehörigen Dialog noch Optionen, um historisierte Daten einfügen zu können. Dies ist nun allerdings auch möglich. Dabei ist der Editor somit generell fertiggestellt und bedarf lediglich einer Design-technischen Überarbeitung.
 
 Weiterhin wurden diese Woche neue Aufgaben verteilt, welche maßgeblich in Bugfixes, Dokumentation und Code kommentieren bestehen. Allerdings müssen auch Dinge implementiert bzw. recherchiert werden, um neue Features fertigzustellen.
 
-#### Aufgaben für die Woche
+####  9.24.2. <a name='AufgabenfrdieWoche'></a>Aufgaben für die Woche
 
 ##### Backend
 * Format der Infoprovider anpassen, um String-Ersetzungen und Array-Verarbeitung zu unterstützen. Dieses Format soll dem Frontend mitgeteilt werden.
@@ -1407,9 +1598,9 @@ Damit genug Zeit für die Abschlusspräsentation ist, beginnen wir bereits jetzt
 
 Die Aufgabe ist es, die Themen bis zum nächsten Dienstag (06.07.2021) zu konkretisieren und so aufzubereiten, dass diese mit Formeln verwendet werden können.
 
-### Fortschrittsbesprechung (02.07.2021)
+###  9.25. <a name='Fortschrittsbesprechung02.07.2021'></a>Fortschrittsbesprechung (02.07.2021)
 
-#### Zusammenfassung
+####  9.25.1. <a name='Zusammenfassung-1'></a>Zusammenfassung
 Insgesamt wurde die vergangene Woche an vielen Kleinigkeiten weitergearbeitet, wobei das Backend mittlerweile den größten Teil für das Projekt abgeschlossen hat. Hier fehlen lediglich noch Tests im Zusammenspiel mit dem Frontend, einige Kleinere Features und eventuelle Bug-Fixes oder Anpassungen. Auch im Frontend geht die Implementierung an neuen Features eimälig dem Ende entgegen: Die letzteren größeren Features wurden mit der String- und Array-Verarbeitung hinzugefügt. Nun geht es primär darum, die Anwendung für die Endpräsentation vorzubereiten und die letzten Bugs zu beseitigen.
 
 Insbesondere der Szeneneditor bedarf noch etwas mehr Arbeit, um abgeschlossen zu werden. Deshalb werden hierfür ab nächste Woche mehrere Mitglieder aus dem Frontend dabei unterstützen, diesen fertig zu implementieren. Dabei geht es primär um das Einfügen von Diagrammen und Bugfixes beim laden von Bildern.
@@ -1418,17 +1609,17 @@ Betrachtet man die Aufgabenliste des letzten Protokolls, so kann gesagt werden, 
 
 Ebenfalls wurde während des Meetings angesprochen, dass in der Abschlussphase Probleme nach kurzer eigener "Probierzeit" mit dem Team geteilt werden sollten, um möglichst wenig Zeitverzug zu verursachen. Dies ist essentiell wichtig, um das Projekt zu einem guten Abschluss zu bringen.
 
-#### Aufgaben für das Wochenende
+####  9.25.2. <a name='AufgabenfrdasWochenende-1'></a>Aufgaben für das Wochenende
 Jedes Teammitglied sollte sich, falls noch nicht geschehen, weiter Gedanken für seinen Präsentationsteil machen, damit die Arbeit an den Folien Mitte nächster Woche beginnen kann. Auf diese Art und Weise ist genug Zeit, die Präsentation so vorzubereiten, dass ein zufriedenstellendes Ergebnis erreicht werden kann.
 
-### Planungsmeeting (05.07.2021)
+###  9.26. <a name='Planungsmeeting05.07.2021'></a>Planungsmeeting (05.07.2021)
 
-#### Zusammenfassung
+####  9.26.1. <a name='Zusammenfassung-1'></a>Zusammenfassung
 Über das Wochenende hinweg wurden noch einige Bugs gefixt, sodass die Erstellung von Infoprovidern nun wieder funktionieren sollte. Außerdem wurde die Route für Logs fertiggestellt und auch das Code-Review zum Szeneneditor ist soweit abgeschlossen.
 
 Diese Woche fallen sehr viele Aufgaben an, welche begonnene Features abschließen sollen. Hier ist insbesondere der Szeneneditor zu nennen, welcher fertig werden muss.
 
-#### Aufgaben für die aktuelle Woche
+####  9.26.2. <a name='AufgabenfrdieaktuelleWoche-1'></a>Aufgaben für die aktuelle Woche
 
 ##### Frontend
 * Abschluss des Szeneneditors (erste Version)
@@ -1445,26 +1636,26 @@ Diese Woche fallen sehr viele Aufgaben an, welche begonnene Features abschließe
 ##### Abschlusspräsentation
 Bis zum Abend des 06.07.2021 hat jedes Teammitglied noch Zeit seinen Teil für die Präsentation fertigzustellen. In den darauffolgenden Tagen soll dann die Präsentation von Sören und Daniel erstellt werden, damit diese schon am Freitag eventuell dem restlichen Team gezeigt werden kann.
 
-### Fortschrittsbesprechung (09.07.2021)
+###  9.27. <a name='Fortschrittsbesprechung09.07.2021'></a>Fortschrittsbesprechung (09.07.2021)
 
-#### Zusammenfassung
+####  9.27.1. <a name='Zusammenfassung-1'></a>Zusammenfassung
 Viele der im vorhergehenden Protokoll erwähnten Aufgaben konnten diese Woche abgeschlossen werden. Einzig der Szeneneditor ist noch nicht vollständig abgeschlossen. Hier müssen noch einige kleinere Probleme behoben werden. Diese sollen nach Möglichkeit über das Wochenende hinweg gelöst werden. Außerdem ist im Laufe der Woche aufgefallen, dass bei den Diagrammen einige kleine Änderungen von Nöten sind. Dies betrifft das Backend: hier muss dafür gesorgt werden, dass bei Diagrammen mit historisierten Daten die richtigen Daten verwendet werden. Dazu muss die bestehende Funktionalität der Historisierung aus dem alten Backend erweitert werden. In diesem war es lediglich möglich einen einzelnen Wert, welcher historisiert wurde, abzufragen. Für unseren Anwendungszweck ist es jedoch notwendig eine Reihe von Werten abzufragen. Hierfür soll es das Backend möglich machen, ein Array von Werten zu erhalten, wenn man historisierte Daten abfragt. Dieser "neue" Typ der Abfrage soll dabei die bisherigen Features nicht ersetzen, sondern diese lediglich erweitern, damit eine Abwärtskompatibilität erhalten bleibt. Auch dies soll noch dieses Wochenende passieren.
 
 Weiterhin wurde während des Meetings die bisherige Präsentation vorgestellt, welche auch beim gesamten Team sehr gut ankam. Einige kleinere Dinge sollen aber noch verbessert werden. Um diese soll sich ebenfalls am Wochenende oder zu Beginn der neuen Woche gekümmert werden.
 
-#### Aufgaben für das Wochenende
+####  9.27.2. <a name='AufgabenfrdasWochenende-1'></a>Aufgaben für das Wochenende
 Wie bereits erwähnt, soll am Wochenende der Szeneneditor fertiggestellt und der neue Abfragetyp für historisierte Daten implementiert werden. Weiterhin wird auch probiert, die Präsentation, soweit bereits möglich, an den Stellen zu überarbeiten, wo es nötig ist.
 
-### Planungsmeeting (12.07.2021)
+###  9.28. <a name='Planungsmeeting12.07.2021'></a>Planungsmeeting (12.07.2021)
 
-#### Zusammenfassung
+####  9.28.1. <a name='Zusammenfassung-1'></a>Zusammenfassung
 Am Wochenende wurde der Upload für den Szeneneditor, bis auf einige wenige Punkte, fertiggestellt. Dabei wurde der bisherige Ablauf für diesen Prozess vollständig überarbeitet. Weiterhin wird nun der gesamte Fortschritt auf einer Szene nicht mehr verworfen, wenn die Seite neu geladen wird, da die Daten im Session Storage gehalten werden.
 
 Die Aufgaben für diese Woche umfassen vor allem die endgültige Fertigstellung des Szeneneditors. Hierzu wird die Methode zum Absenden an das Backend fertiggestellt. Weiterhin muss diese Woche auch das Format für Formeln beim Absenden an das Backend einer Bearbeitung unterzogen werden, da wir hier ein neues Array eingeführt haben, welches pro Formel existiert und jeweils die verwendeten Objekte für eine Formel speichert.
 
 Ansonsten wird die Woche verwendet, um den Use-Case für die Live-Demo in der Präsentation auszuarbeiten und sich generell auf die Präsentation vorzubereiten.
 
-#### Aufgaben für diese Woche
+####  9.28.2. <a name='AufgabenfrdieseWoche'></a>Aufgaben für diese Woche
 
 ##### Frontend
 * Overview für erstellte Videos einbauen
@@ -1481,36 +1672,36 @@ Die meisten Aufgaben aus dieser Kategorie werden vom Backend-Team erledigt, da d
 * Use-Case für Live-Demo ausarbeiten
 * Präsentationsteile üben
 
-#### Kommende Meetings
+####  9.28.3. <a name='KommendeMeetings'></a>Kommende Meetings
 Diese Woche stehen einige Meetings an, deshalb hier eine kurze Übersicht:
 * Dienstag, 14:00 Uhr: Meeting mit Herrn Kammer
 * Mittwoch, 16:00 Uhr: Erster Durchlauf der Präsentation
 * Freitag, 16:00 Uhr: Zweiter Durchlauf der Präsentation + Fortschrittsbesprechung
 
-### Präsentationsübung (16.07.2021)
+###  9.29. <a name='Prsentationsbung16.07.2021'></a>Präsentationsübung (16.07.2021)
 
-#### Zusammenfassung
+####  9.29.1. <a name='Zusammenfassung-1'></a>Zusammenfassung
 Das heutige Fortschrittsmeeting wurde maßgeblich durch die Übung der Abschlusspräsentation bestimmt. Hierbei stellte sich heraus, dass der Vortrag insgesamt schon ziemlich gut geübt wurde. Es gab eigentlich keine Kritik an einzelnen Teilen mehr. Lediglich einige wenige Folien sollen bis Montag eine kleinere Überarbeitung bekommen. 
 
 Weiterhin wurden im Meeting die Probleme besprochen, welche in der Anwendung bis Montag noch zu korrigieren sind. Hierbei handelt es sich primär um Fehler, welche während der Erstellung von Szenen entstehen. Allerdings gibt es auch Fehler beim Absenden eines fertigen Videos. Diese Fehler scheinen allerdings relativ gut behebbar zu sein.
 
-#### Aufgaben für das Wochenende
+####  9.29.2. <a name='AufgabenfrdasWochenende-1'></a>Aufgaben für das Wochenende
 Insgesamt sollen am Wochenende sowohl im Back- als auch im Frontend die Fehler korrigiert werden, welche die Live-Demo für die Präsentation verhindern. Weiterhin soll die erste Version des Projektberichts fertiggestellt werden und die Präsentation soll final überarbeitet werden und dem gesamten Team zur Verfügung gestellt werden.
 
-#### Letztes Planungsmeeting
+####  9.29.3. <a name='LetztesPlanungsmeeting'></a>Letztes Planungsmeeting
 Das letzte Planungsmeeting wird nicht wie üblich am Montag stattfinden, da hier die Abschlusspräsentationen geplant sind. Stattdessen wird die letzte Planung auf den Dienstag verschoben und findet an diesem Tag um 08:30 Uhr statt.
 
-### Planungsmeeting (20.07.2021)
+###  9.30. <a name='Planungsmeeting20.07.2021'></a>Planungsmeeting (20.07.2021)
 
-### Zusammenfassung
+###  9.31. <a name='Zusammenfassung-1'></a>Zusammenfassung
 In den letzten Tagen sollen hauptsächlich die restlichen identifizierten Fehler behoben werden. Außerdem soll der Projektbericht fertiggestellt werden und vom Team gelesen werden.
 
 Auch wird diese Woche noch die Videobearbeitung implementiert, wobei hierfür nicht viel Arbeit notwendig sein sollte. Anschließend wird die Dokumentation an den Stellen ergänzt, an welchen es nötig ist.
 
-### Fortschrittsbesprechung (23.07.2021)
+###  9.32. <a name='Fortschrittsbesprechung23.07.2021'></a>Fortschrittsbesprechung (23.07.2021)
 
-#### Zusammenfassung
+####  9.32.1. <a name='Zusammenfassung-1'></a>Zusammenfassung
 Im letzten Meeting unseres Teams wurde besprochen, was in den letzten Tagen noch zu erledigen ist. Hierbei gibt es lediglich einige wenige fehlende Bug-Fixes, welche am heutigen Freitag und am Samstag bearbeitet werden müssen. Gravierende Fehler sind allerdings nicht mehr aufgefallen. Für die Formeln soll außerdem die Möglichkeit hinzukommen Zahlen mit einem Komma zu verwenden. Weiterhin wird aus den einzelnen Dokumentationsteilen die Dokumentation für die Abgabe vorbereitet. Planmäßig sollen dabei alle Arbeiten am Abend des 24.07. abgeschlossen sein.
 
-#### Reflektion des Teams
+####  9.32.2. <a name='ReflektiondesTeams'></a>Reflektion des Teams
 Insgesamt blickt das Team auf eine gute Zeit zurück und findet, dass im Laufe des Semesters ein gutes Projekt entstanden ist. Es wäre mit mehr Zeit zwar vermutlich mehr möglich gewesen, allerdings ist niemand der Meinung, dass gravierende Fehler in der Software übergeblieben sind.
