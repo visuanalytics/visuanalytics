@@ -21,8 +21,8 @@ sys.path.insert(0, os.path.abspath('../src'))
 # -- Project information -----------------------------------------------------
 
 project = 'VisuAnalytics'
-copyright = '2020, David Martschenko, Jannik Lapp, Lisa Soboth, Max Stephan, Tanja Gutsche, Timon Pellekoorne'
-author = 'David Martschenko, Jannik Lapp, Lisa Soboth, Max Stephan, Tanja Gutsche, Timon Pellekoorne'
+copyright = '2021, Daniel Spengler, Tristan Elias Wolfram, Philipp Helfenritter, Janek Berg, Sören Clausen, Tim Wolfgang Helmut Schwabe'
+author = 'Daniel Spengler, Tristan Elias Wolfram, Philipp Helfenritter, Janek Berg, Sören Clausen, Tim Wolfgang Helmut Schwabe'
 
 # -- General configuration ---------------------------------------------------
 
