@@ -16,14 +16,14 @@
 	* 3.3. [**Datenauswahl**](#Datenauswahl)
 		* 3.3.1. [**API-Texte**](#API-Texte)
 		* 3.3.2. [**ImageLists**](#ImageLists)
-		* 3.3.3. [**DiagramsList**](#DiagramsList)
+		* 3.3.3. [**DiagramList**](#DiagramList)
 		* 3.3.4. [**Hinzufügen von Bildern auf dem Canvas**](#HinzufgenvonBildernaufdemCanvas)
 	* 3.4. [**Speichern der Szene**](#SpeichernderSzene)
 * 4. [**Editierung von Szenen**](#EditierungvonSzenen)
 	* 4.1. [**Besonderheit in der sessionStorage-Verwendung**](#BesonderheitindersessionStorage-Verwendung)
 	* 4.2. [**Vorbereitung der Backend-Daten**](#VorbereitungderBackend-Daten)
 	* 4.3. [**Identifikation der korrekten Bilder**](#IdentifikationderkorrektenBilder)
-	* 4.4. [**Absenden des bearbeiteten Infoproviders**](#AbsendendesbearbeitetenInfoproviders)
+	* 4.4. [**Absenden der bearbeiteten Szene**](#AbsendenderbearbeitetenSzene)
 
 <!-- vscode-markdown-toc-config
 	numbering=true
@@ -720,7 +720,7 @@ Neben dem Auswählen bereits vorhandener Bilder gibt es die Möglichkeit, auch w
     * Diese Handler-Methoden entnehmen dem übergebenen Event mit **event.target.files** die hochgeladene Datei und verpacken diese in eine **FormData**. Ein Aufruf der Methode **postImage**/**postBackgroundImage** sendet dann die FormData an die jeweilige Backend-Route `visuanalytics/image/pictures` bzw. `visuanalytics/image/backgrounds`.
     * Das Backend antwortet auf dieses Posten mit der ID des Bildes im Backend- die Sucess-Handler fragen dann das Bild dieser ID an, generieren eine URL für das erhaltene Blob und hängen das neue Bild an **imageList** bzw. **backgroundImageList** an. Auf diese Weise können die hochgeladenen Bilder direkt verwendet werden.
 
-####  3.3.3. <a name='DiagramsList'></a>**DiagramsList**
+####  3.3.3. <a name='DiagramList'></a>**DiagramList**
 Analog zu **ImageLists** stellt **DiagramLists** die Diagramme dar, die zur Verfügung stehen. Die Liste wird per **props.diagramList** übergeben und durch **renderDiagramEntry** dargestellt. Jeder Eintrag umfasst ein Bild, einen Namen und einen Typ.
 
 Die Generierung des Bildes ist im Grunde gleich wie bei **ImageLists**, auch die Handler-Methode **handleDiagramClick** ist gleich, da für sie einfach **handleImageClick** übergeben wird. Daher soll auf genauere Ausführungen mit dem Verweis auf den vorangehenden Abschnitt verzichtet werden.
@@ -894,7 +894,7 @@ Damit werden die Methoden **findRightBackgroundImage** und **findRightImages** z
 
 Nach diesem Vorgang ist der Szenen-Editor vollständig zur Editierung vorbereitet und kann ab diesem Punkt wie in der Erstellung genutzt werden.
 
-###  4.4. <a name='AbsendendesbearbeitetenInfoproviders'></a>**Absenden des bearbeiteten Infoproviders**
+###  4.4. <a name='AbsendenderbearbeitetenSzene'></a>**Absenden der bearbeiteten Szene**
 Zuletzt anzumerken ist noch das unterschiedliche Absenden der Ergebnisse: Das Hintergrund-Bild und das Preview-Bild werden auf gleiche Weise abgesendet, das Backend sorgt hier für ein Löschen der alten Bilder. Der einzige Unterschied ist **postSceneExport**, welches für die beiden Fälle der Erstellung und Editierung unterschiedliche URLs generiert:
 ```javascript
  //check if the edit mode is active by looking for the props object - post to different route if editing!

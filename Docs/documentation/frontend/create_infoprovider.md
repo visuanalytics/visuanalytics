@@ -169,7 +169,7 @@ Grundsätzlich handelt es sich um eine Adaption der Komponente **PageTemplate**,
 * **{children}** nutzt die Möglichkeit von React, alle als Children-Tags für die Komponente eingebundenen Elemente darstellen zu lassen. Auf diese Weise kann man also den gesamten Seiteninhalt, der sich in dem Frame befindet einfach einfügen und die Vorlage so generisch nutzen.
 * Titel und Hinweistext werden ebenso variabel als Property übergeben.
 
-Da **PageTemplate** jedoch für unsere Anpassung angepasst werden musste haben wir uns dazu entschieden, die Modifikation in einer Kopie der Komponente vorzunehmen.
+Da **PageTemplate** jedoch für unsere Anwendung angepasst werden musste haben wir uns dazu entschieden, die Modifikation in einer Kopie der Komponente vorzunehmen.
 * Auf diese Weise bleibt das originale Frontend hinsichtlich dieser Komponente funktional und könnte in Zukunft bei Bedarf wieder eingesetzt werden.
 
 <div style="page-break-after: always;"></div>
