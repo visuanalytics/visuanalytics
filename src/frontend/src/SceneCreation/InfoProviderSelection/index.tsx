@@ -89,7 +89,7 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
         })
         //go through all diagrams
         const diagramList: Array<DiagramInfo> = [];
-        console.log(infoProvider.diagrams===undefined)
+        //console.log(infoProvider.diagrams===undefined)
         infoProvider.diagrams.forEach((diagram) => {
             //transforms the type into a readable form
             let typeString = "";

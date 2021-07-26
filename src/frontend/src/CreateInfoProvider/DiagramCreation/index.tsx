@@ -185,7 +185,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
      * The standard hook "useCallFetch" is not used here since it seemingly caused method calls on each render.
      */
     const fetchPreviewImage = React.useCallback(() => {
-        console.log("preview creation called");
+        //console.log("preview creation called");
         let url = "/visuanalytics/testdiagram"
         //if this variable is set, add it to the url
         if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url

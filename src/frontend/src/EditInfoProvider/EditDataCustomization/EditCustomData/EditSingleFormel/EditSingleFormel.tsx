@@ -411,7 +411,7 @@ export const EditSingleFormel: React.FC<EditSingleFormelProps> = (props) => {
 
         const data = jsonData as requestBackendAnswer;
 
-        console.log(data.accepted)
+        //console.log(data.accepted)
 
         if ((oldFormelName.length >= 1) && (name !== oldFormelName) && searchForNameDuplicate(name)) {
             props.reportError('Name bereits vergeben!');
@@ -431,7 +431,7 @@ export const EditSingleFormel: React.FC<EditSingleFormelProps> = (props) => {
             const dataSourcesCopy =  props.infoProvDataSources.slice();
             dataSourcesCopy[props.selectedDataSource].customData = arCopy;
             props.setInfoProvDataSources(dataSourcesCopy);
-            console.log(usedFormulaAndApiData.current)
+            //console.log(usedFormulaAndApiData.current)
             fullDelete();
             setName('');
             props.backHandler();

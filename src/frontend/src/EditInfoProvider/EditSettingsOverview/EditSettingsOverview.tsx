@@ -47,8 +47,8 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
 
     const classes = useStyles();
 
-    console.log(props.infoProvDataSources);
-    console.log(props.selectedDataSource);
+    //console.log(props.infoProvDataSources);
+    //console.log(props.selectedDataSource);
 
     /**
      * Boolean that is used to open and close the cancel-dialog

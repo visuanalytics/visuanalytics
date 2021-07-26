@@ -137,7 +137,7 @@ export const ScheduleSelection: React.FC<ScheduleSelectionProps> = (props) => {
         props.setSchedule({...props.schedule, interval: event.target.value as string})
     }
 
-    console.log(props.schedule);
+    //console.log(props.schedule);
 
     return (
         <Grid container>

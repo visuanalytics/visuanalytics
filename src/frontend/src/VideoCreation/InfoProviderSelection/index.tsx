@@ -79,7 +79,7 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
             setContinueDisabled(false);
             // copy the local useRef value to the state of the parent
             props.setMinimalInfoProvObjects(minimalInfoProvObjects.current)
-            console.log(minimalInfoProvObjects.current);
+            //console.log(minimalInfoProvObjects.current);
             //fetch all scenes
             props.fetchAllScenes();
         }

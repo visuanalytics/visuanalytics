@@ -178,7 +178,7 @@ export const InfoProviderOverview: React.FC = () => {
         const data = jsonData as answer;
 
         if (data.err_msg) {
-            console.log("handlesuccess: " + data.err_msg)
+            //console.log("handlesuccess: " + data.err_msg)
         }
 
         for (let i: number = 0; i <= infoprovider.length - 1; i++) {
@@ -255,11 +255,11 @@ export const InfoProviderOverview: React.FC = () => {
      * @param jsonData
      */
     const handleSuccessEdit = (jsonData: any) => {
-        console.log(jsonData);
+        //console.log(jsonData);
         const data = jsonData as InfoProviderFromBackend;
         //transform the infoProvider to frontend format
         const infoProvider = transformBackendInfoProvider(data);
-        console.log(infoProvider)
+        //console.log(infoProvider)
         components?.setCurrent("editInfoProvider", {infoProvId: currentEditId, infoProvider: infoProvider})
     }
 
@@ -284,7 +284,7 @@ export const InfoProviderOverview: React.FC = () => {
     }
 
     const confirmEdit = () => {
-        console.log(currentEditId);
+        //console.log(currentEditId);
         editInfoProvider();
     }
 

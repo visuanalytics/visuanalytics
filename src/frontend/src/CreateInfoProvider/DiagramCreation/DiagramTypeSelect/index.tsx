@@ -92,7 +92,7 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
                 //before pushing, we need to create a new object that has the full keyPath from the parent array on as its keyName
                 //get the full keyName of the innerKey, then cut the array name from it
                 const keyPath = (object[index].parentKeyName + "|" + object[index].keyName).substring(baseArrayName.length + 1);
-                console.log(keyPath);
+                //console.log(keyPath);
                 numericAttributes.push({
                     ...object[index],
                     keyName: keyPath
@@ -104,7 +104,7 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
                 numericAttributes = numericAttributes.concat(getNumericAttributes(object[index].value as Array<ListItemRepresentation>, baseArrayName));
             }
         }
-        console.log(numericAttributes)
+        //console.log(numericAttributes)
         return numericAttributes;
     }
 
