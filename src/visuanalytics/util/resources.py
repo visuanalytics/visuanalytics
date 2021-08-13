@@ -38,6 +38,18 @@ Name des Ordner für Memory-Dateien. Dient zum Abspeichern von vorherigen Berech
 Wird beim Starten mit dem Wert aus der Konfigurationsdatei initialisiert.
 """
 
+INFOPROVIDER_LOCATION = "infoprovider"
+"""
+Enthält den Pfad zu den Infoprovidern.
+Dieser Pfad wird bei Start des Servers in `init.py` durch den Pfad in der `config.json` überschrieben.
+"""
+
+DATASOURCES_LOCATION = "datasources"
+"""
+Enthält den Pfad zu den Datenquellen.
+Dieser Pfad wird bei Start des Servers in `init.py` durch den Pfad in der `config.json` überschrieben.
+"""
+
 DATE_FORMAT = '%Y-%m-%d_%H-%M.%S'
 """
 Datums- und Zeitformat in welchem die Dateien abgespeichert werden.
@@ -73,23 +85,56 @@ def get_resource_path(path: str):
     return path_from_root(os.path.join(RESOURCES_LOCATION, path))
 
 
+def get_infoprovider_path(path: str):
+    """Erstellt einen absoluten Pfad zur übergebenen Infoprovider-Ressource.
+
+    Der Pfad wird dabei aus `RESOURCES_LOCATION`, `INFOPROVIDER_LOCATION` und dem übergebenen Pfad erstellt.
+
+    :param path: Pfad zum benötigten Infoprovider, relativ zum `resources/infoprovider`-Ordner.
+    :return: Absoluter Pfad zum übergebenen Infoprovider.
+    """
+    return get_resource_path(os.path.join(INFOPROVIDER_LOCATION, path))
+
+
 def get_image_path(path: str):
     """Erstellt einen absoluten Pfad zu der übergebenen Image-Ressource.
 
-    Erstellt den Pfad aus `RESOURCES_LOCATION` und dem übergebenen Pfad.
+    Erstellt den Pfad aus `RESOURCES_LOCATION`, `IMAGE_LOCATION` und dem übergebenen Pfad.
 
-    :param path: Pfad zur Ressource, relativ zum `resources`-Ordner.
+    :param path: Pfad zur Ressource, relativ zum `resources/images`-Ordner.
     :return: Absoluter Pfad zur übergebenen Ressource.
     """
     return get_resource_path(os.path.join(IMAGES_LOCATION, path))
 
 
+def get_temp_path(path: str):
+    """Erstellt einen absoluten Pfad zu der übergebenen Temp-Ressource.
+
+    Erstellt den Pfad aus `RESOURCES_LOCATION`, `TEMP_LOCATION` und dem übergebenen Pfad.
+
+    :param path: Pfad zur Ressource, relativ zum `resources/temp`-Ordner.
+    :return: Absoluter Pfad zur übergebenen Ressource.
+    """
+    return get_resource_path(os.path.join(TEMP_LOCATION, path))
+
+
+def get_datasource_path(path: str):
+    """Erstellt einen absoluten Pfad zu der übergebenen Datasource-Ressource.
+
+    Erstellt den Pfad aus `RESOURCES_LOCATION`, `DATASOURCES_LOCATION` und dem übergebenen Pfad.
+
+    :param path: Pfad zur Ressource, relativ zum `resources/datasources`-Ordner.
+    :return: Absoluter Pfad zur übergebenen Ressource.
+    """
+    return get_resource_path(os.path.join(DATASOURCES_LOCATION, path))
+
+
 def get_audio_path(path: str):
     """Erstellt einen absoluten Pfad zu der übergebenen Audio-Ressource.
 
-    Erstellt den Pfad aus `RESOURCES_LOCATION` und dem übergebenen Pfad.
+    Erstellt den Pfad aus `RESOURCES_LOCATION`, `AUDIO_LOCATION` und dem übergebenen Pfad.
 
-    :param path: Pfad zur Ressource, relativ zum `resources`-Ordner.
+    :param path: Pfad zur Ressource, relativ zum `resources/audio`-Ordner.
     :return: Absoluter Pfad zur übergebenen Ressource.
     """
     return get_resource_path(os.path.join(AUDIO_LOCATION, path))
@@ -103,6 +148,22 @@ def get_temp_resource_path(path: str, pipeline_id: str):
     :type pipeline_id: str
     """
     return get_resource_path(os.path.join(TEMP_LOCATION, pipeline_id, path))
+
+
+def get_test_diagram_resource_path(infoprovider_name=None, diagram_name=None):
+    """Erstellt einen absoluten Pfad zu der übergebene Ressource im Temp-Ordner.
+
+    :param infoprovider_name: Name des Infoproviders der das Diagram enthält.
+    :param diagram_name: Name des Diagrams innerhalb des Infoproviders.
+    """
+    if infoprovider_name:
+        path = infoprovider_name + "/"
+    else:
+        return get_resource_path(os.path.join(TEMP_LOCATION, "tmp_diagram.png"))
+    path += (diagram_name if diagram_name else "") + ".png"
+    path = get_resource_path(os.path.join(TEMP_LOCATION, path))
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    return path
 
 
 def get_relative_temp_resource_path(path: str, pipeline_id: str):
@@ -164,7 +225,7 @@ def new_memory_resource_path(job_name: str, name: str):
    :param name: Name der Datei (ohne Datum)
     """
     os.makedirs(get_memory_path("", name, job_name), exist_ok=True)
-    return get_memory_path(f"{datetime.now().strftime('%Y-%m-%d')}.json", name, job_name)
+    return get_memory_path(f"{datetime.now().strftime('%Y-%m-%d-%H-%M-%S')}.json", name, job_name)
 
 
 def open_resource(path: str, mode: str = "rt"):
@@ -183,6 +244,23 @@ def open_resource(path: str, mode: str = "rt"):
     res_path = get_resource_path(path)
     os.makedirs(os.path.dirname(res_path), exist_ok=True)
 
+    return open(res_path, mode, encoding='utf-8')
+
+
+def open_infoprovider_resource(path: str, mode: str = "rt"):
+    """Gibt einen geöffneten Infoprovider zurück.
+
+    Sollte die Datei oder ein zu dieser Datei führender Ordner fehlen, so werden diese erstellt.
+
+    :param path: Pfad der zu öffnenden Datei.
+    :param mode: Der Modus, mit welcher die Datei geöffnet wird. Für eine nähere Information siehe :func:`open`
+
+    :return: Die geöffnete Datei.
+
+    :raises: OSError
+    """
+    res_path = get_infoprovider_path(path)
+    os.makedirs(os.path.dirname(res_path), exist_ok=True)
     return open(res_path, mode, encoding='utf-8')
 
 
@@ -222,6 +300,22 @@ def open_specific_memory_resource(job_name: str, name: str, skip, number: int = 
 
     """
     return open_resource(get_specific_memory_path(job_name, name, number - 1, skip), mode)
+
+
+def delete_infoprovider_resource(path: str):
+    """Löscht den übergebenen Infoprovider aus dem resources-Ordner.
+
+    Dabei wird :func:`get_infoprovider_path` verwendet, um die richtige Ressource zu finden.
+
+    Sollte der Infoprovider nicht vorhanden sein, so wird der Löschversuch ignoriert. Wird hingegen versucht einen Ordner zu löschen, so wirft dies einen Fehler.
+
+    :param path: Infoprovider, welcher gelöscht werden soll, relativ zu `resources/infoprovider`
+
+    :raises: OSError
+    """
+
+    with contextlib.suppress(FileNotFoundError):
+        os.remove(get_infoprovider_path(path))
 
 
 def delete_resource(path: str):

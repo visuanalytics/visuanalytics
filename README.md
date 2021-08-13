@@ -1,5 +1,84 @@
 # VisuAnalytics [![Tests](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/workflows/Automated%20Testing/badge.svg)](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/actions?query=workflow%3A%22Automated+Testing%22) [![Documentation Status](https://readthedocs.org/projects/visuanalytics/badge/?version=latest)](https://visuanalytics.readthedocs.io/de/latest/?badge=latest)
 
+## **Release: VisuAnalytics 2.0**
+Im Rahmen der Veranstaltung [**Softwaretechnik-Projekt**](https://www.thm.de/organizer/index.php?option=com_organizer&view=subject_item&id=13) im Sommersemester 2021 wurde aufbauend auf der Software VisuAnalytics dieses Projekt zum Thema **Data Analytics** durchgeführt.
+
+Die Veranstaltung gehört zum Curriculum der Bachelorstudiengänge der Informatik an der [Technischen Hochschule Mittelhessen](https://www.thm.de).
+
+Ziel war dabei, die bestehende Infrastruktur des VisuAnalytics-Projekts zu nutzen und diese um ein Frontend zu erweitern, über welches die notwendigen JSON-Dateien für Datenabfragen und Videos einfach generiert werden können. Gleichzeitig wurde die Backend-Infrastruktur um neue Features erweitert, mit denen weitergehende Datenverarbeitungen möglich sind. Dabei werden statt den bisherigen vier Job-Arten nun beliebige APIs unterstützt.
+
+Grundkonzept der Anwendung ist nun die Erstellung sogenannter Infoprovider, in welchen mehrere API-Datenquellen zusammengefasst werden können. Diese Infoprovider können dann bei der Erstellung von Szenen (Standbilder mit dynamischen Daten) über einen grafischen Editor genutzt werden, um API-Daten in die Szene einfügen zu lassen. Szenen werden dann in Form von Videojobs aneinandergereiht und um Text-To-Speech (ebenfalls mit Infoprovider-Daten) erweitert. Auf Basis der Backend-Infrastruktur von `VisuAnalytics` wird dann zu vom Nutzer festgelegten Zeitpunkten eine Generierung der konfigurierten Videos mit den aktuellsten Datenwerten der APIs vorgenommen.
+
+### Features
+Folgende Liste stellt eine grobe Übersicht über die neuen Features von `VisuAnalytics 2.0` dar:
+* **Neues Frontend:** Das neue Frontend erlaubt das Erstellen der notwendigen JSON-Konfigurationen über eine einfache, interaktive Oberfläche.
+* **Beliebige APIs**: `VisuAnalytics 2.0` unterstützt nun nicht nur vier Job-Arten, sondern beliebige APIs. Nach Eingabe einer API findet eine grafische Aufbereitung ihrer Daten im Frontend statt.
+* **Neue Datenverarbeitungen:** Es stehen neue Datenverarbeitung zur Verfügung: Summen, Mittelwerte, Minima und Maxima von numerischen Arrays, Ersetzung von Zeichenketten in Strings sowie das Erstellen komplexer Formeln auf Basis von API-Daten.
+* **Historisierung von Daten:** Die Backend-Infrastruktur erlaubt es, APIs unabhängig von Videojobs zu beliebigen Zeitpunkten anzufragen, um Daten von diesem abzufragen und in einer Datenbank zu speichern. Diese historisierten Daten können wie auch die aktuellsten Datenwerte zum Beispiel in Videos verwendet werden!
+* **Erstellung von Diagrammen:** Auf Grundlage numerischer Arrays sowie historisierter Daten können Säulen-, Balken-, Torten-, Punkt/Streu- sowie Liniendiagramme erstellt werden, die dann zur Visualisierung von Daten in Videos eingebunden werden können.
+* **Grafischer Szenen-Editor:** Die einzelnen Szenen, aus denen Videos zusammengesetzt werden können, in einem einfachen Drag-And-Drop Szenen-Editor erstellt werden. Dieser erlaubt das Einfügen von Formen, Texten, API-Datenwerten und Diagrammen und eine grundlegende Formatierung dieser. Weiterhin können eigene Bilder hochgeladen und als Bilder auf der Szene oder Hintergrundbild eingebunden werden.
+* **Videojob-Editor:** Mehrere Szenen können in diesem Editor aneinandergereiht werden und um die Definition von Texten für die Text-To-Speech-Ausgabe erweitert werden (auch diese erlauben das Einbinden von API-Daten).
+
+### Informationen und Dokumentation
+Für einen allgemeinen Überblick über `VisuAnalytics 2.0` empfehlen wir einen Blick in das [Benutzerhandbuch](Docs/usage/Benutzeranleitung.pdf), welches die Funktionen der Anwendung übersichtlich darstellt. Für Details zur Implementierung und Entwicklung des Frontends existiert eine umfassende [Dokumentation des neuen Frontends](Docs/documentation/frontend/complete_frontend_documentation.pdf).
+
+### Abwärtskompatibilität
+Bei der Entwicklung von `VisuAnalytics 2.0` wurde großer Wert darauf gelegt, die Abwärtskompatibilität zum ursprünglichen VisuAnalytics-Projekt zu gewährleisten.
+
+Eine Rückkehr zum alten Frontend ist derzeit nur durch Code-Anpassungen möglich:
+
+**/src/frontend/src/ComponentProvider/index.tsx**:
+
+**1)**
+```
+const startComponent: ComponentKey = "dashboard";
+```
+ändern zu
+```
+const startComponent: ComponentKey = "home";
+```
+**2)**
+```
+setCurrent(mainComponents[sessionStorage.getItem("currentComponent-" + uniqueId)||"dashboard"]);
+```
+ändern zu
+```
+setCurrent(mainComponents[sessionStorage.getItem("currentComponent-" + uniqueId)||"home"]);
+```
+**3)**
+```
+sessionStorage.setItem("currentComponent-" + uniqueId, keyName);
+```
+ändern zu
+```
+//sessionStorage.setItem("currentComponent-" + uniqueId, keyName);
+```
+
+
+**/src/frontend/src/App/index.tsx**:
+
+**1)** Einkommentieren der Variable **theme** und
+```
+<MuiThemeProvider theme={newDarkBlueTheme}>
+```
+ändern zu
+```
+<MuiThemeProvider theme={theme}>
+```
+**2)**
+```
+const legacyFrontend = React.useRef<boolean>(false);
+```
+ändern zu
+```
+const legacyFrontend = React.useRef<boolean>(true);
+```
+
+**Hinweis**:
+> Die Umstellung auf das alte Frontend wurde nicht umfangreich getestet. Es wird daher empfohlen, statt diesem Vorgehen das [ursprüngliche VisuAnalytics-Projekt](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics) zu verwenden.
+
+<br></br>
+
 ## Einleitung
 
 Im Rahmen der Veranstaltung [**Softwaretechnik-Praktikum**](https://www.thm.de/organizer/index.php?option=com_organizer&view=subject_item&id=13) im Sommersemester 2020 wurde dieses Projekt zum Thema **Data Analytics** durchgeführt.
@@ -77,6 +156,8 @@ _Benötigte Software_:
 - [pip](https://packaging.python.org/tutorials/installing-packages/#ensure-you-can-run-pip-from-the-command-line)
 - [FFmpeg](https://ffmpeg.org/download.html)
 - [npm](https://www.npmjs.com/get-npm)
+
+>  Weiterhin kann es nötig sein, dass `Visual C++ 14.0` (oder höher) sowie das `Windows 10 SDK` benötigt werden, wenn die Ausführung unter Windows stattfindet. ([Buildtools für Visual Studio 2019](https://visualstudio.microsoft.com/de/downloads/#build-tools-for-visual-studio-2019))
 
 _In den `src`-Ordner wechseln_: `cd src`
 
@@ -372,4 +453,4 @@ _Benötigte Software_:
 1. in den Dokumentationsordner wechseln: `cd Docs`
 2. Dokumentation generieren: `make html`
 
-Die Dokumentation befindet sich dann im Ordner `_build/html`.
+Die Dokumentation befindet sich dann im Ordner `_build/html`. 

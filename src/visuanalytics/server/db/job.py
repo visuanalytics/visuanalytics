@@ -3,8 +3,8 @@ from datetime import datetime
 from visuanalytics.server.db import db
 from visuanalytics.server.db import queries
 
-# This variable is initialized with the value from the config file, 
-# so a change here has no effect. 
+# This variable is initialized with the value from the config file,
+# so a change here has no effect.
 LOG_LIMIT = 100
 
 INTERVAL = {"minute": {"minutes": 1}, "quarter": {"minutes": 15}, "half": {"minutes": 30},
@@ -84,13 +84,49 @@ def get_job_run_info(job_id):
         return job_name, steps_name, config
 
 
-def insert_log(job_id: int, state: int, start_time: datetime):
+def get_datasource_schedules():
+    """ Gibt alle angelegten Datenquellen mitsamt ihren Zeitplänen zurück.
+
+    """
     with db.open_con() as con:
-        con.execute("INSERT INTO job_logs(job_id, state, start_time) values (?, ?, ?)", [job_id, state, start_time])
+        res = con.execute(
+            """
+            SELECT DISTINCT datasource_id, datasource_name, schedule_historisation.type as s_type, date, time, group_concat(DISTINCT weekday) AS weekdays, 
+            time_interval
+            FROM datasource
+            INNER JOIN schedule_historisation USING(schedule_historisation_id)
+            LEFT JOIN schedule_historisation_weekday USING(schedule_historisation_id)
+            GROUP BY(datasource_id)
+            """).fetchall()
+
+        return res
+
+
+def get_datasource_run_info(datasource_id):
+    """Gibt den Namen einer Datenquelle und den Namen der zugehörigen JSON-Datei zurück.
+
+    :param datasource_id: id des Jobs
+    :type datasource_id: int
+    """
+    with db.open_con() as con:
+        res = con.execute("SELECT datasource_name FROM datasource WHERE datasource_id=?",
+                          [datasource_id]).fetchall()
+        infoprovider_name = con.execute("SELECT infoprovider_name FROM infoprovider INNER JOIN datasource "
+                                        "USING (infoprovider_id) WHERE datasource_id=?",
+                                        [datasource_id]).fetchone()["infoprovider_name"]
+
+        datasource_name = infoprovider_name.replace(" ", "-") + "_" + res[0]["datasource_name"].replace(" ", "-")
+
+        return datasource_name, datasource_name, {}
+
+
+def insert_log(job_id: int, state: int, start_time: datetime, pipeline_type='JOB'):
+    with db.open_con() as con:
+        con.execute("INSERT INTO job_logs(job_id, state, start_time, pipeline_type) values (?, ?, ?, ?)", [job_id, state, start_time, pipeline_type])
         id = con.execute("SELECT last_insert_rowid() as id").fetchone()
         con.commit()
 
-        # Only keep LOG_LIMMIT logs 
+        # Only keep LOG_LIMMIT logs
         con.execute(
             "DELETE FROM job_logs WHERE job_logs_id NOT IN (SELECT job_logs_id FROM job_logs ORDER BY job_logs_id DESC limit ?)",
             [LOG_LIMIT])
@@ -115,8 +151,13 @@ def update_log_finish(id: int, state: int, duration: int):
 def get_interval(res):
     return INTERVAL.get(res["time_interval"])
 
-def insert_next_execution_time(id: int, next_execution: str):
+
+def insert_next_execution_time(id: int, next_execution: str, is_job: bool = False):
     with db.open_con() as con:
-        schedule_id = con.execute("SELECT schedule_id FROM job WHERE job_id = ?", [id]).fetchone()["schedule_id"]
-        con.execute("UPDATE schedule SET next_execution = ? WHERE schedule_id = ?", [next_execution, schedule_id])
+        if is_job:
+            schedule_id = con.execute("SELECT schedule_id FROM job WHERE job_id = ?", [id]).fetchone()["schedule_id"]
+            con.execute("UPDATE schedule SET next_execution = ? WHERE schedule_id = ?", [next_execution, schedule_id])
+        else:
+            schedule_id = con.execute("SELECT schedule_historisation_id FROM datasource WHERE datasource_id = ?", [id]).fetchone()["schedule_historisation_id"]
+            con.execute("UPDATE schedule_historisation SET next_execution = ? WHERE schedule_historisation_id = ?", [next_execution, schedule_id])
         con.commit()

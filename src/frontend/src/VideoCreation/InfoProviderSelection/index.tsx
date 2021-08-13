@@ -1,0 +1,373 @@
+import React from "react";
+import {InfoProviderData, MinimalInfoProvider} from "../types";
+import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
+import {Dialog, DialogActions, DialogContent, DialogTitle, ListItem, ListItemText} from "@material-ui/core";
+import List from "@material-ui/core/List";
+import Button from "@material-ui/core/Button";
+import Box from "@material-ui/core/Box";
+import {useStyles} from "../style";
+import Checkbox from "@material-ui/core/Checkbox";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import {InfoProviderFromBackend, uniqueId} from "../../CreateInfoProvider/types";
+import {Alert} from "@material-ui/lab";
+
+
+interface InfoProviderSelectionProps {
+    continueHandler: () => void;
+    backHandler: () => void;
+    infoProviderList: Array<InfoProviderData>
+    selectedInfoProvider: Array<InfoProviderData>
+    setSelectedInfoProvider: (selected: Array<InfoProviderData>) => void;
+    setMinimalInfoProvObjects: (objects: Array<MinimalInfoProvider>) => void;
+    reportError: (message: string) => void;
+    fetchAllScenes: () => void;
+    infoproviderIDs: Array<number>;
+    setInfoproviderIDs: (infoproviderIDs: Array<number>) => void;
+    isEditMode?: boolean;
+    resetJobSettings: () => void;
+}
+
+/**
+ * Component that displays the selection of infoproviders that should be available for text-to-speech values.
+ */
+export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (props) => {
+
+    const classes = useStyles();
+
+    // true when the continue button is disabled because a fetching from the backend is currently running
+    const [continueDisabled, setContinueDisabled] = React.useState(false);
+    //store a copy of the selection passed on mounting to later check for removed scenes
+    const [originalSelectedInfoProvider, setOriginalSelectedInfoProvider] = React.useState(props.selectedInfoProvider)
+    //true if the dialog for deleting settings on proceeding is opened
+    const [proceedDialogOpen, setProceedDialogOpen] = React.useState(false);
+
+    //store this copy in the sessionStorage
+    React.useEffect(() => {
+        if (sessionStorage.getItem("firstInfoProvSelectionEntering-" + uniqueId) !== null) {
+            setOriginalSelectedInfoProvider(sessionStorage.getItem("originalSelectedInfoProvider-" + uniqueId) === null ? [] : JSON.parse(sessionStorage.getItem("originalSelectedInfoProvider-" + uniqueId)!))
+        } else {
+            //leave a marker in the sessionStorage to identify if this is the first entering
+            sessionStorage.setItem("firstInfoProvSelectionEntering-" + uniqueId, "false");
+        }
+    }, [])
+    React.useEffect(() => {
+        sessionStorage.setItem("originalSelectedInfoProvider-" + uniqueId, JSON.stringify(originalSelectedInfoProvider))
+    }, [originalSelectedInfoProvider])
+    const clearSessionStorage = () => {
+        sessionStorage.removeItem("originalSelectedInfoProvider-" + uniqueId)
+        sessionStorage.removeItem("firstInfoProvSelectionEntering-" + uniqueId)
+    }
+
+    // holds all infoProviders that still need to be fetched
+    // we use useFetch since we often need to change to value without new rendering
+    const infoProviderToFetch= React.useRef<Array<InfoProviderData>>([]);
+    // holds all minimal infoProvider fetched so far - necessary since the parent state wont change between fetches
+    const minimalInfoProvObjects= React.useRef<Array<MinimalInfoProvider>>([]);
+
+    /**
+     * Method block for fetching all selected infoproviders from the backend
+     */
+
+    /**
+     * Fetches the next infoProvider in the list infoProviderToFetch.
+     * If there are no more infoProviders, fetching of all scenes is triggered.
+     */
+    const fetchNextInfoProvider = () => {
+        //when all infoProviders are fetched, proceed to the next component
+        if(infoProviderToFetch.current.length === 0) {
+            setContinueDisabled(false);
+            // copy the local useRef value to the state of the parent
+            props.setMinimalInfoProvObjects(minimalInfoProvObjects.current)
+            //console.log(minimalInfoProvObjects.current);
+            //fetch all scenes
+            props.fetchAllScenes();
+        }
+        //if not, fetch the next infoProvider
+        else fetchInfoProviderById(infoProviderToFetch.current[0].infoprovider_id)
+    }
+
+    /**
+     * Method that transforms a infoProvider fetched from the backend to a minimal infoProvider
+     * only containing the information necessary for video creation.
+     * @param infoProvider The infoProvider sent by the backend
+     */
+    const createMinimalInfoProvider = (infoProvider: InfoProviderFromBackend) => {
+        const minimalInfoProvider: MinimalInfoProvider = {
+            infoproviderName: infoProvider.infoprovider_name,
+            dataSources: []
+        }
+        infoProvider.datasources.forEach((dataSource) => {
+            minimalInfoProvider.dataSources.push({
+                apiName: dataSource.datasource_name,
+                selectedData: dataSource.selected_data,
+                customData: dataSource.formulas,
+                historizedData: dataSource.historized_data,
+                schedule: {
+                    type: dataSource.schedule.type,
+                    weekdays: dataSource.schedule.weekdays,
+                    time: dataSource.schedule.time,
+                    interval: dataSource.schedule.timeInterval,
+                },
+                arrayProcessingList: dataSource.arrayProcessingsList,
+                stringReplacementList: dataSource.stringReplacementList,
+            })
+        })
+        return minimalInfoProvider;
+    }
+
+
+    /**
+     * Handles errors of fetching infoProvider with fetchInfoProviderById()
+     * @param err The error returned by the backend.
+     */
+    const handleErrorFetchById = (err: Error) => {
+        props.reportError("Fehler: " + err);
+        setContinueDisabled(false);
+    }
+
+    /**
+     * Handles the success of the fetchInfoProviderById()-method.
+     * The json from the response will be transformed to a minimal version only
+     * containing the necessary information.
+     * Also removes the infoProvider from the list infoProviderToFetch.
+     * @param jsonData the answer from the backend
+     */
+    const handleSuccessFetchById = (jsonData: any) => {
+        const data = jsonData as InfoProviderFromBackend;
+        //add the transformed minimal infoProvider to the list of the parent component
+        const arCopy = minimalInfoProvObjects.current.slice();
+        arCopy.push(createMinimalInfoProvider(data));
+        minimalInfoProvObjects.current = (arCopy);
+        //remove the infoProvider from the list that still needs to be fetched
+        infoProviderToFetch.current = infoProviderToFetch.current.filter((infoProvider) => {
+            return infoProvider.infoprovider_name !== data.infoprovider_name;
+        })
+        //console.log("added a new infoprovider");
+        //console.log(infoProviderToFetch);
+        fetchNextInfoProvider();
+    }
+
+    //this static value will be true as long as the component is still mounted
+    //used to check if handling of a fetch request should still take place or if the component is not used anymore
+    const isMounted = React.useRef(true);
+
+    /**
+     * Method to fetch a infoProvider from the backend by its id.
+     * The standard hook "useCallFetch" is not used here since we want to pass an additional parameter 'id'.
+     * Setting the id in the state would cause problems making sure the right value is present when needed.
+     */
+    const fetchInfoProviderById = (id: number) => {
+        let url = "/visuanalytics/infoprovider/" + id;
+        //if this variable is set, add it to the url
+        if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
+        //setup a timer to stop the request after 5 seconds
+        const abort = new AbortController();
+        const timer = setTimeout(() => abort.abort(), 5000);
+        //starts fetching the contents from the backend
+        fetch(url, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json\n"
+            },
+            signal: abort.signal
+        }).then((res: Response) => {
+            //handles the response and gets the data object from it
+            if (!res.ok) throw new Error(`Network response was not ok, status: ${res.status}`);
+            return res.status === 204 ? {} : res.json();
+        }).then((data) => {
+            //success case - the data is passed to the handler
+            //only called when the component is still mounted
+            if (isMounted.current) handleSuccessFetchById(data)
+        }).catch((err) => {
+            //error case - the error code ist passed to the error handler
+            //only called when the component is still mounted
+            if (isMounted.current) handleErrorFetchById(err)
+        }).finally(() => clearTimeout(timer));
+    }
+
+    //defines a cleanup method that sets isMounted to false when unmounting
+    //will signal the fetchMethod to not work with the results anymore
+    React.useEffect(() => {
+        return () => {
+            isMounted.current = false;
+        };
+    }, []);
+
+    /**
+     * Method that checks if any infoproviders were unselected compared to the original state.
+     * Returns true if this is the case.
+     */
+    const checkProceedDialog = () => {
+        //if the amount is smaller, we can instantly say there was something removed
+        if(props.selectedInfoProvider.length < originalSelectedInfoProvider.length) return true;
+        //get the ids of both sets
+        const idArrayOriginal: Array<number> = [];
+        originalSelectedInfoProvider.forEach((selection) => {
+            idArrayOriginal.push(selection.infoprovider_id);
+        })
+        const idArray: Array<number> = [];
+        props.selectedInfoProvider.forEach((selection) => {
+            idArray.push(selection.infoprovider_id);
+        })
+        //for each id that was used originally, check if it is still in use
+        for (let index = 0; index < idArrayOriginal.length; index++) {
+            if(!idArray.includes(idArrayOriginal[index])) return true;
+        }
+        return false;
+    }
+
+    //console.log(originalSelectedInfoProvider)
+
+    /**
+     * Method to check if a certain infoProviderID is included in the list of selected infoproviders
+     * @param id The id to be checked
+     */
+    const checkIdIncluded = (id: number) => {
+        for (let index = 0; index < props.selectedInfoProvider.length; index++) {
+            if(props.selectedInfoProvider[index].infoprovider_id === id) return true;
+        }
+        return false;
+    }
+
+    /**
+     * Handler for clicking a checkbox of one of the info providers in the list.
+     * Adds the infoProvider to the selection if it is not selected, removes it if it is already selected
+     * The ID of the infoprovider is also added / removed to the used IDs for the tts
+     * @param infoProvider The infoProvider the checkbox was clicked for
+     */
+    const checkBoxHandler = (infoProvider: InfoProviderData) => {
+        //check if the infoProvider is already selected
+        if(checkIdIncluded(infoProvider.infoprovider_id)) {
+            //remove the infoProvider from the selection
+            props.setSelectedInfoProvider(props.selectedInfoProvider.filter((selectedInfoProvider) => {
+                return selectedInfoProvider.infoprovider_id !== infoProvider.infoprovider_id
+            }));
+            // Remove the infoprovider also from the array with the IDs of all selected infoproviders
+            props.setInfoproviderIDs(props.infoproviderIDs.filter((selectedInfoProviderID) => {
+                return selectedInfoProviderID !== infoProvider.infoprovider_id
+            }))
+        } else {
+            //add the infoProvider to the selection
+            const arCopy = props.selectedInfoProvider.slice();
+            arCopy.push(infoProvider);
+            props.setSelectedInfoProvider(arCopy);
+            // Add the ID of the infoprovider to the array with IDs of all selected infoproviders
+            const idsCopy = props.infoproviderIDs.slice();
+            idsCopy.push(infoProvider.infoprovider_id);
+            props.setInfoproviderIDs(idsCopy);
+        }
+    }
+
+    /**
+     * Method that renders a single item in the list of available infoproviders.
+     * @param infoProvider The infoprovider list item that should be rendered.
+     */
+    const renderListItem = (infoProvider: InfoProviderData) => {
+        return (
+            <ListItem key={infoProvider.infoprovider_id}>
+                <ListItemIcon>
+                    <Checkbox
+                        checked={checkIdIncluded(infoProvider.infoprovider_id)}
+                        onChange={() => checkBoxHandler(infoProvider)}
+                        disabled={props.isEditMode}
+                    />
+                </ListItemIcon>
+                <ListItemText className={classes.wrappedText}>
+                    {infoProvider.infoprovider_name}
+                </ListItemText>
+            </ListItem>
+        )
+    }
+
+
+    return (
+        <React.Fragment>
+            <Grid container justify="space-around">
+                <Grid item xs={12}>
+                    <Typography variant="body1">
+                        Bitte wählen sie die Infoprovider, deren Datenwerte in der Videoerstellung für Text-to-Speech zur Verfügung stehen sollen:
+                    </Typography>
+                </Grid>
+                <Grid item xs={10}>
+                    <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.listFrame}>
+                        <List disablePadding={true}>
+                            {props.infoProviderList.map((infoProvider) => renderListItem(infoProvider))}
+                        </List>
+                    </Box>
+                </Grid>
+                <Grid item xs={12} className={classes.fixedWarningContainer}>
+                    {props.selectedInfoProvider.length > 5 &&
+                    <Alert severity="warning">
+                        <strong>Warnung:</strong> Es müssen die Informationen aller ausgewählten Infoprovider gleichzeitig geladen werden.<br/>
+                        Bitte berücksichtigen sie, dass bei einer größeren Menge und sehr großen Infoprovidern Performance-Einbußen auftreten können.
+                    </Alert>
+                    }
+                </Grid>
+                <Grid item container xs={12} justify="space-between" className={classes.elementLargeMargin}>
+                    <Grid item>
+                        <Button variant="contained" size="large" color="primary" onClick={() => {
+                            clearSessionStorage();
+                            props.backHandler();
+                        }}>
+                            zurück
+                        </Button>
+                    </Grid>
+                    <Grid item className={classes.blockableButtonPrimary}>
+                        <Button disabled={continueDisabled} variant="contained" size="large" color="primary" onClick={() => {
+                            if(checkProceedDialog()) setProceedDialogOpen(true);
+                            else {
+                                infoProviderToFetch.current = props.selectedInfoProvider;
+                                setContinueDisabled(true);
+                                fetchNextInfoProvider();
+                            }
+                        }}>
+                            weiter
+                        </Button>
+                    </Grid>
+                </Grid>
+            </Grid>
+            <Dialog onClose={() => {
+                setProceedDialogOpen(false);
+            }} aria-labelledby="backDialog-title"
+                    open={proceedDialogOpen}>
+                <DialogTitle id="backDialog-title">
+                    Zurücksetzen der Szenen-Einstellungen
+                </DialogTitle>
+                <DialogContent dividers>
+                    <Typography gutterBottom>
+                        Durch das Abwählen von Infoprovidern wird es notwendig, die bisher vorgenommenen Szeneneinstellungen zurücksetzen.
+                    </Typography>
+                    <Typography gutterBottom>
+                        Wirklich fortfahren?
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Grid container justify="space-between">
+                        <Grid item>
+                            <Button variant="contained"
+                                    onClick={() => {
+                                        setProceedDialogOpen(false);
+                                    }}>
+                                abbrechen
+                            </Button>
+                        </Grid>
+                        <Grid item>
+                            <Button variant="contained"
+                                    onClick={() => {
+                                        props.resetJobSettings();
+                                        infoProviderToFetch.current = props.selectedInfoProvider;
+                                        setContinueDisabled(true);
+                                        fetchNextInfoProvider();
+                                    }}
+                                    color="primary"
+                            >
+                                weiter
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </DialogActions>
+            </Dialog>
+        </React.Fragment>
+    )
+}

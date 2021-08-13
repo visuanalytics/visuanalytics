@@ -1,10 +1,26 @@
 --
--- File generated with SQLiteStudio v3.2.1 on Mi. Aug. 19 13:20:08 2020
+-- File generated with SQLiteStudio v3.3.3 on Mo Jul 5 09:46:32 2021
 --
--- Text encoding used: UTF-8
+-- Text encoding used: System
 --
 PRAGMA foreign_keys = off;
 BEGIN TRANSACTION;
+
+-- Table: datasource
+DROP TABLE IF EXISTS datasource;
+
+CREATE TABLE datasource (
+    datasource_id             INTEGER PRIMARY KEY AUTOINCREMENT
+                                      UNIQUE
+                                      NOT NULL,
+    datasource_name           VARCHAR NOT NULL,
+    schedule_historisation_id INTEGER REFERENCES schedule_historisation (schedule_historisation_id) ON DELETE CASCADE
+                                                                                                    ON UPDATE CASCADE,
+    infoprovider_id           INTEGER REFERENCES infoprovider (infoprovider_id) ON DELETE CASCADE
+                                                                                ON UPDATE CASCADE
+                                      NOT NULL
+);
+
 
 -- Table: delete_options
 DROP TABLE IF EXISTS delete_options;
@@ -19,6 +35,29 @@ CREATE TABLE delete_options (
     days              INTEGER,
     hours             INTEGER,
     fix_names_count   INTEGER
+);
+
+
+-- Table: image
+DROP TABLE IF EXISTS image;
+
+CREATE TABLE image (
+    image_id   INTEGER PRIMARY KEY AUTOINCREMENT
+                       UNIQUE
+                       NOT NULL,
+    image_name VARCHAR NOT NULL,
+    folder     VARCHAR NOT NULL
+);
+
+
+-- Table: infoprovider
+DROP TABLE IF EXISTS infoprovider;
+
+CREATE TABLE infoprovider (
+    infoprovider_id   INTEGER PRIMARY KEY AUTOINCREMENT
+                              UNIQUE
+                              NOT NULL,
+    infoprovider_name VARCHAR NOT NULL
 );
 
 
@@ -68,7 +107,9 @@ CREATE TABLE job_logs (
     error_msg       TEXT,
     error_traceback TEXT,
     duration        INT,
-    start_time      DATETIME
+    start_time      DATETIME,
+    pipeline_type   VARCHAR  NOT NULL
+                             DEFAULT JOB
 );
 
 
@@ -90,19 +131,111 @@ CREATE TABLE job_topic_position (
 );
 
 
+-- Table: job_uses_scene
+DROP TABLE IF EXISTS job_uses_scene;
+
+CREATE TABLE job_uses_scene (
+    job_uses_scene_id INTEGER PRIMARY KEY AUTOINCREMENT
+                              UNIQUE
+                              NOT NULL,
+    job_id            INTEGER REFERENCES job (job_id) ON DELETE CASCADE
+                                                      ON UPDATE CASCADE
+                              NOT NULL,
+    scene_id          INTEGER REFERENCES scene (scene_id) ON DELETE CASCADE
+                                                          ON UPDATE CASCADE
+                              NOT NULL,
+    scene_is_preview  BOOLEAN NOT NULL
+);
+
+
+-- Table: scene
+DROP TABLE IF EXISTS scene;
+
+CREATE TABLE scene (
+    scene_id   INTEGER PRIMARY KEY AUTOINCREMENT
+                       UNIQUE
+                       NOT NULL,
+    scene_name VARCHAR NOT NULL
+);
+
+
+-- Table: scene_uses_image
+DROP TABLE IF EXISTS scene_uses_image;
+
+CREATE TABLE scene_uses_image (
+    scene_uses_image_id INTEGER PRIMARY KEY AUTOINCREMENT
+                                UNIQUE
+                                NOT NULL,
+    scene_id            INTEGER REFERENCES scene (scene_id) ON DELETE CASCADE
+                                                            ON UPDATE CASCADE
+                                NOT NULL,
+    image_id            INTEGER REFERENCES image (image_id) ON DELETE CASCADE
+                                                            ON UPDATE CASCADE
+                                NOT NULL
+);
+
+
+-- Table: scene_uses_infoprovider
+DROP TABLE IF EXISTS scene_uses_infoprovider;
+
+CREATE TABLE scene_uses_infoprovider (
+    scene_uses_infoprovider_id INTEGER PRIMARY KEY AUTOINCREMENT
+                                       UNIQUE
+                                       NOT NULL,
+    infoprovider_id            INTEGER REFERENCES infoprovider (infoprovider_id) ON DELETE CASCADE
+                                                                                 ON UPDATE CASCADE
+                                       NOT NULL,
+    scene_id                   INTEGER REFERENCES scene (scene_id) ON DELETE CASCADE
+                                                                   ON UPDATE CASCADE
+                                       NOT NULL
+);
+
+
 -- Table: schedule
 DROP TABLE IF EXISTS schedule;
 
 CREATE TABLE schedule (
-    schedule_id   INTEGER PRIMARY KEY
-                          UNIQUE
-                          NOT NULL,
-    type          VARCHAR NOT NULL
-                          CHECK (type IN ("daily", "weekly", "interval", "on_date") ),
-    time          TIME,
-    date          DATE,
-    time_interval         CHECK (time_interval IN ("minute", "quarter", "half", "threequarter", "hour", "quartday", "halfday") ),
+    schedule_id    INTEGER PRIMARY KEY
+                           UNIQUE
+                           NOT NULL,
+    type           VARCHAR NOT NULL
+                           CHECK (type IN ("daily", "weekly", "interval", "on_date") ),
+    time           TIME,
+    date           DATE,
+    time_interval          CHECK (time_interval IN ("minute", "quarter", "half", "threequarter", "hour", "quartday", "halfday") ),
     next_execution VARCHAR
+);
+
+
+-- Table: schedule_historisation
+DROP TABLE IF EXISTS schedule_historisation;
+
+CREATE TABLE schedule_historisation (
+    schedule_historisation_id INTEGER PRIMARY KEY AUTOINCREMENT
+                                      UNIQUE
+                                      NOT NULL,
+    type                      VARCHAR NOT NULL
+                                      CHECK (type IN ("daily", "weekly", "interval", "on_date") ),
+    time                      TIME,
+    date                      DATE,
+    time_interval                     CHECK (time_interval IN ("minute", "quarter", "half", "threequarter", "hour", "quartday", "halfday") ),
+    next_execution            VARCHAR
+);
+
+
+-- Table: schedule_historisation_weekday
+DROP TABLE IF EXISTS schedule_historisation_weekday;
+
+CREATE TABLE schedule_historisation_weekday (
+    schedule_weekday_historisation_id INTEGER     PRIMARY KEY AUTOINCREMENT
+                                                  UNIQUE
+                                                  NOT NULL,
+    weekday                           INTEGER (1) NOT NULL
+                                                  CHECK (weekday >= 0 AND
+                                                         weekday <= 6),
+    schedule_historisation_id         INTEGER     REFERENCES schedule_historisation (schedule_historisation_id) ON DELETE CASCADE
+                                                                                                                ON UPDATE CASCADE
+                                                  NOT NULL
 );
 
 

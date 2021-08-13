@@ -34,9 +34,8 @@ def register_audio_parts(func):
 
 @register_audio_parts
 def file(values, data):
-    """Gibt den Text unter pattern aus.
-
-    Gibt den Text unter pattern aus. Wenn dieser Ersetzungen erwartet, werden diese durchgeführt.
+    """
+    Gibt an, dass eine bereits vorhandene Audio Teil der Audio ist
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
@@ -96,7 +95,17 @@ def random_text(values, data):
     """
     len_pattern = len(values["pattern"])
     if len_pattern == 1:
-        return data.format(values["pattern"][0], values)
+        return data.format(values["pattern"][0], values), True
     else:
         rand = randint(0, len_pattern - 1)
-        return data.format(values["pattern"][rand], values)
+        return data.format(values["pattern"][rand], values), True
+
+@register_audio_parts
+def silent(values, data):
+    """
+    Gibt an, dass eine lautlose Audio Teil der Audio ist
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    """
+    return "", False

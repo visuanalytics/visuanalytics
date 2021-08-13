@@ -7,7 +7,7 @@ import { handleResponse, fetchTimeOut } from "../util/fetchUtils";
  *
  * @param url Request URL (siehe fetch)
  * @param parms Request parms (siehe fetch)
- * @param calBack Callback Funktion für einen erfolgreichen Request
+ * @param callBack Callback Funktion für einen erfolgreichen Request
  * @param errorHandle Callback Funktion für den Fehler fall
  */
 export const useCallFetch = (

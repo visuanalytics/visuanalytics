@@ -70,6 +70,10 @@ class ImageError(StepError):
     pass
 
 
+class DiagramError(StepError):
+    pass
+
+
 class ThumbnailError(StepError):
     pass
 
@@ -80,6 +84,16 @@ class AudioError(StepError):
 
 class SequenceError(StepError):
     pass
+
+
+class PiePlotError(Exception):
+    """
+    Fehlerklasse für ein Kuchendiagramm,
+    der des 'diagrams' Schrittes auftritt, falls die Y-Werte einen negativen Wert enthalten.
+    """
+
+    def __init__(self):
+        super().__init__(f"Can not generate pie-plot with negative values")
 
 
 class StepTypeError(Exception):

@@ -70,3 +70,39 @@ def get_private():
     except FileNotFoundError as e:
         e.strerror = "Private configuration file does not exist"
         raise e
+
+
+def set_private(new_config):
+    """
+    Setzt den Inhalt der privaten Konfigurationsdatei auf das übergeben Json-Objekt.
+
+    :param new_config: Inhalt der neuen Konfigurationsdatei als Json-Objekt.
+    :raises: FileNotFoundError: Wenn die private Konfigurationsdatei nicht existiert.
+    """
+    try:
+        with open(os.path.normpath(os.path.join(os.path.dirname(__file__), CONFIG_PRIVATE_LOCATION)), "w") as fh:
+            json.dump(new_config, fh)
+    except FileNotFoundError as e:
+        e.strerror = "Private configuration file does not exist"
+        raise e
+
+
+def assert_private_exists():
+    """
+    Generiert die private Konfigurationsdatei falls sie nicht vorhanden ist.
+    """
+    config_content = {
+        "api_keys": {},
+        "steps_base_config": {
+            "output_path": "out",
+            "testing": False,
+            "h264_nvenc": False
+        },
+        "testing": True,
+        "console_mode": False
+    }
+    path = os.path.normpath(os.path.join(os.path.dirname(__file__), CONFIG_PRIVATE_LOCATION))
+    if not os.path.isfile(path):
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        with open(path, "w") as f:
+            json.dump(config_content, f)

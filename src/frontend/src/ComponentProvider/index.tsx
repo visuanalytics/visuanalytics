@@ -4,9 +4,10 @@ import {
   MainComponent,
   mainComponents,
 } from "../util/mainComponents";
+import {uniqueId} from "../CreateInfoProvider/types";
 
 // Component das zuerst Angezeigt wird
-const startComponent: ComponentKey = "home";
+const startComponent: ComponentKey = "dashboard";
 
 type ComponentContextType = {
   current: MainComponent;
@@ -25,12 +26,50 @@ interface Props {}
  */
 export const ComponentProvider: React.FC<Props> = ({ children }) => {
   const [current, setCurrent] = React.useState<MainComponent>(
-    mainComponents[startComponent]
+    mainComponents[sessionStorage.getItem("currentComponent-" + uniqueId)||startComponent]
   );
 
   const handleSetCurrent = (next: ComponentKey, props?: Object) => {
     setCurrent({ ...mainComponents[next], props: props });
   };
+  
+  /* keep current context in sessionStorage */
+  React.useEffect(() => {
+    //get the componentKey from sessionStorage and choose the correct context object
+    //dashboard is the default when nothing is selected
+    setCurrent(mainComponents[sessionStorage.getItem("currentComponent-" + uniqueId)||"dashboard"]);
+  }, [])
+
+  /* on every context change, store the componentKey of the new context in sessionStorage */
+  React.useEffect(() => {
+    /* calculate keyName */
+    //currently, navName is the same as keyName, but to be prepared for changes here, this search is included
+    //no support for the old frontend
+    let keyName = "";
+    switch(current.navName) {
+      case "createInfoProvider": {
+        keyName = "createInfoProvider";
+        break;
+      }
+      case "dashboard": {
+        keyName = "dashboard";
+        break;
+      }
+      case "editInfoProvider": {
+        keyName = "editInfoProvider";
+        break;
+      }
+      case "sceneEditor": {
+          keyName = "sceneEditor";
+          break;
+      }
+      case "videoCreator": {
+        keyName = "videoCreator";
+        break;
+      }
+    }
+    sessionStorage.setItem("currentComponent-" + uniqueId, keyName);
+  }, [current])
 
   return (
     <ComponentContext.Provider

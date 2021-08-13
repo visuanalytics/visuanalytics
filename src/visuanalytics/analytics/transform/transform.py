@@ -7,6 +7,7 @@ from collections import Counter
 from datetime import datetime
 from pydoc import locate
 from random import randint
+from copy import deepcopy
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.transform.calculate import CALCULATE_ACTIONS
@@ -201,6 +202,8 @@ def replace(values: dict, data: StepData):
         new_value = value.replace(data.format(values["old_value"], values),
                                   data.format(values["new_value"], values),
                                   data.get_data(values.get("count", -1), values, int))
+        # test mit RegEx
+        # new_value = re.sub(data.format(values["old_value"], values), data.format(values["new_value"], values), value, count=data.get_data(values.get("count", 0), values, int))
         data.insert_data(new_key, new_value, values)
 
 
@@ -431,7 +434,7 @@ def copy(values: dict, data: StepData):
     """
     for idx, key in data.loop_key(values["keys"], values):
         new_key = get_new_keys(values, idx)
-        new_value = data.get_data(key, values)
+        new_value = deepcopy(data.get_data(key, values))
         data.insert_data(new_key, new_value, values)
 
 
