@@ -165,5 +165,10 @@ docs/modules
 /resources/temp/*
 !/resources/temp/.gitkeep
 /resources/memory/
+/resources/datasources
+/resources/images/scene
+/resources/infoprovider
+/resources/scenes
+/resources/steps
 server/static
 server/templates
