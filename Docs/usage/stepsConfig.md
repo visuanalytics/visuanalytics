@@ -9,12 +9,12 @@ Um auf die Daten der API-Antwort zugreifen und diese modifizieren zu können, we
 Es werden Bilder (`images`) und Audiodateien (`audio`) erstellt, die am Ende in einer bestimmten Reihenfolge (`sequence`) 
 aneinander gehängt werden.
 
-Im Repository finden 4 dieser [JSON-Dateien](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/tree/master/src/visuanalytics/resources/steps) für die Generierung von Videos zu den Themen:
+Im Repository finden 4 dieser [JSON-Dateien](https://github.com/visuanalytics/visuanalytics/tree/master/src/visuanalytics/resources/steps) für die Generierung von Videos zu den Themen:
 
-- [Deutschlandweiter Wetterbericht](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/blob/master/src/visuanalytics/resources/steps/weather_germany.json)
-- [Ortsbezogener Wetterbericht](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/blob/master/src/visuanalytics/resources/steps/weather_single.json)
-- [Fußballbericht zur 1. und 2. Bundesliga](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/blob/master/src/visuanalytics/resources/steps/football.json)
-- [Twitter-Wordcloud-Verlauf](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/blob/master/src/visuanalytics/resources/steps/twitter.json)
+- [Deutschlandweiter Wetterbericht](https://github.com/visuanalytics/visuanalytics/blob/master/src/visuanalytics/resources/steps/weather_germany.json)
+- [Ortsbezogener Wetterbericht](https://github.com/visuanalytics/visuanalytics/blob/master/src/visuanalytics/resources/steps/weather_single.json)
+- [Fußballbericht zur 1. und 2. Bundesliga](https://github.com/visuanalytics/visuanalytics/blob/master/src/visuanalytics/resources/steps/football.json)
+- [Twitter-Wordcloud-Verlauf](https://github.com/visuanalytics/visuanalytics/blob/master/src/visuanalytics/resources/steps/twitter.json)
 
 Die JSON-Datei mit den Konfigurationen zu einem Thema (im folgenden JSON-Datei genannt) hat folgende Abschnitte:
 ```JSON

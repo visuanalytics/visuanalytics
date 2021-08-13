@@ -648,7 +648,7 @@ Möchte man einen Wordcloud-Verlauf darstellen, müssen einzelne Wordclouds erst
 häufigsten vorkommt, dann kommt das zweithäufigste Wort hinzu und so weiter. Bis am Ende eine Worcloud mit allen Wörtern 
 dargestellt wird. Die einzelnen Wordclouds werden dann im Sequence-Schritt aneinandergehängt.
 
-In dem Verlauf, welcher mit der [twitter.json](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/blob/master/src/visuanalytics/resources/steps/twitter.json)
+In dem Verlauf, welcher mit der [twitter.json](https://github.com/visuanalytics/visuanalytics/blob/master/src/visuanalytics/resources/steps/twitter.json)
 erstellt wird, werden Wordclouds mit jeweils den ersten x (x = 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, alle) Wörtern, die am 
 häufigsten vorkommen, erstellt und aneinandergereiht.
 
