@@ -31,6 +31,10 @@
       {
         "name": "Corona-Bundesland",
         "file_name": "corona_bundesland"
+      },
+      {
+        "name": "Abfuhrkalenar Biebertal",
+        "file_name": "waste_collection"
       }
     ]
   },
