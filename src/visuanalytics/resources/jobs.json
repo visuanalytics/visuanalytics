@@ -5,9 +5,7 @@
       "id": 0,
       "steps": "weather_germany",
       "schedule": {
-        "times": [
-          "14:34"
-        ],
+        "times": ["14:34"],
         "daily": true
       },
       "config": {
@@ -16,14 +14,8 @@
           {
             "steps": "twitter",
             "config": {
-              "hashtags": [
-                "Bundesliga",
-                "Fußball"
-              ],
-              "stopwords": [
-                "Bundesliga",
-                "Werder"
-              ],
+              "hashtags": ["Bundesliga", "Fußball"],
+              "stopwords": ["Bundesliga", "Werder"],
               "normalize_words": true,
               "colormap_words": "viridis",
               "color_func": true,
@@ -42,9 +34,7 @@
       "id": 1,
       "steps": "weather_single",
       "schedule": {
-        "times": [
-          "11:27"
-        ],
+        "times": ["11:27"],
         "daily": true,
         "removal_time": {
           "days": 7,
@@ -73,9 +63,7 @@
       "id": 1,
       "steps": "football",
       "schedule": {
-        "times": [
-          "14:46"
-        ],
+        "times": ["14:46"],
         "daily": true
       },
       "config": {
@@ -89,20 +77,12 @@
       "id": 1,
       "steps": "twitter",
       "schedule": {
-        "times": [
-          "20:04"
-        ],
+        "times": ["20:04"],
         "daily": true
       },
       "config": {
-        "hashtags": [
-          "Bundesliga",
-          "Corona",
-          "Berlin"
-        ],
-        "stopwords": [
-          "Corona"
-        ],
+        "hashtags": ["Bundesliga", "Corona", "Berlin"],
+        "stopwords": ["Corona"],
         "thumbnail": true,
         "normalize_words": true,
         "colormap_words": "viridis",
@@ -121,9 +101,7 @@
       "id": 1,
       "steps": "corona_regional",
       "schedule": {
-        "times": [
-          "11:26"
-        ],
+        "times": ["11:26"],
         "daily": true
       },
       "config": {
@@ -147,9 +125,7 @@
       "id": 1,
       "steps": "corona_bundesland",
       "schedule": {
-        "times": [
-          "10:46"
-        ],
+        "times": ["10:46"],
         "daily": true
       },
       "config": {
@@ -164,9 +140,7 @@
       "id": 1,
       "steps": "weather_simpel",
       "schedule": {
-        "times": [
-          "16:29"
-        ],
+        "times": ["16:29"],
         "daily": true,
         "removal_time": {
           "days": 7,
@@ -177,6 +151,22 @@
         "thumbnail": false,
         "keep_count": 3,
         "p_code": "35398"
+      }
+    },
+    {
+      "name": "Abfuhrkalendar",
+      "id": 1,
+      "steps": "waste_collection",
+      "schedule": {
+        "times": ["19:45"],
+        "daily": true,
+        "removal_time": {
+          "days": 7,
+          "hours": 10
+        }
+      },
+      "config": {
+        "url": "http://localhost"
       }
     }
   ]

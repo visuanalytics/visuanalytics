@@ -595,7 +595,6 @@ Führt alle angegebenen `transform`-Typen für alle Werte eines Arrays aus.
   Für kompliziertere Anwendungen kann es sein, dass man einen Trick benötigt, um _Spezialvariablen_ aus der vorherigen
   Ebene (innerhalb der JSON-Datei) zu verwenden. Dieser ist unter `Key Trick <#key-trick>`_ beschrieben.
 ```
-```
 
 ### transform_dict
 
@@ -618,6 +617,14 @@ Führt alle angegebenen `transform`-Typen für alle Werte eines Dictionaries aus
 `transform`:
 
 `transform`-Typen, die für alle Werte des - unter `dict_key` angegebenen - Dictionaries ausgeführt werden sollen.
+
+`filter_keys`:
+
+[str](#string) - `Regex` zum Filtern der dict keys (Ein Beispiel für einen Regulären ausdruck befindet sich [hier](#regex))
+
+`skip_keys`:
+
+[str](#string) - `Regex` zum überspringen von dict keys (Ein Beispiel für einen Regulären ausdruck befindet sich [hier](#regex))
 
 - _Spezialvariablen_:
   - `_loop`: Hier wird der aktuelle Wert des Schleifendurchlaufs gespeichert.

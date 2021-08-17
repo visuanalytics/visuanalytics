@@ -1,0 +1,1222 @@
+{
+  "id": 1,
+  "name": "waste_collection",
+  "info": "Der Abfuhrkalender für die Gemeinde Biebertal.",
+  "api": {
+    "type": "request_multiple",
+    "steps_value": [
+      "Biebertal-Bieber",
+      "Biebertal-Fellingshausen",
+      "Biebertal-Frankenbach",
+      "Biebertal-Königsberg",
+      "Biebertal-Krumbach",
+      "Biebertal-Rodheim",
+      "Biebertal-Vetzberg"
+    ],
+    "url_pattern": "{_conf|url}/{_loop}.json",
+    "use_loop_as_key": true
+  },
+  "transform": [
+    {
+      "type": "add_data",
+      "new_keys": ["today"],
+      "data": "heute"
+    },
+    {
+      "type": "add_data",
+      "new_keys": ["tomorrow"],
+      "data": "morgen"
+    },
+    {
+      "type": "add_data",
+      "new_keys": ["and"],
+      "data": " und "
+    },
+    {
+      "type": "add_data",
+      "new_keys": ["collectionToday"],
+      "data": {
+        "isEmpty": true
+      }
+    },
+    {
+      "type": "add_data",
+      "new_keys": ["collectionTomorrow"],
+      "data": {
+        "isEmpty": true
+      }
+    },
+    {
+      "type": "transform_dict",
+      "dict_key": "_req",
+      "transform": [
+        {
+          "type": "add_data",
+          "new_keys": ["city"],
+          "data": "$_idx"
+        },
+        {
+          "type": "replace",
+          "keys": ["city"],
+          "old_value": "Biebertal-",
+          "new_value": ""
+        },
+        {
+          "type": "transform_dict",
+          "dict_key": "_loop",
+          "filter_keys": ".*TAG$",
+          "transform": [
+            {
+              "type": "compare",
+              "value_left": "_loop|0",
+              "value_right": "today",
+              "on_equal": [
+                {
+                  "type": "append",
+                  "keys": ["city"],
+                  "new_keys": ["collectionToday|{_idx}"],
+                  "append_type": "string",
+                  "delimiter": ", "
+                },
+                {
+                  "type": "add_data",
+                  "new_keys": ["collectionToday|isEmpty"],
+                  "data": false
+                }
+              ]
+            },
+            {
+              "type": "compare",
+              "value_left": "_loop|0",
+              "value_right": "tomorrow",
+              "on_equal": [
+                {
+                  "type": "append",
+                  "keys": ["city"],
+                  "new_keys": ["collectionTomorrow|{_idx}"],
+                  "append_type": "string",
+                  "delimiter": ", "
+                },
+                {
+                  "type": "add_data",
+                  "new_keys": ["collectionTomorrow|isEmpty"],
+                  "data": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "transform_dict",
+          "dict_key": "_loop",
+          "skip_keys": ".*TAG$",
+          "transform": [
+            {
+              "type": "date_format",
+              "keys": ["_loop|0"],
+              "given_format": "%d.%m.%Y",
+              "format": "%d.%m",
+              "zeropaded_off": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "add_data",
+      "new_keys": ["collectionToday|text"],
+      "data": "Heute werden die "
+    },
+
+    {
+      "type": "add_data",
+      "new_keys": ["todayAddAnd"],
+      "data": false
+    },
+    {
+      "type": "transform_dict",
+      "dict_key": "collectionToday",
+      "skip_keys": "isEmpty|text|Mobile Schadstoffsammlung im Ort TAG",
+      "transform": [
+        {
+          "type": "regex",
+          "keys": ["_idx"],
+          "new_keys": ["tonne"],
+          "regex": "(Tonne)? TAG",
+          "replace_by": ""
+        },
+        {
+          "type": "option",
+          "check": "todayAddAnd",
+          "on_true": [
+            {
+              "type": "append",
+              "keys": ["and"],
+              "new_keys": ["collectionToday|text"],
+              "append_type": "string",
+              "delimiter": ""
+            }
+          ]
+        },
+        {
+          "type": "add_data",
+          "new_keys": ["preText"],
+          "data": "{tonne} Tonnen in {_loop} Abgeholt"
+        },
+        {
+          "type": "append",
+          "keys": ["preText"],
+          "new_keys": ["collectionToday|text"],
+          "append_type": "string",
+          "delimiter": " "
+        },
+        {
+          "type": "add_data",
+          "new_keys": ["todayAddAnd"],
+          "data": true
+        }
+      ]
+    },
+    {
+      "type": "add_data",
+      "new_keys": ["collectionTomorrow|text"],
+      "data": "Morgen werden die "
+    },
+    {
+      "type": "add_data",
+      "new_keys": ["tomorrowAddAnd"],
+      "data": false
+    },
+    {
+      "type": "transform_dict",
+      "dict_key": "collectionTomorrow",
+      "skip_keys": "isEmpty|text|Mobile Schadstoffsammlung im Ort TAG",
+      "transform": [
+        {
+          "type": "regex",
+          "keys": ["_idx"],
+          "new_keys": ["tonne"],
+          "regex": "(Tonne)? TAG",
+          "replace_by": ""
+        },
+        {
+          "type": "option",
+          "check": "tomorrowAddAnd",
+          "on_true": [
+            {
+              "type": "append",
+              "keys": ["and"],
+              "new_keys": ["collectionTomorrow|text"],
+              "append_type": "string",
+              "delimiter": ""
+            }
+          ]
+        },
+        {
+          "type": "add_data",
+          "new_keys": ["preText"],
+          "data": "{tonne} Tonnen in {_loop} Abgeholt"
+        },
+        {
+          "type": "append",
+          "keys": ["preText"],
+          "new_keys": ["collectionTomorrow|text"],
+          "append_type": "string",
+          "delimiter": " "
+        },
+        {
+          "type": "add_data",
+          "new_keys": ["tomorrowAddAnd"],
+          "data": true
+        }
+      ]
+    }
+  ],
+  "storing": [],
+  "images": {
+    "background": {
+      "type": "pillow",
+      "path": "waste_collection/background.png",
+      "overlay": [
+        {
+          "description": "Tone Heute",
+          "type": "option",
+          "check": "_req|Biebertal-Bieber|Restabfall 2-w\u00f6chentlich TAG|0",
+          "on_true": [
+            {
+              "type": "text",
+              "pos_x": 559,
+              "pos_y": 298,
+              "preset": "dateNow",
+              "pattern": "{_req|Biebertal-Bieber|Restabfall 2-w\u00f6chentlich TAG|0}"
+            }
+          ],
+          "on_false": [
+            {
+              "type": "text",
+              "pos_x": 559,
+              "pos_y": 298,
+              "preset": "date",
+              "pattern": "{_req|Biebertal-Bieber|Restabfall 2-w\u00f6chentlich|0}"
+            }
+          ]
+        },
+        {
+          "description": "Tone Heute",
+          "type": "option",
+          "check": "_req|Biebertal-Bieber|Restabfall 4-w\u00f6chentlich TAG|0",
+          "on_true": [
+            {
+              "type": "text",
+              "pos_x": 800,
+              "pos_y": 298,
+              "preset": "dateNow",
+              "pattern": "{_req|Biebertal-Bieber|Restabfall 4-w\u00f6chentlich TAG|0}"
+            }
+          ],
+          "on_false": [
+            {
+              "type": "text",
+              "pos_x": 800,
+              "pos_y": 298,
+              "preset": "date",
+              "pattern": "{_req|Biebertal-Bieber|Restabfall 4-w\u00f6chentlich|0}"
+            }
+          ]
+        },
+        {
+          "description": "Tone Heute",
+          "type": "option",
+          "check": "_req|Biebertal-Bieber|Bioabfall TAG|0",
+          "on_true": [
+            {
+              "type": "text",
+              "pos_x": 1041,
+              "pos_y": 298,
+              "preset": "dateNow",
+              "pattern": "{_req|Biebertal-Bieber|Bioabfall TAG|0}"
+            }
+          ],
+          "on_false": [
+            {
+              "type": "text",
+              "pos_x": 1041,
+              "pos_y": 298,
+              "preset": "date",
+              "pattern": "{_req|Biebertal-Bieber|Bioabfall|0}"
+            }
+          ]
+        },
+        {
+          "description": "Tone Heute",
+          "type": "option",
+          "check": "_req|Biebertal-Bieber|Gelbe Tonne TAG|0",
+          "on_true": [
+            {
+              "type": "text",
+              "pos_x": 1282,
+              "pos_y": 298,
+              "preset": "dateNow",
+              "pattern": "{_req|Biebertal-Bieber|Gelbe Tonne TAG|0}"
+            }
+          ],
+          "on_false": [
+            {
+              "type": "text",
+              "pos_x": 1282,
+              "pos_y": 298,
+              "preset": "date",
+              "pattern": "{_req|Biebertal-Bieber|Gelbe Tonne|0}"
+            }
+          ]
+        },
+        {
+          "description": "Tone Heute",
+          "type": "option",
+          "check": "_req|Biebertal-Bieber|Altpapier TAG|0",
+          "on_true": [
+            {
+              "type": "text",
+              "pos_x": 1523,
+              "pos_y": 298,
+              "preset": "dateNow",
+              "pattern": "{_req|Biebertal-Bieber|Altpapier TAG|0}"
+            }
+          ],
+          "on_false": [
+            {
+              "type": "text",
+              "pos_x": 1523,
+              "pos_y": 298,
+              "preset": "date",
+              "pattern": "{_req|Biebertal-Bieber|Altpapier|0}"
+            }
+          ]
+        },
+        {
+          "description": "Tone Heute",
+          "type": "option",
+          "check": "_req|Biebertal-Bieber|Mobile Schadstoffsammlung im Ort TAG|0",
+          "on_true": [
+            {
+              "type": "text",
+              "pos_x": 1764,
+              "pos_y": 298,
+              "preset": "dateNow",
+              "pattern": "{_req|Biebertal-Bieber|Mobile Schadstoffsammlung im Ort TAG|0}"
+            }
+          ],
+          "on_false": [
+            {
+              "type": "text",
+              "pos_x": 1764,
+              "pos_y": 298,
+              "preset": "date",
+              "pattern": "{_req|Biebertal-Bieber|Mobile Schadstoffsammlung im Ort|0}"
+            }
+          ]
+        },
+        {
+          "description": "Tone Heute",
+          "type": "option",
+          "check": "_req|Biebertal-Fellingshausen|Restabfall 2-w\u00f6chentlich TAG|0",
+          "on_true": [
+            {
+              "type": "text",
+              "pos_x": 559,
+              "pos_y": 398,
+              "preset": "dateNow",
+              "pattern": "{_req|Biebertal-Fellingshausen|Restabfall 2-w\u00f6chentlich TAG|0}"
+            }
+          ],
+          "on_false": [
+            {
+              "type": "text",
+              "pos_x": 559,
+              "pos_y": 398,
+              "preset": "date",
+              "pattern": "{_req|Biebertal-Fellingshausen|Restabfall 2-w\u00f6chentlich|0}"
+            }
+          ]
+        },
+        {
+          "description": "Tone Heute",
+          "type": "option",
+          "check": "_req|Biebertal-Fellingshausen|Restabfall 4-w\u00f6chentlich TAG|0",
+          "on_true": [
+            {
+              "type": "text",
+              "pos_x": 800,
+              "pos_y": 398,
+              "preset": "dateNow",
+              "pattern": "{_req|Biebertal-Fellingshausen|Restabfall 4-w\u00f6chentlich TAG|0}"
+            }
+          ],
+          "on_false": [
+            {
+              "type": "text",
+              "pos_x": 800,
+              "pos_y": 398,
+              "preset": "date",
+              "pattern": "{_req|Biebertal-Fellingshausen|Restabfall 4-w\u00f6chentlich|0}"
+            }
+          ]
+        },
+        {
+          "description": "Tone Heute",
+          "type": "option",
+          "check": "_req|Biebertal-Fellingshausen|Bioabfall TAG|0",
+          "on_true": [
+            {
+              "type": "text",
+              "pos_x": 1041,
+              "pos_y": 398,
+              "preset": "dateNow",
+              "pattern": "{_req|Biebertal-Fellingshausen|Bioabfall TAG|0}"
+            }
+          ],
+          "on_false": [
+            {
+              "type": "text",
+              "pos_x": 1041,
+              "pos_y": 398,
+              "preset": "date",
+              "pattern": "{_req|Biebertal-Fellingshausen|Bioabfall|0}"
+            }
+          ]
+        },
+        {
+          "description": "Tone Heute",
+          "type": "option",
+          "check": "_req|Biebertal-Fellingshausen|Gelbe Tonne TAG|0",
+          "on_true": [
+            {
+              "type": "text",
+              "pos_x": 1282,
+              "pos_y": 398,
+              "preset": "dateNow",
+              "pattern": "{_req|Biebertal-Fellingshausen|Gelbe Tonne TAG|0}"
+            }
+          ],
+          "on_false": [
+            {
+              "type": "text",
+              "pos_x": 1282,
+              "pos_y": 398,
+              "preset": "date",
+              "pattern": "{_req|Biebertal-Fellingshausen|Gelbe Tonne|0}"
+            }
+          ]
+        },
+        {
+          "description": "Tone Heute",
+          "type": "option",
+          "check": "_req|Biebertal-Fellingshausen|Altpapier TAG|0",
+          "on_true": [
+            {
+              "type": "text",
+              "pos_x": 1523,
+              "pos_y": 398,
+              "preset": "dateNow",
+              "pattern": "{_req|Biebertal-Fellingshausen|Altpapier TAG|0}"
+            }
+          ],
+          "on_false": [
+            {
+              "type": "text",
+              "pos_x": 1523,
+              "pos_y": 398,
+              "preset": "date",
+              "pattern": "{_req|Biebertal-Fellingshausen|Altpapier|0}"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "pos_x": 1764,
+          "pos_y": 398,
+          "preset": "date",
+          "pattern": "-"
+        },
+        {
+          "description": "Tone Heute",
+          "type": "option",
+          "check": "_req|Biebertal-Frankenbach|Restabfall 2-w\u00f6chentlich TAG|0",
+          "on_true": [
+            {
+              "type": "text",
+              "pos_x": 559,
+              "pos_y": 498,
+              "preset": "dateNow",
+              "pattern": "{_req|Biebertal-Frankenbach|Restabfall 2-w\u00f6chentlich TAG|0}"
+            }
+          ],
+          "on_false": [
+            {
+              "type": "text",
+              "pos_x": 559,
+              "pos_y": 498,
+              "preset": "date",
+              "pattern": "{_req|Biebertal-Frankenbach|Restabfall 2-w\u00f6chentlich|0}"
+            }
+          ]
+        },
+        {
+          "description": "Tone Heute",
+          "type": "option",
+          "check": "_req|Biebertal-Frankenbach|Restabfall 4-w\u00f6chentlich TAG|0",
+          "on_true": [
+            {
+              "type": "text",
+              "pos_x": 800,
+              "pos_y": 498,
+              "preset": "dateNow",
+              "pattern": "{_req|Biebertal-Frankenbach|Restabfall 4-w\u00f6chentlich TAG|0}"
+            }
+          ],
+          "on_false": [
+            {
+              "type": "text",
+              "pos_x": 800,
+              "pos_y": 498,
+              "preset": "date",
+              "pattern": "{_req|Biebertal-Frankenbach|Restabfall 4-w\u00f6chentlich|0}"
+            }
+          ]
+        },
+        {
+          "description": "Tone Heute",
+          "type": "option",
+          "check": "_req|Biebertal-Frankenbach|Bioabfall TAG|0",
+          "on_true": [
+            {
+              "type": "text",
+              "pos_x": 1041,
+              "pos_y": 498,
+              "preset": "dateNow",
+              "pattern": "{_req|Biebertal-Frankenbach|Bioabfall TAG|0}"
+            }
+          ],
+          "on_false": [
+            {
+              "type": "text",
+              "pos_x": 1041,
+              "pos_y": 498,
+              "preset": "date",
+              "pattern": "{_req|Biebertal-Frankenbach|Bioabfall|0}"
+            }
+          ]
+        },
+        {
+          "description": "Tone Heute",
+          "type": "option",
+          "check": "_req|Biebertal-Frankenbach|Gelbe Tonne TAG|0",
+          "on_true": [
+            {
+              "type": "text",
+              "pos_x": 1282,
+              "pos_y": 498,
+              "preset": "dateNow",
+              "pattern": "{_req|Biebertal-Frankenbach|Gelbe Tonne TAG|0}"
+            }
+          ],
+          "on_false": [
+            {
+              "type": "text",
+              "pos_x": 1282,
+              "pos_y": 498,
+              "preset": "date",
+              "pattern": "{_req|Biebertal-Frankenbach|Gelbe Tonne|0}"
+            }
+          ]
+        },
+        {
+          "description": "Tone Heute",
+          "type": "option",
+          "check": "_req|Biebertal-Frankenbach|Altpapier TAG|0",
+          "on_true": [
+            {
+              "type": "text",
+              "pos_x": 1523,
+              "pos_y": 498,
+              "preset": "dateNow",
+              "pattern": "{_req|Biebertal-Frankenbach|Altpapier TAG|0}"
+            }
+          ],
+          "on_false": [
+            {
+              "type": "text",
+              "pos_x": 1523,
+              "pos_y": 498,
+              "preset": "date",
+              "pattern": "{city}"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "pos_x": 1764,
+          "pos_y": 498,
+          "preset": "date",
+          "pattern": "-"
+        },
+        {
+          "description": "Tone Heute",
+          "type": "option",
+          "check": "_req|Biebertal-K\u00f6nigsberg|Restabfall 2-w\u00f6chentlich TAG|0",
+          "on_true": [
+            {
+              "type": "text",
+              "pos_x": 559,
+              "pos_y": 598,
+              "preset": "dateNow",
+              "pattern": "{_req|Biebertal-K\u00f6nigsberg|Restabfall 2-w\u00f6chentlich TAG|0}"
+            }
+          ],
+          "on_false": [
+            {
+              "type": "text",
+              "pos_x": 559,
+              "pos_y": 598,
+              "preset": "date",
+              "pattern": "{_req|Biebertal-K\u00f6nigsberg|Restabfall 2-w\u00f6chentlich|0}"
+            }
+          ]
+        },
+        {
+          "description": "Tone Heute",
+          "type": "option",
+          "check": "_req|Biebertal-K\u00f6nigsberg|Restabfall 4-w\u00f6chentlich TAG|0",
+          "on_true": [
+            {
+              "type": "text",
+              "pos_x": 800,
+              "pos_y": 598,
+              "preset": "dateNow",
+              "pattern": "{_req|Biebertal-K\u00f6nigsberg|Restabfall 4-w\u00f6chentlich TAG|0}"
+            }
+          ],
+          "on_false": [
+            {
+              "type": "text",
+              "pos_x": 800,
+              "pos_y": 598,
+              "preset": "date",
+              "pattern": "{_req|Biebertal-K\u00f6nigsberg|Restabfall 4-w\u00f6chentlich|0}"
+            }
+          ]
+        },
+        {
+          "description": "Tone Heute",
+          "type": "option",
+          "check": "_req|Biebertal-K\u00f6nigsberg|Bioabfall TAG|0",
+          "on_true": [
+            {
+              "type": "text",
+              "pos_x": 1041,
+              "pos_y": 598,
+              "preset": "dateNow",
+              "pattern": "{_req|Biebertal-K\u00f6nigsberg|Bioabfall TAG|0}"
+            }
+          ],
+          "on_false": [
+            {
+              "type": "text",
+              "pos_x": 1041,
+              "pos_y": 598,
+              "preset": "date",
+              "pattern": "{_req|Biebertal-K\u00f6nigsberg|Bioabfall|0}"
+            }
+          ]
+        },
+        {
+          "description": "Tone Heute",
+          "type": "option",
+          "check": "_req|Biebertal-K\u00f6nigsberg|Gelbe Tonne TAG|0",
+          "on_true": [
+            {
+              "type": "text",
+              "pos_x": 1282,
+              "pos_y": 598,
+              "preset": "dateNow",
+              "pattern": "{_req|Biebertal-K\u00f6nigsberg|Gelbe Tonne TAG|0}"
+            }
+          ],
+          "on_false": [
+            {
+              "type": "text",
+              "pos_x": 1282,
+              "pos_y": 598,
+              "preset": "date",
+              "pattern": "{_req|Biebertal-K\u00f6nigsberg|Gelbe Tonne|0}"
+            }
+          ]
+        },
+        {
+          "description": "Tone Heute",
+          "type": "option",
+          "check": "_req|Biebertal-K\u00f6nigsberg|Altpapier TAG|0",
+          "on_true": [
+            {
+              "type": "text",
+              "pos_x": 1523,
+              "pos_y": 598,
+              "preset": "dateNow",
+              "pattern": "{_req|Biebertal-K\u00f6nigsberg|Altpapier TAG|0}"
+            }
+          ],
+          "on_false": [
+            {
+              "type": "text",
+              "pos_x": 1523,
+              "pos_y": 598,
+              "preset": "date",
+              "pattern": "{_req|Biebertal-K\u00f6nigsberg|Altpapier|0}"
+            }
+          ]
+        },
+        {
+          "description": "Tone Heute",
+          "type": "option",
+          "check": "_req|Biebertal-K\u00f6nigsberg|Mobile Schadstoffsammlung im Ort TAG|0",
+          "on_true": [
+            {
+              "type": "text",
+              "pos_x": 1764,
+              "pos_y": 598,
+              "preset": "dateNow",
+              "pattern": "{_req|Biebertal-K\u00f6nigsberg|Mobile Schadstoffsammlung im Ort TAG|0}"
+            }
+          ],
+          "on_false": [
+            {
+              "type": "text",
+              "pos_x": 1764,
+              "pos_y": 598,
+              "preset": "date",
+              "pattern": "{_req|Biebertal-K\u00f6nigsberg|Mobile Schadstoffsammlung im Ort|0}"
+            }
+          ]
+        },
+        {
+          "description": "Tone Heute",
+          "type": "option",
+          "check": "_req|Biebertal-Krumbach|Restabfall 2-w\u00f6chentlich TAG|0",
+          "on_true": [
+            {
+              "type": "text",
+              "pos_x": 559,
+              "pos_y": 698,
+              "preset": "dateNow",
+              "pattern": "{_req|Biebertal-Krumbach|Restabfall 2-w\u00f6chentlich TAG|0}"
+            }
+          ],
+          "on_false": [
+            {
+              "type": "text",
+              "pos_x": 559,
+              "pos_y": 698,
+              "preset": "date",
+              "pattern": "{_req|Biebertal-Krumbach|Restabfall 2-w\u00f6chentlich|0}"
+            }
+          ]
+        },
+        {
+          "description": "Tone Heute",
+          "type": "option",
+          "check": "_req|Biebertal-Krumbach|Restabfall 4-w\u00f6chentlich TAG|0",
+          "on_true": [
+            {
+              "type": "text",
+              "pos_x": 800,
+              "pos_y": 698,
+              "preset": "dateNow",
+              "pattern": "{_req|Biebertal-Krumbach|Restabfall 4-w\u00f6chentlich TAG|0}"
+            }
+          ],
+          "on_false": [
+            {
+              "type": "text",
+              "pos_x": 800,
+              "pos_y": 698,
+              "preset": "date",
+              "pattern": "{_req|Biebertal-Krumbach|Restabfall 4-w\u00f6chentlich|0}"
+            }
+          ]
+        },
+        {
+          "description": "Tone Heute",
+          "type": "option",
+          "check": "_req|Biebertal-Krumbach|Bioabfall TAG|0",
+          "on_true": [
+            {
+              "type": "text",
+              "pos_x": 1041,
+              "pos_y": 698,
+              "preset": "dateNow",
+              "pattern": "{_req|Biebertal-Krumbach|Bioabfall TAG|0}"
+            }
+          ],
+          "on_false": [
+            {
+              "type": "text",
+              "pos_x": 1041,
+              "pos_y": 698,
+              "preset": "date",
+              "pattern": "{_req|Biebertal-Krumbach|Bioabfall|0}"
+            }
+          ]
+        },
+        {
+          "description": "Tone Heute",
+          "type": "option",
+          "check": "_req|Biebertal-Krumbach|Gelbe Tonne TAG|0",
+          "on_true": [
+            {
+              "type": "text",
+              "pos_x": 1282,
+              "pos_y": 698,
+              "preset": "dateNow",
+              "pattern": "{_req|Biebertal-Krumbach|Gelbe Tonne TAG|0}"
+            }
+          ],
+          "on_false": [
+            {
+              "type": "text",
+              "pos_x": 1282,
+              "pos_y": 698,
+              "preset": "date",
+              "pattern": "{_req|Biebertal-Krumbach|Gelbe Tonne|0}"
+            }
+          ]
+        },
+        {
+          "description": "Tone Heute",
+          "type": "option",
+          "check": "_req|Biebertal-Krumbach|Altpapier TAG|0",
+          "on_true": [
+            {
+              "type": "text",
+              "pos_x": 1523,
+              "pos_y": 698,
+              "preset": "dateNow",
+              "pattern": "{_req|Biebertal-Krumbach|Altpapier TAG|0}"
+            }
+          ],
+          "on_false": [
+            {
+              "type": "text",
+              "pos_x": 1523,
+              "pos_y": 698,
+              "preset": "date",
+              "pattern": "{_req|Biebertal-Krumbach|Altpapier|0}"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "pos_x": 1764,
+          "pos_y": 698,
+          "preset": "date",
+          "pattern": "-"
+        },
+        {
+          "description": "Tone Heute",
+          "type": "option",
+          "check": "_req|Biebertal-Rodheim|Restabfall 2-w\u00f6chentlich TAG|0",
+          "on_true": [
+            {
+              "type": "text",
+              "pos_x": 559,
+              "pos_y": 798,
+              "preset": "dateNow",
+              "pattern": "{_req|Biebertal-Rodheim|Restabfall 2-w\u00f6chentlich TAG|0}"
+            }
+          ],
+          "on_false": [
+            {
+              "type": "text",
+              "pos_x": 559,
+              "pos_y": 798,
+              "preset": "date",
+              "pattern": "{_req|Biebertal-Rodheim|Restabfall 2-w\u00f6chentlich|0}"
+            }
+          ]
+        },
+        {
+          "description": "Tone Heute",
+          "type": "option",
+          "check": "_req|Biebertal-Rodheim|Restabfall 4-w\u00f6chentlich TAG|0",
+          "on_true": [
+            {
+              "type": "text",
+              "pos_x": 800,
+              "pos_y": 798,
+              "preset": "dateNow",
+              "pattern": "{_req|Biebertal-Rodheim|Restabfall 4-w\u00f6chentlich TAG|0}"
+            }
+          ],
+          "on_false": [
+            {
+              "type": "text",
+              "pos_x": 800,
+              "pos_y": 798,
+              "preset": "date",
+              "pattern": "{_req|Biebertal-Rodheim|Restabfall 4-w\u00f6chentlich|0}"
+            }
+          ]
+        },
+        {
+          "description": "Tone Heute",
+          "type": "option",
+          "check": "_req|Biebertal-Rodheim|Bioabfall TAG|0",
+          "on_true": [
+            {
+              "type": "text",
+              "pos_x": 1041,
+              "pos_y": 798,
+              "preset": "dateNow",
+              "pattern": "{_req|Biebertal-Rodheim|Bioabfall TAG|0}"
+            }
+          ],
+          "on_false": [
+            {
+              "type": "text",
+              "pos_x": 1041,
+              "pos_y": 798,
+              "preset": "date",
+              "pattern": "{_req|Biebertal-Rodheim|Bioabfall|0}"
+            }
+          ]
+        },
+        {
+          "description": "Tone Heute",
+          "type": "option",
+          "check": "_req|Biebertal-Rodheim|Gelbe Tonne TAG|0",
+          "on_true": [
+            {
+              "type": "text",
+              "pos_x": 1282,
+              "pos_y": 798,
+              "preset": "dateNow",
+              "pattern": "{_req|Biebertal-Rodheim|Gelbe Tonne TAG|0}"
+            }
+          ],
+          "on_false": [
+            {
+              "type": "text",
+              "pos_x": 1282,
+              "pos_y": 798,
+              "preset": "date",
+              "pattern": "{_req|Biebertal-Rodheim|Gelbe Tonne|0}"
+            }
+          ]
+        },
+        {
+          "description": "Tone Heute",
+          "type": "option",
+          "check": "_req|Biebertal-Rodheim|Altpapier TAG|0",
+          "on_true": [
+            {
+              "type": "text",
+              "pos_x": 1523,
+              "pos_y": 798,
+              "preset": "dateNow",
+              "pattern": "{_req|Biebertal-Rodheim|Altpapier TAG|0}"
+            }
+          ],
+          "on_false": [
+            {
+              "type": "text",
+              "pos_x": 1523,
+              "pos_y": 798,
+              "preset": "date",
+              "pattern": "{_req|Biebertal-Rodheim|Altpapier|0}"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "pos_x": 1764,
+          "pos_y": 798,
+          "preset": "date",
+          "pattern": "-"
+        },
+        {
+          "description": "Tone Heute",
+          "type": "option",
+          "check": "_req|Biebertal-Vetzberg|Restabfall 2-w\u00f6chentlich TAG|0",
+          "on_true": [
+            {
+              "type": "text",
+              "pos_x": 559,
+              "pos_y": 898,
+              "preset": "dateNow",
+              "pattern": "{_req|Biebertal-Vetzberg|Restabfall 2-w\u00f6chentlich TAG|0}"
+            }
+          ],
+          "on_false": [
+            {
+              "type": "text",
+              "pos_x": 559,
+              "pos_y": 898,
+              "preset": "date",
+              "pattern": "{_req|Biebertal-Vetzberg|Restabfall 2-w\u00f6chentlich|0}"
+            }
+          ]
+        },
+        {
+          "description": "Tone Heute",
+          "type": "option",
+          "check": "_req|Biebertal-Vetzberg|Restabfall 4-w\u00f6chentlich TAG|0",
+          "on_true": [
+            {
+              "type": "text",
+              "pos_x": 800,
+              "pos_y": 898,
+              "preset": "dateNow",
+              "pattern": "{_req|Biebertal-Vetzberg|Restabfall 4-w\u00f6chentlich TAG|0}"
+            }
+          ],
+          "on_false": [
+            {
+              "type": "text",
+              "pos_x": 800,
+              "pos_y": 898,
+              "preset": "date",
+              "pattern": "{_req|Biebertal-Vetzberg|Restabfall 4-w\u00f6chentlich|0}"
+            }
+          ]
+        },
+        {
+          "description": "Tone Heute",
+          "type": "option",
+          "check": "_req|Biebertal-Vetzberg|Bioabfall TAG|0",
+          "on_true": [
+            {
+              "type": "text",
+              "pos_x": 1041,
+              "pos_y": 898,
+              "preset": "dateNow",
+              "pattern": "{_req|Biebertal-Vetzberg|Bioabfall TAG|0}"
+            }
+          ],
+          "on_false": [
+            {
+              "type": "text",
+              "pos_x": 1041,
+              "pos_y": 898,
+              "preset": "date",
+              "pattern": "{_req|Biebertal-Vetzberg|Bioabfall|0}"
+            }
+          ]
+        },
+        {
+          "description": "Tone Heute",
+          "type": "option",
+          "check": "_req|Biebertal-Vetzberg|Gelbe Tonne TAG|0",
+          "on_true": [
+            {
+              "type": "text",
+              "pos_x": 1282,
+              "pos_y": 898,
+              "preset": "dateNow",
+              "pattern": "{_req|Biebertal-Vetzberg|Gelbe Tonne TAG|0}"
+            }
+          ],
+          "on_false": [
+            {
+              "type": "text",
+              "pos_x": 1282,
+              "pos_y": 898,
+              "preset": "date",
+              "pattern": "{_req|Biebertal-Vetzberg|Gelbe Tonne|0}"
+            }
+          ]
+        },
+        {
+          "description": "Tone Heute",
+          "type": "option",
+          "check": "_req|Biebertal-Vetzberg|Altpapier TAG|0",
+          "on_true": [
+            {
+              "type": "text",
+              "pos_x": 1523,
+              "pos_y": 898,
+              "preset": "dateNow",
+              "pattern": "{_req|Biebertal-Vetzberg|Altpapier TAG|0}"
+            }
+          ],
+          "on_false": [
+            {
+              "type": "text",
+              "pos_x": 1523,
+              "pos_y": 898,
+              "preset": "date",
+              "pattern": "{_req|Biebertal-Vetzberg|Altpapier|0}"
+            }
+          ]
+        },
+        {
+          "description": "Tone Heute",
+          "type": "option",
+          "check": "_req|Biebertal-Vetzberg|Mobile Schadstoffsammlung im Ort TAG|0",
+          "on_true": [
+            {
+              "type": "text",
+              "pos_x": 1764,
+              "pos_y": 898,
+              "preset": "dateNow",
+              "pattern": "{_req|Biebertal-Vetzberg|Mobile Schadstoffsammlung im Ort TAG|0}"
+            }
+          ],
+          "on_false": [
+            {
+              "type": "text",
+              "pos_x": 1764,
+              "pos_y": 898,
+              "preset": "date",
+              "pattern": "{_req|Biebertal-Vetzberg|Mobile Schadstoffsammlung im Ort|0}"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "audio": {
+    "audios": {
+      "a1": {
+        "parts": [
+          {
+            "type": "text",
+            "pattern": "Der Abfuhrkalendar der Gemeinde Biebertal."
+          },
+          {
+            "type": "option",
+            "check": "collectionToday|isEmpty",
+            "on_true": [
+              {
+                "type": "text",
+                "pattern": "Heute werden keine Tonnen abgeholt. "
+              }
+            ],
+            "on_false": [
+              {
+                "type": "text",
+                "pattern": "{collectionToday|text}. "
+              }
+            ]
+          },
+          {
+            "type": "option",
+            "check": "collectionTomorrow|isEmpty",
+            "on_true": [
+              {
+                "type": "text",
+                "pattern": "Morgen werden keine Tonnen abgeholt. "
+              }
+            ],
+            "on_false": [
+              {
+                "type": "text",
+                "pattern": "{collectionTomorrow|text}. "
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "sequence": {
+    "type": "custom",
+    "pattern": [
+      {
+        "image": "background",
+        "audio_l": "a1",
+        "time_diff": 20
+      }
+    ]
+  },
+  "run_config": {
+    "url": {
+      "type": "string",
+      "display_name": "Endpunkt der API",
+      "optional": false,
+      "default_value": ""
+    }
+  },
+  "presets": {
+    "date": {
+      "anchor_point": "center",
+      "color": "black",
+      "font_size": 62,
+      "font": "fonts/Dosis-Bold.ttf"
+    },
+    "dateNow": {
+      "anchor_point": "center",
+      "color": "red",
+      "font_size": 62,
+      "font": "fonts/Dosis-Bold.ttf"
+    }
+  }
+}
