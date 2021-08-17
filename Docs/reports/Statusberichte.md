@@ -113,7 +113,7 @@ Auch die Implementierung der Benutzeroberfläche wurde begonnen. Hierzu wurden d
 ### Zusammenfassung
 In diesem Sprint lag der Fokus auf der Fertigstellung des Dockercontainers und somit des ersten Release (Release 0.1.0). Dieser wurde erfolgreich fertiggestellt und steht in dem Repository:
 
-[https://github.com/SWTP-SS20-Kammer-2/Data-Analytics](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics)
+[https://github.com/visuanalytics/visuanalytics](https://github.com/visuanalytics/visuanalytics)
 
 zur Verfügung. Eine genaue Erläuterung, wie dieser zu verwenden ist, ist der Datei `Bericht_Data-Analytics` zu entnehmen.
 
@@ -303,5 +303,5 @@ Wird eine fehlerhafte Datei hochgeladen, wird dies nicht überprüft. Dies kann 
 <img src="../_static/images/reports/upload.png" width="90%">
 
 ### Links
-- [GitHub-Repository](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics)
+- [GitHub-Repository](https://github.com/visuanalytics/visuanalytics)
 - [Dokumentation](visuanalytics.readthedocs.io/)

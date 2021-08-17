@@ -158,7 +158,7 @@ Hat ein Teammitglied den _Issue_ erledigt, so zieht er diesen in die Spalte `Rev
 
 Der _Pull Request_ wird dann einem anderen Teammitglied zum reviewen zugeteilt. Dieses überprüft noch einmal manuell den Code. Wenn alles in Ordnung ist, wird der Code gemerged, also dem Hauptcode hinzugefügt.
 
-Link zum GitHub-Repository: [https://github.com/SWTP-SS20-Kammer-2/Data-Analytics](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics)
+Link zum GitHub-Repository: [https://github.com/visuanalytics/visuanalytics](https://github.com/visuanalytics/visuanalytics)
 
 ### GitHub Automatisation
 
