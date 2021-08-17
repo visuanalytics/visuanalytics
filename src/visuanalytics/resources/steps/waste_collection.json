@@ -29,13 +29,22 @@
     },
     {
       "type": "add_data",
+      "new_keys": ["and"],
+      "data": " und "
+    },
+    {
+      "type": "add_data",
       "new_keys": ["collectionToday"],
-      "data": ""
+      "data": {
+        "isEmpty": true
+      }
     },
     {
       "type": "add_data",
       "new_keys": ["collectionTomorrow"],
-      "data": ""
+      "data": {
+        "isEmpty": true
+      }
     },
     {
       "type": "transform_dict",
@@ -53,166 +62,174 @@
           "new_value": ""
         },
         {
-          "type": "add_data",
-          "new_keys": ["todayWasAdded|{city}"],
-          "data": false
-        },
-        {
-          "type": "add_data",
-          "new_keys": ["tomorrowWasAdded|{city}"],
-          "data": false
-        },
-        {
           "type": "transform_dict",
           "dict_key": "_loop",
+          "filter_keys": ".*TAG$",
           "transform": [
             {
-              "type": "option",
-              "check": "todayWasAdded|{city}",
-              "on_false": [
+              "type": "compare",
+              "value_left": "_loop|0",
+              "value_right": "today",
+              "on_equal": [
                 {
-                  "type": "compare",
-                  "value_left": "_loop|0",
-                  "value_right": "today",
-                  "on_equal": [
-                    {
-                      "type": "append",
-                      "keys": ["city"],
-                      "new_keys": ["collectionToday"],
-                      "append_type": "string",
-                      "delimiter": ", "
-                    },
-                    {
-                      "type": "add_data",
-                      "new_keys": ["todayWasAdded|{city}"],
-                      "data": true
-                    }
-                  ]
+                  "type": "append",
+                  "keys": ["city"],
+                  "new_keys": ["collectionToday|{_idx}"],
+                  "append_type": "string",
+                  "delimiter": ", "
+                },
+                {
+                  "type": "add_data",
+                  "new_keys": ["collectionToday|isEmpty"],
+                  "data": false
                 }
               ]
             },
             {
-              "type": "option",
-              "check": "tomorrowWasAdded|{city}",
-              "on_false": [
+              "type": "compare",
+              "value_left": "_loop|0",
+              "value_right": "tomorrow",
+              "on_equal": [
                 {
-                  "type": "compare",
-                  "value_left": "_loop|0",
-                  "value_right": "tomorrow",
-                  "on_equal": [
-                    {
-                      "type": "append",
-                      "keys": ["city"],
-                      "new_keys": ["collectionTomorrow"],
-                      "append_type": "string",
-                      "delimiter": ", "
-                    },
-                    {
-                      "type": "add_data",
-                      "new_keys": ["tomorrowWasAdded|{city}"],
-                      "data": true
-                    }
-                  ]
+                  "type": "append",
+                  "keys": ["city"],
+                  "new_keys": ["collectionTomorrow|{_idx}"],
+                  "append_type": "string",
+                  "delimiter": ", "
+                },
+                {
+                  "type": "add_data",
+                  "new_keys": ["collectionTomorrow|isEmpty"],
+                  "data": false
                 }
               ]
+            }
+          ]
+        },
+        {
+          "type": "transform_dict",
+          "dict_key": "_loop",
+          "skip_keys": ".*TAG$",
+          "transform": [
+            {
+              "type": "date_format",
+              "keys": ["_loop|0"],
+              "given_format": "%d.%m.%Y",
+              "format": "%d.%m",
+              "zeropaded_off": false
             }
           ]
         }
       ]
     },
     {
-      "type": "date_format",
-      "keys": [
-        "_req|Biebertal-Bieber|Bioabfall|0",
-        "_req|Biebertal-Bieber|Gelbe Tonne|0",
-        "_req|Biebertal-Bieber|Restabfall 2-w\u00f6chentlich|0",
-        "_req|Biebertal-Bieber|Altpapier|0",
-        "_req|Biebertal-Bieber|Restabfall 4-w\u00f6chentlich|0",
-        "_req|Biebertal-Bieber|Mobile Schadstoffsammlung im Ort|0"
-      ],
-      "given_format": "%d.%m.%Y",
-      "format": "%d.%m",
-      "zeropaded_off": false
+      "type": "add_data",
+      "new_keys": ["collectionToday|text"],
+      "data": "Heute werden die "
+    },
+
+    {
+      "type": "add_data",
+      "new_keys": ["todayAddAnd"],
+      "data": false
     },
     {
-      "type": "date_format",
-      "keys": [
-        "_req|Biebertal-Fellingshausen|Bioabfall|0",
-        "_req|Biebertal-Fellingshausen|Gelbe Tonne|0",
-        "_req|Biebertal-Fellingshausen|Restabfall 2-w\u00f6chentlich|0",
-        "_req|Biebertal-Fellingshausen|Altpapier|0",
-        "_req|Biebertal-Fellingshausen|Restabfall 4-w\u00f6chentlich|0"
-      ],
-      "given_format": "%d.%m.%Y",
-      "format": "%d.%m",
-      "zeropaded_off": false
+      "type": "transform_dict",
+      "dict_key": "collectionToday",
+      "skip_keys": "isEmpty|text|Mobile Schadstoffsammlung im Ort TAG",
+      "transform": [
+        {
+          "type": "regex",
+          "keys": ["_idx"],
+          "new_keys": ["tonne"],
+          "regex": "(Tonne)? TAG",
+          "replace_by": ""
+        },
+        {
+          "type": "option",
+          "check": "todayAddAnd",
+          "on_true": [
+            {
+              "type": "append",
+              "keys": ["and"],
+              "new_keys": ["collectionToday|text"],
+              "append_type": "string",
+              "delimiter": ""
+            }
+          ]
+        },
+        {
+          "type": "add_data",
+          "new_keys": ["preText"],
+          "data": "{tonne} Tonnen in {_loop} Abgeholt"
+        },
+        {
+          "type": "append",
+          "keys": ["preText"],
+          "new_keys": ["collectionToday|text"],
+          "append_type": "string",
+          "delimiter": " "
+        },
+        {
+          "type": "add_data",
+          "new_keys": ["todayAddAnd"],
+          "data": true
+        }
+      ]
     },
     {
-      "type": "date_format",
-      "keys": [
-        "_req|Biebertal-Frankenbach|Bioabfall|0",
-        "_req|Biebertal-Frankenbach|Gelbe Tonne|0",
-        "_req|Biebertal-Frankenbach|Restabfall 2-w\u00f6chentlich|0",
-        "_req|Biebertal-Frankenbach|Altpapier|0",
-        "_req|Biebertal-Frankenbach|Restabfall 4-w\u00f6chentlich|0"
-      ],
-      "given_format": "%d.%m.%Y",
-      "format": "%d.%m",
-      "zeropaded_off": false
+      "type": "add_data",
+      "new_keys": ["collectionTomorrow|text"],
+      "data": "Morgen werden die "
     },
     {
-      "type": "date_format",
-      "keys": [
-        "_req|Biebertal-K\u00f6nigsberg|Bioabfall|0",
-        "_req|Biebertal-K\u00f6nigsberg|Gelbe Tonne|0",
-        "_req|Biebertal-K\u00f6nigsberg|Restabfall 2-w\u00f6chentlich|0",
-        "_req|Biebertal-K\u00f6nigsberg|Altpapier|0",
-        "_req|Biebertal-K\u00f6nigsberg|Restabfall 4-w\u00f6chentlich|0",
-        "_req|Biebertal-K\u00f6nigsberg|Mobile Schadstoffsammlung im Ort|0"
-      ],
-      "given_format": "%d.%m.%Y",
-      "format": "%d.%m",
-      "zeropaded_off": false
+      "type": "add_data",
+      "new_keys": ["tomorrowAddAnd"],
+      "data": false
     },
     {
-      "type": "date_format",
-      "keys": [
-        "_req|Biebertal-Krumbach|Bioabfall|0",
-        "_req|Biebertal-Krumbach|Gelbe Tonne|0",
-        "_req|Biebertal-Krumbach|Restabfall 2-w\u00f6chentlich|0",
-        "_req|Biebertal-Krumbach|Altpapier|0",
-        "_req|Biebertal-Krumbach|Restabfall 4-w\u00f6chentlich|0"
-      ],
-      "given_format": "%d.%m.%Y",
-      "format": "%d.%m",
-      "zeropaded_off": false
-    },
-    {
-      "type": "date_format",
-      "keys": [
-        "_req|Biebertal-Rodheim|Bioabfall|0",
-        "_req|Biebertal-Rodheim|Gelbe Tonne|0",
-        "_req|Biebertal-Rodheim|Restabfall 2-w\u00f6chentlich|0",
-        "_req|Biebertal-Rodheim|Altpapier|0",
-        "_req|Biebertal-Rodheim|Restabfall 4-w\u00f6chentlich|0"
-      ],
-      "given_format": "%d.%m.%Y",
-      "format": "%d.%m",
-      "zeropaded_off": false
-    },
-    {
-      "type": "date_format",
-      "keys": [
-        "_req|Biebertal-Vetzberg|Bioabfall|0",
-        "_req|Biebertal-Vetzberg|Gelbe Tonne|0",
-        "_req|Biebertal-Vetzberg|Restabfall 2-w\u00f6chentlich|0",
-        "_req|Biebertal-Vetzberg|Altpapier|0",
-        "_req|Biebertal-Vetzberg|Restabfall 4-w\u00f6chentlich|0",
-        "_req|Biebertal-Vetzberg|Mobile Schadstoffsammlung im Ort|0"
-      ],
-      "given_format": "%d.%m.%Y",
-      "format": "%d.%m",
-      "zeropaded_off": false
+      "type": "transform_dict",
+      "dict_key": "collectionTomorrow",
+      "skip_keys": "isEmpty|text|Mobile Schadstoffsammlung im Ort TAG",
+      "transform": [
+        {
+          "type": "regex",
+          "keys": ["_idx"],
+          "new_keys": ["tonne"],
+          "regex": "(Tonne)? TAG",
+          "replace_by": ""
+        },
+        {
+          "type": "option",
+          "check": "tomorrowAddAnd",
+          "on_true": [
+            {
+              "type": "append",
+              "keys": ["and"],
+              "new_keys": ["collectionTomorrow|text"],
+              "append_type": "string",
+              "delimiter": ""
+            }
+          ]
+        },
+        {
+          "type": "add_data",
+          "new_keys": ["preText"],
+          "data": "{tonne} Tonnen in {_loop} Abgeholt"
+        },
+        {
+          "type": "append",
+          "keys": ["preText"],
+          "new_keys": ["collectionTomorrow|text"],
+          "append_type": "string",
+          "delimiter": " "
+        },
+        {
+          "type": "add_data",
+          "new_keys": ["tomorrowAddAnd"],
+          "data": true
+        }
+      ]
     }
   ],
   "storing": [],
@@ -1136,33 +1153,33 @@
           },
           {
             "type": "option",
-            "check": "collectionToday",
+            "check": "collectionToday|isEmpty",
             "on_true": [
               {
                 "type": "text",
-                "pattern": "Heute werden die Tonnen in {collectionToday} abgeholt."
+                "pattern": "Heute werden keine Tonnen abgeholt."
               }
             ],
             "on_false": [
               {
                 "type": "text",
-                "pattern": "Heute werden keine Tonnen abgeholt."
+                "pattern": "{collectionToday|text}."
               }
             ]
           },
           {
             "type": "option",
-            "check": "collectionTomorrow",
+            "check": "collectionTomorrow|isEmpty",
             "on_true": [
               {
                 "type": "text",
-                "pattern": "Morgen werden die Tonnen in {collectionTomorrow} abgeholt."
+                "pattern": "Morgen werden keine Tonnen abgeholt."
               }
             ],
             "on_false": [
               {
                 "type": "text",
-                "pattern": "Morgen werden keine Tonnen abgeholt."
+                "pattern": "{collectionTomorrow|text}."
               }
             ]
           }
