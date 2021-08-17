@@ -1157,13 +1157,13 @@
             "on_true": [
               {
                 "type": "text",
-                "pattern": "Heute werden keine Tonnen abgeholt."
+                "pattern": "Heute werden keine Tonnen abgeholt. "
               }
             ],
             "on_false": [
               {
                 "type": "text",
-                "pattern": "{collectionToday|text}."
+                "pattern": "{collectionToday|text}. "
               }
             ]
           },
@@ -1173,13 +1173,13 @@
             "on_true": [
               {
                 "type": "text",
-                "pattern": "Morgen werden keine Tonnen abgeholt."
+                "pattern": "Morgen werden keine Tonnen abgeholt. "
               }
             ],
             "on_false": [
               {
                 "type": "text",
-                "pattern": "{collectionTomorrow|text}."
+                "pattern": "{collectionTomorrow|text}. "
               }
             ]
           }
