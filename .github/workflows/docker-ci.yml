@@ -70,7 +70,7 @@ jobs:
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
           context: src
-          file: Dockerfile.wordpress
+          file: src/Dockerfile.wordpress
           push: true
           tags: ${{ steps.metaWordpress.outputs.tags }}
           labels: ${{ steps.metaWordpress.outputs.labels }}
