@@ -1197,6 +1197,10 @@
       }
     ]
   },
+  "thumbnail": {
+    "type": "created",
+    "name": "background"
+  },
   "run_config": {
     "url": {
       "type": "string",
