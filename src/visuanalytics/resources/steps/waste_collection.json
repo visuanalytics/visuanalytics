@@ -1145,12 +1145,16 @@
   },
   "audio": {
     "audios": {
-      "a1": {
+      "intro": {
         "parts": [
           {
             "type": "text",
             "pattern": "Der Abfuhrkalendar der Gemeinde Biebertal."
-          },
+          }
+        ]
+      },
+      "today": {
+        "parts": [
           {
             "type": "option",
             "check": "collectionToday|isEmpty",
@@ -1166,7 +1170,11 @@
                 "pattern": "{collectionToday|text}. "
               }
             ]
-          },
+          }
+        ]
+      },
+      "tomorrow": {
+        "parts": [
           {
             "type": "option",
             "check": "collectionTomorrow|isEmpty",
@@ -1192,7 +1200,17 @@
     "pattern": [
       {
         "image": "background",
-        "audio_l": "a1",
+        "audio_l": "intro",
+        "time_diff": 0.7
+      },
+      {
+        "image": "background",
+        "audio_l": "today",
+        "time_diff": 0.7
+      },
+      {
+        "image": "background",
+        "audio_l": "tomorrow",
         "time_diff": 20
       }
     ]
