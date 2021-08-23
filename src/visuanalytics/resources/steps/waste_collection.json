@@ -609,7 +609,7 @@
               "pos_x": 1523,
               "pos_y": 498,
               "preset": "date",
-              "pattern": "{city}"
+              "pattern": "{_req|Biebertal-Frankenbach|Altpapier|0}"
             }
           ]
         },
