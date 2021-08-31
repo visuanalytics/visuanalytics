@@ -255,18 +255,6 @@ def _get_steps_path(json_file_name: str):
     return os.path.join(STEPS_LOCATION, json_file_name) + ".json"
 
 
-def _get_image_path(json_file_name: str, folder: str, image_type: str):
-    if folder != '':
-        os.makedirs(os.path.join(IMAGE_LOCATION, folder), exist_ok=True)
-        return os.path.join(IMAGE_LOCATION, folder, json_file_name) + "." + image_type
-    else:
-        return os.path.join(IMAGE_LOCATION, json_file_name) + "." + image_type
-
-
-def _get_audio_path(json_file_name: str):
-    return os.path.join(AUDIO_LOCATION, json_file_name) + ".mp3"
-
-
 def _get_topic_info(json_file_name: str):
     try:
         return _get_topic_steps(json_file_name).get("info", "")
@@ -278,15 +266,6 @@ def _get_topic_steps(json_file_name: str):
     path_to_json = _get_steps_path(json_file_name)
     with open(path_to_json, encoding="utf-8") as fh:
         return json.loads(fh.read())
-
-
-def _get_values(param_string):
-    if param_string is None:
-        return []
-    kvts = [kvt.split(":") for kvt in param_string.split(",")]
-    values = {kvt[0]: to_typed_value(kvt[1], kvt[2]) for kvt in kvts}
-    return values
-
 
 def _to_untyped_value(v, t):
     if t in ["string", "enum"]:
