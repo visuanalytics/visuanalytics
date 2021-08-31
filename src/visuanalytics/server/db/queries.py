@@ -61,8 +61,8 @@ def get_job_list():
         delete_options.type AS d_type, days, hours, k_count, fix_names_count,
         GROUP_CONCAT(DISTINCT weekday) AS weekdays,
         COUNT(DISTINCT position_id) AS topic_count,
-        GROUP_CONCAT(DISTINCT steps.steps_id || ":" || steps_name || ":" || json_file_name || ":" || position) AS topic_positions,
-        GROUP_CONCAT(DISTINCT position || ":" || key || ":" || value || ":" || job_config.type) AS param_values
+        GROUP_CONCAT(steps.steps_id || CHAR(0x1F) || steps_name || CHAR(0x1F) || json_file_name || CHAR(0x1F) || position, CHAR(0x1D)) AS topic_positions,
+        GROUP_CONCAT(position || CHAR(0x1F) || key || CHAR(0x1F) || value || CHAR(0x1F) || job_config.type, CHAR(0x1D)) AS param_values
         FROM job 
         INNER JOIN schedule USING (schedule_id)
         LEFT JOIN schedule_weekday USING (schedule_id)
@@ -215,8 +215,8 @@ def _row_to_job(row):
         delete_schedule = {**delete_schedule, "count": int(row["fix_names_count"])}
 
     topic_values = [{}] * (int(row["topic_count"]))
-    for tp_s in row["topic_positions"].split(","):
-        tp = tp_s.split(":")
+    for tp_s in row["topic_positions"].split(chr(0x1D)):
+        tp = tp_s.split(chr(0x1F))
         topic_id = tp[0]
         topic_name = tp[1]
         json_file_name = tp[2]
@@ -230,8 +230,8 @@ def _row_to_job(row):
             "values": {}
         }
     if param_values is not None:
-        for vals_s in param_values.split(","):
-            vals = vals_s.split(":")
+        for vals_s in param_values.split(chr(0x1D)):
+            vals = vals_s.split(chr(0x1F))
             position = int(vals[0])
             name = vals[1]
             u_val = vals[2]
