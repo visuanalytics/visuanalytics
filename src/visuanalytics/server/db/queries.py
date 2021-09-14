@@ -61,8 +61,8 @@ def get_job_list():
         delete_options.type AS d_type, days, hours, k_count, fix_names_count,
         GROUP_CONCAT(DISTINCT weekday) AS weekdays,
         COUNT(DISTINCT position_id) AS topic_count,
-        GROUP_CONCAT(DISTINCT steps.steps_id || ":" || steps_name || ":" || json_file_name || ":" || position) AS topic_positions,
-        GROUP_CONCAT(DISTINCT position || ":" || key || ":" || value || ":" || job_config.type) AS param_values
+        GROUP_CONCAT(steps.steps_id || CHAR(0x1F) || steps_name || CHAR(0x1F) || json_file_name || CHAR(0x1F) || position, CHAR(0x1D)) AS topic_positions,
+        GROUP_CONCAT(position || CHAR(0x1F) || key || CHAR(0x1F) || value || CHAR(0x1F) || job_config.type, CHAR(0x1D)) AS param_values
         FROM job 
         INNER JOIN schedule USING (schedule_id)
         LEFT JOIN schedule_weekday USING (schedule_id)
@@ -215,8 +215,8 @@ def _row_to_job(row):
         delete_schedule = {**delete_schedule, "count": int(row["fix_names_count"])}
 
     topic_values = [{}] * (int(row["topic_count"]))
-    for tp_s in row["topic_positions"].split(","):
-        tp = tp_s.split(":")
+    for tp_s in row["topic_positions"].split(chr(0x1D)):
+        tp = tp_s.split(chr(0x1F))
         topic_id = tp[0]
         topic_name = tp[1]
         json_file_name = tp[2]
@@ -230,8 +230,8 @@ def _row_to_job(row):
             "values": {}
         }
     if param_values is not None:
-        for vals_s in param_values.split(","):
-            vals = vals_s.split(":")
+        for vals_s in param_values.split(chr(0x1D)):
+            vals = vals_s.split(chr(0x1F))
             position = int(vals[0])
             name = vals[1]
             u_val = vals[2]
@@ -255,18 +255,6 @@ def _get_steps_path(json_file_name: str):
     return os.path.join(STEPS_LOCATION, json_file_name) + ".json"
 
 
-def _get_image_path(json_file_name: str, folder: str, image_type: str):
-    if folder != '':
-        os.makedirs(os.path.join(IMAGE_LOCATION, folder), exist_ok=True)
-        return os.path.join(IMAGE_LOCATION, folder, json_file_name) + "." + image_type
-    else:
-        return os.path.join(IMAGE_LOCATION, json_file_name) + "." + image_type
-
-
-def _get_audio_path(json_file_name: str):
-    return os.path.join(AUDIO_LOCATION, json_file_name) + ".mp3"
-
-
 def _get_topic_info(json_file_name: str):
     try:
         return _get_topic_steps(json_file_name).get("info", "")
@@ -278,15 +266,6 @@ def _get_topic_steps(json_file_name: str):
     path_to_json = _get_steps_path(json_file_name)
     with open(path_to_json, encoding="utf-8") as fh:
         return json.loads(fh.read())
-
-
-def _get_values(param_string):
-    if param_string is None:
-        return []
-    kvts = [kvt.split(":") for kvt in param_string.split(",")]
-    values = {kvt[0]: to_typed_value(kvt[1], kvt[2]) for kvt in kvts}
-    return values
-
 
 def _to_untyped_value(v, t):
     if t in ["string", "enum"]:
