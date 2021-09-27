@@ -4,7 +4,7 @@ export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     paper: {
       padding: "20px",
-        marginTop: '72px'
+      marginTop: "72px",
     },
     header: {
       margin: "7px",
