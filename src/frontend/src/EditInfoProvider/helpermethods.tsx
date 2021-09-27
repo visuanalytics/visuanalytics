@@ -1,6 +1,5 @@
 //import React from "react";
-import {StrArg} from "../CreateInfoProvider/DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/StrArg";
-
+import { StrArg } from "../CreateInfoProvider/DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/StrArg";
 
 /**
  * This method receives an array with string-arguments and creates the output string with makeStringRep()
@@ -8,44 +7,42 @@ import {StrArg} from "../CreateInfoProvider/DataCustomization/CreateCustomData/C
  *
  */
 export const calculationToString = (calculation: Array<StrArg>) => {
-    let stringToShow: string = '';
+  let stringToShow: string = "";
 
-    for (let i: number = 0; i < calculation.length; i++) {
-        stringToShow = stringToShow + calculation[i].makeStringRep();
-    }
+  for (let i: number = 0; i < calculation.length; i++) {
+    stringToShow = stringToShow + calculation[i].makeStringRep();
+  }
 
-    return stringToShow;
-}
+  return stringToShow;
+};
 
 /**
  * Receives a string and checks if it consist only of numbers (0-9).
  * @param arg The String to be checked.
  */
 export const checkNumbers = (arg: string): boolean => {
+  let onlyNumbers: boolean = true;
 
-    let onlyNumbers: boolean = true;
-
-    for (let i: number = 0; i <= arg.length - 1; i++) {
-
-        if (arg.charAt(i) !== '0' &&
-            arg.charAt(i) !== '1' &&
-            arg.charAt(i) !== '2' &&
-            arg.charAt(i) !== '3' &&
-            arg.charAt(i) !== '4' &&
-            arg.charAt(i) !== '5' &&
-            arg.charAt(i) !== '6' &&
-            arg.charAt(i) !== '7' &&
-            arg.charAt(i) !== '8' &&
-            arg.charAt(i) !== '9' &&
-            arg.charAt(i) !== '.'
-        ) {
-            onlyNumbers = false;
-        }
-
+  for (let i: number = 0; i <= arg.length - 1; i++) {
+    if (
+      arg.charAt(i) !== "0" &&
+      arg.charAt(i) !== "1" &&
+      arg.charAt(i) !== "2" &&
+      arg.charAt(i) !== "3" &&
+      arg.charAt(i) !== "4" &&
+      arg.charAt(i) !== "5" &&
+      arg.charAt(i) !== "6" &&
+      arg.charAt(i) !== "7" &&
+      arg.charAt(i) !== "8" &&
+      arg.charAt(i) !== "9" &&
+      arg.charAt(i) !== "."
+    ) {
+      onlyNumbers = false;
     }
+  }
 
-    return onlyNumbers;
-}
+  return onlyNumbers;
+};
 
 /**
  * Receives a string and checks if it consist only of operators (+,-,*,/,%).
@@ -53,29 +50,28 @@ export const checkNumbers = (arg: string): boolean => {
  * @param arg The String to be checked.
  */
 export const checkOperator = (arg: string) => {
-    return (
-        arg.charAt(0) === '+' ||
-        arg.charAt(0) === '-' ||
-        arg.charAt(0) === '*' ||
-        arg.charAt(0) === '/' ||
-        arg.charAt(0) === '%'
-    );
-}
+  return (
+    arg.charAt(0) === "+" ||
+    arg.charAt(0) === "-" ||
+    arg.charAt(0) === "*" ||
+    arg.charAt(0) === "/" ||
+    arg.charAt(0) === "%"
+  );
+};
 
 /**
  * Checks if there is an comma in the last number.
  * @param formel
  */
 export const searchForComma = (formel: Array<StrArg>): boolean => {
-
-    for (let i: number = formel.length - 1; i >= 0; i--) {
-        if (formel[i].isComma) {
-            return true;
-        }
-        if (!formel[i].isNumber) {
-            break;
-        }
+  for (let i: number = formel.length - 1; i >= 0; i--) {
+    if (formel[i].isComma) {
+      return true;
     }
+    if (!formel[i].isNumber) {
+      break;
+    }
+  }
 
-    return false;
-}
+  return false;
+};

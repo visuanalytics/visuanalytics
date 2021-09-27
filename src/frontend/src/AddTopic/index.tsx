@@ -125,8 +125,8 @@ export const AddTopic = () => {
               <Typography align={"center"} color="textSecondary">
                 Mit VisuAnalytics können Sie sich Videos zu verschiedenen Themen
                 generieren lassen.
-                <br /> Klicken Sie auf 'Thema erstellen', um ein neues
-                Thema anzulegen.
+                <br /> Klicken Sie auf 'Thema erstellen', um ein neues Thema
+                anzulegen.
               </Typography>
             ),
             button: {

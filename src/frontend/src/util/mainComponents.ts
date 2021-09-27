@@ -1,7 +1,7 @@
 import { Home } from "../Home";
 import HomeIcon from "@material-ui/icons/Home";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
-import /*React,*/ { FC } from "react";
+import { /*React,*/ FC } from "react";
 import { OverridableComponent } from "@material-ui/core/OverridableComponent";
 import { SvgIconTypeMap } from "@material-ui/core/SvgIcon/SvgIcon";
 import { JobPage } from "../JobPage";
@@ -9,12 +9,12 @@ import { JobLogs } from "../JobLogs";
 import DescriptionIcon from "@material-ui/icons/Description";
 import CreateIcon from "@material-ui/icons/Create";
 import { AddTopic } from "../AddTopic";
-import { CreateInfoProvider } from "../CreateInfoProvider"
-import {Dashboard} from "../Dashboard";
-import {EditInfoProvider} from "../EditInfoProvider";
+import { CreateInfoProvider } from "../CreateInfoProvider";
+import { Dashboard } from "../Dashboard";
+import { EditInfoProvider } from "../EditInfoProvider";
 import EditIcon from "@material-ui/icons/Edit";
-import {VideoCreation} from "../VideoCreation";
-import {SceneCreation} from "../SceneCreation";
+import { VideoCreation } from "../VideoCreation";
+import { SceneCreation } from "../SceneCreation";
 
 export type MainComponent = {
   component: FC;
@@ -60,26 +60,35 @@ export const mainComponents: MainComponents = {
   dashboard: {
     component: Dashboard,
     icon: HomeIcon,
-    navName: "dashboard"
+    navName: "dashboard",
   },
   editInfoProvider: {
     component: EditInfoProvider,
     icon: EditIcon,
-    navName: "editInfoProvider"
+    navName: "editInfoProvider",
   },
   videoCreator: {
     component: VideoCreation,
     icon: EditIcon,
-    navName: "videoCreator"
+    navName: "videoCreator",
   },
   sceneEditor: {
     component: SceneCreation,
     icon: EditIcon,
-    navName: "sceneEditor"
-  }
+    navName: "sceneEditor",
+  },
 };
 
 /**
  * Type für alle Keys von mainComponents
  */
-export type ComponentKey = "home" | "jobPage" | "jobLogs" | "addTopic" | "createInfoProvider" | "dashboard" | "editInfoProvider" | "videoCreator" | "sceneEditor";
+export type ComponentKey =
+  | "home"
+  | "jobPage"
+  | "jobLogs"
+  | "addTopic"
+  | "createInfoProvider"
+  | "dashboard"
+  | "editInfoProvider"
+  | "videoCreator"
+  | "sceneEditor";

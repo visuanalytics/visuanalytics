@@ -11,7 +11,7 @@ import {
   ListItemIcon,
 } from "@material-ui/core";
 import ReportProblemOutlinedIcon from "@material-ui/icons/ReportProblemOutlined";
-import ArrowRightIcon from '@material-ui/icons/ArrowRight';
+import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 
 export interface LoadFailedProps {
   hasFailed: boolean;

@@ -1,132 +1,131 @@
 /* CreateInfoProvider */
 //data type for elements contained in selectedData
-import {FormelObj} from "./DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
+import { FormelObj } from "./DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 
 export type SelectedDataItem = {
-    key: string;
-    type: string;
-    arrayValueType?: string;
-}
+  key: string;
+  type: string;
+  arrayValueType?: string;
+};
 
 // data type to save information about the selected schedule for historization
 export type Schedule = {
-    type: string;
-    weekdays: number[];
-    time: string;
-    interval: string;
-}
+  type: string;
+  weekdays: number[];
+  time: string;
+  interval: string;
+};
 
 export type DataSource = {
-    apiName: string;
-    query: string;
-    noKey: boolean;
-    method: string;
-    selectedData: SelectedDataItem[];
-    customData: FormelObj[];
-    historizedData: string[];
-    schedule: Schedule;
-    listItems: Array<ListItemRepresentation>;
-    arrayProcessingsList: Array<ArrayProcessingData>;
-    stringReplacementList: Array<StringReplacementData>;
-}
+  apiName: string;
+  query: string;
+  noKey: boolean;
+  method: string;
+  selectedData: SelectedDataItem[];
+  customData: FormelObj[];
+  historizedData: string[];
+  schedule: Schedule;
+  listItems: Array<ListItemRepresentation>;
+  arrayProcessingsList: Array<ArrayProcessingData>;
+  stringReplacementList: Array<StringReplacementData>;
+};
 
 /**
  * Type that represents an array processing in the backend,
  * called "Calculate" there.
  */
 export type BackendCalculate = {
-    type: string;
-    action: string;
-    keys: Array<string>;
-    innerKey?: Array<string>;
-    new_keys: Array<string>;
-    decimal: number;
-}
+  type: string;
+  action: string;
+  keys: Array<string>;
+  innerKey?: Array<string>;
+  new_keys: Array<string>;
+  decimal: number;
+};
 
 /**
  * Type that represents a string replacement in the backend,
  * called "Replacement" there.
  */
 export type BackendReplacement = {
-    type: string;
-    keys: Array<String>;
-    new_keys: Array<String>;
-    old_value: string;
-    new_value: string;
-    count: number;
-}
+  type: string;
+  keys: Array<String>;
+  new_keys: Array<String>;
+  old_value: string;
+  new_value: string;
+  count: number;
+};
 
 //data Source as sent to and returned from the backend
 export type BackendDataSource = {
-    datasource_name: string;
-    api: {
-        api_info: {
-            type: string;
-            api_key_name: string;
-            url_pattern: string;
-        };
-        method: string;
-        response_type: string;
+  datasource_name: string;
+  api: {
+    api_info: {
+      type: string;
+      api_key_name: string;
+      url_pattern: string;
     };
-    transform: Array<any>;
-    storing: Array<any>;
-    formulas: Array<FormelObj>,
-    calculates: Array<BackendCalculate>;
-    replacements: Array<BackendReplacement>;
-    schedule: {
-        type: string;
-        time: string;
-        date: string;
-        timeInterval: string;
-        weekdays: Array<number>;
-    };
-    selected_data: Array<SelectedDataItem>;
-    historized_data: Array<string>;
-    arrayProcessingsList: Array<ArrayProcessingData>;
-    stringReplacementList: Array<StringReplacementData>;
-    listItems: Array<ListItemRepresentation>;
-}
+    method: string;
+    response_type: string;
+  };
+  transform: Array<any>;
+  storing: Array<any>;
+  formulas: Array<FormelObj>;
+  calculates: Array<BackendCalculate>;
+  replacements: Array<BackendReplacement>;
+  schedule: {
+    type: string;
+    time: string;
+    date: string;
+    timeInterval: string;
+    weekdays: Array<number>;
+  };
+  selected_data: Array<SelectedDataItem>;
+  historized_data: Array<string>;
+  arrayProcessingsList: Array<ArrayProcessingData>;
+  stringReplacementList: Array<StringReplacementData>;
+  listItems: Array<ListItemRepresentation>;
+};
 
 //type/format of infoproviders returned by the backend
 export type InfoProviderFromBackend = {
-    infoprovider_name: string;
-    datasources: Array<BackendDataSource>;
-    //there is a structure in this type, but since we dont know the diagram names
-    //we also dont know how many keys with which names exist
-    diagrams: any;
-    diagrams_original: Array<Diagram>;
-    arrays_used_in_diagrams: Array<string>;
-}
+  infoprovider_name: string;
+  datasources: Array<BackendDataSource>;
+  //there is a structure in this type, but since we dont know the diagram names
+  //we also dont know how many keys with which names exist
+  diagrams: any;
+  diagrams_original: Array<Diagram>;
+  arrays_used_in_diagrams: Array<string>;
+};
 
 export type FrontendInfoProvider = {
-    infoproviderName: string;
-    dataSources: Array<DataSource>;
-    dataSourcesKeys: Map<string, DataSourceKey>;
-    diagrams: Array<Diagram>;
-}
+  infoproviderName: string;
+  dataSources: Array<DataSource>;
+  dataSourcesKeys: Map<string, DataSourceKey>;
+  diagrams: Array<Diagram>;
+};
 
 export type DataSourceKey = {
-    apiKeyInput1: string;
-    apiKeyInput2: string;
-}
+  apiKeyInput1: string;
+  apiKeyInput2: string;
+};
 
 export type AuthDataDialogElement = {
-    name: string;
-    method: string;
-}
-
+  name: string;
+  method: string;
+};
 
 //unique application id used to avoid collisions in session storage
-export const uniqueId = "ddfdd278-abf9-11eb-8529-0242ac130003"
+export const uniqueId = "ddfdd278-abf9-11eb-8529-0242ac130003";
 
 /* BasicSettings */
 /**
  * Defines the type that is expected for the backends answer to our request
  */
 export type testDataBackendAnswer = {
-    status: number
-    api_keys: object
-}
+  status: number;
+  api_keys: object;
+};
 
 /* DataSelection */
 /** Internal representation of a list item extracted from the JSON object.
@@ -137,27 +136,30 @@ export type testDataBackendAnswer = {
  * @param arrayLength Holds the length of the array, if it is such
  */
 export type ListItemRepresentation = {
-    keyName: string;
-    value: string|Array<ListItemRepresentation>;
-    parentKeyName: string;
-    arrayRep: boolean;
-    arrayLength: number;
-}
-
+  keyName: string;
+  value: string | Array<ListItemRepresentation>;
+  parentKeyName: string;
+  arrayRep: boolean;
+  arrayLength: number;
+};
 
 /* DataCustomization */
 /**
  * Defines the type that is expected for the backends answer to our request
  */
 export type customDataBackendAnswer = {
-    accepted: boolean
-    //error: string
-}
-
+  accepted: boolean;
+  //error: string
+};
 
 /* DiagramCreation */
 //Type providing constants for all supported diagram types
-export type diagramType = "dotDiagram" | "lineChart" | "horizontalBarChart" | "verticalBarChart" | "pieChart"
+export type diagramType =
+  | "dotDiagram"
+  | "lineChart"
+  | "horizontalBarChart"
+  | "verticalBarChart"
+  | "pieChart";
 
 /**
  * Represents a diagram created by the user.
@@ -165,94 +167,91 @@ export type diagramType = "dotDiagram" | "lineChart" | "horizontalBarChart" | "v
  * @param variant displays the type of diagram defined.
  */
 export type Diagram = {
-    name: string;
-    variant: diagramType;
-    sourceType: string;
-    arrayObjects?: Array<ArrayDiagramProperties>;
-    historizedObjects?: Array<HistorizedDiagramProperties>;
-    amount: number;
-    customLabels: boolean;
-    labelArray: Array<string>;
-    stringAttribute: SelectedStringAttribute;
-}
-
+  name: string;
+  variant: diagramType;
+  sourceType: string;
+  arrayObjects?: Array<ArrayDiagramProperties>;
+  historizedObjects?: Array<HistorizedDiagramProperties>;
+  amount: number;
+  customLabels: boolean;
+  labelArray: Array<string>;
+  stringAttribute: SelectedStringAttribute;
+};
 
 /**
  * Represents an array selected for diagram creation and holds attributes for all settings
  */
 export type ArrayDiagramProperties = {
-    listItem: ListItemRepresentation;
-    numericAttribute: string;
-    color: string;
-    numericAttributes: Array<ListItemRepresentation>;
-    stringAttributes: Array<ListItemRepresentation>
-}
+  listItem: ListItemRepresentation;
+  numericAttribute: string;
+  color: string;
+  numericAttributes: Array<ListItemRepresentation>;
+  stringAttributes: Array<ListItemRepresentation>;
+};
 
 /**
  * Represents historized data selected for diagram creation and holds attributes for all settings
  */
 export type HistorizedDiagramProperties = {
-    name: string;
-    color: string;
-    intervalSizes: Array<number>;
-}
+  name: string;
+  color: string;
+  intervalSizes: Array<number>;
+};
 
 /**
  * Represents a string attribute selected for labeling,
  * containing its name and the array it belongs to.
  */
 export type SelectedStringAttribute = {
-    key: string;
-    array: string;
-}
-
+  key: string;
+  array: string;
+};
 
 /**
  * Plot typed which is used for sending diagrams to the backend in fitting format.
  */
 export type Plots = {
-    customLabels?: boolean;
-    primitive?: boolean;
-    plot: {
-        type: string;
-        x: Array<number>;
-        y: string;
-        color: string;
-        numericAttribute?: string;
-        stringAttribute?: string;
-        x_ticks: {
-            ticks: Array<string>;
-        };
+  customLabels?: boolean;
+  primitive?: boolean;
+  plot: {
+    type: string;
+    x: Array<number>;
+    y: string;
+    color: string;
+    numericAttribute?: string;
+    stringAttribute?: string;
+    x_ticks: {
+      ticks: Array<string>;
     };
-}
+  };
+};
 
 /* ArrayProcessings */
 export type ArrayProcessingData = {
-    name: string;
-    array: ProcessableArray;
-    operation: Operation;
-}
+  name: string;
+  array: ProcessableArray;
+  operation: Operation;
+};
 
 export type Operation = {
-    name: string;
-    displayName: string;
-}
-
+  name: string;
+  displayName: string;
+};
 
 /* StringProcessings */
 export type StringReplacementData = {
-    name: string;
-    string: string;
-    replace: string;
-    with: string;
-}
+  name: string;
+  string: string;
+  replace: string;
+  with: string;
+};
 
 /**
  * Type that contains the information about a processable array.
  * Used for displaying information in the ArrayProcessings and transforming to calculates.
  */
 export type ProcessableArray = {
-    valueInObject: boolean; //true if this is a numeric value in an object contained in an array
-    key: string;
-    innerKey: string; //only used when valueInObject is 'true' - used to display the key path inside the object in the array
-}
+  valueInObject: boolean; //true if this is a numeric value in an object contained in an array
+  key: string;
+  innerKey: string; //only used when valueInObject is 'true' - used to display the key path inside the object in the array
+};

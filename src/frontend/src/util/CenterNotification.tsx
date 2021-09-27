@@ -1,15 +1,15 @@
 import React from "react";
 import { Snackbar } from "@material-ui/core";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles({
   errorAlert: {
     "& .MuiAlert-icon": {
-      fontSize: 25
+      fontSize: 25,
     },
-    fontSize: 16
-  }
+    fontSize: 16,
+  },
 });
 
 export interface NotificationState {
@@ -80,7 +80,12 @@ export const CenterNotification: React.FC<CenterNotificationProps> = ({
       resumeHideDuration={7000}
       onClose={handleClose}
     >
-      <MuiAlert severity={severity} elevation={6} variant="filled" className={classes.errorAlert}>
+      <MuiAlert
+        severity={severity}
+        elevation={6}
+        variant="filled"
+        className={classes.errorAlert}
+      >
         {message}
       </MuiAlert>
     </Snackbar>

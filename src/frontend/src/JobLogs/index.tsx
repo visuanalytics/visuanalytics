@@ -10,7 +10,11 @@ import {
   Typography,
   MenuItem,
   Grid,
-  TextField, ListItem, ListItemIcon, ListItemText, List,
+  TextField,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  List,
 } from "@material-ui/core";
 import { useFetchMultiple } from "../Hooks/useFetchMultiple";
 import { getUrl } from "../util/fetchUtils";
@@ -166,7 +170,10 @@ export const JobLogs: React.FC<Props> = ({ jobId }) => {
           <Typography variant="h5" gutterBottom>
             Logs
           </Typography>
-          <Typography gutterBottom>Auf dieser Seite können Sie sich die Logs zu den angelegten Jobs ansehen. </Typography>
+          <Typography gutterBottom>
+            Auf dieser Seite können Sie sich die Logs zu den angelegten Jobs
+            ansehen.{" "}
+          </Typography>
           <List>
             <ListItem>
               <ListItemIcon className={classes.hintIcons}>
@@ -264,8 +271,9 @@ export const JobLogs: React.FC<Props> = ({ jobId }) => {
               headline: "Keine Logs verfügbar",
               text: (
                 <Typography align={"center"} color="textSecondary">
-                  Für diesen Job sind noch keine Logs verfügbar.
-                  Sie können sich die Logs ansehen, sobald der Job zum ersten mal ausgeführt wurde.
+                  Für diesen Job sind noch keine Logs verfügbar. Sie können sich
+                  die Logs ansehen, sobald der Job zum ersten mal ausgeführt
+                  wurde.
                 </Typography>
               ),
             }}
@@ -274,9 +282,9 @@ export const JobLogs: React.FC<Props> = ({ jobId }) => {
               <TableBody>
                 {(rowsPerPage > 0
                   ? filteredLogs.logs?.slice(
-                    page * rowsPerPage,
-                    page * rowsPerPage + rowsPerPage
-                  )
+                      page * rowsPerPage,
+                      page * rowsPerPage + rowsPerPage
+                    )
                   : filteredLogs.logs
                 )?.map((log, idx) => (
                   <TableRow key={idx}>
