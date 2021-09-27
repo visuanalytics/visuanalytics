@@ -1,25 +1,29 @@
-export type DeleteSchedule = NoDeletionSchedule | OnDayHourSchedule | KeepCountSchedule | FixNamesSchedule
+export type DeleteSchedule =
+  | NoDeletionSchedule
+  | OnDayHourSchedule
+  | KeepCountSchedule
+  | FixNamesSchedule;
 
 interface NoDeletionSchedule {
-    type: "noDeletion"
+  type: "noDeletion";
 }
 
 interface OnDayHourSchedule {
-    type: "onDayHour"
-    removalTime: DayHour
+  type: "onDayHour";
+  removalTime: DayHour;
 }
 
 interface KeepCountSchedule {
-    type: "keepCount"
-    keepCount: number
+  type: "keepCount";
+  keepCount: number;
 }
 
 interface FixNamesSchedule {
-    type: "fixNames"
-    count: number
+  type: "fixNames";
+  count: number;
 }
 
 export interface DayHour {
-    days: number
-    hours: number
+  days: number;
+  hours: number;
 }

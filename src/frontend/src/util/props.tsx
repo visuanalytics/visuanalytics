@@ -1,3 +1,3 @@
 export interface TopicProps {
-    name: string;
+  name: string;
 }

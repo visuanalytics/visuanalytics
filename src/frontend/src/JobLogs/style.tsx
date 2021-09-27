@@ -62,7 +62,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       minWidth: "max-content",
     },
     hintIcons: {
-      color: "white"
-    }
+      color: "white",
+    },
   })
 );

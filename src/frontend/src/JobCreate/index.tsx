@@ -85,30 +85,38 @@ export default function JobCreate() {
     setActiveStep(4);
     delay();
     setFinished(true);
-  }
+  };
 
   const handleAddError = () => {
     reportError("Job konnte nicht erstellt werden");
-  }
+  };
 
   // initialize callback for add job functionality
-  const addJob = useCallFetch(getUrl("/add"), {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      topicValues: topics.map((t, idx) => {
-        return {
-          topicId: t.topicId,
-          values: toTypedValues(trimParamValues(paramValues[idx]), paramLists ? paramLists[idx] : [])
-        }
+  const addJob = useCallFetch(
+    getUrl("/add"),
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        topicValues: topics.map((t, idx) => {
+          return {
+            topicId: t.topicId,
+            values: toTypedValues(
+              trimParamValues(paramValues[idx]),
+              paramLists ? paramLists[idx] : []
+            ),
+          };
+        }),
+        jobName: jobName,
+        schedule: withFormattedDates(schedule),
+        deleteSchedule: deleteSchedule,
       }),
-      jobName: jobName,
-      schedule: withFormattedDates(schedule),
-      deleteSchedule: deleteSchedule
-    })
-  }, handleAddSuccess, handleAddError);
+    },
+    handleAddSuccess,
+    handleAddError
+  );
 
   // handler for param Load failed
   const handleLoadParamsFailed = React.useCallback(() => {
@@ -149,8 +157,6 @@ export default function JobCreate() {
     fetchParams();
   }, [fetchParams]);
 
-
-
   // when a new topic is selected, fetch params
   useEffect(() => {
     if (topics.length > 0) {
@@ -181,7 +187,7 @@ export default function JobCreate() {
       if (countertimeout.current !== undefined) {
         clearTimeout(countertimeout.current);
       }
-    }
+    };
   }, []);
 
   const delay = () => {
@@ -205,7 +211,8 @@ export default function JobCreate() {
         }
         if (jobName.trim() === "") {
           setInvalidJobName(true);
-          errorMessage = errorMessage !== "" ? errorMessage : "Job-Name nicht ausgefüllt";
+          errorMessage =
+            errorMessage !== "" ? errorMessage : "Job-Name nicht ausgefüllt";
         } else {
           setInvalidJobName(false);
         }
@@ -215,11 +222,13 @@ export default function JobCreate() {
         }
         break;
       case 1:
-        const invalid = paramLists?.map((l, idx) => getInvalidParamValues(paramValues[idx], l));
+        const invalid = paramLists?.map((l, idx) =>
+          getInvalidParamValues(paramValues[idx], l)
+        );
         setInvalidValues(invalid ? invalid : []);
-        const paramsValid = invalid?.every(t => t.length === 0);
+        const paramsValid = invalid?.every((t) => t.length === 0);
         if (!paramsValid) {
-          reportError("Parameter nicht korrekt gesetzt")
+          reportError("Parameter nicht korrekt gesetzt");
           return;
         }
         break;
@@ -335,22 +344,24 @@ export default function JobCreate() {
             setSingleTopicHandler={handleSetSingleTopic}
             addTopicHandler={handleAddTopic}
             enterJobNameHandler={handleEnterJobName}
-            invalidJobName={invalidJobName} />
+            invalidJobName={invalidJobName}
+          />
         );
       case 1:
         return (
           <ParamSelection
-            topicNames={topics.map(t => t.topicName)}
+            topicNames={topics.map((t) => t.topicName)}
             values={paramValues}
             params={paramLists}
             loadFailedProps={{
               hasFailed: loadFailed,
               name: "Parameter",
-              onReload: handleReloadParams
+              onReload: handleReloadParams,
             }}
             selectParamHandler={handleSelectParam}
-            invalidValues={invalidValues} />
-        )
+            invalidValues={invalidValues}
+          />
+        );
       case 2:
         return (
           <SettingsPage
@@ -362,11 +373,11 @@ export default function JobCreate() {
             handleHintState={handleHintState}
             paramSelectionProps={undefined}
           />
-        )
+        );
       default:
         return "";
     }
-  }
+  };
 
   return (
     <div className={classes.root}>
@@ -407,46 +418,43 @@ export default function JobCreate() {
                 >
                   {"Zurück"}
                 </BackButton>
-                <ContinueButton
-                  onClick={handleNext}
-                  style={{ marginLeft: 20 }}
-                >
+                <ContinueButton onClick={handleNext} style={{ marginLeft: 20 }}>
                   {activeStep < steps.length - 1 ? "WEITER" : "ERSTELLEN"}
                 </ContinueButton>
               </span>
             </div>
           </div>
         ) : (
-            <Fade in={true}>
-              <div className={classes.MPaddingTB}>
-                <Grid container spacing={2}>
-                  <Grid container item justify="center">
-                    <CheckCircleIcon
-                      className={classes.checkIcon}
-                      color={"disabled"}
-                      fontSize={"default"}
-                    />
-                  </Grid>
-                  <Grid container item justify="center">
-                    <Typography>Job '{jobName}' erfolgreich erstellt!</Typography>
-                  </Grid>
-                  <Grid container item justify="center">
-                    <Typography>
-                      Sie werden in {counter} Sekunden zur Startseite
+          <Fade in={true}>
+            <div className={classes.MPaddingTB}>
+              <Grid container spacing={2}>
+                <Grid container item justify="center">
+                  <CheckCircleIcon
+                    className={classes.checkIcon}
+                    color={"disabled"}
+                    fontSize={"default"}
+                  />
+                </Grid>
+                <Grid container item justify="center">
+                  <Typography>Job '{jobName}' erfolgreich erstellt!</Typography>
+                </Grid>
+                <Grid container item justify="center">
+                  <Typography>
+                    Sie werden in {counter} Sekunden zur Startseite
                     weitergeleitet.
                   </Typography>
-                  </Grid>
-                  <Grid container item justify="center">
-                    <ContinueButton
-                      onClick={() => components?.setCurrent("home")}
-                    >
-                      STARTSEITE
-                  </ContinueButton>
-                  </Grid>
                 </Grid>
-              </div>
-            </Fade>
-          )}
+                <Grid container item justify="center">
+                  <ContinueButton
+                    onClick={() => components?.setCurrent("home")}
+                  >
+                    STARTSEITE
+                  </ContinueButton>
+                </Grid>
+              </Grid>
+            </div>
+          </Fade>
+        )}
       </div>
       <Notification
         handleClose={() => dispatchMessage({ type: "close" })}
