@@ -67,7 +67,12 @@ def transform_dict(values: dict, data: StepData):
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
-    for _ in data.loop_dict(data.get_data(values["dict_key"], values), values):
+    filter = re.compile(values["filter_keys"]) if "filter_keys" in values else None
+    skip = re.compile(values["skip_keys"]) if "skip_keys" in values else None
+
+    for idx,_ in data.loop_dict(data.get_data(values["dict_key"], values), values):
+        if (filter and not filter.match(idx)) or (skip and skip.match(idx)):
+            continue
         transform(values, data)
 
 

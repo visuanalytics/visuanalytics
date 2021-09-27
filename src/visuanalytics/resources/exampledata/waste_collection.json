@@ -1,0 +1,127 @@
+{
+  "Biebertal-Bieber": {
+    "Bioabfall TAG": ["heute", "", "", ""],
+    "Bioabfall": ["10.08.2021", "24.08.2021", "07.09.2021", "21.09.2021"],
+    "Gelbe Tonne TAG": ["", "", "", ""],
+    "Gelbe Tonne": ["16.08.2021", "30.08.2021", "13.09.2021", "27.09.2021"],
+    "Restabfall 2-w\u00f6chentlich TAG": ["", "", "", ""],
+    "Restabfall 2-w\u00f6chentlich": [
+      "17.08.2021",
+      "31.08.2021",
+      "14.09.2021",
+      "28.09.2021"
+    ],
+    "Altpapier TAG": ["morgen", ""],
+    "Altpapier": ["17.08.2021", "14.09.2021"],
+    "Restabfall 4-w\u00f6chentlich TAG": ["", ""],
+    "Restabfall 4-w\u00f6chentlich": ["31.08.2021", "28.09.2021"],
+    "Mobile Schadstoffsammlung im Ort TAG": [""],
+    "Mobile Schadstoffsammlung im Ort": ["29.09.2021"]
+  },
+  "Biebertal-Fellingshausen": {
+    "Gelbe Tonne TAG": ["morgen", "", "", ""],
+    "Gelbe Tonne": ["12.08.2021", "26.08.2021", "09.09.2021", "23.09.2021"],
+    "Restabfall 2-w\u00f6chentlich TAG": ["", "", "", ""],
+    "Restabfall 2-w\u00f6chentlich": [
+      "16.08.2021",
+      "30.08.2021",
+      "13.09.2021",
+      "27.09.2021"
+    ],
+    "Altpapier TAG": ["morgen", ""],
+    "Altpapier": ["18.08.2021", "15.09.2021"],
+    "Bioabfall TAG": ["morgen", "", ""],
+    "Bioabfall": ["23.08.2021", "06.09.2021", "20.09.2021"],
+    "Restabfall 4-w\u00f6chentlich TAG": ["morgen", ""],
+    "Restabfall 4-w\u00f6chentlich": ["30.08.2021", "27.09.2021"]
+  },
+  "Biebertal-Frankenbach": {
+    "Gelbe Tonne TAG": ["", "", "", ""],
+    "Gelbe Tonne": ["12.08.2021", "26.08.2021", "09.09.2021", "23.09.2021"],
+    "Restabfall 2-w\u00f6chentlich TAG": ["", "", "", ""],
+    "Restabfall 2-w\u00f6chentlich": [
+      "16.08.2021",
+      "30.08.2021",
+      "13.09.2021",
+      "27.09.2021"
+    ],
+    "Altpapier TAG": ["", ""],
+    "Altpapier": ["17.08.2021", "14.09.2021"],
+    "Bioabfall TAG": ["", "", ""],
+    "Bioabfall": ["23.08.2021", "06.09.2021", "20.09.2021"],
+    "Restabfall 4-w\u00f6chentlich TAG": ["", ""],
+    "Restabfall 4-w\u00f6chentlich": ["30.08.2021", "27.09.2021"]
+  },
+  "Biebertal-K\u00f6nigsberg": {
+    "Gelbe Tonne TAG": ["", "", "", ""],
+    "Gelbe Tonne": ["12.08.2021", "26.08.2021", "09.09.2021", "23.09.2021"],
+    "Restabfall 2-w\u00f6chentlich TAG": ["", "", "", ""],
+    "Restabfall 2-w\u00f6chentlich": [
+      "16.08.2021",
+      "30.08.2021",
+      "13.09.2021",
+      "27.09.2021"
+    ],
+    "Altpapier TAG": ["", ""],
+    "Altpapier": ["17.08.2021", "14.09.2021"],
+    "Bioabfall TAG": ["", "", ""],
+    "Bioabfall": ["23.08.2021", "06.09.2021", "20.09.2021"],
+    "Restabfall 4-w\u00f6chentlich TAG": ["", ""],
+    "Restabfall 4-w\u00f6chentlich": ["30.08.2021", "27.09.2021"],
+    "Mobile Schadstoffsammlung im Ort TAG": [""],
+    "Mobile Schadstoffsammlung im Ort": ["29.09.2021"]
+  },
+  "Biebertal-Krumbach": {
+    "Gelbe Tonne TAG": ["", "", "", ""],
+    "Gelbe Tonne": ["12.08.2021", "26.08.2021", "09.09.2021", "23.09.2021"],
+    "Restabfall 2-w\u00f6chentlich TAG": ["", "", "", ""],
+    "Restabfall 2-w\u00f6chentlich": [
+      "16.08.2021",
+      "30.08.2021",
+      "13.09.2021",
+      "27.09.2021"
+    ],
+    "Altpapier TAG": ["", ""],
+    "Altpapier": ["17.08.2021", "14.09.2021"],
+    "Bioabfall TAG": ["", "", ""],
+    "Bioabfall": ["23.08.2021", "06.09.2021", "20.09.2021"],
+    "Restabfall 4-w\u00f6chentlich TAG": ["", ""],
+    "Restabfall 4-w\u00f6chentlich": ["30.08.2021", "27.09.2021"]
+  },
+  "Biebertal-Rodheim": {
+    "Bioabfall TAG": ["heute", "", "", ""],
+    "Bioabfall": ["10.08.2021", "24.08.2021", "07.09.2021", "21.09.2021"],
+    "Gelbe Tonne TAG": ["", "", "", ""],
+    "Gelbe Tonne": ["16.08.2021", "30.08.2021", "13.09.2021", "27.09.2021"],
+    "Restabfall 2-w\u00f6chentlich TAG": ["", "", "", ""],
+    "Restabfall 2-w\u00f6chentlich": [
+      "17.08.2021",
+      "31.08.2021",
+      "14.09.2021",
+      "28.09.2021"
+    ],
+    "Altpapier TAG": ["", ""],
+    "Altpapier": ["17.08.2021", "14.09.2021"],
+    "Restabfall 4-w\u00f6chentlich TAG": ["", ""],
+    "Restabfall 4-w\u00f6chentlich": ["31.08.2021", "28.09.2021"]
+  },
+  "Biebertal-Vetzberg": {
+    "Bioabfall TAG": ["heute", "", "", ""],
+    "Bioabfall": ["10.08.2021", "24.08.2021", "07.09.2021", "21.09.2021"],
+    "Gelbe Tonne TAG": ["", "", "", ""],
+    "Gelbe Tonne": ["16.08.2021", "30.08.2021", "13.09.2021", "27.09.2021"],
+    "Restabfall 2-w\u00f6chentlich TAG": ["", "", "", ""],
+    "Restabfall 2-w\u00f6chentlich": [
+      "17.08.2021",
+      "31.08.2021",
+      "14.09.2021",
+      "28.09.2021"
+    ],
+    "Restabfall 4-w\u00f6chentlich TAG": ["", ""],
+    "Restabfall 4-w\u00f6chentlich": ["17.08.2021", "14.09.2021"],
+    "Altpapier TAG": ["", ""],
+    "Altpapier": ["17.08.2021", "14.09.2021"],
+    "Mobile Schadstoffsammlung im Ort TAG": [""],
+    "Mobile Schadstoffsammlung im Ort": ["29.09.2021"]
+  }
+}

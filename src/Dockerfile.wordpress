@@ -47,6 +47,9 @@ VOLUME /home/appuser/visuanalytics/resources/audio
 VOLUME /home/appuser/visuanalytics/resources/images
 VOLUME /home/appuser/visuanalytics/resources/memory
 
+LABEL maintainer="VisuAnalytics"
+LABEL org.opencontainers.image.authors="VisuAnalytics"
+
 # Set FONTCONFIG_PATH
 ENV FONTCONFIG_PATH=/etc/fonts
 

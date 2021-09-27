@@ -1,4 +1,4 @@
-# VisuAnalytics [![Tests](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/workflows/Automated%20Testing/badge.svg)](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/actions?query=workflow%3A%22Automated+Testing%22) [![Documentation Status](https://readthedocs.org/projects/visuanalytics/badge/?version=latest)](https://visuanalytics.readthedocs.io/de/latest/?badge=latest)
+# VisuAnalytics [![Tests](https://github.com/visuanalytics/visuanalytics/workflows/Automated%20Testing/badge.svg)](https://github.com/visuanalytics/visuanalytics/actions?query=workflow%3A%22Automated+Testing%22) [![Documentation Status](https://readthedocs.org/projects/visuanalytics/badge/?version=latest)](https://visuanalytics.readthedocs.io/de/latest/?badge=latest)
 
 ## **Release: VisuAnalytics 2.0**
 Im Rahmen der Veranstaltung [**Softwaretechnik-Projekt**](https://www.thm.de/organizer/index.php?option=com_organizer&view=subject_item&id=13) im Sommersemester 2021 wurde aufbauend auf der Software VisuAnalytics dieses Projekt zum Thema **Data Analytics** durchgeführt.

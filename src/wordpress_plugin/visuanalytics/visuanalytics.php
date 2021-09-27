@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: VisuAnalytics
-Plugin URI: https://github.com/SWTP-SS20-Kammer-2/Data-Analytics
+Plugin URI: https://github.com/visuanalytics/visuanalytics
 Description: Plugin zum generieren von Videos.
 Author: David Martschenko, Jannik Lapp, Max Stephan, Tanja Gutsche, Timon Pellekoorne
 Version: 0.1

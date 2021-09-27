@@ -9,12 +9,12 @@ Um auf die Daten der API-Antwort zugreifen und diese modifizieren zu können, we
 Es werden Bilder (`images`) und Audiodateien (`audio`) erstellt, die am Ende in einer bestimmten Reihenfolge (`sequence`) 
 aneinander gehängt werden.
 
-Im Repository finden 4 dieser [JSON-Dateien](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/tree/master/src/visuanalytics/resources/steps) für die Generierung von Videos zu den Themen:
+Im Repository finden 4 dieser [JSON-Dateien](https://github.com/visuanalytics/visuanalytics/tree/master/src/visuanalytics/resources/steps) für die Generierung von Videos zu den Themen:
 
-- [Deutschlandweiter Wetterbericht](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/blob/master/src/visuanalytics/resources/steps/weather_germany.json)
-- [Ortsbezogener Wetterbericht](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/blob/master/src/visuanalytics/resources/steps/weather_single.json)
-- [Fußballbericht zur 1. und 2. Bundesliga](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/blob/master/src/visuanalytics/resources/steps/football.json)
-- [Twitter-Wordcloud-Verlauf](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/blob/master/src/visuanalytics/resources/steps/twitter.json)
+- [Deutschlandweiter Wetterbericht](https://github.com/visuanalytics/visuanalytics/blob/master/src/visuanalytics/resources/steps/weather_germany.json)
+- [Ortsbezogener Wetterbericht](https://github.com/visuanalytics/visuanalytics/blob/master/src/visuanalytics/resources/steps/weather_single.json)
+- [Fußballbericht zur 1. und 2. Bundesliga](https://github.com/visuanalytics/visuanalytics/blob/master/src/visuanalytics/resources/steps/football.json)
+- [Twitter-Wordcloud-Verlauf](https://github.com/visuanalytics/visuanalytics/blob/master/src/visuanalytics/resources/steps/twitter.json)
 
 Die JSON-Datei mit den Konfigurationen zu einem Thema (im folgenden JSON-Datei genannt) hat folgende Abschnitte:
 ```JSON
@@ -595,7 +595,6 @@ Führt alle angegebenen `transform`-Typen für alle Werte eines Arrays aus.
   Für kompliziertere Anwendungen kann es sein, dass man einen Trick benötigt, um _Spezialvariablen_ aus der vorherigen
   Ebene (innerhalb der JSON-Datei) zu verwenden. Dieser ist unter `Key Trick <#key-trick>`_ beschrieben.
 ```
-```
 
 ### transform_dict
 
@@ -618,6 +617,14 @@ Führt alle angegebenen `transform`-Typen für alle Werte eines Dictionaries aus
 `transform`:
 
 `transform`-Typen, die für alle Werte des - unter `dict_key` angegebenen - Dictionaries ausgeführt werden sollen.
+
+`filter_keys`:
+
+[str](#string) - `Regex` zum Filtern der dict keys (Ein Beispiel für einen Regulären ausdruck befindet sich [hier](#regex))
+
+`skip_keys`:
+
+[str](#string) - `Regex` zum überspringen von dict keys (Ein Beispiel für einen Regulären ausdruck befindet sich [hier](#regex))
 
 - _Spezialvariablen_:
   - `_loop`: Hier wird der aktuelle Wert des Schleifendurchlaufs gespeichert.

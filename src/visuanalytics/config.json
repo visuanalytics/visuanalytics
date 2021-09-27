@@ -1,57 +1,61 @@
 {
-    "external_programs": [
+  "external_programs": [
+    {
+      "name": "ffmpeg",
+      "url": "https://ffmpeg.org/"
+    }
+  ],
+  "db": {
+    "db_path": "instance/visuanalytics.db",
+    "topics": [
       {
-        "name": "ffmpeg",
-        "url": "https://ffmpeg.org/"
+        "name": "Deutschlandweiter Wetterbericht",
+        "file_name": "weather_germany"
+      },
+      {
+        "name": "Ortsbezogener Wetterbericht",
+        "file_name": "weather_single"
+      },
+      {
+        "name": "Bundesliga-Ergebnisse",
+        "file_name": "football"
+      },
+      {
+        "name": "Twitter-Wordcloud",
+        "file_name": "twitter"
+      },
+      {
+        "name": "Corona-Regional",
+        "file_name": "corona_regional"
+      },
+      {
+        "name": "Corona-Bundesland",
+        "file_name": "corona_bundesland"
+      },
+      {
+        "name": "Abfuhrkalender Biebertal",
+        "file_name": "waste_collection"
       }
-    ],
-    "db": {
-      "db_path": "instance/visuanalytics.db",
-      "topics": [
-        {
-          "name": "Deutschlandweiter Wetterbericht",
-          "file_name": "weather_germany"
-        },
-        {
-          "name": "Ortsbezogener Wetterbericht",
-          "file_name": "weather_single"
-        },
-        {
-          "name": "Bundesliga-Ergebnisse",
-          "file_name": "football"
-        },
-        {
-          "name": "Twitter-Wordcloud",
-          "file_name": "twitter"
-        },
-        {
-          "name": "Corona-Regional",
-          "file_name": "corona_regional"
-        },
-        {
-          "name": "Corona-Bundesland",
-          "file_name": "corona_bundesland"
-        }
-      ]
-    },
-    "resources": {
-      "main_path": "resources",
-      "sub_paths": {
-        "infoprovider": "infoprovider",
-        "images": "images",
-        "temp": "temp",
-        "memory": "memory"
-      }
-    },
-    "console_mode": false,
-    "steps_base_config": {
-      "output_path": "out"
-    },
-    "audio": {
-      "type": "default",
-      "lang": "de",
-      "format": "mp3"
-    },
-    "log_limit": 100,
-    "testing": false
-  }
+    ]
+  },
+  "resources": {
+    "main_path": "resources",
+    "sub_paths": {
+      "infoprovider": "infoprovider",
+      "images": "images",
+      "temp": "temp",
+      "memory": "memory"
+    }
+  },
+  "console_mode": false,
+  "steps_base_config": {
+    "output_path": "out"
+  },
+  "audio": {
+    "type": "default",
+    "lang": "de",
+    "format": "mp3"
+  },
+  "log_limit": 100,
+  "testing": false
+}

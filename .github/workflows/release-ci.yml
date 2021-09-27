@@ -1,0 +1,32 @@
+name: Release CI
+
+on:
+  push:
+    tags: ["v*.*.*"]
+
+jobs:
+  publish-wp-plugin:
+    name: Publish WordPress Plugin
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Bump Plugin Version
+        run: |
+          version=$(echo ${GITHUB_REF##*/v})
+          sed -i -e "s/Version: 0.1/Version: $version/g" visuanalytics.php
+        working-directory: src/wordpress_plugin/visuanalytics
+      - name: Install Dependencies
+        run: npm ci
+        working-directory: src/frontend
+      - name: Build Plugin
+        run: python build.py
+        working-directory: src/wordpress_plugin
+      - name: Upload Plugin to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: src/wordpress_plugin/build/visuanalytics.zip
+          asset_name: visuanalytics-wp-plugin.zip
+          tag: ${{ github.ref }}
+          overwrite: true
