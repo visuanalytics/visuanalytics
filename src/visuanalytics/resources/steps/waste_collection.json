@@ -119,6 +119,16 @@
               "zeropaded_off": false
             }
           ]
+        },
+        {
+          "type": "check_key",
+          "keys": ["_req|{_idx}|Mobile Schadstoffsammlung im Ort TAG"],
+          "init_with": [""]
+        },
+        {
+          "type": "check_key",
+          "keys": ["_req|{_idx}|Mobile Schadstoffsammlung im Ort"],
+          "init_with": ["-"]
         }
       ]
     },
@@ -492,11 +502,27 @@
           ]
         },
         {
-          "type": "text",
-          "pos_x": 1764,
-          "pos_y": 398,
-          "preset": "date",
-          "pattern": "-"
+          "description": "Tone Heute",
+          "type": "option",
+          "check": "_req|Biebertal-Fellingshausen|Mobile Schadstoffsammlung im Ort TAG|0",
+          "on_true": [
+            {
+              "type": "text",
+              "pos_x": 1764,
+              "pos_y": 398,
+              "preset": "dateNow",
+              "pattern": "{_req|Biebertal-Fellingshausen|Mobile Schadstoffsammlung im Ort TAG|0}"
+            }
+          ],
+          "on_false": [
+            {
+              "type": "text",
+              "pos_x": 1764,
+              "pos_y": 398,
+              "preset": "date",
+              "pattern": "{_req|Biebertal-Fellingshausen|Mobile Schadstoffsammlung im Ort|0}"
+            }
+          ]
         },
         {
           "description": "Tone Heute",
@@ -614,11 +640,27 @@
           ]
         },
         {
-          "type": "text",
-          "pos_x": 1764,
-          "pos_y": 498,
-          "preset": "date",
-          "pattern": "-"
+          "description": "Tone Heute",
+          "type": "option",
+          "check": "_req|Biebertal-Frankenbach|Mobile Schadstoffsammlung im Ort TAG|0",
+          "on_true": [
+            {
+              "type": "text",
+              "pos_x": 1764,
+              "pos_y": 498,
+              "preset": "dateNow",
+              "pattern": "{_req|Biebertal-Frankenbach|Mobile Schadstoffsammlung im Ort TAG|0}"
+            }
+          ],
+          "on_false": [
+            {
+              "type": "text",
+              "pos_x": 1764,
+              "pos_y": 498,
+              "preset": "date",
+              "pattern": "{_req|Biebertal-Fellingshausen|Mobile Schadstoffsammlung im Ort|0}"
+            }
+          ]
         },
         {
           "description": "Tone Heute",
@@ -874,11 +916,27 @@
           ]
         },
         {
-          "type": "text",
-          "pos_x": 1764,
-          "pos_y": 698,
-          "preset": "date",
-          "pattern": "-"
+          "description": "Tone Heute",
+          "type": "option",
+          "check": "_req|Biebertal-Krumbach|Mobile Schadstoffsammlung im Ort TAG|0",
+          "on_true": [
+            {
+              "type": "text",
+              "pos_x": 1764,
+              "pos_y": 698,
+              "preset": "dateNow",
+              "pattern": "{_req|Biebertal-Krumbach|Mobile Schadstoffsammlung im Ort TAG|0}"
+            }
+          ],
+          "on_false": [
+            {
+              "type": "text",
+              "pos_x": 1764,
+              "pos_y": 698,
+              "preset": "date",
+              "pattern": "{_req|Biebertal-Krumbach|Mobile Schadstoffsammlung im Ort|0}"
+            }
+          ]
         },
         {
           "description": "Tone Heute",
@@ -996,11 +1054,27 @@
           ]
         },
         {
-          "type": "text",
-          "pos_x": 1764,
-          "pos_y": 798,
-          "preset": "date",
-          "pattern": "-"
+          "description": "Tone Heute",
+          "type": "option",
+          "check": "_req|Biebertal-Rodheim|Mobile Schadstoffsammlung im Ort TAG|0",
+          "on_true": [
+            {
+              "type": "text",
+              "pos_x": 1764,
+              "pos_y": 798,
+              "preset": "dateNow",
+              "pattern": "{_req|Biebertal-Rodheim|Mobile Schadstoffsammlung im Ort TAG|0}"
+            }
+          ],
+          "on_false": [
+            {
+              "type": "text",
+              "pos_x": 1764,
+              "pos_y": 798,
+              "preset": "date",
+              "pattern": "{_req|Biebertal-Rodheim|Mobile Schadstoffsammlung im Ort|0}"
+            }
+          ]
         },
         {
           "description": "Tone Heute",
