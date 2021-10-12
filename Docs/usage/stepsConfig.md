@@ -66,7 +66,7 @@ _Ordnerstruktur_:
 resources
 |   
 +---fonts
-|       Dosis-Bold.ttf
+|       dosis-bold.ttf
 |       
 +---images
 |   \---football
@@ -91,7 +91,7 @@ _Verwendung der Schriftart in einer JSON-Datei_:
 
 ```JSON
 {
-  "font": "fonts/Dosis-Bold.ttf"
+  "font": "fonts/dosis-bold.ttf"
 }
 ```
 
@@ -2597,7 +2597,7 @@ WORDCLOUD_DEFAULT_PARAMETER = {
     "max_words": 200,
     "contour_width": 0,
     "contour_color": "white",
-    "font_path": "fonts/Dosis-Regular.ttf",
+    "font_path": "fonts/dosis-regular.ttf",
     "prefer_horizontal": 0.90,
     "scale": 1,
     "min_font_size": 4,
@@ -2644,7 +2644,7 @@ int - Breite der Kontur/Umrandung der Maske bzw. der Form der Wordcloud
 color value - Farbe der Kontur/Umrandung
 
 `font_path`: 
-[str](#string) - Relativer Pfad zur Schriftart (Default: Dosis-Medium.ttf)
+[str](#string) - Relativer Pfad zur Schriftart (Default: dosis-medium.ttf)
 
 `prefer_horizontal`: 
 float - Verhältnis der Zeiten für den Versuch einer horizontalen Anpassung im Gegensatz zu einer vertikalen Anpassung.
@@ -3337,12 +3337,12 @@ der restlichen JSON-Datei kann man diese dann mit `"preset": "key"` verwenden.
     "test_preset_1": {
       "color": "black",
       "font_size": 74,
-      "font": "fonts/Dosis-Bold.ttf"
+      "font": "fonts/dosis-bold.ttf"
     },
     "test_preset_2": {
       "color": "white",
       "font_size": 35,
-      "font": "fonts/Dosis-Bold.ttf"
+      "font": "fonts/dosis-bold.ttf"
     }
   }
 }
