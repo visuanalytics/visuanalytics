@@ -55,7 +55,7 @@ export const DiagramList: React.FC<DiagramListProps> = (props) => {
               props.handleDiagramClick(
                 diagram.url,
                 0,
-                "diagrams\\" +
+                "diagrams/" +
                   props.infoProviderName +
                   "_" +
                   diagram.name +
