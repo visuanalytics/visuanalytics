@@ -57,6 +57,7 @@ import { ImageLists } from "./ImageLists";
 import { DiagramList } from "./DiagramList";
 import { ComponentContext } from "../../ComponentProvider";
 import { FullScene } from "../../Dashboard/types";
+import { ToolBar } from "./ToolBar";
 
 interface SceneEditorProps {
   continueHandler: () => void;
@@ -1344,7 +1345,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
       // reset default font properties
       setCurrentFontSize(20);
       setCurrentFontColor("#000000");
-      setCurrentFontFamily("Arial");
+      setCurrentFontFamily("arial");
       // reset the delete text on the editor
       setDeleteText("Letztes Elem. entf.");
       return;
@@ -2740,249 +2741,39 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
               onKeyDown={(e) => handleTextareaKeyDown(e)}
             />
           </Grid>
-          <Grid item xs={12}>
-            <Box border={5} borderRadius={5} className={classes.lowerButtons}>
-              <Grid item container xs={12} justify={"center"} spacing={10}>
-                <Grid container item xs={3}>
-                  <Grid item>
-                    <Button className={classes.button} onClick={clearCanvas}>
-                      ZURÜCKSETZEN
-                    </Button>
-                  </Grid>
-                  <Grid item>
-                    <Typography className={classes.labels} variant={"button"}>
-                      Farbe:
-                    </Typography>
-                  </Grid>
-                  <Grid item>
-                    <input
-                      className={classes.buttonColor}
-                      id="itemColor"
-                      type={"color"}
-                      onChange={switchItemColor}
-                      disabled={disableColor()}
-                      value={currentItemColor}
-                    />
-                  </Grid>
-                  <Grid item>
-                    <Typography className={classes.labels} variant={"button"}>
-                      Schriftfarbe:
-                    </Typography>
-                  </Grid>
-                  <Grid item>
-                    <input
-                      className={classes.buttonColor}
-                      id="fontColor"
-                      type="color"
-                      onChange={(e) => changeFontColor(e)}
-                      disabled={!disableFontColor()}
-                      value={currentFontColor}
-                    />
-                  </Grid>
-                </Grid>
-                <Grid item xs={3}>
-                  <Button
-                    className={classes.button}
-                    id="del"
-                    disabled={items.length <= 0}
-                    onClick={deleteItem}
-                  >
-                    {deleteText}
-                  </Button>
-                  <br />
-                  <br />
-                  <TextField
-                    className={classes.buttonNumber}
-                    id="coordinatesX"
-                    type="number"
-                    InputProps={{
-                      inputProps: {
-                        min: 0,
-                        max: 960,
-                        step: stepSize.toString(),
-                      },
-                    }}
-                    onChange={handleCoordinatesXChange}
-                    disabled={!itemSelected}
-                    label={"X Koordinate"}
-                    value={currentXCoordinate}
-                  />
-                  <br />
-                  <br />
-                  <TextField
-                    id="fontType"
-                    onChange={(e) => changeFontFamily(e)}
-                    className={classes.selection}
-                    label={"Schriftart"}
-                    value={currentFontFamily}
-                    disabled={!selectedItemName.startsWith("text")}
-                    select
-                  >
-                    <MenuItem value={"Arial"} style={{ fontFamily: "arial" }}>
-                      Arial
-                    </MenuItem>
-                    <MenuItem
-                      value={"veranda"}
-                      style={{ fontFamily: "verdana" }}
-                    >
-                      veranda
-                    </MenuItem>
-                    <MenuItem value={"Tahoma"} style={{ fontFamily: "Tahoma" }}>
-                      Tahoma
-                    </MenuItem>
-                    <MenuItem
-                      value={"Georgia"}
-                      style={{ fontFamily: "Georgia" }}
-                    >
-                      Georgia
-                    </MenuItem>
-                    <MenuItem
-                      value={"Times New Roman"}
-                      style={{ fontFamily: "Times New Roman" }}
-                    >
-                      Times New Roman
-                    </MenuItem>
-                  </TextField>
-                  <br />
-                  <br />
-                  <TextField
-                    className={classes.buttonNumber}
-                    id="widthOfItem"
-                    type="number"
-                    InputProps={{
-                      inputProps: {
-                        min: 1,
-                        max: 960,
-                      },
-                    }}
-                    onChange={handleItemWidthChange}
-                    disabled={!selectedItemName.startsWith("rect")}
-                    label={"Breite"}
-                    value={currentItemWidth}
-                  />
-                  <br />
-                  <br />
-                </Grid>
-                <Grid item xs={3}>
-                  <Button
-                    className={classes.button}
-                    id="undo"
-                    onClick={undo}
-                    disabled={recentlyRemovedItems.length === 0}
-                  >
-                    {" "}
-                    RÜCKGÄNGIG{" "}
-                  </Button>
-                  <br />
-                  <br />
-                  <TextField
-                    className={classes.buttonNumber}
-                    id="coordinatesY"
-                    type="number"
-                    InputProps={{
-                      inputProps: {
-                        min: 0,
-                        max: 540,
-                        step: stepSize.toString(),
-                      },
-                    }}
-                    onChange={handleCoordinatesYChange}
-                    disabled={!itemSelected}
-                    label={"Y Koordinate"}
-                    value={currentYCoordinate}
-                  />
-                  <br />
-                  <br />
-                  <TextField
-                    className={classes.buttonNumber}
-                    id="fontSize"
-                    type="number"
-                    InputProps={{
-                      inputProps: {
-                        min: 1,
-                        max: 144,
-                        step: 1,
-                      },
-                    }}
-                    onChange={(e) => changeFontSize(e)}
-                    label={"Schriftgröße (PX)"}
-                    value={currentFontSize}
-                    disabled={!selectedItemName.startsWith("text")}
-                  />
-                  <br />
-                  <br />
-                  <TextField
-                    className={classes.buttonNumber}
-                    id="heigthOfItem"
-                    type="number"
-                    InputProps={{
-                      inputProps: {
-                        min: 1,
-                        max: 960,
-                      },
-                    }}
-                    onChange={handleItemHeightChange}
-                    disabled={!selectedItemName.startsWith("rect")}
-                    label={"Höhe"}
-                    value={currentItemHeight}
-                  />
-                  <br />
-                  <br />
-                </Grid>
-                <Grid item xs={3}>
-                  <Button
-                    className={classes.button}
-                    onClick={dupe}
-                    disabled={!itemSelected}
-                  >
-                    {" "}
-                    Klonen{" "}
-                  </Button>
-                  <br />
-                  <br />
-                  <TextField
-                    id="stepSizeOptions"
-                    onChange={(e) => handleStepSizeChange(e)}
-                    value={stepSize}
-                    className={classes.selection}
-                    select
-                    label={"Sprunggröße"}
-                    disabled={!itemSelected}
-                  >
-                    <MenuItem value={1}> 1 </MenuItem>
-                    <MenuItem value={5}> 5 </MenuItem>
-                    <MenuItem value={10}> 10 </MenuItem>
-                    <MenuItem value={20}> 20 </MenuItem>
-                    <MenuItem value={25}> 25 </MenuItem>
-                    <MenuItem value={50}> 50 </MenuItem>
-                    <MenuItem value={75}> 75 </MenuItem>
-                    <MenuItem value={100}> 100 </MenuItem>
-                    <MenuItem value={250}> 250 </MenuItem>
-                  </TextField>
-                  <br />
-                  <br />
-                  <TextField
-                    className={classes.buttonNumber}
-                    id="textWidth"
-                    type="number"
-                    InputProps={{
-                      inputProps: {
-                        min: 200,
-                        max: 940,
-                        step: 1,
-                      },
-                    }}
-                    onChange={(e) => changeTextWidth(e)}
-                    label={"Textbreite (PX)"}
-                    value={currentTextWidth}
-                    disabled={!selectedItemName.startsWith("text")}
-                  />
-                  <br />
-                  <br />
-                </Grid>
-              </Grid>
-            </Box>
-          </Grid>
+          <ToolBar
+            clearCanvas={clearCanvas}
+            switchItemColor={switchItemColor}
+            disableColor={disableColor}
+            currentItemColor={currentItemColor}
+            changeFontColor={changeFontColor}
+            disableFontColor={disableFontColor}
+            currentFontColor={currentFontColor}
+            items={items}
+            deleteItem={deleteItem}
+            deleteText={deleteText}
+            stepSize={stepSize}
+            handleCoordinatesXChange={handleCoordinatesXChange}
+            itemSelected={itemSelected}
+            currentXCoordinate={currentXCoordinate}
+            currentYCoordinate={currentYCoordinate}
+            changeFontFamily={changeFontFamily}
+            currentFontFamily={currentFontFamily}
+            selectedItemName={selectedItemName}
+            handleItemWidthChange={handleItemWidthChange}
+            currentItemWidth={currentItemWidth}
+            undo={undo}
+            recentlyRemovedItems={recentlyRemovedItems}
+            handleCoordinatesYChange={handleCoordinatesYChange}
+            changeFontSize={changeFontSize}
+            currentFontSize={currentFontSize}
+            handleItemHeightChange={handleItemHeightChange}
+            currentItemHeight={currentItemHeight}
+            dupe={dupe}
+            changeTextWidth={changeTextWidth}
+            handleStepSizeChange={handleStepSizeChange}
+            currentTextWidth={currentTextWidth}
+          />
         </Grid>
         <Grid item xs={5}>
           <Grid item xs={12} className={classes.rightButtons}>
@@ -3020,12 +2811,11 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 onChange={(e) => setCurrentTextContent(e.target.value)}
               />
             </Grid>
-            <br />
+
             <Grid item xs={12} className={classes.elementLargeMargin}>
               <Typography variant={"h4"} align={"center"}>
                 Ausgewählte Daten des Infoproviders
               </Typography>
-              <br />
             </Grid>
             <Grid item xs={12}>
               <Box
@@ -3047,7 +2837,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                   <Typography variant={"h4"} align={"center"}>
                     Array-Verarbeitungen
                   </Typography>
-                  <br />
                 </Grid>
                 <Grid item xs={12}>
                   <Box
@@ -3071,7 +2860,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                   <Typography variant={"h4"} align={"center"}>
                     Formeln
                   </Typography>
-                  <br />
                 </Grid>
                 <Grid item xs={12}>
                   <Box
@@ -3098,7 +2886,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                   <Typography variant={"h4"} align={"center"}>
                     String-Ersetzungen
                   </Typography>
-                  <br />
                 </Grid>
                 <Grid item xs={12}>
                   <Box
@@ -3122,7 +2909,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                   <Typography variant={"h4"} align={"center"}>
                     Historisierte Daten
                   </Typography>
-                  <br />
                 </Grid>
                 <Grid item xs={12}>
                   <Box
@@ -3141,7 +2927,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 </Grid>
               </React.Fragment>
             )}
-            <br />
+
             <ImageLists
               imageList={props.imageList}
               backgroundImageList={props.backgroundImageList}
@@ -3161,7 +2947,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
               handleBackgroundUploadChange={handleBackgroundUploadChange}
               handleBackgroundImageClick={handleBackgroundImageClick}
             />
-            <br />
+
             {props.diagramList.length > 0 && (
               <DiagramList
                 diagramList={props.diagramList}
