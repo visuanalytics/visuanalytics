@@ -4,6 +4,7 @@ import DescriptionIcon from "@material-ui/icons/Description";
 import { ComponentContext } from "../../ComponentProvider";
 import { MenuButton } from "./MenuButton";
 import CreateIcon from "@material-ui/icons/Create";
+import { SelectTheme } from "./SelectTheme";
 
 export const Menu = () => {
   const components = React.useContext(ComponentContext);
@@ -20,6 +21,7 @@ export const Menu = () => {
         iconButtonProps={{ onClick: () => components?.setCurrent("addTopic") }}
         icon={<CreateIcon />}
       />
+      <SelectTheme />
     </Grid>
   );
 };
