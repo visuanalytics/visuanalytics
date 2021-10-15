@@ -780,7 +780,38 @@ Bestimmt den am häufigsten in einem Array vorkommenden Wert.
 }
 ```
 
+#### formula
+
+Berechnung einer Formel. Hierbei kann man in der 
+Formel alle Grundrechenarten verwenden. Will man Berechnungen mit API-Daten in der Formel verwenden, kann man dies mit der normalen Syntax hierfür tun (`{key}`).
+
+**Beispiel**
+
+```JSON
+{
+  "type": "calculate",
+  "action": "formula",
+  "formula": "{_req|data|number} * 8",
+  "decimal": 2,
+  "new_key": "Test"
+}
+```
+
+`formula`:
+
+[str](#string) - Formel die Berchnet werden soll.
+
+`decimal`_(optional)_: 
+
+int - Nachkommastelle, auf die der Durchschnittswert gerundet werden soll.
+
 #### Grundrechenarten
+
+```warning::
+
+  Diese Funktionen sind veraltet und stadessen sollte `formula` verwendet werden.
+
+```
 
 Die Aktionen `multiply`, `divide`, `subtract` und `add` sind gleich aufgebaut. Daher haben die Keys auch die gleiche Bedeutung.
 Als default ist der Wert zu `keys` immer auf der linken Seite der Gleichung. Alternativ: `keys_right`.

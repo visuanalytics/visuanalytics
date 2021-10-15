@@ -5,11 +5,13 @@ import collections
 import numbers
 import operator
 from functools import reduce
+from tokenize import Number
 import numpy as np
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
-from visuanalytics.analytics.transform.util.key_utils import get_new_keys
+from visuanalytics.analytics.transform.util.key_utils import get_new_key, get_new_keys
 from visuanalytics.server.db import queries
+from sympy.parsing.sympy_parser import parse_expr
 
 CALCULATE_ACTIONS = {}
 """Ein Dictionary bestehend aus allen Calculate-Actions-Methoden."""
@@ -213,6 +215,18 @@ def _bi_calculate(values: dict, data: StepData, op):
 
             data.insert_data(new_key, res, values)
 
+@register_calculate
+def calculate_formula(values: dict, data: StepData):
+    """"""
+    formula = data.format(values.get("formula", ""), values)
+
+    new_key = values["new_key"]
+    new_value = parse_expr(formula)
+
+    if isinstance(new_value, numbers.Number) and values.get("decimal", None):
+        new_value = round(new_value, data.get_data(values["decimal"], values, numbers.Number))
+
+    data.insert_data(new_key, new_value, values)
 
 @register_calculate
 def calculate_multiply(values: dict, data: StepData):
