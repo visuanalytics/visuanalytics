@@ -10,3 +10,4 @@ services:
       - ./src/visuanalytics/out:/home/appuser/visuanalytics/out
       - ./src/visuanalytics/instance:/home/appuser/visuanalytics/instance
       - ./src/visuanalytics/resources:/home/appuser/visuanalytics/resources
+      - ./src/visuanalytics/resources/images:/home/appuser/visuanalytics/resources/images
