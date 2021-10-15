@@ -1,13 +1,20 @@
 import React from "react";
 import AppBar from "@material-ui/core/AppBar";
 import { Navigation } from "./Navigation";
-import { Box, Grid, Toolbar } from "@material-ui/core";
+import { Box, Grid, MenuItem, Select, Theme, Toolbar } from "@material-ui/core";
 import { BlueDivider } from "./BlueDivider";
 import { getUrl } from "../util/fetchUtils";
 import { Menu } from "./Menu/Menu";
 
 interface HeaderProps {
   legacyFrontend: boolean;
+  currentTheme: string;
+  handleChange: (
+    event: React.ChangeEvent<{
+      value: unknown;
+    }>
+  ) => void;
+  themeList: Record<string, Theme>;
 }
 
 export const Header: React.FC<HeaderProps> = (props) => {
@@ -56,6 +63,11 @@ export const Header: React.FC<HeaderProps> = (props) => {
             src={getUrl("/images/logo.png")}
             alt="logo"
           />
+          <Select value={props.currentTheme} onChange={props.handleChange}>
+            {Object.keys(props.themeList).map((key) => (
+              <MenuItem value={key}>{key}</MenuItem>
+            ))}
+          </Select>
         </Box>
       </AppBar>
     );
