@@ -241,14 +241,6 @@ export const useStyles = makeStyles((theme: Theme) =>
       },
     },
 
-    lowerButtons: {
-      color: theme.palette.primary.main,
-      marginLeft: "10px",
-      marginTop: "10px",
-      height: "250px",
-      width: "960px",
-    },
-
     labels: {
       marginLeft: "10px",
       width: "100%",

@@ -19,7 +19,7 @@ WORDCLOUD_DEFAULT_PARAMETER = {
     "max_words": 200,
     "contour_width": 0,
     "contour_color": "white",
-    "font_path": "fonts/Dosis-Regular.ttf",
+    "font_path": "fonts/dosis-regular.ttf",
     "prefer_horizontal": 0.90,
     "scale": 1,
     "min_font_size": 4,
@@ -88,7 +88,8 @@ def wordcloud(values: dict, step_data: StepData, prev_paths):
             if isinstance(wordcloud_parameter[param], bool):
                 value = step_data.get_data(parameter[param], {}, bool)
             elif isinstance(wordcloud_parameter[param], numbers.Number):
-                value = step_data.get_data(parameter[param], {}, numbers.Number)
+                value = step_data.get_data(
+                    parameter[param], {}, numbers.Number)
             else:
                 value = step_data.format(parameter[param])
 
@@ -111,7 +112,8 @@ def wordcloud(values: dict, step_data: StepData, prev_paths):
         wordcloud_parameter["color_func"] = None
 
     if parameter.get("colormap", ""):
-        wordcloud_parameter["colormap"] = step_data.format(parameter["colormap"])
+        wordcloud_parameter["colormap"] = step_data.format(
+            parameter["colormap"])
 
     if parameter.get("figure", None) is not None:
         figure = step_data.format(parameter["figure"], {})
@@ -142,7 +144,8 @@ def wordcloud(values: dict, step_data: StepData, prev_paths):
         dont_use = step_data.get_data(values.get("stopwords", []), {}, list)
         wordcloud_parameter["stopwords"] = set(dont_use)
     if values.get("text", None) is not None:
-        wordcloud_image = WordCloud(**wordcloud_parameter).generate(step_data.format(values["text"], {}))
+        wordcloud_image = WordCloud(
+            **wordcloud_parameter).generate(step_data.format(values["text"], {}))
     elif values.get("dict", None) is not None:
         wordcloud_image = WordCloud(**wordcloud_parameter).generate_from_frequencies(
             step_data.get_data(values["dict"], {}, dict))
