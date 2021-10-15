@@ -7,7 +7,6 @@ import { getUrl } from "../util/fetchUtils";
 import { Menu } from "./Menu/Menu";
 
 interface HeaderProps {
-  legacyFrontend: boolean;
   currentTheme: string;
   handleChange: (
     event: React.ChangeEvent<{
@@ -18,58 +17,37 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = (props) => {
-  if (props.legacyFrontend) {
-    return (
-      <AppBar position="relative" color="transparent">
-        <Box height="3rem" display="flex" alignSelf="center">
-          <img
-            style={{ maxWidth: "100%", maxHeight: "100%" }}
-            src={getUrl("/images/logo.png")}
-            alt="logo"
-          />
-        </Box>
-        <BlueDivider />
-        <Toolbar style={{ minHeight: "40px" }}>
-          <Grid container justify="center">
-            <Grid item md xs />
-            <Grid
-              md
-              xs={10}
-              item
-              container
-              justify="center"
-              alignItems="center"
-            >
-              <Grid item>
-                <Navigation />
-              </Grid>
-            </Grid>
-            <Grid item container md xs justify="flex-end">
-              <Grid item>
-                <Menu />
-              </Grid>
+  return (
+    <AppBar position="relative" color="transparent">
+      <Box height="3rem" display="flex" alignSelf="center">
+        <img
+          style={{ maxWidth: "100%", maxHeight: "100%" }}
+          src={getUrl("/images/logo.png")}
+          alt="logo"
+        />
+      </Box>
+      <BlueDivider />
+      <Toolbar style={{ minHeight: "40px" }}>
+        <Grid container justify="center">
+          <Grid item md xs />
+          <Grid md xs={10} item container justify="center" alignItems="center">
+            <Grid item>
+              <Navigation />
             </Grid>
           </Grid>
-        </Toolbar>
-        <BlueDivider />
-      </AppBar>
-    );
-  } else {
-    return (
-      <AppBar position="relative" color="transparent">
-        <Box height="3rem" display="flex" alignSelf="center">
-          <img
-            style={{ maxWidth: "100%", maxHeight: "100%" }}
-            src={getUrl("/images/logo.png")}
-            alt="logo"
-          />
-          <Select value={props.currentTheme} onChange={props.handleChange}>
-            {Object.keys(props.themeList).map((key) => (
-              <MenuItem value={key}>{key}</MenuItem>
-            ))}
-          </Select>
-        </Box>
-      </AppBar>
-    );
-  }
+          <Grid item container md xs justify="flex-end">
+            <Select value={props.currentTheme} onChange={props.handleChange}>
+              {Object.keys(props.themeList).map((key) => (
+                <MenuItem value={key}>{key}</MenuItem>
+              ))}
+            </Select>
+            <Grid item>
+              <Menu />
+            </Grid>
+          </Grid>
+        </Grid>
+      </Toolbar>
+      <BlueDivider />
+    </AppBar>
+  );
 };

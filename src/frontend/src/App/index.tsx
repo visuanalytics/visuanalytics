@@ -117,7 +117,6 @@ export const themeList: Record<string, Theme> = {
 };
 
 const App = () => {
-  const legacyFrontend = React.useRef<boolean>(false);
   const [currentTheme, setCurrentTheme] = useState(
     localStorage.getItem("va_theme") ?? "v1"
   );
@@ -133,7 +132,6 @@ const App = () => {
       <MuiThemeProvider theme={themeList[currentTheme]}>
         <ComponentProvider>
           <Header
-            legacyFrontend={legacyFrontend.current}
             handleChange={handleChange}
             currentTheme={currentTheme}
             themeList={themeList}
