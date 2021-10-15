@@ -119,11 +119,13 @@ export const themeList: Record<string, Theme> = {
 const App = () => {
   const legacyFrontend = React.useRef<boolean>(false);
   const [currentTheme, setCurrentTheme] = useState(
-    localStorage.getItem("theme") ?? "v1"
+    localStorage.getItem("va_theme") ?? "v1"
   );
 
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setCurrentTheme(event.target.value as string);
+    const theme = event.target.value as string;
+    setCurrentTheme(theme);
+    localStorage.setItem("va_theme", theme);
   };
 
   return (
