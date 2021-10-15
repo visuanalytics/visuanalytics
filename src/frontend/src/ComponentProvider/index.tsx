@@ -7,7 +7,7 @@ import {
 import { uniqueId } from "../CreateInfoProvider/types";
 
 // Component das zuerst Angezeigt wird
-const startComponent: ComponentKey = "dashboard";
+const startComponent: ComponentKey = "home";
 
 type ComponentContextType = {
   current: MainComponent;
@@ -41,7 +41,7 @@ export const ComponentProvider: React.FC<Props> = ({ children }) => {
     //dashboard is the default when nothing is selected
     setCurrent(
       mainComponents[
-        sessionStorage.getItem("currentComponent-" + uniqueId) || "dashboard"
+        sessionStorage.getItem("currentComponent-" + uniqueId) || startComponent
       ]
     );
   }, []);
@@ -50,31 +50,11 @@ export const ComponentProvider: React.FC<Props> = ({ children }) => {
   React.useEffect(() => {
     /* calculate keyName */
     //currently, navName is the same as keyName, but to be prepared for changes here, this search is included
-    //no support for the old frontend
-    let keyName = "";
-    switch (current.navName) {
-      case "createInfoProvider": {
-        keyName = "createInfoProvider";
-        break;
-      }
-      case "dashboard": {
-        keyName = "dashboard";
-        break;
-      }
-      case "editInfoProvider": {
-        keyName = "editInfoProvider";
-        break;
-      }
-      case "sceneEditor": {
-        keyName = "sceneEditor";
-        break;
-      }
-      case "videoCreator": {
-        keyName = "videoCreator";
-        break;
-      }
-    }
-    sessionStorage.setItem("currentComponent-" + uniqueId, keyName);
+    const keyName = Object.entries(mainComponents).find(
+      (c) => c[1].navName === current.navName
+    );
+    if (keyName)
+      sessionStorage.setItem("currentComponent-" + uniqueId, keyName[0]);
   }, [current]);
 
   return (
