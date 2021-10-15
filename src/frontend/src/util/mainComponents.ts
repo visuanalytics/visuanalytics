@@ -50,17 +50,18 @@ export const mainComponents: MainComponents = {
   addTopic: {
     component: AddTopic,
     icon: CreateIcon,
-    navName: "Themen",
+    navName: "Themen (Alt)",
   },
   createInfoProvider: {
     component: CreateInfoProvider,
     icon: HomeIcon,
     navName: "createInfoProvider",
   },
+  // TODO change key
   dashboard: {
     component: Dashboard,
-    icon: HomeIcon,
-    navName: "dashboard",
+    icon: CreateIcon,
+    navName: "Themen",
   },
   editInfoProvider: {
     component: EditInfoProvider,

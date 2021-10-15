@@ -18,7 +18,7 @@ export const Menu = () => {
       />
       <MenuButton
         title="Themen hinzufügen"
-        iconButtonProps={{ onClick: () => components?.setCurrent("addTopic") }}
+        iconButtonProps={{ onClick: () => components?.setCurrent("dashboard") }}
         icon={<CreateIcon />}
       />
       <SelectTheme />
