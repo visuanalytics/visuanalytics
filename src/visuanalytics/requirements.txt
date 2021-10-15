@@ -10,6 +10,7 @@ pyhumps==1.6.1
 xmltodict==0.12.0
 pydub==0.25.1
 kiwisolver==1.0.1
+sympy==1.9
 
 # Server requirements
 flask==1.1.2

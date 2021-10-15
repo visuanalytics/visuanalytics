@@ -18,9 +18,9 @@ from visuanalytics.analytics.processing.image.matplotlib.diagram import generate
 from visuanalytics.util.resources import TEMP_LOCATION, get_resource_path, get_temp_path
 from visuanalytics.util.config_manager import get_private, set_private
 
-from ast2json import str2json
 from base64 import b64encode
 from visuanalytics.analytics.apis.checkapi import check_api
+from sympy.parsing.sympy_parser import parse_expr
 
 logger = logging.getLogger()
 
@@ -617,16 +617,11 @@ def testformula():
         tmp = queries.remove_toplevel_key(formula["formula"])
         if tmp[0].isdigit:
             tmp = "|" + tmp
-        str2json(tmp.replace("|", "uzjhnjtdryfguljkm"))
+        parse_expr(tmp.replace("|", "uzjhnjtdryfguljkm"))
         return flask.jsonify({"accepted": True})
 
-    except SyntaxError:
-        return flask.jsonify({"accepted": False})
-
     except Exception:
-        logger.exception("An error occurred: ")
-        err = flask.jsonify({"err_msg": "An error occurred while testing a formula"})
-        return err, 400
+        return flask.jsonify({"accepted": False})
 
 
 @api.route("/scene", methods=["POST"])
