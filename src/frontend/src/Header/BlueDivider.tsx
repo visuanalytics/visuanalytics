@@ -3,7 +3,7 @@ import { Divider } from "@material-ui/core";
 
 export const BlueDivider = withStyles((theme: Theme) => ({
   root: {
-    backgroundColor: "#2E97C5",
+    backgroundColor: theme.palette.primary.main,
     height: "0.5rem",
   },
 }))(Divider) as typeof Divider;
