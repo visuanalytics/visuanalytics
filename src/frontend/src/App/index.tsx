@@ -62,7 +62,6 @@ const newDarkBlueTheme = createMuiTheme({
   },
 });
 
-//commented out since linter doesnt allow unused variables, possibly suppress warnings here
 const theme = createMuiTheme({
   typography: {
     fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
