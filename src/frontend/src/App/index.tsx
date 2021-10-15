@@ -1,8 +1,8 @@
-import React from "react";
+import { createMuiTheme, MuiThemeProvider, Theme } from "@material-ui/core";
+import React, { useState } from "react";
 import { ComponentProvider } from "../ComponentProvider";
-import { Main } from "./Main";
 import { Header } from "../Header";
-import { createMuiTheme, MuiThemeProvider } from "@material-ui/core";
+import { Main } from "./Main";
 
 const newDarkBlueTheme = createMuiTheme({
   typography: {
@@ -62,10 +62,18 @@ const newDarkBlueTheme = createMuiTheme({
   },
 });
 
-//commented out since linter doesnt allow unused variables, possibly suppress warnings here
-/*const theme = createMuiTheme({
-    typography: {
-        fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+const theme = createMuiTheme({
+  typography: {
+    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+  },
+  overrides: {
+    MuiStepIcon: {
+      active: {
+        color: "#2E97C5 !important",
+      },
+      completed: {
+        color: "rgb(0, 99, 141) !important",
+      },
     },
     MuiInputBase: {
       root: {
@@ -102,16 +110,34 @@ const newDarkBlueTheme = createMuiTheme({
     },
   },
 });
-*/
+
+export const themeList: Record<string, Theme> = {
+  v1: theme,
+  v2: newDarkBlueTheme,
+};
 
 const App = () => {
   const legacyFrontend = React.useRef<boolean>(false);
+  const [currentTheme, setCurrentTheme] = useState(
+    localStorage.getItem("va_theme") ?? "v1"
+  );
+
+  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    const theme = event.target.value as string;
+    setCurrentTheme(theme);
+    localStorage.setItem("va_theme", theme);
+  };
 
   return (
     <div>
-      <MuiThemeProvider theme={newDarkBlueTheme}>
+      <MuiThemeProvider theme={themeList[currentTheme]}>
         <ComponentProvider>
-          <Header legacyFrontend={legacyFrontend.current} />
+          <Header
+            legacyFrontend={legacyFrontend.current}
+            handleChange={handleChange}
+            currentTheme={currentTheme}
+            themeList={themeList}
+          />
           <Main />
         </ComponentProvider>
       </MuiThemeProvider>
