@@ -1498,10 +1498,14 @@ def _extend_formula_keys(obj, datasource_name, formula_keys):
                 float(part)
             except Exception:
                 transformed_keys = [key if key not in part else part for key in transformed_keys]
-                if part != "" and part not in formula_keys and part not in transformed_keys:
+                if part != "" and part not in transformed_keys:
                     transformed_keys.append(part)
-                    part_temp = remove_toplevel_key(part)
-                    obj = obj.replace(part, "_req|" + datasource_name + "|" + part_temp)
+                    if part not in formula_keys:
+                        part_temp = remove_toplevel_key(part)
+                    
+                        obj = obj.replace(part, f"{{_req|{datasource_name}|{part_temp}}}")
+                    else:
+                        obj = obj.replace(part, f"{{{part}}}")
     return obj
 
 
@@ -1520,11 +1524,10 @@ def _insert_param_values(con, job_id, topic_values, config=True):
 
 def _generate_transform(formulas, old_transform):
     transform = []
-    counter = 0
     for method in old_transform:
         transform.append(method)
     for formula in formulas:
-        transform_part, counter = generate_step_transform(formula["formelString"], formula["formelName"], counter, copy=formula.get("copy_key", None), array_key=formula.get("array_key", None), loop_key=formula.get("loop_key", ""), decimal=formula.get("decimal", 2))
+        transform_part = generate_step_transform(formula["formelString"], formula["formelName"], copy=formula.get("copy_key", None), array_key=formula.get("array_key", None), loop_key=formula.get("loop_key", ""), decimal=formula.get("decimal", 2))
         if transform_part is None:
             return None
         transform += transform_part
