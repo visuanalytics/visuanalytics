@@ -15,14 +15,15 @@ FROM jrottenberg/ffmpeg:4.2-nvidia
 ENV TZ="Europe/Berlin"
 RUN apt-get update \
     && apt-get install -y --no-install-recommends\
-    tzdata \
-    fontconfig
+    tzdata
 
 # install Python
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
+    gcc g++ \
     python3.8 \
     python3-setuptools\
+    python3-dev \
     python3-pip
 
 # install Requirements
