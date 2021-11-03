@@ -369,6 +369,16 @@ URL nach dem Zusammenbauen:
   Diese ist nur für den `body_type` `other` möglich.
 ```
 
+`verify_ssl`: _(optional)_:
+
+[bool](#boolean) - Soll das SSL-Zertifikat auf Gültigkeit überprüft werden (default: `true`)
+
+```warning::
+  Wenn diese Option auf `false` gesetzt wird, akzeptiert dieses Programm jedes SSL-Zertifikat des Servers. 
+  Dies macht diese Anfragen anfällig für `man-in-the-middle (MitM)` Angriffe.
+  Somit sollte diese Option nur zur Entwicklung und zum Testen verwendet werden.
+```
+
 `response_format` _(optional)_:
 
 [str](#string) - Der Datentyp des Response-Bodys.
