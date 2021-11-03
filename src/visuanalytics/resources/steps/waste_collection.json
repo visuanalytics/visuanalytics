@@ -238,6 +238,11 @@
           "type": "add_data",
           "new_keys": ["tomorrowAddAnd"],
           "data": true
+        },
+        {
+          "type": "date_now",
+          "new_key": "creationDate",
+          "format": "%d.%m.%Y"
         }
       ]
     }
@@ -1213,6 +1218,13 @@
               "pattern": "{_req|Biebertal-Vetzberg|Mobile Schadstoffsammlung im Ort|0}"
             }
           ]
+        },
+        {
+          "type": "text",
+          "pos_x": 30,
+          "pos_y": 235,
+          "preset": "creationDate",
+          "pattern": "{creationDate}"
         }
       ]
     }
@@ -1313,6 +1325,12 @@
       "color": "red",
       "font_size": 62,
       "font": "fonts/Dosis-Bold.ttf"
+    },
+    "creationDate": {
+      "anchor_point": "left",
+      "color": "black",
+      "font_size": 32,
+      "font": "fonts/Dosis-Medium.ttf"
     }
   }
 }
