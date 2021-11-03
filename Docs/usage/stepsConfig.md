@@ -371,11 +371,11 @@ URL nach dem Zusammenbauen:
 
 `verify_ssl`: _(optional)_:
 
-[bool](#boolean) - Soll das SSL Zertifikate auf Gültigkeit überprüft werden (default: `true`)
+[bool](#boolean) - Soll das SSL-Zertifikat auf Gültigkeit überprüft werden (default: `true`)
 
 ```warning::
-  Wenn diese Option auf `false` gesetzt wird akzeptiert dieses Programm jedes SSL Zertifikate des Servers, 
-  dies macht diese anfragen anfällig für `man-in-the-middle (MitM)` angriffe.
+  Wenn diese Option auf `false` gesetzt wird, akzeptiert dieses Programm jedes SSL-Zertifikat des Servers. 
+  Dies macht diese Anfragen anfällig für `man-in-the-middle (MitM)` Angriffe.
   Somit sollte diese Option nur zur Entwicklung und zum Testen verwendet werden.
 ```
 
