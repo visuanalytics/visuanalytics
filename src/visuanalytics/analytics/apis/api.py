@@ -172,6 +172,7 @@ def fetch(values: dict, data: StepData, save_key):
                            data=req_data.get("other", None), params=req_data["params"])
     # Make the http request
     s = requests.session()
+    s.verify = req_data.get("verify_ssl")
     response = s.send(req.prepare())
 
     if not response.ok:
@@ -225,6 +226,7 @@ def _create_query(values: dict, data: StepData):
     # TODO use Format
     req["xml_config"] = data.deep_format(values.get("xml_config", {}), values=values)
     req["include_headers"] = data.get_data(values.get("include_headers", False), values, bool)
+    req["verify_ssl"] = data.get_data(values.get("verify_ssl", True), values, bool)
 
     return req
 
