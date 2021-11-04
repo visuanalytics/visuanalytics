@@ -238,13 +238,13 @@
           "type": "add_data",
           "new_keys": ["tomorrowAddAnd"],
           "data": true
-        },
-        {
-          "type": "date_now",
-          "new_key": "creationDate",
-          "format": "%d.%m.%Y"
         }
       ]
+    },
+    {
+      "type": "date_now",
+      "new_key": "creationDate",
+      "format": "%d.%m.%Y"
     }
   ],
   "storing": [],
