@@ -505,35 +505,55 @@
       "plot_size_y": 4.5,
       "axis_depth": 2,
       "bar_colors": {
-        "default": "#accfe9",
+        "default": "#c9ced3",
         "list": [
           {
             "number": 10,
-            "color": "#528ebc"
+            "color": "#accfe9"
           },
           {
             "number": 20,
-            "color": "#d4a129"
+            "color": "#68ade4"
           },
           {
             "number": 35,
-            "color": "#ee7401"
+            "color": "#2a6baa"
           },
           {
             "number": 50,
-            "color": "#cb1a14"
+            "color": "#a98463"
           },
           {
-            "number": 75,
-            "color": "#a20500"
+            "number": 100,
+            "color": "#f9980a"
           },
           {
             "number": 150,
-            "color": "#7f0000"
+            "color": "#e5600a"
           },
           {
-            "number": 250,
-            "color": "#520000"
+            "number": 200,
+            "color": "#ca1625"
+          },
+          {
+            "number": 350,
+            "color": "#b10e5d"
+          },
+          {
+            "number": 500,
+            "color": "#583c73"
+          },
+          {
+            "number": 800,
+            "color": "#30154c"
+          },
+          {
+            "number": 1200,
+            "color": "#190B28"
+          },
+           {
+            "number": 2000,
+            "color": "#000000"
           }
         ]
       }
